@@ -4,26 +4,44 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "storybook": "start-storybook -p 7007"
   },
   "dependencies": {
     "react": "16.8.3",
-    "react-native": "0.59.9"
+    "react-native": "0.59.9",
+    "react-native-linear-gradient": "^2.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/runtime": "^7.4.5",
+    "@storybook/addon-actions": "^5.1.9",
+    "@storybook/addon-info": "^5.1.9",
+    "@storybook/addon-links": "^5.1.9",
+    "@storybook/addons": "^5.1.9",
+    "@storybook/cli": "^5.1.9",
+    "@storybook/react-native": "^5.1.9",
+    "@storybook/react-native-server": "^5.1.9",
+    "@storybook/theming": "^5.1.9",
     "@types/jest": "^24.0.15",
     "@types/react": "^16.8.22",
     "@types/react-native": "^0.57.64",
     "@types/react-test-renderer": "^16.8.2",
+    "@types/storybook__react": "^4.0.2",
     "babel-jest": "^24.8.0",
+    "babel-loader": "^8.0.6",
     "jest": "^24.8.0",
     "metro-react-native-babel-preset": "^0.54.1",
+    "react-dom": "16.8.3",
     "react-test-renderer": "16.8.3",
     "typescript": "^3.5.2"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
   }
 }
