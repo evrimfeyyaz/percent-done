@@ -1,10 +1,17 @@
 import React, { FunctionComponent, useState } from 'react'
 import { LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
+import { colors, fonts } from '../theme';
 
 interface SectionProps {
+  /**
+   * Title of the section.
+   */
   title: string,
 }
 
+/**
+ * Container for a section.
+ */
 export const Section: FunctionComponent<SectionProps> = ({ title, children = null }) => {
   const MARGIN = 20;
 
@@ -56,8 +63,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   title: {
-    color: '#9B9B9B',
-    fontFamily: 'NunitoSans-Regular',
+    color: colors.gray,
+    fontFamily: fonts.regular,
     fontSize: 12,
     left: 0,
     position: 'absolute',
@@ -66,12 +73,11 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   content: {
-    color: '#fff',
     flex: 1,
     paddingStart: 60,
   },
   separator: {
-    borderBottomColor: '#fff',
+    borderBottomColor: colors.gray,
     borderBottomWidth: StyleSheet.hairlineWidth,
     opacity: .2,
     bottom: 0,

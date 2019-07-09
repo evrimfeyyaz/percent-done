@@ -1,9 +1,10 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react-native';
 import CenterView from './CenterView';
-import { Body, ProgressChart, Section } from '../../src/components';
+import { Body, colors, ProgressChart, Section } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
+import { GoalRow } from '../../src/components/containers/GoalRow';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -18,6 +19,9 @@ storiesOf('Containers', module)
     <Section title={'Sample Section'}>
       <Body>Lorem ipsum dolor sit amet.</Body>
     </Section>
+  ))
+  .add('Goal Row', () => (
+    <GoalRow name={'Write'} color={colors.yellow} chainLength={10} completedMinutes={30} totalMinutes={60} />
   ));
 
 storiesOf('Charts', module)

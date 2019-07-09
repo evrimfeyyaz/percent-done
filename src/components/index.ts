@@ -1,8 +1,11 @@
 // Containers
-export * from './containers/Section'
+export * from './containers/Section';
 
 // Typography
-export * from './typography/Body'
+export * from './typography/Body';
 
 // Charts
-export * from './charts/ProgressChart'
+export * from './charts/ProgressChart';
+
+// Theme
+export * from './theme';

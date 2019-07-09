@@ -1,18 +1,25 @@
-import React, { FunctionComponent } from 'react'
-import { ProgressCircle } from 'react-native-svg-charts'
+import React, { FunctionComponent } from 'react';
+import { ProgressCircle } from 'react-native-svg-charts';
 import { StyleSheet, View, Text } from 'react-native';
+import { colors, fonts } from '../theme';
 
 interface ProgressChartProps {
+  /**
+   * Percentage of the work completed.
+   */
   percentDone: number,
 }
 
+/**
+ * Shows a circular chart.
+ */
 export const ProgressChart: FunctionComponent<ProgressChartProps> = ({ percentDone = 0 }) => {
   return (
-    <View>
+    <>
       <ProgressCircle style={{ height: 125, width: 125 }}
                       progress={percentDone / 100}
-                      backgroundColor={'#464855'}
-                      progressColor={'#EAB400'}
+                      backgroundColor={colors.darkGray}
+                      progressColor={colors.yellow}
                       strokeWidth={15}
                       endAngle={-Math.PI * 2} />
       <View style={styles.infoContainer}>
@@ -26,8 +33,8 @@ export const ProgressChart: FunctionComponent<ProgressChartProps> = ({ percentDo
           Done
         </Text>
       </View>
-    </View>
-  )
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -42,18 +49,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   percentDone: {
-    fontFamily: 'NunitoSans-SemiBold',
+    fontFamily: fonts.semibold,
     fontSize: 36,
-    color: '#fff',
+    color: colors.white,
   },
   percentSign: {
     fontSize: 12,
   },
   done: {
-    fontFamily: 'NunitoSans-SemiBold',
+    fontFamily: fonts.semibold,
     fontSize: 12,
-    color: '#9B9B9B',
+    color: colors.gray,
     textTransform: 'uppercase',
     marginTop: -5,
-  }
+  },
 });
