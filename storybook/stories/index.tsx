@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react-native';
 import CenterView from './CenterView';
-import { Body, colors, ProgressChart, Section } from '../../src/components';
+import { Body, Button, colors, ProgressChart, Section } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
 import { GoalRow } from '../../src/components/containers/GoalRow';
@@ -39,3 +39,11 @@ storiesOf('Charts', module)
 
     return (<ProgressChart percentDone={percentDone} />);
   });
+
+storiesOf('Inputs', module)
+  .add('Button', () => (
+    <Button title={'Press This'} />
+  ))
+  .add('Button with icon', () => (
+    <Button title={'Stop'} iconSource={require('../../assets/icons/stop.png')} />
+  ));

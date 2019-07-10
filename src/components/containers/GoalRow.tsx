@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ProgressCircle } from 'react-native-svg-charts';
-import { colors, fonts, spacings } from '../theme';
+import { colors, fonts } from '../theme';
 
 interface GoalRowProps {
   /**
@@ -88,11 +88,11 @@ const styles = StyleSheet.create({
     height: 60,
     width: '100%',
     alignItems: 'center',
-    paddingHorizontal: spacings.paddingHorizontal,
+    paddingHorizontal: 20,
   },
   details: {
     flex: 1,
-    paddingHorizontal: spacings.paddingHorizontal,
+    paddingHorizontal: 20,
   },
   name: {
     fontFamily: fonts.semibold,

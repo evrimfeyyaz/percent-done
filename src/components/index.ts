@@ -7,5 +7,8 @@ export * from './typography/Body';
 // Charts
 export * from './charts/ProgressChart';
 
+// Inputs
+export * from './inputs/Button';
+
 // Theme
 export * from './theme';
