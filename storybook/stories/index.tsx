@@ -1,10 +1,9 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react-native';
 import CenterView from './CenterView';
-import { Body, Button, colors, ProgressChart, Section } from '../../src/components';
+import { Body, Button, colors, ProgressChart, Section, GoalRow } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
-import { GoalRow } from '../../src/components/containers/GoalRow';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);

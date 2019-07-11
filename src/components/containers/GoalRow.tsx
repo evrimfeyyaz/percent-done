@@ -82,7 +82,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
+  imageContainer: {
     display: 'flex',
     flexDirection: 'row',
     height: 60,

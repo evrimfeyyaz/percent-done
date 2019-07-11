@@ -31,7 +31,7 @@ export const Button: FunctionComponent<ButtonProps> = ({ title, iconSource = nul
 };
 
 const styles = StyleSheet.create({
-  container: {
+  imageContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

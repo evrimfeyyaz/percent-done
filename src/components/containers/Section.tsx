@@ -58,7 +58,7 @@ export const Section: FunctionComponent<SectionProps> = ({ title, children = nul
 };
 
 const styles = StyleSheet.create({
-  container: {
+  imageContainer: {
     display: 'flex',
     flexDirection: 'row',
   },

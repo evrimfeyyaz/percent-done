@@ -1,5 +1,7 @@
 // Containers
 export * from './containers/Section';
+export * from './containers/BackgroundView';
+export * from './containers/GoalRow';
 
 // Typography
 export * from './typography/Body';
