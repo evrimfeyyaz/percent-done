@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react-native';
 import CenterView from './CenterView';
-import { Body, Button, colors, ProgressChart, Section, GoalRow } from '../../src/components';
+import { Body, Button, colors, ProgressChart, Section, GoalRow, TabItem } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
 
@@ -45,4 +45,12 @@ storiesOf('Inputs', module)
   ))
   .add('Button with icon', () => (
     <Button title={'Stop'} iconSource={require('../../assets/icons/stop.png')} />
+  ));
+
+storiesOf('Navigation', module)
+  .add('Tab Item', () => (
+    <TabItem title={'Goals'} />
+  ))
+  .add('Tab Item (Active)', () => (
+    <TabItem title={'Goals'} active={true} />
   ));

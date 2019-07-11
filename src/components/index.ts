@@ -12,5 +12,8 @@ export * from './charts/ProgressChart';
 // Inputs
 export * from './inputs/Button';
 
+// Navigation
+export * from './navigation/TabItem';
+
 // Theme
 export * from './theme';

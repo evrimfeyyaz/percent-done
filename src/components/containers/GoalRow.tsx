@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../theme';
+import { Icons } from '../../../assets';
 
 interface GoalRowProps {
   /**
@@ -43,7 +44,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
   if (chainLength != null) {
     chainInfo = (
       <View style={styles.chainInfo}>
-        <Image source={require('../../../assets/icons/link.png')} />
+        <Image source={Icons.link} />
         <Text style={styles.chainLength}>{chainLength} days</Text>
       </View>
     );
@@ -82,7 +83,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
 };
 
 const styles = StyleSheet.create({
-  imageContainer: {
+  container: {
     display: 'flex',
     flexDirection: 'row',
     height: 60,

@@ -2,12 +2,13 @@ import React from 'react';
 import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 import Storybook from './storybook';
 import { colors, fonts } from './src/components';
-import { SettingsScreen, TodayScreen, TomorrowScreen } from './src/screens';
-import { StatsScreen } from './src/screens/StatsScreen';
-import { Image } from 'react-native';
+import { SettingsScreen, TodayScreen, TomorrowScreen, StatsScreen } from './src/screens';
+import { Image, YellowBox } from 'react-native';
 import { Icons } from './assets';
 
-// export default Storybook;
+YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from react-native core']);
+
+export default Storybook;
 
 const TodayStack = createStackNavigator({
   Today: TodayScreen,
@@ -58,11 +59,11 @@ const AppNavigator = createBottomTabNavigator(
 
 const AppContainer = createAppContainer(AppNavigator);
 
-export default class App extends React.Component {
-  render() {
-    return <AppContainer />;
-  }
-}
+// export default class App extends React.Component {
+//   render() {
+//     return <AppContainer />;
+//   }
+// }
 
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {
