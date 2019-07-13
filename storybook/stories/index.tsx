@@ -1,7 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react-native';
+import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
-import { Body, Button, colors, ProgressChart, Section, GoalRow, TabItem } from '../../src/components';
+import { Body, Button, colors, ProgressChart, Section, GoalRow, TabItem, TabBar } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
 
@@ -53,4 +54,6 @@ storiesOf('Navigation', module)
   ))
   .add('Tab Item (Active)', () => (
     <TabItem title={'Goals'} active={true} />
-  ));
+  ))
+  .add('Tab Bar', () => (
+    <TabBar tabTitles={['Goals', 'Timetable']} activeTitle={'Goals'} onPress={action('tab-bar-press')} />));

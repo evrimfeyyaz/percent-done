@@ -1,19 +1,26 @@
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { colors, fonts } from '../theme';
 
 interface TabItemProps {
   title: string,
   active?: boolean,
+  onPress?: (title: string) => void,
+  style?: ViewStyle,
 }
 
-export const TabItem: FunctionComponent<TabItemProps> = ({ title, active = false }) => {
+export const TabItem: FunctionComponent<TabItemProps> = ({ title, active = false, onPress = null, style = null }) => {
+  const handlePress = () => {
+    if (onPress != null) onPress(title);
+  };
+
   const titleStyle = active ? StyleSheet.flatten([styles.title, styles.titleActive]) : styles.title;
+  const containerStyle = active ? styles.containerActive : null;
 
   return (
-    <View style={active ? styles.containerActive : null}>
+    <TouchableOpacity style={StyleSheet.flatten([containerStyle, style])} onPress={handlePress} disabled={active}>
       <Text style={titleStyle}>{title}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
