@@ -11,19 +11,20 @@ interface ButtonProps {
    * Icon for the button. Should be white and 24x24.
    */
   iconSource?: ImageSourcePropType,
+  onPress: () => void,
 }
 
 /**
  * A styled button component.
  */
-export const Button: FunctionComponent<ButtonProps> = ({ title, iconSource = null }) => {
+export const Button: FunctionComponent<ButtonProps> = ({ title, iconSource = null, onPress }) => {
   let icon = null;
   if (iconSource != null) {
     icon = <Image source={iconSource} style={styles.icon} />;
   }
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       {icon}
       <Text style={styles.title}>{title}</Text>
     </TouchableOpacity>

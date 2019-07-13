@@ -42,10 +42,11 @@ storiesOf('Charts', module)
 
 storiesOf('Inputs', module)
   .add('Button', () => (
-    <Button title={'Press This'} />
+    <Button title={'Press This'} onPress={action('button-pressed')} />
   ))
   .add('Button with icon', () => (
-    <Button title={'Stop'} iconSource={require('../../assets/icons/stop.png')} />
+    <Button title={'Stop'} iconSource={require('../../assets/icons/stop.png')}
+            onPress={action('button-with-icon-pressed')} />
   ));
 
 storiesOf('Navigation', module)
