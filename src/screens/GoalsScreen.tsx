@@ -1,11 +1,12 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { NavigationScreenComponent } from 'react-navigation';
-import { BackgroundView, Body } from '../components';
+import { BackgroundView, textStyles } from '../components';
 
 export const GoalsScreen: NavigationScreenComponent = () => {
   return (
     <BackgroundView>
-      <Body>Goals Screen</Body>
+      <Text style={textStyles.body}>Goals Screen</Text>
     </BackgroundView>
   );
 };

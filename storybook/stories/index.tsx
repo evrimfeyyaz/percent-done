@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
 import {
-  Body,
+  textStyles,
   Button,
   colors,
   ProgressChart,
@@ -21,13 +21,13 @@ addDecorator(withKnobs);
 
 storiesOf('Typography', module)
   .add('Body', () => (
-    <Body>Lorem ipsum dolor sit amet.</Body>
+    <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
   ));
 
 storiesOf('Containers', module)
   .add('Section', () => (
     <Section title={'Sample Section'}>
-      <Body>Lorem ipsum dolor sit amet.</Body>
+      <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
     </Section>
   ))
   .add('Goal Row', () => (
