@@ -8,4 +8,20 @@ export const textStyles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: 14,
   },
-})
+  info: {
+    color: colors.white,
+    fontFamily: fonts.semibold,
+    fontSize: 27,
+  },
+  infoSmall: {
+    color: colors.white,
+    fontFamily: fonts.semibold,
+    fontSize: 16,
+  },
+  infoTitle: {
+    color: colors.gray,
+    fontFamily: fonts.semibold,
+    fontSize: 12,
+    textTransform: 'uppercase',
+  }
+});

@@ -20,9 +20,15 @@ import { withKnobs, number } from '@storybook/addon-knobs';
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
 
-storiesOf('Typography', module)
+storiesOf('Text styles', module)
   .add('Body', () => (
     <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
+  ))
+  .add('Info', () => (
+    <Text style={textStyles.info}>
+      01<Text style={textStyles.infoSmall}>H</Text> 30<Text style={textStyles.infoSmall}>M</Text>
+      <Text style={textStyles.infoTitle}>  done</Text>
+    </Text>
   ));
 
 storiesOf('Containers', module)
