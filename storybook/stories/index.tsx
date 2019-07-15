@@ -53,6 +53,7 @@ storiesOf('Charts', module)
     const entries: TimetableEntry[] = [
       {
         title: 'Research vacation spots',
+        timeTracked: true,
         startHour: 1,
         startMinute: 25,
         endHour: 2,
@@ -62,12 +63,23 @@ storiesOf('Charts', module)
       },
       {
         title: 'Write',
+        timeTracked: true,
         startHour: 3,
         startMinute: 12,
         endHour: 4,
         endMinute: 37,
         color: '#000000',
         id: 2,
+      },
+      {
+        title: 'Clean up the kitchen',
+        timeTracked: false,
+        startHour: 5,
+        startMinute: 30,
+        endHour: 6,
+        endMinute: 30,
+        color: '#3394FA',
+        id: 3,
       },
     ];
 

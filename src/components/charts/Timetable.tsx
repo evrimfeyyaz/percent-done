@@ -2,8 +2,13 @@ import React, { FunctionComponent } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts } from '../theme';
 
+/**
+ * Type for timetable entries. Start hour-minute should be the same as
+ * end hour-minute for entries that are not time tracked.
+ */
 export interface TimetableEntry {
   title: string
+  timeTracked: boolean,
   startHour: number,
   startMinute: number,
   endHour: number,
@@ -26,20 +31,37 @@ export const Timetable: FunctionComponent<TimetableProps> = ({ entries }) => {
     );
   };
 
-  const makeEntry = (entry: TimetableEntry) => {
+  const makeTimeTrackedEntry = (entry: TimetableEntry) => {
     const positionStyle = {
       top: entryTopOffset(entry),
       height: entryHeight(entry),
       backgroundColor: entry.color,
     };
 
-    const titleStyle = {
+    const titleColorStyle = {
       color: contrastingColor(entry.color),
     };
 
     return (
-      <View style={StyleSheet.flatten([styles.entry, positionStyle])} key={entry.id}>
-        <Text style={titleStyle}>{entry.title}</Text>
+      <View style={StyleSheet.flatten([styles.timeTrackedEntry, positionStyle])} key={entry.id}>
+        <Text style={StyleSheet.flatten([styles.entryTitle, titleColorStyle])}>{entry.title}</Text>
+      </View>
+    );
+  };
+
+  const makeNonTimeTrackedEntry = (entry: TimetableEntry) => {
+    const positionStyle = {
+      top: entryTopOffset(entry),
+    };
+
+    const titleColorStyle = {
+      borderBottomColor: entry.color,
+    };
+
+    return (
+      <View style={StyleSheet.flatten([styles.nonTimeTrackedEntry, positionStyle])} key={entry.id}>
+        <View style={StyleSheet.flatten([styles.nonTimeTrackedEntryLine, titleColorStyle])} />
+        <Text style={StyleSheet.flatten([styles.entryTitle, styles.nonTimeTrackedEntryTitle])}>{entry.title}</Text>
       </View>
     );
   };
@@ -49,7 +71,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({ entries }) => {
   return (
     <View style={styles.container}>
       {timeMarks}
-      {entries.map(entry => makeEntry(entry))}
+      {entries.map(entry => entry.timeTracked ? makeTimeTrackedEntry(entry) : makeNonTimeTrackedEntry(entry))}
     </View>
   );
 };
@@ -81,7 +103,11 @@ const styles = StyleSheet.create({
     marginBottom: 11,
     marginStart: 5,
   },
-  entry: {
+  entryTitle: {
+    fontFamily: fonts.regular,
+    fontSize: 14,
+  },
+  timeTrackedEntry: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -89,6 +115,22 @@ const styles = StyleSheet.create({
     left: 57,
     right: 19,
     borderRadius: 5,
+  },
+  nonTimeTrackedEntry: {
+    position: 'absolute',
+    left: 57,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: -9,
+  },
+  nonTimeTrackedEntryLine: {
+    borderBottomWidth: 1,
+    width: 50,
+  },
+  nonTimeTrackedEntryTitle: {
+    color: '#fff',
+    marginStart: 10,
   },
 });
 
@@ -143,9 +185,6 @@ function contrastingColor(hexCode: string): string {
   return '#fff';
 }
 
-/**
- * Returns top position value for an entry given the starting time.
- */
 function entryTopOffset(entry: TimetableEntry): number {
   const offsetFor12Am = 19;
   const offsetForAMinute = 1;
@@ -156,9 +195,6 @@ function entryTopOffset(entry: TimetableEntry): number {
   return offsetFor12Am + offsetForHour + offsetForMinute;
 }
 
-/**
- * Returns height for an entry given its start and end times.
- */
 function entryHeight(entry: TimetableEntry): number {
   return (entry.endHour - entry.startHour) * 60 + entry.endMinute - entry.startMinute;
 }
