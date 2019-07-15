@@ -44,7 +44,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({ entries }) => {
 
     return (
       <View style={StyleSheet.flatten([styles.timeTrackedEntry, positionStyle])} key={entry.id}>
-        <Text style={StyleSheet.flatten([styles.entryTitle, titleColorStyle])}>{entry.title}</Text>
+        <Text style={StyleSheet.flatten([styles.entryTitle, titleColorStyle])} numberOfLines={1}>{entry.title}</Text>
       </View>
     );
   };
@@ -61,7 +61,8 @@ export const Timetable: FunctionComponent<TimetableProps> = ({ entries }) => {
     return (
       <View style={StyleSheet.flatten([styles.nonTimeTrackedEntry, positionStyle])} key={entry.id}>
         <View style={StyleSheet.flatten([styles.nonTimeTrackedEntryLine, titleColorStyle])} />
-        <Text style={StyleSheet.flatten([styles.entryTitle, styles.nonTimeTrackedEntryTitle])}>{entry.title}</Text>
+        <Text style={StyleSheet.flatten([styles.entryTitle, styles.nonTimeTrackedEntryTitle])}
+              numberOfLines={1} ellipsizeMode={'tail'}>{entry.title}</Text>
       </View>
     );
   };
@@ -113,16 +114,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     left: 57,
-    right: 19,
+    right: 20,
     borderRadius: 5,
+    paddingHorizontal: 20,
   },
   nonTimeTrackedEntry: {
     position: 'absolute',
     left: 57,
+    right: 20,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: -9,
+    flexGrow: 0,
+    overflow: 'hidden',
   },
   nonTimeTrackedEntryLine: {
     borderBottomWidth: 1,
@@ -131,6 +136,7 @@ const styles = StyleSheet.create({
   nonTimeTrackedEntryTitle: {
     color: '#fff',
     marginStart: 10,
+    flex: 1,
   },
 });
 
