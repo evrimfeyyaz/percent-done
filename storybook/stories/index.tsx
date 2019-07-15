@@ -2,7 +2,17 @@ import React from 'react';
 import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
-import { Body, Button, colors, ProgressChart, Section, GoalRow, TabItem, TabBar } from '../../src/components';
+import {
+  Body,
+  Button,
+  colors,
+  ProgressChart,
+  Section,
+  GoalRow,
+  TabItem,
+  TabBar,
+  Timetable, TimetableEntry,
+} from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
 
@@ -37,7 +47,31 @@ storiesOf('Charts', module)
 
     const percentDone = number(label, defaultValue, options);
 
-    return (<ProgressChart percentDone={percentDone} />);
+    return <ProgressChart percentDone={percentDone} />;
+  })
+  .add('Timetable', () => {
+    const entries: TimetableEntry[] = [
+      {
+        title: 'Research vacation spots',
+        startHour: 1,
+        startMinute: 25,
+        endHour: 2,
+        endMinute: 0,
+        color: '#19C403',
+        id: 1,
+      },
+      {
+        title: 'Write',
+        startHour: 3,
+        startMinute: 12,
+        endHour: 4,
+        endMinute: 37,
+        color: '#000000',
+        id: 2,
+      },
+    ];
+
+    return <Timetable entries={entries} />;
   });
 
 storiesOf('Inputs', module)

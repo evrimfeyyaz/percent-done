@@ -8,6 +8,7 @@ export * from './typography/Body';
 
 // Charts
 export * from './charts/ProgressChart';
+export * from './charts/Timetable';
 
 // Inputs
 export * from './inputs/Button';
