@@ -1,6 +1,8 @@
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, fonts } from '../theme';
+import { compareTimes, durationInHoursAndMinutes, formattedTimeFromHoursAndMinutes } from '../../utilities';
+import Svg, { Line } from 'react-native-svg';
 
 /**
  * Type for timetable entries. Start hour-minute should be the same as
@@ -14,65 +16,99 @@ export interface TimetableEntry {
   endHour: number,
   endMinute: number,
   color: string,
-  id: number,
+  id: string,
 }
 
 interface TimetableProps {
   entries: TimetableEntry[]
+  onEntryPress: (id: string) => void
 }
 
-export const Timetable: FunctionComponent<TimetableProps> = ({ entries }) => {
-  const makeTimeMark = (time: string) => {
+export const Timetable: FunctionComponent<TimetableProps> = ({ entries, onEntryPress }) => {
+  const entriesSortedByStartingTime = entries.sort((e1, e2) => {
+    // If starting times are equal, compare by ending times.
+    if (e1.startHour === e2.startHour && e1.startMinute === e2.startMinute) {
+      return compareTimes(e1.endHour, e1.endMinute, e2.endHour, e2.endMinute);
+    }
+
+    return compareTimes(e1.startHour, e1.startMinute, e2.startHour, e2.startMinute);
+  });
+
+  const makeEntry = (entry: TimetableEntry) => {
+    const { hours, minutes } = durationInHoursAndMinutes(entry.startHour, entry.startMinute, entry.endHour, entry.endMinute);
+    const startTime = formattedTimeFromHoursAndMinutes(entry.startHour, entry.startMinute);
+    const endTime = formattedTimeFromHoursAndMinutes(entry.endHour, entry.endMinute);
+
+    const titleColorStyle = { color: entry.color };
+    const durationOrCompletion = entry.timeTracked ? `${hours}h ${minutes}m` : 'Completed';
+    const times = entry.timeTracked ? `${startTime} - ${endTime}` : `${endTime}`;
+
     return (
-      <View style={styles.timeMark} key={time}>
-        <Text style={styles.time}>{time}</Text>
-        <View style={styles.mark} />
+      <TouchableOpacity style={styles.entry} onPress={() => onEntryPress(entry.id)} key={entry.id}>
+        <Text style={[styles.entryTitle, titleColorStyle]} numberOfLines={1}>
+          {entry.title}
+        </Text>
+        <Text style={styles.entryLength}>
+          {durationOrCompletion}
+        </Text>
+        <Text style={styles.entryTiming}>
+          {times}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const makeUnusedTimeLine = (hours: number, minutes: number, key: string) => {
+    const verticalSeparator = (
+      <Svg height={16} width={4}>
+        <Line
+          y1='0%'
+          y2='100%'
+          stroke={colors.gray}
+          strokeWidth={2}
+          strokeDasharray={[3]}
+          strokeLinecap='butt'
+        />
+      </Svg>
+    );
+
+    return (
+      <View style={styles.unusedTime} key={key}>
+        {verticalSeparator}
+        <Text style={styles.unusedTimeLength}>{hours}h {minutes}m</Text>
+        {verticalSeparator}
       </View>
     );
   };
 
-  const makeTimeTrackedEntry = (entry: TimetableEntry) => {
-    const positionStyle = {
-      top: entryTopOffset(entry),
-      height: entryHeight(entry),
-      backgroundColor: entry.color,
-    };
+  const makeTimetable = (entries: TimetableEntry[]) => {
+    const timetable: Element[] = [];
 
-    const titleColorStyle = {
-      color: contrastingColor(entry.color),
-    };
+    const entriesLength = entries.length;
+    for (let i = 0; i < entriesLength; i++) {
+      const entry = entries[i];
 
-    return (
-      <View style={StyleSheet.flatten([styles.timeTrackedEntry, positionStyle])} key={entry.id}>
-        <Text style={StyleSheet.flatten([styles.entryTitle, titleColorStyle])} numberOfLines={1}>{entry.title}</Text>
-      </View>
-    );
+      timetable.push(makeEntry(entry));
+
+      if (i + 1 === entriesLength) continue;
+
+      const prevEntry = entries[i + 1];
+
+      if (entry.startHour === prevEntry.startHour && entry.startMinute === prevEntry.startMinute) continue;
+
+      const { hours: hoursUntilNextEntry, minutes: minutesUntilNextEntry } =
+        durationInHoursAndMinutes(prevEntry.endHour, prevEntry.endMinute, entry.startHour, entry.startMinute);
+
+      const key = `${i}-unused`;
+      timetable.push(makeUnusedTimeLine(hoursUntilNextEntry, minutesUntilNextEntry, key));
+    }
+
+    return timetable;
   };
-
-  const makeNonTimeTrackedEntry = (entry: TimetableEntry) => {
-    const positionStyle = {
-      top: entryTopOffset(entry),
-    };
-
-    const titleColorStyle = {
-      borderBottomColor: entry.color,
-    };
-
-    return (
-      <View style={StyleSheet.flatten([styles.nonTimeTrackedEntry, positionStyle])} key={entry.id}>
-        <View style={StyleSheet.flatten([styles.nonTimeTrackedEntryLine, titleColorStyle])} />
-        <Text style={StyleSheet.flatten([styles.entryTitle, styles.nonTimeTrackedEntryTitle])}
-              numberOfLines={1} ellipsizeMode={'tail'}>{entry.title}</Text>
-      </View>
-    );
-  };
-
-  const timeMarks = get24HoursIn30MinIncrements().map(timeString => makeTimeMark(timeString));
 
   return (
     <View style={styles.container}>
-      {timeMarks}
-      {entries.map(entry => entry.timeTracked ? makeTimeTrackedEntry(entry) : makeNonTimeTrackedEntry(entry))}
+      {makeTimetable(entriesSortedByStartingTime)}
     </View>
   );
 };
@@ -80,127 +116,45 @@ export const Timetable: FunctionComponent<TimetableProps> = ({ entries }) => {
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    alignItems: 'stretch',
-    paddingHorizontal: 20,
+    alignItems: 'center',
   },
-  timeMark: {
+  entry: {
     display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    height: 30,
-  },
-  time: {
+    alignItems: 'center',
     marginTop: 10,
-    fontFamily: fonts.regular,
-    fontSize: 12,
-    color: colors.white,
-    opacity: 0.2,
-  },
-  mark: {
-    borderBottomColor: colors.white,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    flex: 1,
-    opacity: .1,
-    marginBottom: 11,
-    marginStart: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: colors.darkGray,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    width: '80%',
   },
   entryTitle: {
-    fontFamily: fonts.regular,
-    fontSize: 14,
+    fontFamily: fonts.semibold,
+    fontSize: 16,
+    flexShrink: 1,
   },
-  timeTrackedEntry: {
+  entryLength: {
+    fontFamily: fonts.semibold,
+    fontSize: 13,
+    color: colors.white,
+  },
+  entryTiming: {
+    fontFamily: fonts.semibold,
+    fontSize: 12,
+    color: colors.gray,
+  },
+  unusedTime: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
-    left: 57,
-    right: 20,
-    borderRadius: 5,
-    paddingHorizontal: 20,
+    marginTop: 12,
   },
-  nonTimeTrackedEntry: {
-    position: 'absolute',
-    left: 57,
-    right: 20,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: -9,
-    flexGrow: 0,
-    overflow: 'hidden',
-  },
-  nonTimeTrackedEntryLine: {
-    borderBottomWidth: 1,
-    width: 50,
-  },
-  nonTimeTrackedEntryTitle: {
-    color: '#fff',
-    marginStart: 10,
-    flex: 1,
+  unusedTimeLength: {
+    fontFamily: fonts.semibold,
+    fontSize: 12,
+    color: colors.gray,
+    marginBottom: 5,
+    marginTop: 5,
   },
 });
-
-/**
- * Returns an array of string containing the time in 30-minute increments,
- * such as '00:00', '00:30', and so on.
- */
-function get24HoursIn30MinIncrements(): string[] {
-  let increments: string[] = [];
-
-  for (let i = 0; i < 24; i++) {
-    const hourString = `${i}`.padStart(2, '0');
-
-    increments.push(`${hourString}:00`);
-    increments.push(`${hourString}:30`);
-  }
-
-  increments.push('24:00');
-
-  return increments;
-}
-
-function hexToDecimal(hex: string): number {
-  return parseInt(`0x${hex}`);
-}
-
-function getRedFromHex(hexCode: string): number {
-  return hexToDecimal(hexCode.substring(1, 3));
-}
-
-function getGreenFromHex(hexCode: string): number {
-  return hexToDecimal(hexCode.substring(3, 5));
-}
-
-function getBlueFromHex(hexCode: string): number {
-  return hexToDecimal(hexCode.substring(5, 7));
-}
-
-/**
- * Returns "#fff" or "#000", whichever contrasts best with the given
- * color. Based on https://stackoverflow.com/a/3943023.
- */
-function contrastingColor(hexCode: string): string {
-  const r = getRedFromHex(hexCode);
-  const g = getGreenFromHex(hexCode);
-  const b = getBlueFromHex(hexCode);
-
-  if ((r * 0.299 + g * 0.587 + b * 0.114) > 150) {
-    return '#000';
-  }
-
-  return '#fff';
-}
-
-function entryTopOffset(entry: TimetableEntry): number {
-  const offsetFor12Am = 19;
-  const offsetForAMinute = 1;
-
-  const offsetForHour = offsetForAMinute * 60 * entry.startHour;
-  const offsetForMinute = offsetForAMinute * entry.startMinute;
-
-  return offsetFor12Am + offsetForHour + offsetForMinute;
-}
-
-function entryHeight(entry: TimetableEntry): number {
-  return (entry.endHour - entry.startHour) * 60 + entry.endMinute - entry.startMinute;
-}

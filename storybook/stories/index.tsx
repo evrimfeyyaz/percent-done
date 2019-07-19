@@ -26,8 +26,8 @@ storiesOf('Text styles', module)
   ))
   .add('Info', () => (
     <Text style={textStyles.info}>
-      01<Text style={textStyles.infoSmall}>H</Text> 30<Text style={textStyles.infoSmall}>M</Text>
-      <Text style={textStyles.infoTitle}>  done</Text>
+      1<Text style={textStyles.infoSmall}>H</Text> 30<Text style={textStyles.infoSmall}>M</Text>
+      <Text style={textStyles.infoTitle}> done</Text>
     </Text>
   ));
 
@@ -66,7 +66,17 @@ storiesOf('Charts', module)
         endHour: 2,
         endMinute: 0,
         color: '#19C403',
-        id: 1,
+        id: '1',
+      },
+      {
+        title: 'Clean up the kitchen',
+        timeTracked: false,
+        startHour: 5,
+        startMinute: 30,
+        endHour: 5,
+        endMinute: 30,
+        color: '#3394FA',
+        id: '2',
       },
       {
         title: 'Write',
@@ -75,22 +85,22 @@ storiesOf('Charts', module)
         startMinute: 12,
         endHour: 4,
         endMinute: 37,
-        color: '#000000',
-        id: 2,
+        color: '#DDD046',
+        id: '3',
       },
       {
-        title: 'Clean up the kitchen',
-        timeTracked: false,
+        title: 'Write',
+        timeTracked: true,
         startHour: 5,
         startMinute: 30,
-        endHour: 6,
-        endMinute: 30,
-        color: '#3394FA',
-        id: 3,
+        endHour: 7,
+        endMinute: 58,
+        color: '#DDD046',
+        id: '4',
       },
     ];
 
-    return <Timetable entries={entries} />;
+    return <Timetable entries={entries} onEntryPress={action('timetable-entry-pressed')} />;
   });
 
 storiesOf('Inputs', module)
