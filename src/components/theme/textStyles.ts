@@ -18,7 +18,7 @@ export const textStyles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 16,
   },
-  infoTitle: {
+  infoTail: {
     color: colors.gray,
     fontFamily: fonts.semibold,
     fontSize: 12,

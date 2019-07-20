@@ -27,7 +27,7 @@ storiesOf('Text styles', module)
   .add('Info', () => (
     <Text style={textStyles.info}>
       1<Text style={textStyles.infoSmall}>H</Text> 30<Text style={textStyles.infoSmall}>M</Text>
-      <Text style={textStyles.infoTitle}> done</Text>
+      <Text style={textStyles.infoTail}> done</Text>
     </Text>
   ));
 
