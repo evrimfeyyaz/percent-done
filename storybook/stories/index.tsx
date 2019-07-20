@@ -12,7 +12,7 @@ import {
   GoalRow,
   TabItem,
   TabBar,
-  Timetable, TimetableEntry,
+  Timetable, TimetableEntry, Achievement,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
@@ -101,7 +101,13 @@ storiesOf('Charts', module)
     ];
 
     return <Timetable entries={entries} onEntryPress={action('timetable-entry-pressed')} />;
-  });
+  })
+  .add('Achievement', () => (
+    <Achievement title='Added a one‑time goal' iconSource={require('../../assets/icons/one-time-goal.png')} />
+  ))
+  .add('Achievement (done)', () => (
+    <Achievement title='Added a one‑time goal' iconSource={require('../../assets/icons/one-time-goal.png')} done />
+  ));
 
 storiesOf('Inputs', module)
   .add('Button', () => (

@@ -6,6 +6,7 @@ export * from './containers/GoalRow';
 // Charts
 export * from './charts/ProgressChart';
 export * from './charts/Timetable';
+export * from './charts/Achievement';
 
 // Inputs
 export * from './inputs/Button';
