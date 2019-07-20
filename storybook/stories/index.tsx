@@ -12,7 +12,7 @@ import {
   GoalRow,
   TabItem,
   TabBar,
-  Timetable, TimetableEntry, Achievement,
+  Timetable, TimetableEntry, Achievement, TextInput,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
@@ -116,14 +116,15 @@ storiesOf('Inputs', module)
   .add('Button with icon', () => (
     <Button title={'Stop'} iconSource={require('../../assets/icons/stop.png')}
             onPress={action('button-with-icon-pressed')} />
-  ));
+  ))
+  .add('Text input', () => <TextInput placeholder='What is your goal?' />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
     <TabItem title={'Goals'} />
   ))
-  .add('Tab Item (Active)', () => (
+  .add('Tab item (active)', () => (
     <TabItem title={'Goals'} active={true} />
   ))
-  .add('Tab Bar', () => (
+  .add('Tab bar', () => (
     <TabBar tabTitles={['Goals', 'Timetable']} activeTitle={'Goals'} onPress={action('tab-bar-press')} />));
