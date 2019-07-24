@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 
 interface TextButtonProps {
   title: string,

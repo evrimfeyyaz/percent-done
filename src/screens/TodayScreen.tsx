@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import { createMaterialTopTabNavigator, TabRouter } from 'react-navigation';
 import { GoalsScreen } from './GoalsScreen';
 import { TimetableScreen } from './TimetableScreen';
-import { colors, fonts } from '../components/theme';
+import { colors, fonts } from '../theme';
 
 const todayTabs = TabRouter({
     Goals: GoalsScreen,

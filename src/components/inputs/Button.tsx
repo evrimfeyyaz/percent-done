@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { GestureResponderEvent, Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 
 interface ButtonProps {
   /**

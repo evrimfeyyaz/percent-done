@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { StyleSheet, TextInput as RNTextInput, TextInputProps } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 import { InputContainer } from './InputContainer';
 
 export const TextInput: FunctionComponent<TextInputProps> = (props) => {

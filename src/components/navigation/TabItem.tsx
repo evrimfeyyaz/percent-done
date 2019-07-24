@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 
 interface TabItemProps {
   title: string,

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Text, ImageSourcePropType, View, Image, StyleSheet } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 
 interface AchievementProps {
   title: string,

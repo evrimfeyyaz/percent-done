@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react'
 import { LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 
 interface SectionProps {
   /**

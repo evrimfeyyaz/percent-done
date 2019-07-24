@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 
 interface InputContainerProps {
   /**

@@ -4,9 +4,7 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
 import {
-  textStyles,
   Button,
-  colors,
   ProgressChart,
   Section,
   GoalRow,
@@ -16,6 +14,7 @@ import {
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
+import { colors, textStyles } from '../../src/theme';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);

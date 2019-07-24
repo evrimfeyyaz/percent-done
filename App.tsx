@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 import Storybook from './storybook';
-import { colors, fonts } from './src/components';
+import { colors, fonts } from './src/theme';
 import { SettingsScreen, TodayScreen, TomorrowScreen, StatsScreen } from './src/screens';
 import { Image, YellowBox } from 'react-native';
 import { Icons } from './assets';

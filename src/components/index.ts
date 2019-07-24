@@ -19,6 +19,3 @@ export * from './inputs/DurationInput';
 // Navigation
 export * from './navigation/TabItem';
 export * from './navigation/TabBar';
-
-// Theme
-export * from './theme';

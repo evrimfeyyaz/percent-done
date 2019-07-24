@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ProgressCircle } from 'react-native-svg-charts';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
 
 interface GoalRowProps {

@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { ProgressCircle } from 'react-native-svg-charts';
 import { StyleSheet, View, Text } from 'react-native';
-import { colors, fonts } from '../theme';
+import { colors, fonts } from '../../theme';
 
 interface ProgressChartProps {
   /**
