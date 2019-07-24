@@ -13,6 +13,7 @@ export * from './inputs/Button';
 export * from './inputs/TextButton';
 export * from './inputs/TextInput';
 export * from './inputs/DateInput';
+export * from './inputs/TimeInput';
 
 // Navigation
 export * from './navigation/TabItem';
