@@ -24,6 +24,7 @@ export const DurationInput: FunctionComponent = () => {
           date={duration}
           onDateChange={handleDurationChange}
           mode="time"
+          androidMode='spinner'
           locale='TR' // To make the time format 24h.
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"

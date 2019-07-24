@@ -1,3 +1,5 @@
+import moment, { Moment } from 'moment';
+
 export function durationInHoursAndMinutes(startHour: number, startMinute: number, endHour: number, endMinute: number): { hours: number, minutes: number } {
   let minutes = endMinute - startMinute;
   let hours = endHour - startHour;
@@ -23,26 +25,18 @@ export function compareTimes(hour1: number, minute1: number, hour2: number, minu
   return hour2 - hour1;
 }
 
-export function compareDays(date1: Date, date2: Date) {
-  if (date1.getFullYear() === date2.getFullYear()
-    && date1.getMonth() === date2.getMonth()
-    && date1.getDate() === date2.getDate()) {
-
-    return true;
-  }
-
-  return false;
+export function compareDays(date1: Moment, date2: Moment) {
+  return date1.isSame(date2, 'day');
 }
 
-export function isToday(date: Date) {
-  const today = new Date();
+export function isToday(date: Moment) {
+  const today = moment();
 
   return compareDays(date, today);
 }
 
-export function isTomorrow(date: Date) {
-  const today = new Date();
-  const tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+export function isTomorrow(date: Moment) {
+  const tomorrow = moment().add(1, 'day');
 
   return compareDays(date, tomorrow);
 }

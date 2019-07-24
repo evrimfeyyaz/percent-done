@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@types/react-native-datepicker": "^1.7.0",
+    "moment": "^2.24.0",
     "react": "16.8.3",
     "react-native": "0.59.9",
     "react-native-datepicker": "^1.7.2",

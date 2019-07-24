@@ -2,14 +2,15 @@ import React, { FunctionComponent, useRef, useState } from 'react';
 import { InputContainer } from './InputContainer';
 import DatePicker from 'react-native-datepicker';
 import { isToday, isTomorrow } from '../../utilities';
+import moment, { Moment } from 'moment';
 
 export const DateInput: FunctionComponent = () => {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(moment());
 
   const datePickerRef = useRef<DatePicker>(null);
 
   const handleDateChange = (_: string, date: Date) => {
-    setDate(date);
+    setDate(moment(date));
   };
 
   return (
@@ -35,7 +36,7 @@ export const DateInput: FunctionComponent = () => {
   );
 };
 
-function formatDate(date: Date) {
+function formatDate(date: Moment) {
   if (isToday(date)) {
     return 'Today';
   }
@@ -44,5 +45,5 @@ function formatDate(date: Date) {
     return 'Tomorrow';
   }
 
-  return date.toLocaleDateString();
+  return date.format('LL');
 }
