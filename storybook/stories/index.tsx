@@ -13,7 +13,7 @@ import {
   Timetable, TimetableEntry, Achievement, TextInput, DateInput, TimeInput, DurationInput, SwitchInput,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
-import { withKnobs, number } from '@storybook/addon-knobs';
+import { withKnobs, number, boolean } from '@storybook/addon-knobs';
 import { colors, textStyles } from '../../src/theme';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
@@ -120,7 +120,10 @@ storiesOf('Inputs', module)
   .add('Date input', () => <DateInput />)
   .add('Time input', () => <TimeInput />)
   .add('Duration input', () => <DurationInput />)
-  .add('Switch input', () => <SwitchInput title='Time tracking' />);
+  .add('Switch input', () => {
+    return <SwitchInput title='Time tracking' value={boolean('Value', false)}
+                        onValueChange={action('switch-value-changed')} />;
+  });
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
