@@ -22,3 +22,27 @@ export function compareTimes(hour1: number, minute1: number, hour2: number, minu
 
   return hour2 - hour1;
 }
+
+export function compareDays(date1: Date, date2: Date) {
+  if (date1.getFullYear() === date2.getFullYear()
+    && date1.getMonth() === date2.getMonth()
+    && date1.getDate() === date2.getDate()) {
+
+    return true;
+  }
+
+  return false;
+}
+
+export function isToday(date: Date) {
+  const today = new Date();
+
+  return compareDays(date, today);
+}
+
+export function isTomorrow(date: Date) {
+  const today = new Date();
+  const tomorrow = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+
+  return compareDays(date, tomorrow);
+}

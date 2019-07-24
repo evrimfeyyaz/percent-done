@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { GestureResponderEvent, Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { colors, fonts } from '../theme';
 
 interface ButtonProps {
@@ -11,7 +11,7 @@ interface ButtonProps {
    * Icon for the button. Should be white and 24x24.
    */
   iconSource?: ImageSourcePropType,
-  onPress: () => void,
+  onPress: (event: GestureResponderEvent) => void,
 }
 
 /**

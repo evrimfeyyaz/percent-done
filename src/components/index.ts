@@ -10,7 +10,9 @@ export * from './charts/Achievement';
 
 // Inputs
 export * from './inputs/Button';
+export * from './inputs/TextButton';
 export * from './inputs/TextInput';
+export * from './inputs/DateInput';
 
 // Navigation
 export * from './navigation/TabItem';

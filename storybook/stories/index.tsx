@@ -12,7 +12,7 @@ import {
   GoalRow,
   TabItem,
   TabBar,
-  Timetable, TimetableEntry, Achievement, TextInput,
+  Timetable, TimetableEntry, Achievement, TextInput, DateInput,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
@@ -117,7 +117,8 @@ storiesOf('Inputs', module)
     <Button title={'Stop'} iconSource={require('../../assets/icons/stop.png')}
             onPress={action('button-with-icon-pressed')} />
   ))
-  .add('Text input', () => <TextInput placeholder='What is your goal?' />);
+  .add('Text input', () => <TextInput placeholder='What is your goal?' />)
+  .add('Date input', () => <DateInput />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
