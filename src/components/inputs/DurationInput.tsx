@@ -24,7 +24,7 @@ export const DurationInput: FunctionComponent = () => {
           date={duration}
           onDateChange={handleDurationChange}
           mode="time"
-          locale='TR'
+          locale='TR' // To make the time format 24h.
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
           ref={datePickerRef}
