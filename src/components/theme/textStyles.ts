@@ -15,12 +15,10 @@ export const textStyles = StyleSheet.create({
   },
   infoSmall: {
     color: colors.white,
-    fontFamily: fonts.semibold,
     fontSize: 16,
   },
   infoTail: {
     color: colors.gray,
-    fontFamily: fonts.semibold,
     fontSize: 12,
     textTransform: 'uppercase',
   }
