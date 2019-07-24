@@ -6,7 +6,7 @@ import { colors } from '../../theme';
 interface SwitchInputProps {
   title: string,
   value?: boolean,
-  onValueChange?: () => void,
+  onValueChange?: (value: boolean) => void,
 }
 
 export const SwitchInput: FunctionComponent<SwitchInputProps> = ({ title, value = false, onValueChange }) => {
