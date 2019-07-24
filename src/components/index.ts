@@ -14,6 +14,7 @@ export * from './inputs/TextButton';
 export * from './inputs/TextInput';
 export * from './inputs/DateInput';
 export * from './inputs/TimeInput';
+export * from './inputs/DurationInput';
 
 // Navigation
 export * from './navigation/TabItem';
