@@ -10,7 +10,7 @@ import {
   GoalRow,
   TabItem,
   TabBar,
-  Timetable, TimetableEntry, Achievement, TextInput, DateInput, TimeInput, DurationInput,
+  Timetable, TimetableEntry, Achievement, TextInput, DateInput, TimeInput, DurationInput, SwitchInput,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import { withKnobs, number } from '@storybook/addon-knobs';
@@ -32,12 +32,12 @@ storiesOf('Text styles', module)
 
 storiesOf('Containers', module)
   .add('Section', () => (
-    <Section title={'Sample Section'}>
+    <Section title='Sample Section'>
       <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
     </Section>
   ))
   .add('Goal Row', () => (
-    <GoalRow name={'Write'} color={colors.yellow} chainLength={10} completedMinutes={30} totalMinutes={60} />
+    <GoalRow name='Write' color={colors.yellow} chainLength={10} completedMinutes={30} totalMinutes={60} />
   ));
 
 storiesOf('Charts', module)
@@ -110,23 +110,24 @@ storiesOf('Charts', module)
 
 storiesOf('Inputs', module)
   .add('Button', () => (
-    <Button title={'Press This'} onPress={action('button-pressed')} />
+    <Button title='Press This' onPress={action('button-pressed')} />
   ))
   .add('Button with icon', () => (
-    <Button title={'Stop'} iconSource={require('../../assets/icons/stop.png')}
+    <Button title='Stop' iconSource={require('../../assets/icons/stop.png')}
             onPress={action('button-with-icon-pressed')} />
   ))
   .add('Text input', () => <TextInput placeholder='What is your goal?' />)
   .add('Date input', () => <DateInput />)
   .add('Time input', () => <TimeInput />)
-  .add('Duration input', () => <DurationInput />);
+  .add('Duration input', () => <DurationInput />)
+  .add('Switch input', () => <SwitchInput title='Time tracking' />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
-    <TabItem title={'Goals'} />
+    <TabItem title='Goals' />
   ))
   .add('Tab item (active)', () => (
-    <TabItem title={'Goals'} active={true} />
+    <TabItem title='Goals' active={true} />
   ))
   .add('Tab bar', () => (
-    <TabBar tabTitles={['Goals', 'Timetable']} activeTitle={'Goals'} onPress={action('tab-bar-press')} />));
+    <TabBar tabTitles={['Goals', 'Timetable']} activeTitle='Goals' onPress={action('tab-bar-press')} />));

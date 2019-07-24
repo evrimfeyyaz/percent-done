@@ -36,7 +36,7 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({ title =
         <Line
           x1='0%'
           x2='100%'
-          stroke={colors.gray}
+          stroke={colors.darkGray}
           strokeWidth={1}
         />
       </Svg>
@@ -58,12 +58,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 14,
     color: colors.white,
+    marginBottom: 3
   },
   value: {
     fontFamily: fonts.semibold,
     fontSize: 14,
     color: colors.yellow,
     textAlign: 'right',
+    marginBottom: 3
   },
   bottomLine: {
     position: 'absolute',
