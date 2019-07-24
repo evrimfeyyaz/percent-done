@@ -119,11 +119,10 @@ storiesOf('Inputs', module)
   .add('Text input', () => <TextInput placeholder='What is your goal?' />)
   .add('Date input', () => <DateInput />)
   .add('Time input', () => <TimeInput />)
-  .add('Duration input', () => <DurationInput />)
-  .add('Switch input', () => {
-    return <SwitchInput title='Time tracking' value={boolean('Value', false)}
-                        onValueChange={action('switch-value-changed')} />;
-  });
+  .add('Duration input', () => <DurationInput hours={number('Hours', 1)} minutes={number('Minutes', 0)}
+                                              onDurationChange={action('duration-value-changed')} />)
+  .add('Switch input', () => <SwitchInput title='Time tracking' value={boolean('Value', false)}
+                                          onValueChange={action('switch-value-changed')} />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (

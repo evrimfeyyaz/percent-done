@@ -2,18 +2,24 @@ import React, { FunctionComponent, useRef, useState } from 'react';
 import { InputContainer } from './InputContainer';
 import DatePicker from 'react-native-datepicker';
 
-export const DurationInput: FunctionComponent = () => {
-  const [duration, setDuration] = useState('00:00');
+interface DurationInputProps {
+  hours?: number,
+  minutes?: number,
+  onDurationChange?: (hours: number, minutes: number) => void
+}
 
+export const DurationInput: FunctionComponent<DurationInputProps> = ({ hours = 1, minutes = 0, onDurationChange }) => {
   const datePickerRef = useRef<DatePicker>(null);
 
   const handleDurationChange = (duration: string, _: Date) => {
-    setDuration(duration);
+    const [hours, minutes] = duration.split(':').map(part => parseInt(part));
+
+    if (onDurationChange != null) onDurationChange(hours, minutes);
   };
 
   return (
     <>
-      <InputContainer title='Duration' value={formatDuration(duration)}
+      <InputContainer title='Duration' value={formatDuration(hours, minutes)}
                       onPress={() => {
                         const datePicker = datePickerRef.current;
                         if (datePicker != null) datePicker.onPressDate();
@@ -21,7 +27,7 @@ export const DurationInput: FunctionComponent = () => {
         <DatePicker
           showIcon={false}
           hideText={true}
-          date={duration}
+          date={formatDuration(hours, minutes)}
           onDateChange={handleDurationChange}
           mode="time"
           androidMode='spinner'
@@ -35,8 +41,6 @@ export const DurationInput: FunctionComponent = () => {
   );
 };
 
-function formatDuration(duration: string) {
-  const [hour, minute] = duration.split(':');
-
-  return `${hour}h ${minute}m`;
+function formatDuration(hours: number, minutes: number) {
+  return `${hours}h ${minutes}m`;
 }
