@@ -1,21 +1,24 @@
-import React, { FunctionComponent, useRef, useState } from 'react';
+import React, { FunctionComponent, useRef } from 'react';
 import { InputContainer } from './InputContainer';
 import DatePicker from 'react-native-datepicker';
 import { isToday, isTomorrow } from '../../utilities';
 import moment, { Moment } from 'moment';
 
-export const DateInput: FunctionComponent = () => {
-  const [date, setDate] = useState(moment());
+interface DateInputProps {
+  value?: Date,
+  onValueChange?: (date: Date) => void,
+}
 
+export const DateInput: FunctionComponent<DateInputProps> = ({ value, onValueChange }) => {
   const datePickerRef = useRef<DatePicker>(null);
 
   const handleDateChange = (_: string, date: Date) => {
-    setDate(moment(date));
+    if (onValueChange != null) onValueChange(date);
   };
 
   return (
     <>
-      <InputContainer title='Date' value={formatDate(date)} onPress={() => {
+      <InputContainer title='Date' value={formatDate(moment(value))} onPress={() => {
         const datePicker = datePickerRef.current;
         if (datePicker != null) datePicker.onPressDate();
       }}>
@@ -23,7 +26,7 @@ export const DateInput: FunctionComponent = () => {
           showIcon={false}
           hideText={true}
           minDate={new Date()}
-          date={date}
+          date={value}
           onDateChange={handleDateChange}
           mode="date"
           format="YYYY-MM-DD"

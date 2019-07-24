@@ -13,7 +13,7 @@ import {
   Timetable, TimetableEntry, Achievement, TextInput, DateInput, TimeInput, DurationInput, SwitchInput,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
-import { withKnobs, number, boolean } from '@storybook/addon-knobs';
+import { withKnobs, number, boolean, text, date } from '@storybook/addon-knobs';
 import { colors, textStyles } from '../../src/theme';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
@@ -116,11 +116,13 @@ storiesOf('Inputs', module)
     <Button title='Stop' iconSource={require('../../assets/icons/stop.png')}
             onPress={action('button-with-icon-pressed')} />
   ))
-  .add('Text input', () => <TextInput placeholder='What is your goal?' />)
-  .add('Date input', () => <DateInput />)
-  .add('Time input', () => <TimeInput />)
+  .add('Text input', () => <TextInput placeholder='What is your goal?' value={text('Text', null)}
+                                      onChangeText={action('text-changed')} />)
+  .add('Date input', () => <DateInput value={dateKnobReturningDateObj('Date', new Date())}
+                                      onValueChange={action('date-changed')} />)
+  .add('Time input', () => <TimeInput value={text('Time (hh:mm)', '9:04')} onValueChange={action('time-changed')} />)
   .add('Duration input', () => <DurationInput hours={number('Hours', 1)} minutes={number('Minutes', 0)}
-                                              onDurationChange={action('duration-value-changed')} />)
+                                              onValueChange={action('duration-changed')} />)
   .add('Switch input', () => <SwitchInput title='Time tracking' value={boolean('Value', false)}
                                           onValueChange={action('switch-value-changed')} />);
 
@@ -133,3 +135,9 @@ storiesOf('Navigation', module)
   ))
   .add('Tab bar', () => (
     <TabBar tabTitles={['Goals', 'Timetable']} activeTitle='Goals' onPress={action('tab-bar-press')} />));
+
+function dateKnobReturningDateObj(name: string, defaultValue: Date) {
+  const stringTimestamp = date(name, defaultValue);
+
+  return new Date(stringTimestamp);
+}

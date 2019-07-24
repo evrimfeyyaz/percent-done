@@ -1,19 +1,33 @@
-import React, { FunctionComponent, useRef, useState } from 'react';
+import React, { FunctionComponent, useRef } from 'react';
 import { InputContainer } from './InputContainer';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 
-export const TimeInput: FunctionComponent = () => {
-  const [time, setTime] = useState(moment());
+interface TimeInputProps {
+  /**
+   * A time string that is parseable by Minute.js.
+   */
+  value?: string,
+
+  /**
+   * Called when the value is changed by the user.
+   *
+   * @param value: 24h formatted time.
+   */
+  onValueChange?: (value: string) => void,
+}
+
+export const TimeInput: FunctionComponent<TimeInputProps> = ({ value, onValueChange }) => {
+  const parsedTime = moment(value, ['h:m', 'h:m a']);
 
   const datePickerRef = useRef<DatePicker>(null);
 
-  const handleTimeChange = (_: string, time: Date) => {
-    setTime(moment(time));
+  const handleTimeChange = (time: string, _: Date) => {
+    if (onValueChange != null) onValueChange(time);
   };
 
   return (
-    <InputContainer title='Time' value={time.format('LT')}
+    <InputContainer title='Time' value={parsedTime.format('LT')}
                     onPress={() => {
                       const datePicker = datePickerRef.current;
                       if (datePicker != null) datePicker.onPressDate();
@@ -21,7 +35,7 @@ export const TimeInput: FunctionComponent = () => {
       <DatePicker
         showIcon={false}
         hideText={true}
-        date={time}
+        date={parsedTime}
         onDateChange={handleTimeChange}
         mode="time"
         confirmBtnText="Confirm"

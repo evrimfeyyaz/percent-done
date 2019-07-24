@@ -6,7 +6,8 @@ import { InputContainer } from './InputContainer';
 export const TextInput: FunctionComponent<TextInputProps> = (props) => {
   return (
     <InputContainer>
-      <RNTextInput style={StyleSheet.flatten([styles.input, props.style])} placeholderTextColor={colors.gray} {...props} />
+      <RNTextInput style={StyleSheet.flatten([styles.input, props.style])}
+                   placeholderTextColor={colors.gray} {...props} />
     </InputContainer>
   );
 };

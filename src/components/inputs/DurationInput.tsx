@@ -1,20 +1,20 @@
-import React, { FunctionComponent, useRef, useState } from 'react';
+import React, { FunctionComponent, useRef } from 'react';
 import { InputContainer } from './InputContainer';
 import DatePicker from 'react-native-datepicker';
 
 interface DurationInputProps {
   hours?: number,
   minutes?: number,
-  onDurationChange?: (hours: number, minutes: number) => void
+  onValueChange?: (hours: number, minutes: number) => void
 }
 
-export const DurationInput: FunctionComponent<DurationInputProps> = ({ hours = 1, minutes = 0, onDurationChange }) => {
+export const DurationInput: FunctionComponent<DurationInputProps> = ({ hours = 1, minutes = 0, onValueChange }) => {
   const datePickerRef = useRef<DatePicker>(null);
 
   const handleDurationChange = (duration: string, _: Date) => {
     const [hours, minutes] = duration.split(':').map(part => parseInt(part));
 
-    if (onDurationChange != null) onDurationChange(hours, minutes);
+    if (onValueChange != null) onValueChange(hours, minutes);
   };
 
   return (
