@@ -10,7 +10,7 @@ import {
   DateInput,
   DaysOfWeekInput,
   DurationInput,
-  GoalRow,
+  GoalRow, MenuLink,
   ProgressChart,
   Section,
   SwitchInput,
@@ -146,7 +146,8 @@ storiesOf('Inputs', module)
         selectedDays={array('Selected days', ['Sunday', 'Monday'])}
         onDayChange={action('day-changed')} />
     ),
-  );
+  )
+  .add('Menu link', () => <MenuLink title='Terms & Conditions' onPress={action('menu-link-pressed')} />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (

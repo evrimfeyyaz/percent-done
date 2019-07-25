@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { colors, fonts } from '../../theme';
 
@@ -13,6 +13,12 @@ interface InputContainerProps {
    * Current value of the input, shown on the right side.
    */
   value?: string,
+
+  /**
+   * A React element to add to the right side of the input container.
+   */
+  rightItem?: Element,
+
   onPress?: (event: GestureResponderEvent) => void,
 
   /**
@@ -24,7 +30,7 @@ interface InputContainerProps {
 }
 
 export const InputContainer: FunctionComponent<InputContainerProps> = ({
-                                                                         title = null, value = null, style,
+                                                                         title, value, rightItem, style,
                                                                          opacityOnTouch = true, onPress, children,
                                                                        }) => {
   let titleText = null;
@@ -48,6 +54,7 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
       {titleText}
       {children}
       {valueText}
+      {rightItem}
       <Svg height={1} style={styles.bottomLine}>
         <Line
           x1='0%'
