@@ -7,23 +7,23 @@ interface TimeInputProps {
   /**
    * A time string that is parseable by Minute.js.
    */
-  value?: string,
+  time?: string,
 
   /**
    * Called when the value is changed by the user.
    *
-   * @param value: 24h formatted time.
+   * @param time: 24h formatted time.
    */
-  onValueChange?: (value: string) => void,
+  onTimeChange?: (time: string) => void,
 }
 
-export const TimeInput: FunctionComponent<TimeInputProps> = ({ value, onValueChange }) => {
-  const parsedTime = moment(value, ['h:m', 'h:m a']);
+export const TimeInput: FunctionComponent<TimeInputProps> = ({ time, onTimeChange }) => {
+  const parsedTime = moment(time, ['h:m', 'h:m a']);
 
   const datePickerRef = useRef<DatePicker>(null);
 
   const handleTimeChange = (time: string, _: Date) => {
-    if (onValueChange != null) onValueChange(time);
+    if (onTimeChange != null) onTimeChange(time);
   };
 
   return (

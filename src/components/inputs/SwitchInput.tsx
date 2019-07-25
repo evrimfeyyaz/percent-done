@@ -11,7 +11,7 @@ interface SwitchInputProps {
 
 export const SwitchInput: FunctionComponent<SwitchInputProps> = ({ title, value = false, onValueChange }) => {
   return (
-    <InputContainer title={title}>
+    <InputContainer title={title} opacityOnTouch={false}>
       <Switch style={styles.switch} ios_backgroundColor={colors.gray}
               trackColor={{ false: colors.gray, true: colors.orange }}
               thumbColor={colors.white}

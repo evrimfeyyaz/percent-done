@@ -5,16 +5,16 @@ import DatePicker from 'react-native-datepicker';
 interface DurationInputProps {
   hours?: number,
   minutes?: number,
-  onValueChange?: (hours: number, minutes: number) => void
+  onDurationChange?: (hours: number, minutes: number) => void
 }
 
-export const DurationInput: FunctionComponent<DurationInputProps> = ({ hours = 1, minutes = 0, onValueChange }) => {
+export const DurationInput: FunctionComponent<DurationInputProps> = ({ hours = 1, minutes = 0, onDurationChange }) => {
   const datePickerRef = useRef<DatePicker>(null);
 
   const handleDurationChange = (duration: string, _: Date) => {
     const [hours, minutes] = duration.split(':').map(part => parseInt(part));
 
-    if (onValueChange != null) onValueChange(hours, minutes);
+    if (onDurationChange != null) onDurationChange(hours, minutes);
   };
 
   return (

@@ -5,20 +5,20 @@ import { isToday, isTomorrow } from '../../utilities';
 import moment, { Moment } from 'moment';
 
 interface DateInputProps {
-  value?: Date,
-  onValueChange?: (date: Date) => void,
+  date?: Date,
+  onDateChange?: (date: Date) => void,
 }
 
-export const DateInput: FunctionComponent<DateInputProps> = ({ value, onValueChange }) => {
+export const DateInput: FunctionComponent<DateInputProps> = ({ date, onDateChange }) => {
   const datePickerRef = useRef<DatePicker>(null);
 
   const handleDateChange = (_: string, date: Date) => {
-    if (onValueChange != null) onValueChange(date);
+    if (onDateChange != null) onDateChange(date);
   };
 
   return (
     <>
-      <InputContainer title='Date' value={formatDate(moment(value))} onPress={() => {
+      <InputContainer title='Date' value={formatDate(moment(date))} onPress={() => {
         const datePicker = datePickerRef.current;
         if (datePicker != null) datePicker.onPressDate();
       }}>
@@ -26,7 +26,7 @@ export const DateInput: FunctionComponent<DateInputProps> = ({ value, onValueCha
           showIcon={false}
           hideText={true}
           minDate={new Date()}
-          date={value}
+          date={date}
           onDateChange={handleDateChange}
           mode="date"
           format="YYYY-MM-DD"

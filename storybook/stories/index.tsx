@@ -127,11 +127,11 @@ storiesOf('Inputs', module)
   ))
   .add('Text input', () => <TextInput placeholder='What is your goal?' value={text('Text', null)}
                                       onChangeText={action('text-changed')} />)
-  .add('Date input', () => <DateInput value={dateKnobReturningDateObj('Date', new Date())}
-                                      onValueChange={action('date-changed')} />)
-  .add('Time input', () => <TimeInput value={text('Time (hh:mm)', '9:04')} onValueChange={action('time-changed')} />)
+  .add('Date input', () => <DateInput date={dateKnobReturningDateObj('Date', new Date())}
+                                      onDateChange={action('date-changed')} />)
+  .add('Time input', () => <TimeInput time={text('Time (hh:mm)', '9:04')} onTimeChange={action('time-changed')} />)
   .add('Duration input', () => <DurationInput hours={number('Hours', 1)} minutes={number('Minutes', 0)}
-                                              onValueChange={action('duration-changed')} />)
+                                              onDurationChange={action('duration-changed')} />)
   .add('Switch input', () => <SwitchInput title='Time tracking' value={boolean('Value', false)}
                                           onValueChange={action('switch-value-changed')} />)
   .add('Color input', () => {
