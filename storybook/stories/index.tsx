@@ -10,10 +10,10 @@ import {
   GoalRow,
   TabItem,
   TabBar,
-  Timetable, TimetableEntry, Achievement, TextInput, DateInput, TimeInput, DurationInput, SwitchInput,
+  Timetable, TimetableEntry, Achievement, TextInput, DateInput, TimeInput, DurationInput, SwitchInput, ColorInput,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
-import { withKnobs, number, boolean, text, date } from '@storybook/addon-knobs';
+import { withKnobs, number, boolean, text, date, select } from '@storybook/addon-knobs';
 import { colors, textStyles } from '../../src/theme';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
@@ -124,7 +124,14 @@ storiesOf('Inputs', module)
   .add('Duration input', () => <DurationInput hours={number('Hours', 1)} minutes={number('Minutes', 0)}
                                               onValueChange={action('duration-changed')} />)
   .add('Switch input', () => <SwitchInput title='Time tracking' value={boolean('Value', false)}
-                                          onValueChange={action('switch-value-changed')} />);
+                                          onValueChange={action('switch-value-changed')} />)
+  .add('Color input', () => {
+    const colors = ['#CB0E0E', '#D80C82', '#A306DD', '#0910B7', '#0C69B9', '#0391A3',
+      '#05B943', '#98B402', '#E0C010', '#D1760B', '#121212'];
+
+    return <ColorInput colors={colors} selectedColor={select('Color', colors, '#CB0E0E')}
+                       onColorChange={action('color-changed')} />;
+  });
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (

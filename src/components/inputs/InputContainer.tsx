@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { colors, fonts } from '../../theme';
 
@@ -14,21 +14,34 @@ interface InputContainerProps {
    */
   value?: string,
   onPress?: (event: GestureResponderEvent) => void,
+
+  /**
+   * Whether this item should flash when tapped.
+   */
+  opacityOnTouch?: boolean
 }
 
-export const InputContainer: FunctionComponent<InputContainerProps> = ({ title = null, value = null, onPress, children }) => {
+export const InputContainer: FunctionComponent<InputContainerProps> = ({
+                                                                         title = null, value = null,
+                                                                         opacityOnTouch = true, onPress, children,
+                                                                       }) => {
   let titleText = null;
   if (title != null) {
-    titleText = <Text style={styles.title}>{title}</Text>
+    titleText = <Text style={styles.title}>{title}</Text>;
   }
 
   let valueText = null;
   if (value != null) {
-    valueText = <Text style={styles.value}>{value}</Text>
+    valueText = <Text style={styles.value}>{value}</Text>;
+  }
+
+  let activeOpacity = 0.2;
+  if (!opacityOnTouch) {
+    activeOpacity = 1;
   }
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={activeOpacity}>
       {titleText}
       {children}
       {valueText}
@@ -47,7 +60,7 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({ title =
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 45,
+    minHeight: 45,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -58,14 +71,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 14,
     color: colors.white,
-    marginBottom: 3
+    marginBottom: 3,
   },
   value: {
     fontFamily: fonts.semibold,
     fontSize: 14,
     color: colors.yellow,
     textAlign: 'right',
-    marginBottom: 3
+    marginBottom: 3,
   },
   bottomLine: {
     position: 'absolute',
