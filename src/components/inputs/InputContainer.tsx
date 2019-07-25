@@ -19,10 +19,12 @@ interface InputContainerProps {
    * Whether this item should flash when tapped.
    */
   opacityOnTouch?: boolean
+
+  style?: ViewStyle,
 }
 
 export const InputContainer: FunctionComponent<InputContainerProps> = ({
-                                                                         title = null, value = null,
+                                                                         title = null, value = null, style,
                                                                          opacityOnTouch = true, onPress, children,
                                                                        }) => {
   let titleText = null;
@@ -41,7 +43,8 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
   }
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={activeOpacity}>
+    <TouchableOpacity style={StyleSheet.flatten([styles.container, style])} onPress={onPress}
+                      activeOpacity={activeOpacity}>
       {titleText}
       {children}
       {valueText}

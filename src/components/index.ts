@@ -17,6 +17,7 @@ export * from './inputs/TimeInput';
 export * from './inputs/DurationInput';
 export * from './inputs/SwitchInput';
 export * from './inputs/ColorInput';
+export * from './inputs/DaysOfWeekInput';
 
 // Navigation
 export * from './navigation/TabItem';

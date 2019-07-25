@@ -4,16 +4,25 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
 import {
+  Achievement,
   Button,
+  ColorInput,
+  DateInput,
+  DaysOfWeekInput,
+  DurationInput,
+  GoalRow,
   ProgressChart,
   Section,
-  GoalRow,
-  TabItem,
+  SwitchInput,
   TabBar,
-  Timetable, TimetableEntry, Achievement, TextInput, DateInput, TimeInput, DurationInput, SwitchInput, ColorInput,
+  TabItem,
+  TextInput,
+  TimeInput,
+  Timetable,
+  TimetableEntry,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
-import { withKnobs, number, boolean, text, date, select } from '@storybook/addon-knobs';
+import { array, boolean, date, number, select, text, withKnobs } from '@storybook/addon-knobs';
 import { colors, textStyles } from '../../src/theme';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
@@ -131,7 +140,13 @@ storiesOf('Inputs', module)
 
     return <ColorInput colors={colors} selectedColor={select('Color', colors, '#CB0E0E')}
                        onColorChange={action('color-changed')} />;
-  });
+  })
+  .add('Days of week input', () => (
+      <DaysOfWeekInput
+        selectedDays={array('Selected days', ['Sunday', 'Monday'])}
+        onDayChange={action('day-changed')} />
+    ),
+  );
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
