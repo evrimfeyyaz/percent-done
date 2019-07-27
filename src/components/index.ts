@@ -7,6 +7,7 @@ export * from './containers/GoalRow';
 export * from './charts/ProgressChart';
 export * from './charts/Timetable';
 export * from './charts/Achievement';
+export * from './charts/PercentDoneChart';
 
 // Inputs
 export * from './inputs/Button';

@@ -40,3 +40,7 @@ export function isTomorrow(date: Moment) {
 
   return compareDays(date, tomorrow);
 }
+
+export function shortDayName(date: Date) {
+  return moment(date).format('ddd').toUpperCase();
+}

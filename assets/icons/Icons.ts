@@ -8,6 +8,12 @@ export const Icons = {
   settingsInactive: require('./settings-inactive.png'),
   settingsActive: require('./settings-active.png'),
 
+  checkmark: require('./checkmark.png'),
+
+  chevronRight: require('./chevron-right.png'),
+
+  oneTimeGoal: require('./one-time-goal.png'),
+
   link: require('./link.png'),
   stop: require('./stop.png'),
 };

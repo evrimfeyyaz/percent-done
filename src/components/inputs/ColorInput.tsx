@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { InputContainer } from './InputContainer';
 import { FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Icons } from '../../../assets';
 
 interface ColorInputProps {
   colors?: string[],
@@ -21,7 +22,7 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({ colors = [], se
                               }}>
       {/*
        // @ts-ignore */}
-      <Image style={selectedIndicatorStyle} source={require('../../../assets/icons/checkmark.png')} />
+      <Image style={selectedIndicatorStyle} source={Icons.checkmark} />
     </TouchableOpacity>);
   };
 

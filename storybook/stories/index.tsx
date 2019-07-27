@@ -10,7 +10,7 @@ import {
   DateInput,
   DaysOfWeekInput,
   DurationInput,
-  GoalRow, MenuLink,
+  GoalRow, MenuLink, PercentDoneChart,
   ProgressChart,
   Section,
   SwitchInput,
@@ -24,6 +24,7 @@ import {
 import { addDecorator } from '@storybook/react-native/dist';
 import { array, boolean, date, number, select, text, withKnobs } from '@storybook/addon-knobs';
 import { colors, textStyles } from '../../src/theme';
+import moment from 'moment';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -45,12 +46,12 @@ storiesOf('Containers', module)
       <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
     </Section>
   ))
-  .add('Goal Row', () => (
+  .add('Goal row', () => (
     <GoalRow name='Write' color={colors.yellow} chainLength={10} completedMinutes={30} totalMinutes={60} />
   ));
 
 storiesOf('Charts', module)
-  .add('Progress Chart', () => {
+  .add('Progress chart', () => {
     const label = 'Percent Done';
     const defaultValue = 75;
     const options = {
@@ -115,7 +116,23 @@ storiesOf('Charts', module)
   ))
   .add('Achievement (done)', () => (
     <Achievement title='Added a one‑time goal' iconSource={require('../../assets/icons/one-time-goal.png')} done />
-  ));
+  ))
+  .add('Percent done chart', () => {
+    const today = moment();
+    const data = [
+      { date: today.clone().subtract(6, 'day').toDate(), percentDone: 40 },
+      { date: today.clone().subtract(5, 'day').toDate(), percentDone: 85 },
+      { date: today.clone().subtract(4, 'day').toDate(), percentDone: 61 },
+      { date: today.clone().subtract(3, 'day').toDate(), percentDone: 84 },
+      { date: today.clone().subtract(2, 'day').toDate(), percentDone: 62 },
+      { date: today.clone().subtract(1, 'day').toDate(), percentDone: 63 },
+      { date: today.toDate(), percentDone: 42 },
+    ];
+
+    return (
+      <PercentDoneChart data={data} />
+    );
+  });
 
 storiesOf('Inputs', module)
   .add('Button', () => (

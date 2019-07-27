@@ -1,12 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { ImageBackground, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { Images } from '../../../assets';
 
 export const BackgroundView: FunctionComponent = ({ children }) => {
   return (
     <LinearGradient colors={['#23212C', '#3E4353']} style={styles.gradientContainer}>
       <ImageBackground style={styles.imageContainer}
-                       source={require('../../../assets/images/bg.png')}
+                       source={Images.bg}
                        resizeMode={'repeat'}>
       </ImageBackground>
       {children}

@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { InputContainer } from './InputContainer';
 import { GestureResponderEvent, Image } from 'react-native';
+import { Icons } from '../../../assets';
 
 interface MenuLinkProps {
   title: string,
@@ -9,7 +10,7 @@ interface MenuLinkProps {
 
 export const MenuLink: FunctionComponent<MenuLinkProps> = ({ title, onPress }) => {
   const rightItem = (
-    <Image source={require('../../../assets/icons/chevron-right.png')} />
+    <Image source={Icons.chevronRight} />
   );
 
   return <InputContainer title={title} rightItem={rightItem} onPress={onPress} />;
