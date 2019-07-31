@@ -1,4 +1,4 @@
-export function median(numbers: number[]): number {
+export function getMedian(numbers: number[]): number {
   if (numbers.length === 0) return 0;
 
   numbers.sort((a, b) => a - b);

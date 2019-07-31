@@ -4,19 +4,18 @@ import { Image, StyleSheet, View } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { Defs, Line, LinearGradient, Stop } from 'react-native-svg';
 import { Images } from '../../../assets';
-import { shortDayName, median } from '../../utilities';
+import { getMedian } from '../../utilities';
 
-interface PercentDoneChartProps {
-  /**
-   * Data to plot. Should be ordered by date in ascending order.
-   */
+interface StatChartProps {
   data: {
-    date: Date,
-    percentDone: number,
+    label: string,
+    value: number,
   }[],
+  min: number,
+  max: number,
 }
 
-export const PercentDoneChart: FunctionComponent<PercentDoneChartProps> = ({ data }) => {
+export const StatChart: FunctionComponent<StatChartProps> = ({ data, min, max }) => {
   const contentInset = { top: 20, bottom: 20, left: 30, right: 30 };
 
   const StrokeGradient = () => (
@@ -28,16 +27,16 @@ export const PercentDoneChart: FunctionComponent<PercentDoneChartProps> = ({ dat
     </Defs>
   );
 
-  const MedianLine: any = (({ y }: { y: Function }) => {
-    const medianPercentage = median(data.map(dailyPercentDone => dailyPercentDone.percentDone));
+  const MedianLine: any = (({ x, y }: { x: Function, y: Function }) => {
+    const median = getMedian(data.map(el => el.value));
+    const lastElementIndex = data.length - 1;
 
     return (
       <Line
         key={'medianLine'}
-        x1={'0%'}
-        x2={'100%'}
-        y1={y(medianPercentage)}
-        y2={y(medianPercentage)}
+        x1={x(0)}
+        x2={x(lastElementIndex)}
+        y={y(median)}
         stroke={colors.orange}
         strokeDasharray={[4, 8]}
         strokeWidth={2}
@@ -59,18 +58,16 @@ export const PercentDoneChart: FunctionComponent<PercentDoneChartProps> = ({ dat
           fontFamily: fonts.regular,
           textAnchor: 'end',
         }}
-        numberOfTicks={6}
-        min={0}
-        max={100}
+        min={min}
+        max={max}
       />
       <View style={styles.innerContainer}>
         <LineChart
           style={styles.chart}
           data={data}
-          numberOfTicks={6}
-          yAccessor={({ item }) => item.percentDone}
-          yMin={0}
-          yMax={100}
+          yAccessor={({ item }) => item.value}
+          yMin={min}
+          yMax={max}
           contentInset={contentInset}
           svg={{
             strokeWidth: 2,
@@ -84,7 +81,7 @@ export const PercentDoneChart: FunctionComponent<PercentDoneChartProps> = ({ dat
         </LineChart>
         <XAxis
           data={data}
-          formatLabel={value => shortDayName(data[value].date)}
+          formatLabel={value => data[value].label}
           contentInset={contentInset}
           numberOfTicks={4}
           svg={{

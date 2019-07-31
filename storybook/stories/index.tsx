@@ -10,7 +10,7 @@ import {
   DateInput,
   DaysOfWeekInput,
   DurationInput,
-  GoalRow, MenuLink, PercentDoneChart,
+  GoalRow, MenuLink, StatChart,
   ProgressChart,
   Section,
   SwitchInput,
@@ -117,21 +117,55 @@ storiesOf('Charts', module)
   .add('Achievement (done)', () => (
     <Achievement title='Added a one‑time goal' iconSource={require('../../assets/icons/one-time-goal.png')} done />
   ))
-  .add('Percent done chart', () => {
-    const today = moment();
+  .add('Weekly percent done chart', () => {
     const data = [
-      { date: today.clone().subtract(6, 'day').toDate(), percentDone: 40 },
-      { date: today.clone().subtract(5, 'day').toDate(), percentDone: 85 },
-      { date: today.clone().subtract(4, 'day').toDate(), percentDone: 61 },
-      { date: today.clone().subtract(3, 'day').toDate(), percentDone: 84 },
-      { date: today.clone().subtract(2, 'day').toDate(), percentDone: 62 },
-      { date: today.clone().subtract(1, 'day').toDate(), percentDone: 63 },
-      { date: today.toDate(), percentDone: 42 },
+      { label: 'THU', value: 42 },
+      { label: 'FRI', value: 62 },
+      { label: 'SAT', value: 63 },
+      { label: 'SUN', value: 83 },
+      { label: 'MON', value: 61 },
+      { label: 'TUE', value: 87 },
+      { label: 'WED', value: 38 },
     ];
 
-    return (
-      <PercentDoneChart data={data} />
-    );
+    return <StatChart data={data} min={0} max={100} />;
+  })
+  .add('Monthly percent done chart', () => {
+    const data = [...Array(31).keys()].map(dayNo => {
+      const percentDone = Math.floor(Math.random() * 101);
+      const date = moment().subtract(dayNo, 'day').format('MMM D');
+
+      return { label: date, value: percentDone };
+    }).reverse();
+
+    return <StatChart data={data} min={0} max={100} />;
+  })
+  .add('Weekly hours done chart', () => {
+    const data = [
+      { label: 'THU', value: 1.4 },
+      { label: 'FRI', value: 3.5 },
+      { label: 'SAT', value: 2.7 },
+      { label: 'SUN', value: 2.8 },
+      { label: 'MON', value: 8.2 },
+      { label: 'TUE', value: 1.2 },
+      { label: 'WED', value: 6.1 },
+    ];
+
+    return <StatChart data={data} min={1} max={9} />;
+  })
+  .add('Monthly hours done chart', () => {
+    const data = [...Array(31).keys()].map(dayNo => {
+      const hoursDone = Math.random() * 9;
+      const date = moment().subtract(dayNo, 'day').format('MMM D');
+
+      return { label: date, value: hoursDone };
+    }).reverse();
+
+    const values = data.map(el => el.value);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+
+    return <StatChart data={data} min={Math.floor(min)} max={Math.ceil(max)} />;
   });
 
 storiesOf('Inputs', module)
@@ -175,6 +209,9 @@ storiesOf('Navigation', module)
   ))
   .add('Tab bar', () => (
     <TabBar tabTitles={['Goals', 'Timetable']} activeTitle='Goals' onPress={action('tab-bar-press')} />));
+
+
+// Utilities
 
 function dateKnobReturningDateObj(name: string, defaultValue: Date) {
   const stringTimestamp = date(name, defaultValue);
