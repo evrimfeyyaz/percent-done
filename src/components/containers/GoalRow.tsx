@@ -8,23 +8,23 @@ interface GoalRowProps {
   /**
    * Name of the goal.
    */
-  name: string,
+  name: string;
   /**
    * Color of the goal.
    */
-  color: string,
+  color: string;
   /**
    * Number of days this goal has been completed in a row.
    */
-  chainLength?: number,
+  chainLength?: number;
   /**
    * Total duration of the goal in minutes.
    */
-  totalMinutes?: number,
+  totalMinutes?: number;
   /**
    * Total minutes completed.
    */
-  completedMinutes?: number,
+  completedMinutes?: number;
 }
 
 /**
@@ -37,7 +37,6 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
                                                            totalMinutes = null,
                                                            completedMinutes = null,
                                                          }) => {
-
   const nameStyle = StyleSheet.flatten([styles.name, { color }]);
 
   let chainInfo = null;
@@ -57,7 +56,9 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
 
     durationInfo = (
       <View>
-        <Text style={styles.timeLeft}>{hours}h {minutes}m</Text>
+        <Text style={styles.timeLeft}>
+          {hours}h {minutes}m
+        </Text>
         <Text style={styles.leftText}>Left</Text>
       </View>
     );
@@ -67,12 +68,14 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
 
   return (
     <View style={styles.container}>
-      <ProgressCircle style={{ height: 34, width: 34 }}
-                      progress={progress}
-                      backgroundColor={colors.darkGray}
-                      progressColor={color}
-                      strokeWidth={4}
-                      endAngle={-Math.PI * 2} />
+      <ProgressCircle
+        style={styles.circle}
+        progress={progress}
+        backgroundColor={colors.darkGray}
+        progressColor={color}
+        strokeWidth={4}
+        endAngle={-Math.PI * 2}
+      />
       <View style={styles.details}>
         <Text style={nameStyle}>{name}</Text>
         {chainInfo}
@@ -123,6 +126,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textTransform: 'uppercase',
   },
+  circle: {
+    height: 34,
+    width: 34,
+  },
 });
 
 /**
@@ -130,7 +137,9 @@ const styles = StyleSheet.create({
  *
  * @param totalMinutes Test
  */
-function hoursAndMinutes(totalMinutes: number): { hours: number, minutes: number } {
+function hoursAndMinutes(
+  totalMinutes: number,
+): { hours: number; minutes: number } {
   const minutes = totalMinutes % 60;
   totalMinutes = totalMinutes - minutes;
   const hours = totalMinutes / 60;

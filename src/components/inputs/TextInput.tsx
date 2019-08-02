@@ -1,13 +1,20 @@
 import React, { FunctionComponent } from 'react';
-import { StyleSheet, TextInput as RNTextInput, TextInputProps } from 'react-native';
+import {
+  StyleSheet,
+  TextInput as RNTextInput,
+  TextInputProps,
+} from 'react-native';
 import { colors, fonts } from '../../theme';
 import { InputContainer } from './InputContainer';
 
-export const TextInput: FunctionComponent<TextInputProps> = (props) => {
+export const TextInput: FunctionComponent<TextInputProps> = props => {
   return (
     <InputContainer opacityOnTouch={false}>
-      <RNTextInput style={StyleSheet.flatten([styles.input, props.style])}
-                   placeholderTextColor={colors.gray} {...props} />
+      <RNTextInput
+        style={StyleSheet.flatten([styles.input, props.style])}
+        placeholderTextColor={colors.gray}
+        {...props}
+      />
     </InputContainer>
   );
 };

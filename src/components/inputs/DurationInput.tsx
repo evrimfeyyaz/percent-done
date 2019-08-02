@@ -3,35 +3,46 @@ import { InputContainer } from './InputContainer';
 import DatePicker from 'react-native-datepicker';
 
 interface DurationInputProps {
-  hours?: number,
-  minutes?: number,
-  onDurationChange?: (hours: number, minutes: number) => void
+  hours?: number;
+  minutes?: number;
+  onDurationChange?: (hours: number, minutes: number) => void;
 }
 
-export const DurationInput: FunctionComponent<DurationInputProps> = ({ hours = 1, minutes = 0, onDurationChange }) => {
+export const DurationInput: FunctionComponent<DurationInputProps> = ({
+                                                                       hours = 1,
+                                                                       minutes = 0,
+                                                                       onDurationChange,
+                                                                     }) => {
   const datePickerRef = useRef<DatePicker>(null);
 
-  const handleDurationChange = (duration: string, _: Date) => {
-    const [hours, minutes] = duration.split(':').map(part => parseInt(part));
+  const handleDurationChange = (newDuration: string, _: Date) => {
+    const [newHours, newMinutes] = newDuration.split(':').map(part => parseInt(part));
 
-    if (onDurationChange != null) onDurationChange(hours, minutes);
+    if (onDurationChange != null) {
+      onDurationChange(newHours, newMinutes);
+    }
   };
 
   return (
     <>
-      <InputContainer title='Duration' value={formatDuration(hours, minutes)}
-                      onPress={() => {
-                        const datePicker = datePickerRef.current;
-                        if (datePicker != null) datePicker.onPressDate();
-                      }}>
+      <InputContainer
+        title="Duration"
+        value={formatDuration(hours, minutes)}
+        onPress={() => {
+          const datePicker = datePickerRef.current;
+          if (datePicker != null) {
+            datePicker.onPressDate();
+          }
+        }}
+      >
         <DatePicker
           showIcon={false}
           hideText={true}
           date={formatDuration(hours, minutes)}
           onDateChange={handleDurationChange}
           mode="time"
-          androidMode='spinner'
-          locale='TR' // To make the time format 24h.
+          androidMode="spinner"
+          locale="TR" // To make the time format 24h.
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
           ref={datePickerRef}

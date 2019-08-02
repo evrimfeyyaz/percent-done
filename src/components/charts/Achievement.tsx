@@ -1,16 +1,26 @@
 import React, { FunctionComponent } from 'react';
-import { Text, ImageSourcePropType, View, Image, StyleSheet } from 'react-native';
+import {
+  Text,
+  ImageSourcePropType,
+  View,
+  Image,
+  StyleSheet,
+} from 'react-native';
 import { colors, fonts } from '../../theme';
 
 interface AchievementProps {
-  title: string,
-  iconSource: ImageSourcePropType,
-  done?: boolean,
+  title: string;
+  iconSource: ImageSourcePropType;
+  done?: boolean;
 }
 
-export const Achievement: FunctionComponent<AchievementProps> = ({ title, iconSource, done = false }) => {
+export const Achievement: FunctionComponent<AchievementProps> = ({
+                                                                   title,
+                                                                   iconSource,
+                                                                   done = false,
+                                                                 }) => {
   const achievementStyle = {
-    opacity: done ? 1 : .3,
+    opacity: done ? 1 : 0.3,
   };
 
   return (

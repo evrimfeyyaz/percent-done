@@ -10,7 +10,9 @@ import {
   DateInput,
   DaysOfWeekInput,
   DurationInput,
-  GoalRow, MenuLink, StatChart,
+  GoalRow,
+  MenuLink,
+  StatChart,
   ProgressChart,
   Section,
   SwitchInput,
@@ -22,7 +24,15 @@ import {
   TimetableEntry,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
-import { array, boolean, date, number, select, text, withKnobs } from '@storybook/addon-knobs';
+import {
+  array,
+  boolean,
+  date as dateKnob,
+  number,
+  select,
+  text,
+  withKnobs,
+} from '@storybook/addon-knobs';
 import { colors, textStyles } from '../../src/theme';
 import moment from 'moment';
 
@@ -35,19 +45,26 @@ storiesOf('Text styles', module)
   ))
   .add('Info', () => (
     <Text style={textStyles.info}>
-      1<Text style={textStyles.infoSmall}>H</Text> 30<Text style={textStyles.infoSmall}>M</Text>
+      1<Text style={textStyles.infoSmall}>H</Text> 30
+      <Text style={textStyles.infoSmall}>M</Text>
       <Text style={textStyles.infoTail}> done</Text>
     </Text>
   ));
 
 storiesOf('Containers', module)
   .add('Section', () => (
-    <Section title='Sample Section'>
+    <Section title="Sample Section">
       <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
     </Section>
   ))
   .add('Goal row', () => (
-    <GoalRow name='Write' color={colors.yellow} chainLength={10} completedMinutes={30} totalMinutes={60} />
+    <GoalRow
+      name="Write"
+      color={colors.yellow}
+      chainLength={10}
+      completedMinutes={30}
+      totalMinutes={60}
+    />
   ));
 
 storiesOf('Charts', module)
@@ -109,13 +126,25 @@ storiesOf('Charts', module)
       },
     ];
 
-    return <Timetable entries={entries} onEntryPress={action('timetable-entry-pressed')} />;
+    return (
+      <Timetable
+        entries={entries}
+        onEntryPress={action('timetable-entry-pressed')}
+      />
+    );
   })
   .add('Achievement', () => (
-    <Achievement title='Added a one‑time goal' iconSource={require('../../assets/icons/one-time-goal.png')} />
+    <Achievement
+      title="Added a one‑time goal"
+      iconSource={require('../../assets/icons/one-time-goal.png')}
+    />
   ))
   .add('Achievement (done)', () => (
-    <Achievement title='Added a one‑time goal' iconSource={require('../../assets/icons/one-time-goal.png')} done />
+    <Achievement
+      title="Added a one‑time goal"
+      iconSource={require('../../assets/icons/one-time-goal.png')}
+      done
+    />
   ))
   .add('Weekly percent done chart', () => {
     const data = [
@@ -131,12 +160,16 @@ storiesOf('Charts', module)
     return <StatChart data={data} min={0} max={100} />;
   })
   .add('Monthly percent done chart', () => {
-    const data = [...Array(31).keys()].map(dayNo => {
-      const percentDone = Math.floor(Math.random() * 101);
-      const date = moment().subtract(dayNo, 'day').format('MMM D');
+    const data = [...Array(31).keys()]
+      .map(dayNo => {
+        const percentDone = Math.floor(Math.random() * 101);
+        const date = moment()
+          .subtract(dayNo, 'day')
+          .format('MMM D');
 
-      return { label: date, value: percentDone };
-    }).reverse();
+        return { label: date, value: percentDone };
+      })
+      .reverse();
 
     return <StatChart data={data} min={0} max={100} />;
   })
@@ -154,12 +187,16 @@ storiesOf('Charts', module)
     return <StatChart data={data} min={1} max={9} />;
   })
   .add('Monthly hours done chart', () => {
-    const data = [...Array(31).keys()].map(dayNo => {
-      const hoursDone = Math.random() * 9;
-      const date = moment().subtract(dayNo, 'day').format('MMM D');
+    const data = [...Array(31).keys()]
+      .map(dayNo => {
+        const hoursDone = Math.random() * 9;
+        const date = moment()
+          .subtract(dayNo, 'day')
+          .format('MMM D');
 
-      return { label: date, value: hoursDone };
-    }).reverse();
+        return { label: date, value: hoursDone };
+      })
+      .reverse();
 
     const values = data.map(el => el.value);
     const min = Math.min(...values);
@@ -170,51 +207,74 @@ storiesOf('Charts', module)
 
 storiesOf('Inputs', module)
   .add('Button', () => (
-    <Button title='Press This' onPress={action('button-pressed')} />
+    <Button title="Press This" onPress={action('button-pressed')} />
   ))
   .add('Button with icon', () => (
-    <Button title='Stop' iconSource={require('../../assets/icons/stop.png')}
-            onPress={action('button-with-icon-pressed')} />
+    <Button
+      title="Stop"
+      iconSource={require('../../assets/icons/stop.png')}
+      onPress={action('button-with-icon-pressed')}
+    />
   ))
-  .add('Text input', () => <TextInput placeholder='What is your goal?' value={text('Text', null)}
-                                      onChangeText={action('text-changed')} />)
+  .add('Text input', () => <TextInput placeholder="What is your goal?" value={text('Text', null)}
+                                      onChangeText={action('text-changed')} />,
+  )
   .add('Date input', () => <DateInput date={dateKnobReturningDateObj('Date', new Date())}
-                                      onDateChange={action('date-changed')} />)
+                                      onDateChange={action('date-changed')}
+    />,
+  )
   .add('Time input', () => <TimeInput time={text('Time (hh:mm)', '9:04')} onTimeChange={action('time-changed')} />)
   .add('Duration input', () => <DurationInput hours={number('Hours', 1)} minutes={number('Minutes', 0)}
-                                              onDurationChange={action('duration-changed')} />)
-  .add('Switch input', () => <SwitchInput title='Time tracking' value={boolean('Value', false)}
-                                          onValueChange={action('switch-value-changed')} />)
+                                              onDurationChange={action('duration-changed')}
+    />,
+  )
+  .add('Switch input', () => <SwitchInput title="Time tracking" value={boolean('Value', false)}
+                                          onValueChange={action('switch-value-changed')}
+    />,
+  )
   .add('Color input', () => {
-    const colors = ['#CB0E0E', '#D80C82', '#A306DD', '#0910B7', '#0C69B9', '#0391A3',
+    const inputColors = ['#CB0E0E', '#D80C82', '#A306DD', '#0910B7', '#0C69B9', '#0391A3',
       '#05B943', '#98B402', '#E0C010', '#D1760B', '#121212'];
 
-    return <ColorInput colors={colors} selectedColor={select('Color', colors, '#CB0E0E')}
-                       onColorChange={action('color-changed')} />;
+    return (
+      <ColorInput
+        colors={inputColors}
+        selectedColor={select('Color', inputColors, '#CB0E0E')}
+        onColorChange={action('color-changed')}
+      />
+    );
   })
   .add('Days of week input', () => (
-      <DaysOfWeekInput
-        selectedDays={array('Selected days', ['Sunday', 'Monday'])}
-        onDayChange={action('day-changed')} />
-    ),
-  )
-  .add('Menu link', () => <MenuLink title='Terms & Conditions' onPress={action('menu-link-pressed')} />);
+    <DaysOfWeekInput
+      selectedDays={array('Selected days', ['Sunday', 'Monday'])}
+      onDayChange={action('day-changed')}
+    />
+  ))
+  .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
-    <TabItem title='Goals' />
+    <TabItem title="Goals" />
   ))
   .add('Tab item (active)', () => (
-    <TabItem title='Goals' active={true} />
+    <TabItem title="Goals" active={true} />
   ))
-  .add('Tab bar', () => (
-    <TabBar tabTitles={['Goals', 'Timetable']} activeTitle='Goals' onPress={action('tab-bar-press')} />));
+  .add('Tab bar', () => {
+    const tabs = ['Stats', 'Achievements', 'Time Machine', 'Commitments'];
 
+    return (
+      <TabBar
+        tabTitles={tabs}
+        activeTitle={select('Active tab', tabs, tabs[0])}
+        onPress={action('tab-bar-press')}
+      />
+    );
+  });
 
 // Utilities
 
 function dateKnobReturningDateObj(name: string, defaultValue: Date) {
-  const stringTimestamp = date(name, defaultValue);
+  const stringTimestamp = dateKnob(name, defaultValue);
 
   return new Date(stringTimestamp);
 }

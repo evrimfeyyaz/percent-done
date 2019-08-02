@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useState } from 'react';
 import { LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
 import { colors, fonts } from '../../theme';
 
@@ -6,13 +6,16 @@ interface SectionProps {
   /**
    * Title of the section.
    */
-  title: string,
+  title: string;
 }
 
 /**
  * Container for a section.
  */
-export const Section: FunctionComponent<SectionProps> = ({ title, children = null }) => {
+export const Section: FunctionComponent<SectionProps> = ({
+                                                           title,
+                                                           children = null,
+                                                         }) => {
   const MARGIN = 20;
 
   const [titleMarginStart, setTitleMarginStart] = useState(0);
@@ -20,7 +23,7 @@ export const Section: FunctionComponent<SectionProps> = ({ title, children = nul
   const [containerMinHeight, setContainerMinHeight] = useState(0);
 
   const moveTitleLeft = (titleWidth: number, titleHeight: number) => {
-    setTitleMarginStart(-(titleWidth / 2) + (titleHeight / 2) + MARGIN);
+    setTitleMarginStart(-(titleWidth / 2) + titleHeight / 2 + MARGIN);
   };
 
   const moveTitleIntoContainer = (titleWidth: number) => {
@@ -42,15 +45,23 @@ export const Section: FunctionComponent<SectionProps> = ({ title, children = nul
   };
 
   return (
-    <View style={StyleSheet.flatten([styles.container, { minHeight: containerMinHeight }])}>
-      <Text style={StyleSheet.flatten([styles.title, { marginStart: titleMarginStart, top: titleTopPosition }])}
-            onLayout={handleTitleLayout}>
+    <View
+      style={StyleSheet.flatten([
+        styles.container,
+        { minHeight: containerMinHeight },
+      ])}
+    >
+      <Text
+        style={StyleSheet.flatten([
+          styles.title,
+          { marginStart: titleMarginStart, top: titleTopPosition },
+        ])}
+        onLayout={handleTitleLayout}
+      >
         {title}
       </Text>
 
-      <View style={styles.content}>
-        {children}
-      </View>
+      <View style={styles.content}>{children}</View>
 
       <View style={styles.separator} />
     </View>
@@ -79,7 +90,7 @@ const styles = StyleSheet.create({
   separator: {
     borderBottomColor: colors.gray,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    opacity: .2,
+    opacity: 0.2,
     bottom: 0,
     right: 0,
     width: '84%',

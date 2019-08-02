@@ -4,26 +4,39 @@ import { FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icons } from '../../../assets';
 
 interface ColorInputProps {
-  colors?: string[],
-  selectedColor?: string,
-  onColorChange?: (color: string) => void,
+  colors?: string[];
+  selectedColor?: string;
+  onColorChange?: (color: string) => void;
 }
 
-export const ColorInput: FunctionComponent<ColorInputProps> = ({ colors = [], selectedColor, onColorChange }) => {
+export const ColorInput: FunctionComponent<ColorInputProps> = ({
+                                                                 colors = [],
+                                                                 selectedColor,
+                                                                 onColorChange,
+                                                               }) => {
   const colorButton = (color: string) => {
     let selectedIndicatorStyle = { display: 'none' };
     if (selectedColor === color) {
       selectedIndicatorStyle = { display: 'flex' };
     }
 
-    return (<TouchableOpacity style={StyleSheet.flatten([styles.colorButton, { backgroundColor: color }])}
-                              onPress={() => {
-                                if (onColorChange != null) onColorChange(color);
-                              }}>
-      {/*
+    return (
+      <TouchableOpacity
+        style={StyleSheet.flatten([
+          styles.colorButton,
+          { backgroundColor: color },
+        ])}
+        onPress={() => {
+          if (onColorChange != null) {
+            onColorChange(color);
+          }
+        }}
+      >
+        {/*
        // @ts-ignore */}
-      <Image style={selectedIndicatorStyle} source={Icons.checkmark} />
-    </TouchableOpacity>);
+        <Image style={selectedIndicatorStyle} source={Icons.checkmark} />
+      </TouchableOpacity>
+    );
   };
 
   const numOfColumns = Math.ceil(colors.length / 2);
@@ -38,8 +51,12 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({ colors = [], se
 
   return (
     <InputContainer opacityOnTouch={false}>
-      <FlatList data={data} renderItem={({ item }) => colorButton(item.color)}
-                numColumns={numOfColumns} columnWrapperStyle={styles.colorListRow} />
+      <FlatList
+        data={data}
+        renderItem={({ item }) => colorButton(item.color)}
+        numColumns={numOfColumns}
+        columnWrapperStyle={styles.colorListRow}
+      />
     </InputContainer>
   );
 };

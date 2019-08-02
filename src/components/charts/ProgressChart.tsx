@@ -7,31 +7,31 @@ interface ProgressChartProps {
   /**
    * Percentage of the work completed.
    */
-  percentDone: number,
+  percentDone: number;
 }
 
 /**
  * Shows a circular chart.
  */
-export const ProgressChart: FunctionComponent<ProgressChartProps> = ({ percentDone = 0 }) => {
+export const ProgressChart: FunctionComponent<ProgressChartProps> = ({
+                                                                       percentDone = 0,
+                                                                     }) => {
   return (
     <>
-      <ProgressCircle style={{ height: 125, width: 125 }}
-                      progress={percentDone / 100}
-                      backgroundColor={colors.darkGray}
-                      progressColor={colors.yellow}
-                      strokeWidth={15}
-                      endAngle={-Math.PI * 2} />
+      <ProgressCircle
+        style={styles.circle}
+        progress={percentDone / 100}
+        backgroundColor={colors.darkGray}
+        progressColor={colors.yellow}
+        strokeWidth={15}
+        endAngle={-Math.PI * 2}
+      />
       <View style={styles.infoContainer}>
         <Text style={styles.percentDone}>
           {percentDone}
-          <Text style={styles.percentSign}>
-            %
-          </Text>
+          <Text style={styles.percentSign}>%</Text>
         </Text>
-        <Text style={styles.done}>
-          Done
-        </Text>
+        <Text style={styles.done}>Done</Text>
       </View>
     </>
   );
@@ -62,5 +62,9 @@ const styles = StyleSheet.create({
     color: colors.gray,
     textTransform: 'uppercase',
     marginTop: -5,
+  },
+  circle: {
+    height: 125,
+    width: 125,
   },
 });

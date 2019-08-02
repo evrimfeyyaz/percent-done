@@ -5,11 +5,15 @@ import { Images } from '../../../assets';
 
 export const BackgroundView: FunctionComponent = ({ children }) => {
   return (
-    <LinearGradient colors={['#23212C', '#3E4353']} style={styles.gradientContainer}>
-      <ImageBackground style={styles.imageContainer}
-                       source={Images.bg}
-                       resizeMode={'repeat'}>
-      </ImageBackground>
+    <LinearGradient
+      colors={['#23212C', '#3E4353']}
+      style={styles.gradientContainer}
+    >
+      <ImageBackground
+        style={styles.imageContainer}
+        source={Images.bg}
+        resizeMode={'repeat'}
+      />
       {children}
     </LinearGradient>
   );
@@ -23,7 +27,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     resizeMode: 'cover',
-    opacity: .17,
+    opacity: 0.17,
   },
   gradientContainer: {
     flex: 1,

@@ -10,24 +10,35 @@ export enum DayOfWeek {
   Wednesday = 'Wednesday',
   Thursday = 'Thursday',
   Friday = 'Friday',
-  Saturday = 'Saturday',
+  Saturday = 'Saturday'
 }
 
 interface DaysOfWeekInputProps {
-  selectedDays?: DayOfWeek[] | string[],
-  onDayChange?: (day: DayOfWeek) => void,
+  selectedDays?: DayOfWeek[] | string[];
+  onDayChange?: (day: DayOfWeek) => void;
 }
 
-export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ selectedDays = [], onDayChange }) => {
+export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({
+                                                                           selectedDays = [],
+                                                                           onDayChange,
+                                                                         }) => {
   const dayButton = (day: DayOfWeek) => {
     const selectedStyle = { opacity: 1 };
     const isSelected = selectedDays.includes(day);
-    const dayButtonStyle = isSelected ? StyleSheet.flatten([styles.dayButton, selectedStyle]) : styles.dayButton;
+    const dayButtonStyle = isSelected
+      ? StyleSheet.flatten([styles.dayButton, selectedStyle])
+      : styles.dayButton;
 
     return (
-      <TouchableOpacity style={dayButtonStyle} key={day} onPress={() => {
-        if (onDayChange != null) onDayChange(day);
-      }}>
+      <TouchableOpacity
+        style={dayButtonStyle}
+        key={day}
+        onPress={() => {
+          if (onDayChange != null) {
+            onDayChange(day);
+          }
+        }}
+      >
         <Text style={styles.dayButtonTitle}>{day.toString().charAt(0)}</Text>
       </TouchableOpacity>
     );
@@ -41,10 +52,12 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ selec
   }
 
   return (
-    <InputContainer title='Days of the week' opacityOnTouch={false} style={styles.inputContainer}>
-      <View style={styles.dayButtonsContainer}>
-        {dayButtons}
-      </View>
+    <InputContainer
+      title="Days of the week"
+      opacityOnTouch={false}
+      style={styles.inputContainer}
+    >
+      <View style={styles.dayButtonsContainer}>{dayButtons}</View>
     </InputContainer>
   );
 };
@@ -69,7 +82,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    opacity: .5,
+    opacity: 0.5,
   },
   dayButtonTitle: {
     color: colors.white,

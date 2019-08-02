@@ -1,23 +1,34 @@
 import React, { FunctionComponent } from 'react';
-import { GestureResponderEvent, Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  GestureResponderEvent,
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { colors, fonts } from '../../theme';
 
 interface ButtonProps {
   /**
    * Title of the button.
    */
-  title: string,
+  title: string;
   /**
    * Icon for the button. Should be white and 24x24.
    */
-  iconSource?: ImageSourcePropType,
-  onPress: (event: GestureResponderEvent) => void,
+  iconSource?: ImageSourcePropType;
+  onPress: (event: GestureResponderEvent) => void;
 }
 
 /**
  * A styled button component.
  */
-export const Button: FunctionComponent<ButtonProps> = ({ title, iconSource = null, onPress }) => {
+export const Button: FunctionComponent<ButtonProps> = ({
+                                                         title,
+                                                         iconSource = null,
+                                                         onPress,
+                                                       }) => {
   let icon = null;
   if (iconSource != null) {
     icon = <Image source={iconSource} style={styles.icon} />;

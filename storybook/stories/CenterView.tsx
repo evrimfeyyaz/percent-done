@@ -2,10 +2,15 @@ import React, { FunctionComponent, ReactChild } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-const CenterView: FunctionComponent<{ children?: ReactChild }> = ({ children = null }) => {
+const CenterView: FunctionComponent<{ children?: ReactChild }> = ({
+                                                                    children = null,
+                                                                  }) => {
   return (
     <LinearGradient colors={['#23212C', '#3E4353']} style={styles.main}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}
+      >
         {children}
       </ScrollView>
     </LinearGradient>
@@ -26,5 +31,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 60,
-  }
+  },
 });

@@ -1,12 +1,23 @@
 import React from 'react';
-import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
+import {
+  createBottomTabNavigator,
+  createStackNavigator,
+  createAppContainer,
+} from 'react-navigation';
 import Storybook from './storybook';
 import { colors, fonts } from './src/theme';
-import { SettingsScreen, TodayScreen, TomorrowScreen, StatsScreen } from './src/screens';
+import {
+  SettingsScreen,
+  TodayScreen,
+  TomorrowScreen,
+  StatsScreen,
+} from './src/screens';
 import { Image, YellowBox } from 'react-native';
 import { Icons } from './assets';
 
-YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from react-native core']);
+YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
+YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
+YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
 export default Storybook;
 
@@ -55,7 +66,8 @@ const AppNavigator = createBottomTabNavigator(
         paddingVertical: 8,
       },
     },
-  });
+  },
+);
 
 const AppContainer = createAppContainer(AppNavigator);
 
@@ -68,13 +80,13 @@ const AppContainer = createAppContainer(AppNavigator);
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {
     case 'Today':
-      return (focused ? Icons.todayActive : Icons.todayInactive);
+      return focused ? Icons.todayActive : Icons.todayInactive;
     case 'Tomorrow':
-      return (focused ? Icons.tomorrowActive : Icons.tomorrowInactive);
+      return focused ? Icons.tomorrowActive : Icons.tomorrowInactive;
     case 'Stats':
-      return (focused ? Icons.statsActive : Icons.statsInactive);
+      return focused ? Icons.statsActive : Icons.statsInactive;
     case 'Settings':
-      return (focused ? Icons.settingsActive : Icons.settingsInactive);
+      return focused ? Icons.settingsActive : Icons.settingsInactive;
   }
 
   return null;

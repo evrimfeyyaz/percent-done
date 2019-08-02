@@ -1,5 +1,11 @@
 import React, { FunctionComponent } from 'react';
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import {
+  GestureResponderEvent,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { colors, fonts } from '../../theme';
 
@@ -7,31 +13,36 @@ interface InputContainerProps {
   /**
    * Title, shown on the left side.
    */
-  title?: string,
+  title?: string;
 
   /**
    * Current value of the input, shown on the right side.
    */
-  value?: string,
+  value?: string;
 
   /**
    * A React element to add to the right side of the input container.
    */
-  rightItem?: Element,
+  rightItem?: Element;
 
-  onPress?: (event: GestureResponderEvent) => void,
+  onPress?: (event: GestureResponderEvent) => void;
 
   /**
    * Whether this item should flash when tapped.
    */
-  opacityOnTouch?: boolean
+  opacityOnTouch?: boolean;
 
-  style?: ViewStyle,
+  style?: ViewStyle;
 }
 
 export const InputContainer: FunctionComponent<InputContainerProps> = ({
-                                                                         title, value, rightItem, style,
-                                                                         opacityOnTouch = true, onPress, children,
+                                                                         title,
+                                                                         value,
+                                                                         rightItem,
+                                                                         style,
+                                                                         opacityOnTouch = true,
+                                                                         onPress,
+                                                                         children,
                                                                        }) => {
   let titleText = null;
   if (title != null) {
@@ -49,19 +60,17 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
   }
 
   return (
-    <TouchableOpacity style={StyleSheet.flatten([styles.container, style])} onPress={onPress}
-                      activeOpacity={activeOpacity}>
+    <TouchableOpacity
+      style={StyleSheet.flatten([styles.container, style])}
+      onPress={onPress}
+      activeOpacity={activeOpacity}
+    >
       {titleText}
       {children}
       {valueText}
       {rightItem}
       <Svg height={1} style={styles.bottomLine}>
-        <Line
-          x1='0%'
-          x2='100%'
-          stroke={colors.darkGray}
-          strokeWidth={1}
-        />
+        <Line x1="0%" x2="100%" stroke={colors.darkGray} strokeWidth={1} />
       </Svg>
     </TouchableOpacity>
   );
@@ -97,4 +106,3 @@ const styles = StyleSheet.create({
     right: 0,
   },
 });
-

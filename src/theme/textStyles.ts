@@ -21,5 +21,5 @@ export const textStyles = StyleSheet.create({
     color: colors.gray,
     fontSize: 12,
     textTransform: 'uppercase',
-  }
+  },
 });

@@ -8,26 +8,36 @@ import { getMedian } from '../../utilities';
 
 interface StatChartProps {
   data: {
-    label: string,
-    value: number,
-  }[],
-  min: number,
-  max: number,
+    label: string;
+    value: number;
+  }[];
+  min: number;
+  max: number;
 }
 
-export const StatChart: FunctionComponent<StatChartProps> = ({ data, min, max }) => {
+export const StatChart: FunctionComponent<StatChartProps> = ({
+                                                               data,
+                                                               min,
+                                                               max,
+                                                             }) => {
   const contentInset = { top: 20, bottom: 20, left: 30, right: 30 };
 
   const StrokeGradient = () => (
     <Defs key={'strokeGradient'}>
-      <LinearGradient id={'strokeGradient'} x1={'0'} y1={'0%'} x2={'0%'} y2={'100%'}>
+      <LinearGradient
+        id={'strokeGradient'}
+        x1={'0'}
+        y1={'0%'}
+        x2={'0%'}
+        y2={'100%'}
+      >
         <Stop offset={'0%'} stopColor={colors.orange} />
         <Stop offset={'100%'} stopColor={colors.yellow} />
       </LinearGradient>
     </Defs>
   );
 
-  const MedianLine: any = (({ x, y }: { x: Function, y: Function }) => {
+  const MedianLine: any = ({ x, y }: { x: Function; y: Function }) => {
     const median = getMedian(data.map(el => el.value));
     const lastElementIndex = data.length - 1;
 
@@ -40,10 +50,10 @@ export const StatChart: FunctionComponent<StatChartProps> = ({ data, min, max })
         stroke={colors.orange}
         strokeDasharray={[4, 8]}
         strokeWidth={2}
-        strokeOpacity={.4}
+        strokeOpacity={0.4}
       />
     );
-  });
+  };
 
   return (
     <View style={styles.container}>
@@ -53,7 +63,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({ data, min, max })
         contentInset={contentInset}
         svg={{
           fill: colors.white,
-          fillOpacity: .2,
+          fillOpacity: 0.2,
           fontSize: 12,
           fontFamily: fonts.regular,
           textAnchor: 'end',
@@ -75,7 +85,9 @@ export const StatChart: FunctionComponent<StatChartProps> = ({ data, min, max })
           }}
         >
           <Image source={Images.chartBg} style={styles.chartBg} />
-          <Grid svg={{ stroke: colors.white, strokeOpacity: .04, strokeWidth: 1 }} />
+          <Grid
+            svg={{ stroke: colors.white, strokeOpacity: 0.04, strokeWidth: 1 }}
+          />
           <StrokeGradient />
           <MedianLine />
         </LineChart>
@@ -86,7 +98,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({ data, min, max })
           numberOfTicks={4}
           svg={{
             fill: colors.white,
-            fillOpacity: .2,
+            fillOpacity: 0.2,
             fontSize: 12,
             fontFamily: fonts.regular,
           }}
