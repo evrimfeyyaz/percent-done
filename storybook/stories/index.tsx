@@ -265,7 +265,7 @@ storiesOf('Navigation', module)
     return (
       <TabBar
         tabTitles={tabs}
-        activeTitle={select('Active tab', tabs, tabs[0])}
+        initialSelectedTabTitle={select('Active tab', tabs, tabs[0])}
         onPress={action('tab-bar-press')}
       />
     );
