@@ -1,123 +1,86 @@
-import React, { FunctionComponent, useRef, useState } from 'react';
+import React, { FunctionComponent, useRef, useState, useEffect, MutableRefObject } from 'react';
 import { TabItem } from './TabItem';
-import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet } from 'react-native';
-
-/**
- * The distance between the left side of the screen and the
- * selected tab item.
- */
-const SELECTED_TAB_ITEM_LEFT_OFFSET = 50;
-
-/**
- * Distance between tab items.
- */
-const TAB_ITEM_DISTANCE = 20;
+import { StyleSheet, View, Animated, Dimensions, PanResponder } from 'react-native';
 
 interface TabBarProps {
   tabTitles: string[];
-  initialSelectedTabTitle: string;
+  initialSelectedTabIndex: number;
   /**
-   * Called with the title of the pressed tab item when pressed.
+   * Called with the tabTitle of the pressed tab item when pressed.
    */
   onPress: (pressedTabItemTitle: string) => void;
 }
 
 export const TabBar: FunctionComponent<TabBarProps> = ({
                                                          tabTitles,
-                                                         initialSelectedTabTitle,
+                                                         initialSelectedTabIndex = 0,
                                                          onPress,
                                                        }) => {
-  const [selectedTabItemPositions, setSelectedTabItemPositions] = useState<number[]>([]);
-  const [hasCalculatedSelectedTabItemPositions, setHasCalculatedSelectedTabItemPositions] = useState(false);
+  const [tabItemXPositions, setTabItemXPositions] = useState<number[]>([]);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(initialSelectedTabIndex);
 
-  const [selectedTabTitle, setSelectedTabTitle] = useState(initialSelectedTabTitle);
+  useEffect(() => { // Calculate tab item X positions.
+    const measurePromises = tabItemRefs.map(ref => new Promise<number>(resolve => {
+      if (ref.current != null) {
+        ref.current.measure((x: number) => resolve(x));
+      }
+    }));
 
-  const scrollViewRef = useRef<ScrollView>(null);
-
-  const handleContentSizeChange = async () => {
-    if (!hasCalculatedSelectedTabItemPositions) {
-      setHasCalculatedSelectedTabItemPositions(true);
-
-      Promise.all(
-        tabRefs.map(tabRef => calculateSelectedPositionForTab(tabRef.current)),
-      ).then(xPositions => setSelectedTabItemPositions(xPositions));
-    }
-  };
+    Promise.all(measurePromises).then(xPositions => setTabItemXPositions(xPositions));
+  }, []);
 
   const handleTabPress = (title: string) => {
-    setSelectedTabTitle(title);
+    const tabItemIndex = tabTitles.indexOf(title);
 
-    const scrollView = scrollViewRef.current;
-    if (scrollView != null) {
-      const pressedTitleIndex = tabTitles.indexOf(title);
-
-      scrollView.scrollTo({ x: selectedTabItemPositions[pressedTitleIndex], y: 0, animated: true });
-    }
+    setSelectedTabIndex(tabItemIndex);
   };
 
-  const handleScroll = () => {
-    const scrollView = scrollViewRef.current;
-    if (scrollView != null) {
-      const currentTabIndex = tabTitles.indexOf(selectedTabTitle);
+  /**
+   * Returns the amount of points the tab bar should be moved in
+   * x axis based on the selected tab item.
+   */
+  const getTabBarMoveAmount = () => {
+    const selectedTabItemXPosition = tabItemXPositions[selectedTabIndex];
 
-      scrollView.scrollTo({ x: selectedTabItemPositions[currentTabIndex + 1], y: 0, animated: true });
+    if (selectedTabItemXPosition != null) {
+      return 50 - tabItemXPositions[selectedTabIndex];
     }
+
+    return 50;
   };
 
-  const tabRefs: any[] = [];
-  const tabItems = tabTitles.map(title => {
-    const tabRef = useRef(null);
-    tabRefs.push(tabRef);
+  const tabItemRefs: MutableRefObject<any>[] = [];
+  const tabItems = tabTitles.map((tabTitle, index) => {
+    const ref = useRef(null);
+    tabItemRefs.push(ref);
 
-    return (
-      <TabItem
-        title={title}
-        active={selectedTabTitle === title}
-        style={styles.item}
-        key={title}
-        onPress={handleTabPress}
-        ref={tabRef}
-      />
-    );
+    return <TabItem
+      title={tabTitle}
+      active={index === selectedTabIndex}
+      key={tabTitle}
+      style={styles.item}
+      onPress={handleTabPress}
+      ref={ref}
+    />;
   });
 
+  const tabBarMoveAmountStyle = { transform: [{ translateX: getTabBarMoveAmount() }] };
+
   return (
-    <ScrollView
-      horizontal
-      disableIntervalMomentum={true}
-      contentContainerStyle={{ paddingStart: SELECTED_TAB_ITEM_LEFT_OFFSET }}
-      decelerationRate='fast'
-      showsHorizontalScrollIndicator={false}
-      pinchGestureEnabled={false}
-      style={styles.container}
-      scrollEnabled={false}
-      scrollToOverflowEnabled={true}
-      onContentSizeChange={handleContentSizeChange}
-      ref={scrollViewRef}
-    >
+    <View style={StyleSheet.create([styles.container, tabBarMoveAmountStyle])}>
       {tabItems}
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
+    flex: 1,
     flexDirection: 'row',
+    position: 'absolute',
+    left: 0,
   },
   item: {
-    marginEnd: TAB_ITEM_DISTANCE,
+    marginRight: 20,
   },
 });
-
-/**
- * Calculates what the x position of the tab item within its view
- * should be for given tab item.
- */
-function calculateSelectedPositionForTab(tabItemComponent: any) {
-  return new Promise<number>((resolve) => {
-    tabItemComponent.measure((x: number) => {
-      resolve(x - SELECTED_TAB_ITEM_LEFT_OFFSET);
-    });
-  });
-}
