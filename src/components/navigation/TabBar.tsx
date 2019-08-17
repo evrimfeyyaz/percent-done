@@ -18,8 +18,9 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
                                                        }) => {
   const [tabItemXPositions, setTabItemXPositions] = useState<number[]>([]);
   const [selectedTabIndex, setSelectedTabIndex] = useState(initialSelectedTabIndex);
+  const [tabBarMoveAmount, setTabBarMoveAmount] = useState(new Animated.Value(50));
 
-  useEffect(() => { // Calculate tab item X positions.
+  useEffect(() => { // Calculate tab item x positions.
     const measurePromises = tabItemRefs.map(ref => new Promise<number>(resolve => {
       if (ref.current != null) {
         ref.current.measure((x: number) => resolve(x));
@@ -28,6 +29,10 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
 
     Promise.all(measurePromises).then(xPositions => setTabItemXPositions(xPositions));
   }, []);
+
+  useEffect(() => { // Animate tab changes.
+    Animated.spring(tabBarMoveAmount, { toValue: getTabBarMoveAmount(), overshootClamping: true }).start();
+  }, [selectedTabIndex]);
 
   const handleTabPress = (title: string) => {
     const tabItemIndex = tabTitles.indexOf(title);
@@ -64,12 +69,12 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
     />;
   });
 
-  const tabBarMoveAmountStyle = { transform: [{ translateX: getTabBarMoveAmount() }] };
+  const tabBarMoveAmountStyle = { transform: [{ translateX: tabBarMoveAmount as unknown as number }] };
 
   return (
-    <View style={StyleSheet.create([styles.container, tabBarMoveAmountStyle])}>
+    <Animated.View style={StyleSheet.create([styles.container, tabBarMoveAmountStyle])}>
       {tabItems}
-    </View>
+    </Animated.View>
   );
 };
 
