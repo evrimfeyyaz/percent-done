@@ -24,11 +24,11 @@ export const TabItem: ForwardRefExoticComponent<PropsWithoutRef<TabItemProps> & 
   const titleStyle = active
     ? StyleSheet.flatten([styles.title, styles.titleActive])
     : styles.title;
-  const containerStyle = active ? styles.containerActive : null;
+  const activeContainerStyle = active ? styles.containerActive : null;
 
   return (
     <TouchableOpacity
-      style={StyleSheet.flatten([containerStyle, style])}
+      style={StyleSheet.flatten([styles.container, activeContainerStyle, style])}
       onPress={handlePress}
       disabled={active}
       ref={ref}
@@ -39,15 +39,19 @@ export const TabItem: ForwardRefExoticComponent<PropsWithoutRef<TabItemProps> & 
 });
 
 const styles = StyleSheet.create({
+  container: {
+    borderBottomWidth: 2,
+    borderBottomColor: 'rgba(0,0,0,0)'
+  },
   containerActive: {
     borderBottomColor: colors.blue,
-    borderBottomWidth: 2,
   },
   title: {
     fontFamily: fonts.regular,
     color: colors.gray,
     fontSize: 20,
     textTransform: 'uppercase',
+    width: '100%'
   },
   titleActive: {
     fontFamily: fonts.semibold,
