@@ -19,7 +19,7 @@ YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
-export default Storybook;
+// export default Storybook;
 
 const TodayStack = createStackNavigator({
   Today: TodayScreen,
@@ -71,11 +71,11 @@ const AppNavigator = createBottomTabNavigator(
 
 const AppContainer = createAppContainer(AppNavigator);
 
-// export default class App extends React.Component {
-//   render() {
-//     return <AppContainer />;
-//   }
-// }
+export default class App extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
+}
 
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {
