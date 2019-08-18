@@ -12,7 +12,7 @@ import {
 interface TabBarProps {
   tabTitles: string[];
   initialSelectedTabIndex: number;
-  onPress: (pressedTabItemTitle: string) => void;
+  onPress: (newSelectedTabItemTitle: string) => void;
 }
 
 const SELECTED_TAB_ITEM_LEFT_MARGIN = 50;
