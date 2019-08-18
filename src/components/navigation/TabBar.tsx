@@ -12,7 +12,7 @@ import {
 interface TabBarProps {
   tabTitles: string[];
   initialSelectedTabIndex: number;
-  onPress: (newSelectedTabItemTitle: string) => void;
+  onTabChange: (newSelectedTabItemTitle: string) => void;
 }
 
 const SELECTED_TAB_ITEM_LEFT_MARGIN = 50;
@@ -20,7 +20,7 @@ const SELECTED_TAB_ITEM_LEFT_MARGIN = 50;
 export const TabBar: FunctionComponent<TabBarProps> = ({
                                                          tabTitles,
                                                          initialSelectedTabIndex = 0,
-                                                         onPress,
+                                                         onTabChange,
                                                        }) => {
   /**
    * X position each tab item should have when they are selected.
@@ -83,7 +83,7 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
       setSelectedTabIndex(newSelectedTabIndex);
 
       const newSelectedTabTitle = tabTitles[newSelectedTabIndex];
-      onPress(newSelectedTabTitle);
+      onTabChange(newSelectedTabTitle);
     }
   };
 
@@ -91,7 +91,7 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
     const tabItemIndex = tabTitles.indexOf(title);
 
     setSelectedTabIndex(tabItemIndex);
-    onPress(title);
+    onTabChange(title);
   };
 
   const tabItemRefs: MutableRefObject<any>[] = [];

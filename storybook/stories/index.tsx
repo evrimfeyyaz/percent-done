@@ -266,7 +266,7 @@ storiesOf('Navigation', module)
       <TabBar
         tabTitles={tabs}
         initialSelectedTabIndex={0}
-        onPress={action('tab-bar-press')}
+        onTabChange={action('tab-change')}
       />
     );
   });
