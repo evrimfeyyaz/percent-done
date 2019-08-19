@@ -7,30 +7,29 @@ import {
   PanResponder,
   GestureResponderEvent,
   PanResponderGestureState,
+  View, ScrollView,
 } from 'react-native';
+import { NavigationState } from 'react-navigation';
 
 interface TabBarProps {
-  tabTitles: string[];
-  initialSelectedTabIndex: number;
-  onTabChange: (newSelectedTabItemTitle: string) => void;
+  navigationState: NavigationState
+  onTabChange: (newTabTitle: string) => void;
 }
 
 const SELECTED_TAB_ITEM_LEFT_MARGIN = 50;
 
 export const TabBar: FunctionComponent<TabBarProps> = ({
-                                                         tabTitles,
-                                                         initialSelectedTabIndex = 0,
+                                                         navigationState,
                                                          onTabChange,
                                                        }) => {
   /**
    * X position each tab item should have when they are selected.
    */
   const [tabItemXPositionsWhenSelected, setTabItemXPositionsWhenSelected] = useState<number[]>([]);
-  const [selectedTabIndex, setSelectedTabIndex] = useState(initialSelectedTabIndex);
   /**
    * The distance of the tab bar to its original position in the x axis.
    */
-  const [tabBarMoveAmount] = useState(new Animated.Value(0));
+  const [tabBarMoveAmount] = useState(new Animated.Value(SELECTED_TAB_ITEM_LEFT_MARGIN));
 
   useEffect(() => { // Calculate tab item x positions.
     const measurePromises = tabItemRefs.map(ref => new Promise<number>(resolve => {
@@ -42,22 +41,23 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
     Promise.all(measurePromises).then(xPositions => {
       const selectedXPositions = xPositions.map(xPosition => SELECTED_TAB_ITEM_LEFT_MARGIN - xPosition);
       setTabItemXPositionsWhenSelected(selectedXPositions);
+      console.log(selectedXPositions);
     });
-  }, []);
+  }, [navigationState]);
 
   useEffect(() => { // Animate tab changes.
-    if (tabItemXPositionsWhenSelected[selectedTabIndex] == null) return;
+    if (tabItemXPositionsWhenSelected[navigationState.index] == null) return;
 
     Animated.spring(
       tabBarMoveAmount,
       {
-        toValue: tabItemXPositionsWhenSelected[selectedTabIndex],
+        toValue: tabItemXPositionsWhenSelected[navigationState.index],
         overshootClamping: true,
       }).start();
   });
 
   const handleResponderGrant = () => {
-    const tabBarMoveAmountOffset = tabItemXPositionsWhenSelected[selectedTabIndex];
+    const tabBarMoveAmountOffset = tabItemXPositionsWhenSelected[navigationState.index];
 
     tabBarMoveAmount.setOffset(tabBarMoveAmountOffset);
     tabBarMoveAmount.setValue(0);
@@ -77,34 +77,26 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
 
     const newSelectedTabIndex = getSelectedTabIndexByDragAmount(gestureState.dx);
 
-    if (selectedTabIndex === newSelectedTabIndex) {
-      Animated.spring(tabBarMoveAmount, { toValue: tabItemXPositionsWhenSelected[selectedTabIndex] }).start();
+    if (navigationState.index === newSelectedTabIndex) {
+      Animated.spring(tabBarMoveAmount, { toValue: tabItemXPositionsWhenSelected[navigationState.index] }).start();
     } else {
-      setSelectedTabIndex(newSelectedTabIndex);
+      const newTabTitle = navigationState.routes[newSelectedTabIndex].routeName;
 
-      const newSelectedTabTitle = tabTitles[newSelectedTabIndex];
-      onTabChange(newSelectedTabTitle);
+      onTabChange(newTabTitle);
     }
   };
 
-  const handleTabPress = (title: string) => {
-    const tabItemIndex = tabTitles.indexOf(title);
-
-    setSelectedTabIndex(tabItemIndex);
-    onTabChange(title);
-  };
-
   const tabItemRefs: MutableRefObject<any>[] = [];
-  const tabItems = tabTitles.map((tabTitle, index) => {
+  const tabItems = navigationState.routes.map((route, index) => {
     const ref = useRef(null);
     tabItemRefs.push(ref);
 
     return <TabItem
-      title={tabTitle}
-      active={index === selectedTabIndex}
-      key={tabTitle}
+      title={route.routeName}
+      active={index === navigationState.index}
+      key={route.key}
       style={styles.item}
-      onPress={handleTabPress}
+      onPress={onTabChange}
       ref={ref}
     />;
   });
@@ -143,32 +135,38 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
     const minDragAmount = 50;
 
     if (dragAmount < -minDragAmount) { // Dragged left, go to next item.
-      return Math.min(selectedTabIndex + 1, tabTitles.length - 1);
+      return Math.min(navigationState.index + 1, navigationState.routes.length - 1);
     } else if (dragAmount > minDragAmount) { // Dragged right, go to previous item.
-      return Math.max(selectedTabIndex - 1, 0);
+      return Math.max(navigationState.index - 1, 0);
     }
 
-    return selectedTabIndex; // Didn't drag far enough.
+    return navigationState.index; // Didn't drag far enough.
   };
 
   const tabBarMoveAmountStyle = { transform: [{ translateX: tabBarMoveAmount as unknown as number }] };
 
   return (
-    <Animated.View style={StyleSheet.flatten([styles.container, tabBarMoveAmountStyle])} {...panResponder.panHandlers}>
-      {tabItems}
-    </Animated.View>
+    <View style={styles.container}>
+      <ScrollView horizontal>
+        <Animated.View
+          style={StyleSheet.flatten([styles.scrollableContainer, tabBarMoveAmountStyle])} {...panResponder.panHandlers}>
+          {tabItems}
+        </Animated.View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 70,
+  },
+  scrollableContainer: {
     flexDirection: 'row',
+    paddingVertical: 20,
     position: 'absolute',
-    alignItems: 'center',
+    paddingRight: Dimensions.get('window').width,
     left: 0,
-    paddingRight: Dimensions.get('window').width * 2, // Extra space at the right end so the user can drag beyond the tab items. Bit hacky.
-    paddingLeft: SELECTED_TAB_ITEM_LEFT_MARGIN, // Left padding so the user can drag beyond the first tab item. Again, bit hacky.
   },
   item: {
     marginRight: 20,

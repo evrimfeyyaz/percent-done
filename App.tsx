@@ -2,18 +2,18 @@ import React from 'react';
 import {
   createBottomTabNavigator,
   createStackNavigator,
-  createAppContainer,
+  createAppContainer, TabRouter, createNavigationContainer, createNavigator,
 } from 'react-navigation';
 import Storybook from './storybook';
 import { colors, fonts } from './src/theme';
 import {
   SettingsScreen,
-  TodayScreen,
   TomorrowScreen,
-  StatsScreen,
+  StatsScreen, GoalsScreen, TimetableScreen,
 } from './src/screens';
 import { Image, YellowBox } from 'react-native';
 import { Icons } from './assets';
+import { TabNavigationView } from './src/navigation';
 
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
@@ -21,9 +21,30 @@ YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
 // export default Storybook;
 
+const router = TabRouter(
+  {
+    Goals: GoalsScreen,
+    Timetable: TimetableScreen,
+  },
+  {
+    initialRouteName: 'Goals',
+  },
+);
+
+const TodayTabsNavigator = createNavigator(
+  TabNavigationView,
+  router,
+  {
+    navigationOptions: {
+      title: 'Today',
+    },
+  },
+);
+
 const TodayStack = createStackNavigator({
-  Today: TodayScreen,
-});
+    Today: TodayTabsNavigator,
+  },
+);
 
 const TomorrowStack = createStackNavigator({
   Tomorrow: TomorrowScreen,
