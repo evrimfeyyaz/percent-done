@@ -2,7 +2,7 @@ import React from 'react';
 import {
   createBottomTabNavigator,
   createStackNavigator,
-  createAppContainer, TabRouter, createNavigationContainer, createNavigator,
+  createAppContainer, TabRouter, createNavigator,
 } from 'react-navigation';
 import Storybook from './storybook';
 import { colors, fonts } from './src/theme';

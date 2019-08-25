@@ -9,10 +9,10 @@ import {
   PanResponderGestureState,
   View, LayoutChangeEvent,
 } from 'react-native';
-import { NavigationState } from 'react-navigation';
+import { NavigationLeafRoute, NavigationParams } from 'react-navigation';
 
 interface Props {
-  navigationState: NavigationState
+  navigationState: NavigationLeafRoute<NavigationParams>
   onTabChange: (newIndex: number) => void;
 }
 
@@ -202,7 +202,7 @@ export const TabBar: FunctionComponent<Props> = ({
   const getIndexOfTabToSelect = (dragAmount: number) => {
     if (dragAmount < MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged left, go to next item.
       return Math.min(selectedTabIndex + 1, navigationState.routes.length - 1);
-    } else if (dragAmount >  MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged right, go to previous item.
+    } else if (dragAmount > MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged right, go to previous item.
       return Math.max(selectedTabIndex - 1, 0);
     }
 
