@@ -1,62 +1,64 @@
-import React, {
-  forwardRef,
-  ForwardRefExoticComponent,
-  PropsWithoutRef,
-  RefAttributes,
-} from 'react';
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Animated, LayoutChangeEvent, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { colors, fonts } from '../../theme';
 
-interface TabItemProps {
+interface Props {
   title: string;
-  active?: boolean;
-  onPress?: (title: string) => void;
+  index: number;
+  onPress?: (index: number) => void;
   style?: ViewStyle;
+  disabled?: boolean;
+  onLayout?: (index: number, event: LayoutChangeEvent) => void;
+  /**
+   * An animated value between 0 and 1, used for transitioning during tab selection animations.
+   * 0 means not selected, and 1 means selected. Anything in between means tab selection is
+   * changing.
+   */
+  selectionStatus?: Animated.Value;
 }
 
-export const TabItem: ForwardRefExoticComponent<PropsWithoutRef<TabItemProps> & RefAttributes<TouchableOpacity>> =
-  forwardRef(({ title, active = false, onPress, style }, ref) => {
+export const TabItem: FunctionComponent<Props> = ({
+                                                    title, index, onPress, disabled, onLayout,
+                                                    selectionStatus = new Animated.Value(0), style,
+                                                  }) => {
+  const handlePress = () => {
+    if (onPress != null) {
+      onPress(index);
+    }
+  };
 
-    const handlePress = () => {
-      if (onPress != null) {
-        onPress(title);
-      }
-    };
+  const handleLayout = (event: LayoutChangeEvent) => {
+    if (onLayout != null) {
+      onLayout(index, event);
+    }
+  };
 
-    const titleStyle = active
-      ? StyleSheet.flatten([styles.title, styles.titleActive])
-      : styles.title;
-    const activeContainerStyle = active ? styles.containerActive : null;
-
-    return (
-      <TouchableOpacity
-        style={StyleSheet.flatten([styles.container, activeContainerStyle, style])}
-        onPress={handlePress}
-        disabled={active}
-        ref={ref}
-      >
-        <Text style={titleStyle}>{title}</Text>
-      </TouchableOpacity>
-    );
+  const titleColor = Animated.diffClamp(selectionStatus, 0, 1).interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.gray, colors.white],
   });
+  const titleStyle = { color: titleColor };
+
+  return (
+    <TouchableOpacity
+      style={style}
+      onPress={handlePress}
+      disabled={disabled}
+      onLayout={handleLayout}
+    >
+      {/*
+      // @ts-ignore */}
+      <Animated.Text style={StyleSheet.flatten([styles.title, titleStyle])}>{title}</Animated.Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    borderBottomWidth: 2,
-    borderBottomColor: 'rgba(0,0,0,0)',
-  },
-  containerActive: {
-    borderBottomColor: colors.blue,
-  },
   title: {
     fontFamily: fonts.regular,
     color: colors.gray,
     fontSize: 20,
     textTransform: 'uppercase',
     width: '100%',
-  },
-  titleActive: {
-    fontFamily: fonts.semibold,
-    color: colors.white,
   },
 });

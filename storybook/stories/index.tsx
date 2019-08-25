@@ -257,7 +257,7 @@ storiesOf('Navigation', module)
     <TabItem title="Goals" />
   ))
   .add('Tab item (active)', () => (
-    <TabItem title="Goals" active={true} />
+    <TabItem title="Goals" selected={true} />
   ))
   .add('Tab bar', () => {
     const tabs = ['Stats', 'Achievements', 'Time Machine', 'Commitments'];

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useState, useEffect, MutableRefObject } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { TabItem } from './TabItem';
 import {
   StyleSheet,
@@ -7,60 +7,85 @@ import {
   PanResponder,
   GestureResponderEvent,
   PanResponderGestureState,
-  View, ScrollView,
+  View, LayoutChangeEvent, EasingFunction,
 } from 'react-native';
 import { NavigationState } from 'react-navigation';
 
-interface TabBarProps {
+interface Props {
   navigationState: NavigationState
-  onTabChange: (newTabTitle: string) => void;
+  onTabChange: (newIndex: number) => void;
 }
 
 const SELECTED_TAB_ITEM_LEFT_MARGIN = 50;
+const MIN_DRAG_AMOUNT_TO_CHANGE_TABS = 50;
 
-export const TabBar: FunctionComponent<TabBarProps> = ({
-                                                         navigationState,
-                                                         onTabChange,
-                                                       }) => {
-  /**
-   * X position each tab item should have when they are selected.
-   */
-  const [tabItemXPositionsWhenSelected, setTabItemXPositionsWhenSelected] = useState<number[]>([]);
+export const TabBar: FunctionComponent<Props> = ({
+                                                   navigationState,
+                                                   onTabChange,
+                                                 }) => {
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
   /**
    * The distance of the tab bar to its original position in the x axis.
    */
-  const [tabBarMoveAmount] = useState(new Animated.Value(SELECTED_TAB_ITEM_LEFT_MARGIN));
+  const [translateX] = useState(new Animated.Value(SELECTED_TAB_ITEM_LEFT_MARGIN));
 
-  useEffect(() => { // Calculate tab item x positions.
-    const measurePromises = tabItemRefs.map(ref => new Promise<number>(resolve => {
-      if (ref.current != null) {
-        ref.current.measure((x: number) => resolve(x));
-      }
-    }));
+  /**
+   * X position each tab item should have when they are selected.
+   */
+  const [selectedTabPositions, setSelectedTabPositions] = useState<{ [index: number]: number }>({});
 
-    Promise.all(measurePromises).then(xPositions => {
-      const selectedXPositions = xPositions.map(xPosition => SELECTED_TAB_ITEM_LEFT_MARGIN - xPosition);
-      setTabItemXPositionsWhenSelected(selectedXPositions);
-      console.log(selectedXPositions);
-    });
+  /**
+   * Selection status of each tab. 1 means selected, 0 means not selected.
+   * Any number between 0 and 1 indicates there is a transition between tabs.
+   * This value is used for transition effects between tabs.
+   */
+  const [tabSelectionStatus, setTabSelectionStatus] = useState<{ [index: number]: Animated.Value }>({});
+
+  /**
+   * Returns a config object for the animation used for moving
+   * tabs during transitions or a gesture.
+   */
+  const tabMoveAnimationConfig = (toValue: number) => {
+    return {
+      toValue,
+      duration: 200,
+      useNativeDriver: true,
+    };
+  };
+
+  /**
+   * Returns a config object for the animation used for the color
+   * change between the selected and the next potential tab item.
+   */
+  const colorChangeAnimationConfig = (toValue: number) => {
+    return {
+      toValue,
+      duration: 200,
+    };
+  };
+
+  /**
+   * If navigation state and local state don't match, fix it.
+   */
+  useEffect(() => {
+    if (navigationState.index != selectedTabIndex) {
+      moveToTab(selectedTabIndex, navigationState.index);
+    }
   }, [navigationState]);
 
-  useEffect(() => { // Animate tab changes.
-    if (tabItemXPositionsWhenSelected[navigationState.index] == null) return;
-
-    Animated.spring(
-      tabBarMoveAmount,
-      {
-        toValue: tabItemXPositionsWhenSelected[navigationState.index],
-        overshootClamping: true,
-      }).start();
-  });
+  /**
+   * Notify listeners when selected tab changes.
+   */
+  useEffect(() => {
+    onTabChange(selectedTabIndex);
+  }, [selectedTabIndex]);
 
   const handleResponderGrant = () => {
-    const tabBarMoveAmountOffset = tabItemXPositionsWhenSelected[navigationState.index];
+    const offset = selectedTabPositions[selectedTabIndex];
 
-    tabBarMoveAmount.setOffset(tabBarMoveAmountOffset);
-    tabBarMoveAmount.setValue(0);
+    translateX.setOffset(offset);
+    translateX.setValue(0);
   };
 
   const handleResponderMove = Animated.event(
@@ -68,48 +93,91 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
     // @ts-ignore
     {
       listener: (event: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-        tabBarMoveAmount.setValue(decelerateDrag(gestureState.dx));
+        const potentialTabIndex = getPotentialTabIndex(gestureState.dx);
+
+        if (potentialTabIndex !== selectedTabIndex) {
+          const dragRatio = Math.abs(gestureState.dx) / MIN_DRAG_AMOUNT_TO_CHANGE_TABS;
+          const selectionStatus = Math.min(dragRatio, 1);
+          tabSelectionStatus[potentialTabIndex].setValue(selectionStatus);
+          tabSelectionStatus[selectedTabIndex].setValue(1 - selectionStatus);
+        }
+
+        translateX.setValue(decelerateDrag(gestureState.dx));
       },
     });
 
   const handleResponderRelease = (e: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-    tabBarMoveAmount.flattenOffset();
+    translateX.flattenOffset();
 
-    const newSelectedTabIndex = getSelectedTabIndexByDragAmount(gestureState.dx);
+    const { dx } = gestureState;
+    const newSelectedTabIndex = getIndexOfTabToSelect(dx);
+    const potentialTabIndex = getPotentialTabIndex(dx);
 
-    if (navigationState.index === newSelectedTabIndex) {
-      Animated.spring(tabBarMoveAmount, { toValue: tabItemXPositionsWhenSelected[navigationState.index] }).start();
-    } else {
-      const newTabTitle = navigationState.routes[newSelectedTabIndex].routeName;
-
-      onTabChange(newTabTitle);
+    if (newSelectedTabIndex !== selectedTabIndex) { // Dragged enough to change tabs.
+      moveToTab(selectedTabIndex, newSelectedTabIndex);
+    } else { // Failed to drag enough to move to another tab.
+      moveToTab(potentialTabIndex, selectedTabIndex);
     }
   };
 
-  const tabItemRefs: MutableRefObject<any>[] = [];
+  const handlePress = (index: number) => {
+    moveToTab(selectedTabIndex, index);
+  };
+
+  const handleTabLayout = (tabIndex: number, event: LayoutChangeEvent) => {
+    const { x } = event.nativeEvent.layout;
+    const selectedXPosition = SELECTED_TAB_ITEM_LEFT_MARGIN - x;
+
+    setSelectedTabPositions({ ...selectedTabPositions, [tabIndex]: selectedXPosition });
+  };
+
   const tabItems = navigationState.routes.map((route, index) => {
-    const ref = useRef(null);
-    tabItemRefs.push(ref);
+    const isSelected = index === selectedTabIndex;
+    const selectionStatusValue = isSelected ? 1 : 0;
+
+    if (tabSelectionStatus[index] == null) {
+      const selectionStatus = new Animated.Value(selectionStatusValue);
+      setTabSelectionStatus({ ...tabSelectionStatus, [index]: selectionStatus });
+    }
 
     return <TabItem
       title={route.routeName}
-      active={index === navigationState.index}
+      index={index}
       key={route.key}
       style={styles.item}
-      onPress={onTabChange}
-      ref={ref}
+      onPress={handlePress}
+      onLayout={handleTabLayout}
+      disabled={isSelected}
+      selectionStatus={tabSelectionStatus[index]}
     />;
   });
 
   const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponderCapture: () => true,
+    onStartShouldSetPanResponder: () => false,
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      const { dx, dy } = gestureState;
+      return dx > 2 || dx < -2 || dy > 2 || dy < -2;
+    },
     onPanResponderTerminationRequest: () => true,
     onPanResponderGrant: handleResponderGrant,
     onPanResponderMove: handleResponderMove,
     onPanResponderRelease: handleResponderRelease,
     onPanResponderTerminate: handleResponderRelease,
   });
+
+  const moveToTab = (fromIndex: number, toIndex: number) => {
+    const toXPosition = selectedTabPositions[toIndex];
+
+    Animated.parallel([
+      Animated.timing(tabSelectionStatus[fromIndex], colorChangeAnimationConfig(0)),
+      Animated.timing(tabSelectionStatus[toIndex], colorChangeAnimationConfig(1)),
+      Animated.timing(translateX, tabMoveAnimationConfig(toXPosition)),
+    ]).start(
+      () => {
+        setSelectedTabIndex(toIndex);
+      },
+    );
+  };
 
   /**
    * As the user pulls beyond the bounds at a point, slowly decelerates
@@ -129,30 +197,40 @@ export const TabBar: FunctionComponent<TabBarProps> = ({
 
   /**
    * Returns the index for the item that we should move to based on
-   * the way user drags the tab bar.
+   * user's gesture.
    */
-  const getSelectedTabIndexByDragAmount = (dragAmount: number) => {
-    const minDragAmount = 50;
-
-    if (dragAmount < -minDragAmount) { // Dragged left, go to next item.
-      return Math.min(navigationState.index + 1, navigationState.routes.length - 1);
-    } else if (dragAmount > minDragAmount) { // Dragged right, go to previous item.
-      return Math.max(navigationState.index - 1, 0);
+  const getIndexOfTabToSelect = (dragAmount: number) => {
+    if (dragAmount < MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged left, go to next item.
+      return Math.min(selectedTabIndex + 1, navigationState.routes.length - 1);
+    } else if (dragAmount >  MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged right, go to previous item.
+      return Math.max(selectedTabIndex - 1, 0);
     }
 
-    return navigationState.index; // Didn't drag far enough.
+    return selectedTabIndex; // Didn't drag far enough.
   };
 
-  const tabBarMoveAmountStyle = { transform: [{ translateX: tabBarMoveAmount as unknown as number }] };
+  /**
+   * Returns the index for the item that the user is swiping towards.
+   */
+  const getPotentialTabIndex = (dragAmount: number) => {
+    if (dragAmount < 0) { // Dragging left.
+      return Math.min(selectedTabIndex + 1, navigationState.routes.length - 1);
+    }
+
+    return Math.max(selectedTabIndex - 1, 0);
+  };
+
+  const tabBarMoveAmountStyle = { transform: [{ translateX: translateX as unknown as number }] };
+  const windowWidth = Dimensions.get('window').width;
 
   return (
     <View style={styles.container}>
-      <ScrollView horizontal>
-        <Animated.View
-          style={StyleSheet.flatten([styles.scrollableContainer, tabBarMoveAmountStyle])} {...panResponder.panHandlers}>
-          {tabItems}
-        </Animated.View>
-      </ScrollView>
+      <Animated.View
+        style={StyleSheet.flatten([styles.scrollableContainer, tabBarMoveAmountStyle])} {...panResponder.panHandlers}
+        hitSlop={{ left: windowWidth, right: windowWidth }}
+      >
+        {tabItems}
+      </Animated.View>
     </View>
   );
 };
@@ -165,7 +243,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 20,
     position: 'absolute',
-    paddingRight: Dimensions.get('window').width,
     left: 0,
   },
   item: {

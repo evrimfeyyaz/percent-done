@@ -8,8 +8,10 @@ interface Props {
 }
 
 export const TabNavigationView: FunctionComponent<Props> = ({ navigation }) => {
-  const onTabChange = (newTabTitle: string) => {
-    navigation.navigate(newTabTitle);
+  const onTabChange = (index: number) => {
+    const tabTitle = navigation.state.routes[index].routeName;
+
+    navigation.navigate(tabTitle);
   };
 
   return (
