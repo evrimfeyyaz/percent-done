@@ -7,7 +7,7 @@ import {
   PanResponder,
   GestureResponderEvent,
   PanResponderGestureState,
-  View, LayoutChangeEvent, EasingFunction,
+  View, LayoutChangeEvent,
 } from 'react-native';
 import { NavigationState } from 'react-navigation';
 
