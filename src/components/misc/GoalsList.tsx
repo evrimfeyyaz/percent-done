@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import { View } from 'react-native';
 import { GoalRow, GoalRowProps } from './GoalRow';
 
 interface Props {
