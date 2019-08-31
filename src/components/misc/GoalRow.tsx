@@ -4,14 +4,8 @@ import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
 
-interface GoalRowProps {
-  /**
-   * Name of the goal.
-   */
+export interface GoalRowProps {
   name: string;
-  /**
-   * Color of the goal.
-   */
   color: string;
   /**
    * Number of days this goal has been completed in a row.
@@ -31,12 +25,12 @@ interface GoalRowProps {
  * A row that shows information on a given goal.
  */
 export const GoalRow: FunctionComponent<GoalRowProps> = ({
-                                                           name,
-                                                           color,
-                                                           chainLength = null,
-                                                           totalMinutes = null,
-                                                           completedMinutes = null,
-                                                         }) => {
+                                                    name,
+                                                    color,
+                                                    chainLength = null,
+                                                    totalMinutes = null,
+                                                    completedMinutes = null,
+                                                  }) => {
   const nameStyle = StyleSheet.flatten([styles.name, { color }]);
 
   let chainInfo = null;

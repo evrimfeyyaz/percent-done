@@ -9,10 +9,15 @@ import {
   PanResponderGestureState,
   View, LayoutChangeEvent,
 } from 'react-native';
-import { NavigationLeafRoute, NavigationParams } from 'react-navigation';
+
+export interface TabInfo {
+  key: string,
+  title: string,
+}
 
 interface Props {
-  navigationState: NavigationLeafRoute<NavigationParams>
+  tabs: TabInfo[];
+  selectedIndex: number;
   onTabChange: (newIndex: number) => void;
 }
 
@@ -20,7 +25,8 @@ const SELECTED_TAB_ITEM_LEFT_MARGIN = 50;
 const MIN_DRAG_AMOUNT_TO_CHANGE_TABS = 50;
 
 export const TabBar: FunctionComponent<Props> = ({
-                                                   navigationState,
+                                                   selectedIndex,
+                                                   tabs,
                                                    onTabChange,
                                                  }) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
@@ -69,10 +75,10 @@ export const TabBar: FunctionComponent<Props> = ({
    * If navigation state and local state don't match, fix it.
    */
   useEffect(() => {
-    if (navigationState.index != selectedTabIndex) {
-      moveToTab(selectedTabIndex, navigationState.index);
+    if (selectedIndex != selectedTabIndex) {
+      moveToTab(selectedTabIndex, selectedIndex);
     }
-  }, [navigationState]);
+  }, [selectedIndex, tabs]);
 
   /**
    * Notify listeners when selected tab changes.
@@ -131,7 +137,7 @@ export const TabBar: FunctionComponent<Props> = ({
     setSelectedTabPositions({ ...selectedTabPositions, [tabIndex]: selectedXPosition });
   };
 
-  const tabItems = navigationState.routes.map((route, index) => {
+  const tabItems = tabs.map((tab, index) => {
     const isSelected = index === selectedTabIndex;
     const selectionStatusValue = isSelected ? 1 : 0;
 
@@ -141,9 +147,9 @@ export const TabBar: FunctionComponent<Props> = ({
     }
 
     return <TabItem
-      title={route.routeName}
+      title={tab.title}
       index={index}
-      key={route.key}
+      key={tab.key}
       style={styles.item}
       onPress={handlePress}
       onLayout={handleTabLayout}
@@ -201,7 +207,7 @@ export const TabBar: FunctionComponent<Props> = ({
    */
   const getIndexOfTabToSelect = (dragAmount: number) => {
     if (dragAmount < MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged left, go to next item.
-      return Math.min(selectedTabIndex + 1, navigationState.routes.length - 1);
+      return Math.min(selectedTabIndex + 1, tabs.length - 1);
     } else if (dragAmount > MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged right, go to previous item.
       return Math.max(selectedTabIndex - 1, 0);
     }
@@ -214,7 +220,7 @@ export const TabBar: FunctionComponent<Props> = ({
    */
   const getPotentialTabIndex = (dragAmount: number) => {
     if (dragAmount < 0) { // Dragging left.
-      return Math.min(selectedTabIndex + 1, navigationState.routes.length - 1);
+      return Math.min(selectedTabIndex + 1, tabs.length - 1);
     }
 
     return Math.max(selectedTabIndex - 1, 0);

@@ -3,7 +3,7 @@ import { ProgressCircle } from 'react-native-svg-charts';
 import { StyleSheet, View, Text } from 'react-native';
 import { colors, fonts } from '../../theme';
 
-interface ProgressChartProps {
+interface Props {
   /**
    * Percentage of the work completed.
    */
@@ -13,11 +13,9 @@ interface ProgressChartProps {
 /**
  * Shows a circular chart.
  */
-export const ProgressChart: FunctionComponent<ProgressChartProps> = ({
-                                                                       percentDone = 0,
-                                                                     }) => {
+export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => {
   return (
-    <>
+    <View style={styles.container}>
       <ProgressCircle
         style={styles.circle}
         progress={percentDone / 100}
@@ -31,20 +29,18 @@ export const ProgressChart: FunctionComponent<ProgressChartProps> = ({
           {percentDone}
           <Text style={styles.percentSign}>%</Text>
         </Text>
-        <Text style={styles.done}>Done</Text>
+        <Text style={styles.doneText}>Done</Text>
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: 125,
+  },
   infoContainer: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    display: 'flex',
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -56,7 +52,7 @@ const styles = StyleSheet.create({
   percentSign: {
     fontSize: 12,
   },
-  done: {
+  doneText: {
     fontFamily: fonts.semibold,
     fontSize: 12,
     color: colors.gray,

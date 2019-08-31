@@ -13,13 +13,15 @@ import {
 } from './src/screens';
 import { Image, YellowBox } from 'react-native';
 import { Icons } from './assets';
-import { TabNavigationView } from './src/navigation';
+import { TabNavigationView } from './src/components';
+import { combineReducers, createStore } from 'redux';
+import { goalReducer } from './src/store/goal/reducers';
 
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
-// export default Storybook;
+export default Storybook;
 
 const router = TabRouter(
   {
@@ -92,11 +94,14 @@ const AppNavigator = createBottomTabNavigator(
 
 const AppContainer = createAppContainer(AppNavigator);
 
-export default class App extends React.Component {
-  render() {
-    return <AppContainer />;
-  }
-}
+// const rootReducer = combineReducers();
+// const store = createStore(rootReducer);
+
+// export default class App extends React.Component {
+//   render() {
+//     return <AppContainer />;
+//   }
+// }
 
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {

@@ -4,7 +4,7 @@ import {
   NavigationTabRouterConfig,
   NavigationView, SceneView,
 } from 'react-navigation';
-import { BackgroundView, TabBar } from '../components';
+import { BackgroundView, TabBar, TabInfo } from '..';
 
 export const TabNavigationView: NavigationView<NavigationTabRouterConfig, NavigationState> = ({ navigation, descriptors }) => {
   const onTabChange = (index: number) => {
@@ -16,10 +16,14 @@ export const TabNavigationView: NavigationView<NavigationTabRouterConfig, Naviga
   const activeKey = navigation.state.routes[navigation.state.index].key;
   const descriptor = descriptors[activeKey];
 
+  const tabs: TabInfo[] = navigation.state.routes.map(route => ({
+    key: route.key,
+    title: route.routeName,
+  }));
 
   return (
     <BackgroundView>
-      <TabBar navigationState={navigation.state} onTabChange={onTabChange} />
+      <TabBar selectedIndex={navigation.state.index} tabs={tabs} onTabChange={onTabChange} />
       {/*
       // @ts-ignore */}
       <SceneView navigation={descriptor.navigation} component={descriptor.getComponent()} />

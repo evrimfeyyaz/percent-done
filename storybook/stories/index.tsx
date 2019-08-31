@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Animated, Text } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
@@ -11,6 +11,7 @@ import {
   DaysOfWeekInput,
   DurationInput,
   GoalRow,
+  GoalRowProps,
   MenuLink,
   StatChart,
   ProgressChart,
@@ -22,6 +23,8 @@ import {
   TimeInput,
   Timetable,
   TimetableEntry,
+  TabInfo,
+  GoalsList,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -51,7 +54,7 @@ storiesOf('Text styles', module)
     </Text>
   ));
 
-storiesOf('Containers', module)
+storiesOf('Miscellaneous', module)
   .add('Section', () => (
     <Section title="Sample Section">
       <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
@@ -65,7 +68,16 @@ storiesOf('Containers', module)
       completedMinutes={30}
       totalMinutes={60}
     />
-  ));
+  ))
+  .add('Goals list', () => {
+    const goals: (GoalRowProps & { key: string })[] = [
+      { name: 'Write', color: colors.white, chainLength: 10, completedMinutes: 30, totalMinutes: 60, key: 'goal1' },
+      { name: 'Write', color: colors.orange, chainLength: 20, completedMinutes: 40, totalMinutes: 120, key: 'goal2' },
+      { name: 'Write', color: colors.blue, chainLength: 0, completedMinutes: 10, totalMinutes: 20, key: 'goal3' },
+    ];
+
+    return <GoalsList goals={goals} />;
+  });
 
 storiesOf('Charts', module)
   .add('Progress chart', () => {
@@ -254,18 +266,23 @@ storiesOf('Inputs', module)
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
-    <TabItem title="Goals" />
+    <TabItem title="Goals" index={0} />
   ))
   .add('Tab item (active)', () => (
-    <TabItem title="Goals" selected={true} />
+    <TabItem title="Goals" index={0} selectionStatus={new Animated.Value(1)} />
   ))
   .add('Tab bar', () => {
-    const tabs = ['Stats', 'Achievements', 'Time Machine', 'Commitments'];
+    const tabs: TabInfo[] = [
+      { key: 'tab1', title: 'Stats' },
+      { key: 'tab2', title: 'Achievements' },
+      { key: 'tab3', title: 'Time Machine' },
+      { key: 'tab4', title: 'Commitments' },
+    ];
 
     return (
       <TabBar
-        tabTitles={tabs}
-        initialSelectedTabIndex={0}
+        selectedIndex={0}
+        tabs={tabs}
         onTabChange={action('tab-change')}
       />
     );

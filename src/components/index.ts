@@ -1,7 +1,8 @@
-// Containers
-export * from './containers/Section';
-export * from './containers/BackgroundView';
-export * from './containers/GoalRow';
+// Miscellaneous
+export * from './misc/Section';
+export * from './misc/BackgroundView';
+export * from './misc/GoalRow';
+export * from './misc/GoalsList';
 
 // Charts
 export * from './charts/ProgressChart';
@@ -24,3 +25,4 @@ export * from './inputs/MenuLink';
 // Navigation
 export * from './navigation/TabItem';
 export * from './navigation/TabBar';
+export * from './navigation/TabNavigationView';
