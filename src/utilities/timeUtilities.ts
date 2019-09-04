@@ -60,3 +60,24 @@ export function shortDayName(date: Date) {
     .format('ddd')
     .toUpperCase();
 }
+
+/**
+ * Creates a string from a given date that can be
+ * used as an index denoting the day in an object.
+ */
+export function convertDateToIndex(date: Date) {
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}
+
+export function compareDateIndices(dateIdx1: string, dateIdx2: string) {
+  const [year1, month1, day1] = dateIdx1.split('-').map(t => parseInt(t));
+  const [year2, month2, day2] = dateIdx2.split('-').map(t => parseInt(t));
+
+  if (year1 !== year2) {
+    return year1 - year2;
+  } else if (month1 !== month2) {
+    return month1 - month2;
+  } else {
+    return day1 - day2;
+  }
+}

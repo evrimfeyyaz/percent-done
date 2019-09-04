@@ -19,18 +19,23 @@ export interface GoalRowProps {
    * Total minutes completed.
    */
   completedMinutes?: number;
+  /**
+   * Current progress of the goal.
+   */
+  progressPercentage?: number;
 }
 
 /**
  * A row that shows information on a given goal.
  */
 export const GoalRow: FunctionComponent<GoalRowProps> = ({
-                                                    name,
-                                                    color,
-                                                    chainLength = null,
-                                                    totalMinutes = null,
-                                                    completedMinutes = null,
-                                                  }) => {
+                                                           name,
+                                                           color,
+                                                           chainLength = null,
+                                                           totalMinutes = null,
+                                                           completedMinutes = null,
+                                                           progressPercentage = 0,
+                                                         }) => {
   const nameStyle = StyleSheet.flatten([styles.name, { color }]);
 
   let chainInfo = null;
@@ -44,7 +49,6 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
   }
 
   let durationInfo = null;
-  let progress = 0;
   if (totalMinutes != null && completedMinutes != null) {
     const { hours, minutes } = hoursAndMinutes(totalMinutes - completedMinutes);
 
@@ -56,15 +60,13 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
         <Text style={styles.leftText}>Left</Text>
       </View>
     );
-
-    progress = completedMinutes / totalMinutes;
   }
 
   return (
     <View style={styles.container}>
       <ProgressCircle
         style={styles.circle}
-        progress={progress}
+        progress={progressPercentage}
         backgroundColor={colors.darkGray}
         progressColor={color}
         strokeWidth={4}
