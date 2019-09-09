@@ -79,7 +79,6 @@ describe('goals selectors', () => {
             totalSeconds: goal.durationInSeconds,
             completedSeconds: 30 * 60,
             chainLength: chainLength,
-            isCompleted: true,
           },
         ],
       };
@@ -106,8 +105,8 @@ describe('goals selectors', () => {
             key: goal.id,
             title: goal.title,
             color: goal.color,
-            totalSeconds: goal.durationInSeconds,
-            completedSeconds: 0,
+            totalSeconds: undefined,
+            completedSeconds: undefined,
             chainLength: 0,
             isCompleted: true,
           },

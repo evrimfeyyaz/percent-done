@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NavigationScreenComponent } from 'react-navigation';
 import { ProgressChart, Section } from '../components';
-import { TodaysIncompleteGoalsList } from '../containers';
+import { TodaysCompletedGoalsList, TodaysIncompleteGoalsList } from '../containers';
 import { textStyles } from '../theme';
 
 export const GoalsScreen: NavigationScreenComponent = () => {
@@ -32,6 +32,10 @@ export const GoalsScreen: NavigationScreenComponent = () => {
 
       <Section title='Incomplete Goals'>
         <TodaysIncompleteGoalsList />
+      </Section>
+
+      <Section title='Completed Goals'>
+        <TodaysCompletedGoalsList />
       </Section>
     </ScrollView>
   );

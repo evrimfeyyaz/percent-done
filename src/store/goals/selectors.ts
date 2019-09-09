@@ -26,10 +26,15 @@ export const getCompleteGoals = (state: StoreState, date: Date): Goal[] =>
  */
 export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], date: Date): GoalListProps => {
   const convertedGoals = goals.map(goal => {
-    const { title, color, chainLength, id: key } = goal;
+    const { title, color, chainLength, isTimeTracked, id: key } = goal;
 
-    const completedSeconds = getCompletedSeconds(state, goal, date);
-    const completed = isCompleted(state, goal, date);
+    let completedSeconds, totalSeconds, completed;
+    if (isTimeTracked) {
+      completedSeconds = getCompletedSeconds(state, goal, date);
+      totalSeconds = goal.durationInSeconds;
+    } else {
+      completed = isCompleted(state, goal, date);
+    }
 
     return {
       key,
@@ -37,7 +42,7 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
       color,
       chainLength,
       completedSeconds,
-      totalSeconds: goal.durationInSeconds,
+      totalSeconds,
       isCompleted: completed,
     };
   });

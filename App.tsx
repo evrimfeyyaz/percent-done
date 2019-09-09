@@ -100,22 +100,35 @@ const AppNavigator = createBottomTabNavigator(
 const AppContainer = createAppContainer(AppNavigator);
 
 const today = new Date();
-const todayIdx = convertDateToIndex(today);
-const goal = createGoal({
+const incompleteGoal = createGoal({
   title: 'Work on PercentDone',
   durationInSeconds: 1 * 60 * 60,
   chainLength: 23,
   color: colors.orange,
+  isTimeTracked: true,
+}, [today]);
+const completedGoal = createGoal({
+  title: 'Read',
+  durationInSeconds: 0,
+  isTimeTracked: false,
+  chainLength: 10,
+  color: colors.blue,
 }, [today]);
 const timetableEntry = createTimetableEntry({
-  goalId: goal.id,
+  goalId: incompleteGoal.id,
   startHour: 10,
   durationInMin: 30,
   startDate: today,
 });
+const timetableEntry2 = createTimetableEntry({
+  goalId: completedGoal.id,
+  startHour: 10,
+  durationInMin: 0,
+  startDate: today,
+});
 const seedData = createStoreState({
-  goals: [goal],
-  timetableEntries: [timetableEntry],
+  goals: [incompleteGoal, completedGoal],
+  timetableEntries: [timetableEntry, timetableEntry2],
 });
 
 const rootReducer = combineReducers({
