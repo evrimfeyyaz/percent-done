@@ -1,7 +1,7 @@
 import React from 'react';
 import { StoreState } from '../store/types';
 import {
-  getCompletedSeconds, getRemainingSecondsForDate,
+  getRemainingSecondsForDate,
   getTotalCompletedSecondsForDate,
   getTotalProgressForDate,
 } from '../store/goals/selectors';
