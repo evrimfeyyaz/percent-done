@@ -1,9 +1,15 @@
 import { createGoal, createStoreState, createTimetableEntry } from '../../../src/factories';
 import {
   convertGoalsToGoalListProps,
+  getCompletedSeconds,
   getCompleteGoals,
   getGoals,
-  getIncompleteGoals, isCompleted,
+  getIncompleteGoals,
+  getProgress,
+  getRemainingSecondsForDate,
+  getTotalCompletedSecondsForDate,
+  getTotalProgressForDate,
+  isCompleted,
 } from '../../../src/store/goals/selectors';
 import { GoalListProps } from '../../../src/components';
 import moment from 'moment';
@@ -172,6 +178,168 @@ describe('goals selectors', () => {
 
         expect(isCompleted(state, goal, today)).toEqual(false);
       });
+    });
+  });
+
+  describe('getProgress', () => {
+    it('returns the current progress of a time-tracked goal', () => {
+      const goal = createGoal({ isTimeTracked: true, durationInSeconds: 60 * 60 });
+      const timetableEntry = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 30,
+      });
+
+      const state = createStoreState({
+        goals: [goal],
+        timetableEntries: [timetableEntry],
+      });
+
+      const progress = getProgress(state, goal, today);
+
+      expect(progress).toEqual(50);
+    });
+
+    it('returns the current progress of a time-tracked goal', () => {
+      const goal = createGoal({ isTimeTracked: false });
+      const timetableEntry = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 0,
+      });
+
+      const state = createStoreState({
+        goals: [goal],
+        timetableEntries: [timetableEntry],
+      });
+
+      const progress = getProgress(state, goal, today);
+
+      expect(progress).toEqual(100);
+    });
+  });
+
+  describe('getTotalProgressForDate', () => {
+    it('returns the current progress off all goals in percentage for given date', () => {
+      const goal1 = createGoal({ isTimeTracked: true, durationInSeconds: 60 * 60 }, [today]);
+      const goal2 = createGoal({ isTimeTracked: false }, [today]);
+      const goal3 = createGoal({ isTimeTracked: false }, [today]);
+
+      const timetableEntry1 = createTimetableEntry({
+        goalId: goal1.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 30,
+      });
+      const timetableEntry2 = createTimetableEntry({
+        goalId: goal2.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 0,
+      });
+
+      const state = createStoreState({
+        goals: [goal1, goal2, goal3],
+        timetableEntries: [timetableEntry1, timetableEntry2],
+      });
+
+      const progress = getTotalProgressForDate(state, today);
+
+      expect(progress).toEqual(50);
+    });
+  });
+
+  describe('getCompletedSeconds', () => {
+    it('returns the number of seconds that have been spent given goal and date', () => {
+      const goal = createGoal({ isTimeTracked: true, durationInSeconds: 60 * 60 }, [today]);
+      const timetableEntry = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 30,
+      });
+      const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry] });
+
+      const seconds = getCompletedSeconds(state, goal, today);
+
+      expect(seconds).toEqual(30 * 60);
+    });
+
+    it('returns `0` when there are no timetable entries for a goal', () => {
+      const goal = createGoal({}, [today]);
+      const state = createStoreState({ goals: [goal] });
+
+      const seconds = getCompletedSeconds(state, goal, today);
+
+      expect(seconds).toEqual(0);
+    });
+
+    it('returns `0` when given goal is not time-tracked', () => {
+      const goal = createGoal({ isTimeTracked: false }, [today]);
+      const state = createStoreState({ goals: [goal] });
+
+      const seconds = getCompletedSeconds(state, goal, today);
+
+      expect(seconds).toEqual(0);
+    });
+  });
+
+  describe('getTotalCompletedSecondsForDate', () => {
+    it('returns number of seconds spent on all goals on given date', () => {
+      const goal1 = createGoal({ isTimeTracked: true, durationInSeconds: 30 * 60 }, [today]);
+      const goal2 = createGoal({ isTimeTracked: true, durationInSeconds: 60 * 60 }, [today]);
+      const timetableEntry1 = createTimetableEntry({
+        goalId: goal1.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 15,
+      });
+      const timetableEntry2 = createTimetableEntry({
+        goalId: goal2.id,
+        startDate: today,
+        startHour: 11,
+        durationInMin: 30,
+      });
+      const state = createStoreState({ goals: [goal1, goal2], timetableEntries: [timetableEntry1, timetableEntry2] });
+
+      const seconds = getTotalCompletedSecondsForDate(state, today);
+
+      expect(seconds).toEqual((30 + 15) * 60);
+    });
+  });
+
+  describe('getRemainingSecondsForDate', () => {
+    it('returns the total number of seconds remaining for all goals on given day', () => {
+      const goal1 = createGoal({ isTimeTracked: true, durationInSeconds: 30 * 60 }, [today]);
+      const goal2 = createGoal({ isTimeTracked: true, durationInSeconds: 60 * 60 }, [today]);
+      const timetableEntry = createTimetableEntry({
+        goalId: goal1.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 15,
+      });
+      const state = createStoreState({ goals: [goal1, goal2], timetableEntries: [timetableEntry] });
+
+      const seconds = getRemainingSecondsForDate(state, today);
+
+      expect(seconds).toEqual((15 + 60) * 60);
+    });
+
+    it('returns `0` when completed seconds surpasses total seconds', () => {
+      const goal = createGoal({ isTimeTracked: true, durationInSeconds: 30 * 60 }, [today]);
+      const timetableEntry = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 45,
+      });
+      const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry] });
+
+      const seconds = getRemainingSecondsForDate(state, today);
+
+      expect(seconds).toEqual(0);
     });
   });
 });

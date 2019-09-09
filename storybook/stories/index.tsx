@@ -24,7 +24,7 @@ import {
   Timetable,
   TimetableEntry,
   TabInfo,
-  GoalList,
+  GoalList, DaysStats,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -235,6 +235,13 @@ storiesOf('Charts', module)
     const max = Math.max(...values);
 
     return <StatChart data={data} min={Math.floor(min)} max={Math.ceil(max)} />;
+  })
+  .add('Day\'s Stats', () => {
+    const progress = 42;
+    const completedSeconds = 1 * 60 * 60;
+    const remainingSeconds = 30 * 60;
+
+    return <DaysStats percentDone={progress} completedSeconds={completedSeconds} remainingSeconds={remainingSeconds} />;
   });
 
 storiesOf('Inputs', module)

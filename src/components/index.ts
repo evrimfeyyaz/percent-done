@@ -9,6 +9,7 @@ export * from './charts/ProgressChart';
 export * from './charts/Timetable';
 export * from './charts/Achievement';
 export * from './charts/StatChart';
+export * from './charts/DaysStats';
 
 // Inputs
 export * from './inputs/Button';

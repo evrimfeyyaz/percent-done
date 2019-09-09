@@ -1,5 +1,4 @@
 import { compareDateIndices, convertDateToIndex, convertSecondsToHoursAndMinutes } from '../../src/utilities';
-import { min } from 'moment';
 
 describe('convertDateToIndex', () => {
   it('converts given date to index', () => {

@@ -55,7 +55,7 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
 /**
  * Returns the total time spent on a goal for given date.
  */
-const getCompletedSeconds = (state: StoreState, goal: Goal, date: Date): number => {
+export const getCompletedSeconds = (state: StoreState, goal: Goal, date: Date): number => {
   const dateIdx = convertDateToIndex(date);
   const timetableEntryIds = goal.timetableEntryIds.byDate[dateIdx];
 
@@ -72,6 +72,30 @@ const getCompletedSeconds = (state: StoreState, goal: Goal, date: Date): number 
 
     return total + (msSpent / 1000);
   }, 0);
+};
+
+/**
+ * Returns the total number of seconds spent on all goals on given day.
+ */
+export const getTotalCompletedSecondsForDate = (state: StoreState, date: Date): number => {
+  const goals = getGoals(state, date);
+
+  return goals.reduce((totalSeconds, goal) => totalSeconds + getCompletedSeconds(state, goal, date), 0);
+};
+
+/**
+ * Returns the total number of seconds remaining for all goals on given day.
+ */
+export const getRemainingSecondsForDate = (state: StoreState, date: Date): number => {
+  const goals = getGoals(state, date);
+  const totalSeconds = goals.reduce((total, goal) => {
+    if (goal.durationInSeconds == null) return total;
+
+    return total + goal.durationInSeconds
+  }, 0);
+  const completedSeconds = getTotalCompletedSecondsForDate(state, date);
+
+  return Math.max(totalSeconds - completedSeconds, 0);
 };
 
 /**
@@ -93,4 +117,38 @@ export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean 
 
     return entries != null && entries.length > 0;
   }
+};
+
+/**
+ * Returns the current progress of a goal in percentage (0 to 100).
+ */
+export const getProgress = (state: StoreState, goal: Goal, date: Date): number => {
+  let progress = 0;
+
+  if (goal.isTimeTracked) {
+    const completedSeconds = getCompletedSeconds(state, goal, date);
+    const totalSeconds = goal.durationInSeconds;
+
+    if (totalSeconds == null) {
+      throw Error('A time tracked goal should have a total duration.');
+    }
+
+    progress = completedSeconds / totalSeconds;
+  } else {
+    progress = isCompleted(state, goal, date) ? 1 : 0;
+  }
+
+  return progress * 100;
+};
+
+/**
+ * Returns the current overall progress for a day in percentage (0 to 100).
+ */
+export const getTotalProgressForDate = (state: StoreState, date: Date): number => {
+  const goals = getGoals(state, date);
+  const numOfGoals = goals.length;
+
+  return goals.reduce((progress, goal) => {
+    return progress + getProgress(state, goal, date) / numOfGoals;
+  }, 0);
 };

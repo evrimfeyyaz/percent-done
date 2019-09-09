@@ -18,7 +18,7 @@ export interface GoalRowProps {
   totalSeconds?: number;
   completedSeconds?: number;
   /**
-   * For non-time-tracked goals.
+   * For non-time-tracked goals. Should be `undefined` for time-tracked goals.
    */
   isCompleted?: boolean;
 }

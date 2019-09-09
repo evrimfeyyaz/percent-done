@@ -1,2 +1,3 @@
-export * from './TodaysIncompleteGoalsList';
-export * from './TodaysCompletedGoalsList';
+export * from './TodaysIncompleteGoals';
+export * from './TodaysCompletedGoals';
+export * from './TodaysStats';
