@@ -81,3 +81,21 @@ export function compareDateIndices(dateIdx1: string, dateIdx2: string) {
     return day1 - day2;
   }
 }
+
+export function convertSecondsToHoursAndMinutes(seconds: number): { hours: number, minutes: number } {
+  const totalMinutes = seconds / 60;
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  return { hours, minutes };
+}
+
+/**
+ * This returns the beginning of day, as new Date() also includes the time,
+ * which would prevent selectors to be memoized properly as the time changes
+ * within a day.
+ */
+export function getBeginningOfDay(date: Date) {
+  return moment(date).startOf('day').toDate();
+}

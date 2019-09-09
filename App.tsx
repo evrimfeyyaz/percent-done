@@ -15,13 +15,18 @@ import { Image, YellowBox } from 'react-native';
 import { Icons } from './assets';
 import { TabNavigationView } from './src/components';
 import { combineReducers, createStore } from 'redux';
-import { goalReducer } from './src/store/goal/reducers';
+import { goalsReducer } from './src/store/goals/reducers';
+import { Provider } from 'react-redux';
+import { timetableEntriesReducer } from './src/store/timetableEntries/reducers';
+import { createGoal, createStoreState, createTimetableEntry } from './src/factories';
+import { convertDateToIndex } from './src/utilities';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
-export default Storybook;
+// export default Storybook;
 
 const router = TabRouter(
   {
@@ -94,14 +99,40 @@ const AppNavigator = createBottomTabNavigator(
 
 const AppContainer = createAppContainer(AppNavigator);
 
-// const rootReducer = combineReducers();
-// const store = createStore(rootReducer);
+const today = new Date();
+const todayIdx = convertDateToIndex(today);
+const goal = createGoal({
+  title: 'Work on PercentDone',
+  durationInSeconds: 1 * 60 * 60,
+  chainLength: 23,
+  color: colors.orange,
+}, [today]);
+const timetableEntry = createTimetableEntry({
+  goalId: goal.id,
+  startHour: 10,
+  durationInMin: 30,
+  startDate: today,
+});
+const seedData = createStoreState({
+  goals: [goal],
+  timetableEntries: [timetableEntry],
+});
 
-// export default class App extends React.Component {
-//   render() {
-//     return <AppContainer />;
-//   }
-// }
+const rootReducer = combineReducers({
+  goals: goalsReducer,
+  timetableEntries: timetableEntriesReducer,
+});
+const store = createStore(rootReducer, seedData, composeWithDevTools());
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    );
+  }
+}
 
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {

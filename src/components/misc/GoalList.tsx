@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from 'react';
 import { GoalRow, GoalRowProps } from './GoalRow';
 
-export interface GoalsListProps {
+export interface GoalListProps {
   goals: (GoalRowProps & { key: string })[];
 }
 
-export const GoalsList: FunctionComponent<GoalsListProps> = ({ goals = [] }) => {
+export const GoalList: FunctionComponent<GoalListProps> = ({ goals = [] }) => {
   const goalRows = goals.map(goal => <GoalRow {...goal} />);
 
   return (

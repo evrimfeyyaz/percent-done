@@ -24,7 +24,7 @@ import {
   Timetable,
   TimetableEntry,
   TabInfo,
-  GoalsList,
+  GoalList,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -62,21 +62,41 @@ storiesOf('Miscellaneous', module)
   ))
   .add('Goal row', () => (
     <GoalRow
-      name="Write"
+      title="Write"
       color={colors.yellow}
       chainLength={10}
-      completedMinutes={30}
-      totalMinutes={60}
+      completedSeconds={30}
+      totalSeconds={60}
     />
   ))
   .add('Goals list', () => {
     const goals: (GoalRowProps & { key: string })[] = [
-      { name: 'Write', color: colors.white, chainLength: 10, completedMinutes: 30, totalMinutes: 60, key: 'goal1' },
-      { name: 'Write', color: colors.orange, chainLength: 20, completedMinutes: 40, totalMinutes: 120, key: 'goal2' },
-      { name: 'Write', color: colors.blue, chainLength: 0, completedMinutes: 10, totalMinutes: 20, key: 'goal3' },
+      {
+        title: 'Write',
+        color: colors.white,
+        chainLength: 10,
+        completedSeconds: 30 * 60,
+        totalSeconds: 60 * 60,
+        key: 'goal1',
+      },
+      {
+        title: 'Write',
+        color: colors.orange,
+        chainLength: 20,
+        completedSeconds: 40 * 60,
+        totalSeconds: 120 * 60,
+        key: 'goal2',
+      },
+      {
+        title: 'Write',
+        color: colors.blue,
+        chainLength: 0,
+        isCompleted: true,
+        key: 'goal3',
+      },
     ];
 
-    return <GoalsList goals={goals} />;
+    return <GoalList goals={goals} />;
   });
 
 storiesOf('Charts', module)

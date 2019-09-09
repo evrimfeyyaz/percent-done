@@ -3,40 +3,46 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
+import { convertSecondsToHoursAndMinutes } from '../../utilities';
 
 export interface GoalRowProps {
-  name: string;
+  title: string;
   color: string;
   /**
    * Number of days this goal has been completed in a row.
    */
-  chainLength?: number;
+  chainLength: number;
   /**
-   * Total duration of the goal in minutes.
+   * Total duration of the goal in seconds.
    */
-  totalMinutes?: number;
+  totalSeconds?: number;
+  completedSeconds?: number;
   /**
-   * Total minutes completed.
+   * For non-time-tracked goals.
    */
-  completedMinutes?: number;
-  /**
-   * Current progress of the goal.
-   */
-  progressPercentage?: number;
+  isCompleted?: boolean;
 }
 
 /**
  * A row that shows information on a given goal.
  */
 export const GoalRow: FunctionComponent<GoalRowProps> = ({
-                                                           name,
+                                                           title,
                                                            color,
                                                            chainLength = null,
-                                                           totalMinutes = null,
-                                                           completedMinutes = null,
-                                                           progressPercentage = 0,
+                                                           totalSeconds = null,
+                                                           completedSeconds = null,
+                                                           isCompleted = false,
                                                          }) => {
   const nameStyle = StyleSheet.flatten([styles.name, { color }]);
+
+  let progressPercentage = 0;
+  if (isCompleted) {
+    progressPercentage = 100;
+  } else if (totalSeconds != null && completedSeconds != null) {
+    progressPercentage = completedSeconds / totalSeconds;
+  }
+
 
   let chainInfo = null;
   if (chainLength != null) {
@@ -49,8 +55,10 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
   }
 
   let durationInfo = null;
-  if (totalMinutes != null && completedMinutes != null) {
-    const { hours, minutes } = hoursAndMinutes(totalMinutes - completedMinutes);
+  if (totalSeconds != null && completedSeconds != null) {
+    let { hours, minutes } = convertSecondsToHoursAndMinutes(totalSeconds - completedSeconds);
+    hours = Math.floor(hours);
+    minutes = Math.floor(minutes);
 
     durationInfo = (
       <View>
@@ -73,7 +81,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
         endAngle={-Math.PI * 2}
       />
       <View style={styles.details}>
-        <Text style={nameStyle}>{name}</Text>
+        <Text style={nameStyle}>{title}</Text>
         {chainInfo}
       </View>
       {durationInfo}
@@ -127,18 +135,3 @@ const styles = StyleSheet.create({
     width: 34,
   },
 });
-
-/**
- * Separates total minutes into hours and minutes, i.e. 90 -> { hours: 1, minutes: 30 }
- *
- * @param totalMinutes Test
- */
-function hoursAndMinutes(
-  totalMinutes: number,
-): { hours: number; minutes: number } {
-  const minutes = totalMinutes % 60;
-  totalMinutes = totalMinutes - minutes;
-  const hours = totalMinutes / 60;
-
-  return { hours, minutes };
-}

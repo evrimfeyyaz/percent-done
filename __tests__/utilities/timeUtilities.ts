@@ -1,4 +1,5 @@
-import { compareDateIndices, convertDateToIndex } from '../../src/utilities';
+import { compareDateIndices, convertDateToIndex, convertSecondsToHoursAndMinutes } from '../../src/utilities';
+import { min } from 'moment';
 
 describe('convertDateToIndex', () => {
   it('converts given date to index', () => {
@@ -20,5 +21,16 @@ describe('compareDateIndices', () => {
     expect(compareDateIndices(dateIdx1, dateIdx2)).toBeLessThan(0);
     expect(compareDateIndices(dateIdx1, dateIdx1)).toEqual(0);
     expect(compareDateIndices(dateIdx2, dateIdx1)).toBeGreaterThan(0);
-  })
+  });
+});
+
+describe('convertSecondsToHoursAndMinutes', () => {
+  it('converts seconds to hours and minutes', () => {
+    const seconds = 3600; // 1 hour;
+
+    const { hours, minutes } = convertSecondsToHoursAndMinutes(seconds);
+
+    expect(hours).toEqual(1);
+    expect(minutes).toEqual(0);
+  });
 });
