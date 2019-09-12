@@ -65,7 +65,7 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
     };
 
     const androidPicker = showAndroidPicker ? (
-      <DateTimePicker mode='time' value={time} onChange={handleTimeChange} />
+      <DateTimePicker mode='time' value={time} onChange={handleTimeChange} display='spinner' />
     ) : null;
 
     const iosPicker = (

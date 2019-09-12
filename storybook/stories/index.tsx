@@ -7,7 +7,6 @@ import {
   Achievement,
   Button,
   ColorInput,
-  DateInput,
   DaysOfWeekInput,
   DurationInput,
   GoalRow,
