@@ -18,10 +18,15 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
                                                              }) => {
     const parsedTime = moment(time, ['h:m', 'h:m a']);
     const bottomSheetRef = useRef<RBSheet>(null);
-    const [tempTime, setTempTime] = useState(time);
+    /**
+     *  Keep the previous time, just in case the user cancels the bottom sheet.
+     *  Only used on iOS.
+     */
+    const [prevTime, setPrevTime] = useState(time);
     const [showAndroidPicker, setShowAndroidPicker] = useState(false);
 
     const showBottomSheet = () => {
+      setPrevTime(time);
       if (bottomSheetRef != null && bottomSheetRef.current != null) {
         bottomSheetRef.current.open();
       }
@@ -33,15 +38,9 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
       }
     };
 
-    const handleTemporaryTimeChange = (event: SyntheticEvent<{ timestamp: number }>, date?: Date) => {
-      if (date != null) setTempTime(date);
-    };
-
     const handleTimeChange = (event: SyntheticEvent<{ timestamp: number }>, date?: Date) => {
-      if (date != null && time.getTime() != date.getTime()) {
-        if (onTimeChange != null) onTimeChange(tempTime);
-      }
-      setShowAndroidPicker(false);
+      if (onTimeChange != null && date != null) onTimeChange(date);
+      if (Platform.OS === 'android') setShowAndroidPicker(false);
     };
 
     const handleInputContainerPress = () => {
@@ -53,15 +52,15 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
     };
 
     const handleCancelButtonPress = () => {
-      setTempTime(time);
+      // Reverse changes.
+      if (onTimeChange != null && prevTime != null && time.getTime() !== prevTime.getTime()) {
+        onTimeChange(prevTime);
+      }
+
       hideBottomSheet();
     };
 
     const handleDoneButtonPress = () => {
-      if (time.getTime() != tempTime.getTime()) {
-        if (onTimeChange != null) onTimeChange(tempTime);
-      }
-
       hideBottomSheet();
     };
 
@@ -79,7 +78,7 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
           </View>
           <View style={styles.bottomSheetButtonsSeparator} />
         </View>
-        <DateTimePicker mode='time' value={tempTime} onChange={handleTemporaryTimeChange} style={styles.picker} />
+        <DateTimePicker mode='time' value={prevTime} onChange={handleTimeChange} style={styles.picker} />
       </RBSheet>
     );
 
