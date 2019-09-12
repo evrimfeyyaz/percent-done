@@ -3,7 +3,7 @@ import { InputContainer } from './InputContainer';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { TextButton } from './TextButton';
 import { colors, fonts } from '../../theme';
 
@@ -16,49 +16,61 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
                                                                time = new Date(),
                                                                onTimeChange,
                                                              }) => {
-  const parsedTime = moment(time, ['h:m', 'h:m a']);
-  const bottomSheetRef = useRef<RBSheet>(null);
-  const [newTime, setNewTime] = useState(time);
+    const parsedTime = moment(time, ['h:m', 'h:m a']);
+    const bottomSheetRef = useRef<RBSheet>(null);
+    const [tempTime, setTempTime] = useState(time);
+    const [showAndroidPicker, setShowAndroidPicker] = useState(false);
 
-  const closeBottomSheet = () => {
-    if (bottomSheetRef != null && bottomSheetRef.current != null) {
-      bottomSheetRef.current.close();
-    }
-  };
+    const showBottomSheet = () => {
+      if (bottomSheetRef != null && bottomSheetRef.current != null) {
+        bottomSheetRef.current.open();
+      }
+    };
 
-  const handleTimeChange = (event: SyntheticEvent<{ timestamp: number }>, date?: Date) => {
-    if (date != null) setNewTime(date);
-  };
+    const hideBottomSheet = () => {
+      if (bottomSheetRef != null && bottomSheetRef.current != null) {
+        bottomSheetRef.current.close();
+      }
+    };
 
-  const handleInputContainerPress = () => {
-    if (bottomSheetRef != null && bottomSheetRef.current != null) {
-      bottomSheetRef.current.open();
-    }
-  };
+    const handleTemporaryTimeChange = (event: SyntheticEvent<{ timestamp: number }>, date?: Date) => {
+      if (date != null) setTempTime(date);
+    };
 
-  const handleCancelButtonPress = () => {
-    setNewTime(time);
-    closeBottomSheet();
-  };
+    const handleTimeChange = (event: SyntheticEvent<{ timestamp: number }>, date?: Date) => {
+      if (date != null && time.getTime() != date.getTime()) {
+        if (onTimeChange != null) onTimeChange(tempTime);
+      }
+      setShowAndroidPicker(false);
+    };
 
-  const handleDoneButtonPress = () => {
-    closeBottomSheet();
-  };
+    const handleInputContainerPress = () => {
+      if (Platform.OS === 'ios') {
+        showBottomSheet();
+      } else if (Platform.OS === 'android') {
+        setShowAndroidPicker(true);
+      }
+    };
 
-  const handleBottomSheetClose = () => {
-    if (time.getTime() != newTime.getTime()) {
-      if (onTimeChange != null) onTimeChange(newTime);
-    }
-  };
+    const handleCancelButtonPress = () => {
+      setTempTime(time);
+      hideBottomSheet();
+    };
 
-  return (
-    <InputContainer
-      title="Time"
-      value={parsedTime.format('LT')}
-      opacityOnTouch={false}
-      onPress={handleInputContainerPress}
-    >
-      <RBSheet ref={bottomSheetRef} height={250} duration={200} animationType='fade' onClose={handleBottomSheetClose}
+    const handleDoneButtonPress = () => {
+      if (time.getTime() != tempTime.getTime()) {
+        if (onTimeChange != null) onTimeChange(tempTime);
+      }
+
+      hideBottomSheet();
+    };
+
+    const androidPicker = showAndroidPicker ? (
+      <DateTimePicker mode='time' value={time} onChange={handleTimeChange} />
+    ) : null;
+
+    const iosPicker = (
+      <RBSheet ref={bottomSheetRef} height={250} duration={200} animationType='fade'
                customStyles={{ container: styles.bottomSheetContainer }}>
         <View>
           <View style={styles.bottomSheetButtonsContainer}>
@@ -67,11 +79,24 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
           </View>
           <View style={styles.bottomSheetButtonsSeparator} />
         </View>
-        <DateTimePicker mode='time' value={newTime} onChange={handleTimeChange} style={styles.picker} />
+        <DateTimePicker mode='time' value={tempTime} onChange={handleTemporaryTimeChange} style={styles.picker} />
       </RBSheet>
-    </InputContainer>
-  );
-};
+    );
+
+    const picker = Platform.OS === 'ios' ? iosPicker : androidPicker;
+
+    return (
+      <InputContainer
+        title="Time"
+        value={parsedTime.format('LT')}
+        opacityOnTouch={false}
+        onPress={handleInputContainerPress}
+      >
+        {picker}
+      </InputContainer>
+    );
+  }
+;
 
 const styles = StyleSheet.create({
   bottomSheetContainer: {
