@@ -3,22 +3,24 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  GestureResponderEvent,
+  GestureResponderEvent, TextStyle,
 } from 'react-native';
 import { colors, fonts } from '../../theme';
 
 interface TextButtonProps {
   title: string;
   onPress: (event: GestureResponderEvent) => void;
+  style?: TextStyle;
 }
 
 export const TextButton: FunctionComponent<TextButtonProps> = ({
                                                                  title,
                                                                  onPress,
+                                                                 style,
                                                                }) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={StyleSheet.flatten([styles.title, style])}>{title}</Text>
     </TouchableOpacity>
   );
 };

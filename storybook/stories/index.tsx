@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Text } from 'react-native';
+import { Animated, Text, View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
@@ -25,6 +25,7 @@ import {
   TimetableEntry,
   TabInfo,
   GoalList, DaysStats,
+  HeaderButton,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -262,7 +263,8 @@ storiesOf('Inputs', module)
                                       onDateChange={action('date-changed')}
     />,
   )
-  .add('Time input', () => <TimeInput time={text('Time (hh:mm)', '9:04')} onTimeChange={action('time-changed')} />)
+  .add('Time input', () => <TimeInput time={dateKnobReturningDateObj('Date', new Date())}
+                                      onTimeChange={action('time-changed')} />)
   .add('Duration input', () => <DurationInput hours={number('Hours', 1)} minutes={number('Minutes', 0)}
                                               onDurationChange={action('duration-changed')}
     />,
@@ -313,7 +315,19 @@ storiesOf('Navigation', module)
         onTabChange={action('tab-change')}
       />
     );
-  });
+  })
+  .add('Header button', () => (
+    <View
+      style={{ backgroundColor: 'white', width: '100%', height: 150, justifyContent: 'center', alignItems: 'center' }}>
+      <HeaderButton title='Add Goal' onPress={action('header-button-press')} />
+    </View>
+  ))
+  .add('Header button (primary)', () => (
+    <View
+      style={{ backgroundColor: 'white', width: '100%', height: 150, justifyContent: 'center', alignItems: 'center' }}>
+      <HeaderButton title='Add Goal' primary onPress={action('header-button-press')} />
+    </View>
+  ));
 
 // Utilities
 

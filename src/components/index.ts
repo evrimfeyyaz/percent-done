@@ -27,3 +27,4 @@ export * from './inputs/MenuLink';
 export * from './navigation/TabItem';
 export * from './navigation/TabBar';
 export * from './navigation/TabNavigationView';
+export * from './navigation/HeaderButton';

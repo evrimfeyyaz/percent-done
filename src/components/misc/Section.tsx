@@ -4,10 +4,12 @@ import { colors, fonts } from '../../theme';
 
 interface Props {
   title: string;
+  bottomSeparator?: boolean;
 }
 
 export const Section: FunctionComponent<Props> = ({
                                                     title,
+                                                    bottomSeparator = true,
                                                     children = null,
                                                   }) => {
   const MARGIN = 20;
@@ -38,6 +40,10 @@ export const Section: FunctionComponent<Props> = ({
     fitTitleInContainer(width);
   };
 
+  const bottomSeparatorComponent = bottomSeparator ? (
+    <View style={styles.separator} />
+  ) : null;
+
   return (
     <View
       style={StyleSheet.flatten([
@@ -57,7 +63,7 @@ export const Section: FunctionComponent<Props> = ({
 
       <View style={styles.content}>{children}</View>
 
-      <View style={styles.separator} />
+      {bottomSeparatorComponent}
     </View>
   );
 };

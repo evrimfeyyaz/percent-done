@@ -2,7 +2,11 @@ import React from 'react';
 import {
   createBottomTabNavigator,
   createStackNavigator,
-  createAppContainer, TabRouter, createNavigator,
+  createAppContainer,
+  TabRouter,
+  createNavigator,
+  NavigationScreenProp,
+  NavigationState,
 } from 'react-navigation';
 import Storybook from './storybook';
 import { colors, fonts } from './src/theme';
@@ -13,20 +17,20 @@ import {
 } from './src/screens';
 import { Image, YellowBox } from 'react-native';
 import { Icons } from './assets';
-import { TabNavigationView } from './src/components';
+import { HeaderButton, TabNavigationView } from './src/components';
 import { combineReducers, createStore } from 'redux';
 import { goalsReducer } from './src/store/goals/reducers';
 import { Provider } from 'react-redux';
 import { timetableEntriesReducer } from './src/store/timetableEntries/reducers';
 import { createGoal, createStoreState, createTimetableEntry } from './src/factories';
-import { convertDateToIndex } from './src/utilities';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { AddGoalScreen } from './src/screens/AddGoalScreen';
 
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
-// export default Storybook;
+export default Storybook;
 
 const router = TabRouter(
   {
@@ -41,15 +45,31 @@ const router = TabRouter(
 const TodayTabsNavigator = createNavigator(
   TabNavigationView,
   router,
-  {
-    navigationOptions: {
-      title: 'Today',
-    },
-  },
+  {},
 );
 
 const TodayStack = createStackNavigator({
+    AddGoal: AddGoalScreen,
     Today: TodayTabsNavigator,
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: colors.offWhite,
+      },
+      headerTitleStyle: {
+        fontFamily: fonts.semibold,
+        fontWeight: '600',
+        color: colors.offBlack,
+        fontSize: 14,
+        textTransform: 'uppercase',
+      },
+      headerRight: (
+        <HeaderButton title='Add Goal' primary onPress={() => navigation.navigate('AddGoal')} />
+      ),
+      title: 'Today',
+    }),
+    mode: 'modal',
   },
 );
 
@@ -79,6 +99,10 @@ const AppNavigator = createBottomTabNavigator(
 
         return <Image source={getTabIcon(routeName, focused)} />;
       },
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
     }),
     tabBarOptions: {
       activeTintColor: colors.orange,
@@ -137,15 +161,15 @@ const rootReducer = combineReducers({
 });
 const store = createStore(rootReducer, seedData, composeWithDevTools());
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <AppContainer />
-      </Provider>
-    );
-  }
-}
+// export default class App extends React.Component {
+//   render() {
+//     return (
+//       <Provider store={store}>
+//         <AppContainer />
+//       </Provider>
+//     );
+//   }
+// }
 
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {
