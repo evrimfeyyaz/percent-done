@@ -15,7 +15,6 @@ export * from './charts/DaysStats';
 export * from './inputs/Button';
 export * from './inputs/TextButton';
 export * from './inputs/TextInput';
-export * from './inputs/DateInput';
 export * from './inputs/TimeInput';
 export * from './inputs/DurationInput';
 export * from './inputs/SwitchInput';

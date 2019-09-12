@@ -259,10 +259,6 @@ storiesOf('Inputs', module)
   .add('Text input', () => <TextInput placeholder="What is your goal?" value={text('Text', null)}
                                       onChangeText={action('text-changed')} />,
   )
-  .add('Date input', () => <DateInput date={dateKnobReturningDateObj('Date', new Date())}
-                                      onDateChange={action('date-changed')}
-    />,
-  )
   .add('Time input', () => <TimeInput time={dateKnobReturningDateObj('Date', new Date())}
                                       onTimeChange={action('time-changed')} />)
   .add('Duration input', () => <DurationInput hours={number('Hours', 1)} minutes={number('Minutes', 0)}

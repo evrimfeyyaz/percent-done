@@ -16,7 +16,6 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
                                                                time = new Date(),
                                                                onTimeChange,
                                                              }) => {
-    const parsedTime = moment(time, ['h:m', 'h:m a']);
     const bottomSheetRef = useRef<RBSheet>(null);
     /**
      *  Keep the previous time, just in case the user cancels the bottom sheet.
@@ -52,6 +51,7 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
     };
 
     const handleCancelButtonPress = () => {
+      debugger;
       // Reverse changes.
       if (onTimeChange != null && prevTime != null && time.getTime() !== prevTime.getTime()) {
         onTimeChange(prevTime);
@@ -87,7 +87,7 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
     return (
       <InputContainer
         title="Time"
-        value={parsedTime.format('LT')}
+        value={moment(time).format('LT')}
         opacityOnTouch={false}
         onPress={handleInputContainerPress}
       >
