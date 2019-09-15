@@ -16,7 +16,6 @@ export * from './inputs/Button';
 export * from './inputs/TextButton';
 export * from './inputs/TextInput';
 export * from './inputs/TimeInput';
-export * from './inputs/DurationInput';
 export * from './inputs/SwitchInput';
 export * from './inputs/ColorInput';
 export * from './inputs/DaysOfWeekInput';

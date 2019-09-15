@@ -8,11 +8,13 @@ import { TextButton } from './TextButton';
 import { colors, fonts } from '../../theme';
 
 interface TimeInputProps {
+  mode?: 'time' | 'duration';
   time?: Date;
   onTimeChange?: (time: Date) => void;
 }
 
 export const TimeInput: FunctionComponent<TimeInputProps> = ({
+                                                               mode = 'time',
                                                                time = new Date(),
                                                                onTimeChange,
                                                              }) => {
@@ -51,7 +53,6 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
     };
 
     const handleCancelButtonPress = () => {
-      debugger;
       // Reverse changes.
       if (onTimeChange != null && prevTime != null && time.getTime() !== prevTime.getTime()) {
         onTimeChange(prevTime);
@@ -64,10 +65,15 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
       hideBottomSheet();
     };
 
+    const is24Hour = mode === 'duration'; // This is a bit of hack. If the mode is 'duration', we show a
+                                          // 24 hour clock to imitate a duration picker on Android. iOS
+                                          // does have a dedicated countdown picker.
     const androidPicker = showAndroidPicker ? (
-      <DateTimePicker mode='time' value={time} onChange={handleTimeChange} display='spinner' />
+      <DateTimePicker mode='time' value={time} onChange={handleTimeChange} display='spinner' is24Hour={is24Hour} />
     ) : null;
 
+
+    const iosMode = mode === 'time' ? 'time' : 'countdown';
     const iosPicker = (
       <RBSheet ref={bottomSheetRef} height={250} duration={200} animationType='fade'
                customStyles={{ container: styles.bottomSheetContainer }}>
@@ -78,16 +84,19 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
           </View>
           <View style={styles.bottomSheetButtonsSeparator} />
         </View>
-        <DateTimePicker mode='time' value={prevTime} onChange={handleTimeChange} style={styles.picker} />
+        <DateTimePicker mode={iosMode} value={prevTime} onChange={handleTimeChange}
+                        style={styles.picker} />
       </RBSheet>
     );
 
     const picker = Platform.OS === 'ios' ? iosPicker : androidPicker;
+    const value = mode === 'time' ? moment(time).format('LT') : moment(time).format('H[h] m[m]');
+    const title = mode === 'time' ? 'Time' : 'Duration';
 
     return (
       <InputContainer
-        title="Time"
-        value={moment(time).format('LT')}
+        title={title}
+        value={value}
         opacityOnTouch={false}
         onPress={handleInputContainerPress}
       >
