@@ -3,6 +3,7 @@ export * from './misc/Section';
 export * from './misc/BackgroundView';
 export * from './misc/GoalRow';
 export * from './misc/GoalList';
+export * from './misc/BottomSheet';
 
 // Charts
 export * from './charts/ProgressChart';
