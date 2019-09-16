@@ -40,6 +40,8 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
     };
 
     const handleTimeChange = (event: SyntheticEvent<{ timestamp: number }>, date?: Date) => {
+      console.log(event.currentTarget.timestamp);
+      console.log(date);
       if (onTimeChange != null && date != null) onTimeChange(date);
       if (Platform.OS === 'android') setShowAndroidPicker(false);
     };
@@ -84,7 +86,7 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
           </View>
           <View style={styles.bottomSheetButtonsSeparator} />
         </View>
-        <DateTimePicker mode={iosMode} value={prevTime} onChange={handleTimeChange}
+        <DateTimePicker mode={iosMode} value={time} onChange={handleTimeChange}
                         style={styles.picker} />
       </RBSheet>
     );

@@ -24,6 +24,7 @@ import {
   TabInfo,
   GoalList, DaysStats,
   HeaderButton,
+  ModalTimePicker,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -259,7 +260,8 @@ storiesOf('Inputs', module)
   )
   .add('Time input', () => <TimeInput time={dateKnobReturningDateObj('Date', new Date())}
                                       onTimeChange={action('time-changed')} />)
-  .add('Duration input', () => <TimeInput mode='duration' time={dateKnobReturningDateObj('Date', new Date(0, 0, 0, 1, 0))}
+  .add('Duration input', () => <TimeInput mode='duration'
+                                          time={dateKnobReturningDateObj('Date', new Date(0, 0, 0, 1, 0))}
                                           onTimeChange={action('duration-changed')}
     />,
   )
@@ -285,7 +287,8 @@ storiesOf('Inputs', module)
       onDayChange={action('day-changed')}
     />
   ))
-  .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />);
+  .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />)
+  .add('Modal time picker', () => <ModalTimePicker />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (

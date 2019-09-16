@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationScreenComponent } from 'react-navigation';
 import {
-  BackgroundView, ColorInput,
+  BackgroundView,
+  ColorInput,
   DaysOfWeekInput,
-  DurationInput,
   Section,
   SwitchInput,
   TextInput,
@@ -14,8 +14,7 @@ import {
 export const AddGoalScreen: NavigationScreenComponent = () => {
   const [title, setTitle] = useState('');
   const [timeTracking, setTimeTracking] = useState(false);
-  const [durationHours, setDurationHours] = useState(1);
-  const [durationMinutes, setDurationMinutes] = useState(0);
+  const [duration, setDuration] = useState(new Date(2019, 0, 0, 1));
   const [recurring, setRecurring] = useState(false);
   const [reminder, setReminder] = useState(false);
 
@@ -27,9 +26,8 @@ export const AddGoalScreen: NavigationScreenComponent = () => {
     setTimeTracking(value);
   };
 
-  const handleDurationChange = (hours: number, minutes: number) => {
-    setDurationHours(hours);
-    setDurationMinutes(minutes);
+  const handleDurationChange = (duration: Date) => {
+    setDuration(duration);
   };
 
   const handleRecurringChange = (value: boolean) => {
@@ -49,7 +47,7 @@ export const AddGoalScreen: NavigationScreenComponent = () => {
 
         <Section title='Time Tracking' bottomSeparator={false}>
           <SwitchInput title='Time tracking' value={timeTracking} onValueChange={handleTimeTrackingChange} />
-          {timeTracking && <DurationInput hours={durationHours} minutes={durationMinutes} onDurationChange={handleDurationChange} />}
+          {timeTracking && <TimeInput time={duration} onTimeChange={handleDurationChange} mode='duration' />}
         </Section>
 
         <Section title='Recurring' bottomSeparator={false}>
@@ -57,10 +55,7 @@ export const AddGoalScreen: NavigationScreenComponent = () => {
           {recurring && <DaysOfWeekInput />}
         </Section>
 
-        <Section title='Reminder' bottomSeparator={false}>
-          <SwitchInput title='Reminder' value={reminder} onValueChange={handleReminderChange} />
-          {reminder && <TimeInput />}
-        </Section>
+
 
         <Section title='Color' bottomSeparator={false}>
           {/*<ColorInput />*/}

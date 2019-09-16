@@ -16,6 +16,7 @@ export const textStyles = StyleSheet.create({
   infoSmall: {
     color: colors.white,
     fontSize: 16,
+    textTransform: 'uppercase',
   },
   infoTail: {
     color: colors.gray,
