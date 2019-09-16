@@ -2,19 +2,17 @@ import React, { FunctionComponent, SyntheticEvent, useRef, useState } from 'reac
 import { InputContainer } from './InputContainer';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform, StyleSheet, View } from 'react-native';
 import { TextButton } from './TextButton';
 import { colors, fonts } from '../../theme';
+import { TimePicker } from './TimePicker';
 
 interface TimeInputProps {
-  mode?: 'time' | 'duration';
   time?: Date;
   onTimeChange?: (time: Date) => void;
 }
 
 export const TimeInput: FunctionComponent<TimeInputProps> = ({
-                                                               mode = 'time',
                                                                time = new Date(),
                                                                onTimeChange,
                                                              }) => {
@@ -24,7 +22,6 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
      *  Only used on iOS.
      */
     const [prevTime, setPrevTime] = useState(time);
-    const [showAndroidPicker, setShowAndroidPicker] = useState(false);
 
     const showBottomSheet = () => {
       setPrevTime(time);
@@ -39,19 +36,12 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
       }
     };
 
-    const handleTimeChange = (event: SyntheticEvent<{ timestamp: number }>, date?: Date) => {
-      console.log(event.currentTarget.timestamp);
-      console.log(date);
+    const handleTimeChange = (date: Date) => {
       if (onTimeChange != null && date != null) onTimeChange(date);
-      if (Platform.OS === 'android') setShowAndroidPicker(false);
     };
 
     const handleInputContainerPress = () => {
-      if (Platform.OS === 'ios') {
-        showBottomSheet();
-      } else if (Platform.OS === 'android') {
-        setShowAndroidPicker(true);
-      }
+      showBottomSheet();
     };
 
     const handleCancelButtonPress = () => {
@@ -67,16 +57,7 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
       hideBottomSheet();
     };
 
-    const is24Hour = mode === 'duration'; // This is a bit of hack. If the mode is 'duration', we show a
-                                          // 24 hour clock to imitate a duration picker on Android. iOS
-                                          // does have a dedicated countdown picker.
-    const androidPicker = showAndroidPicker ? (
-      <DateTimePicker mode='time' value={time} onChange={handleTimeChange} display='spinner' is24Hour={is24Hour} />
-    ) : null;
-
-
-    const iosMode = mode === 'time' ? 'time' : 'countdown';
-    const iosPicker = (
+    const picker = (
       <RBSheet ref={bottomSheetRef} height={250} duration={200} animationType='fade'
                customStyles={{ container: styles.bottomSheetContainer }}>
         <View>
@@ -86,18 +67,15 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({
           </View>
           <View style={styles.bottomSheetButtonsSeparator} />
         </View>
-        <DateTimePicker mode={iosMode} value={time} onChange={handleTimeChange}
-                        style={styles.picker} />
+        <TimePicker onTimeChange={handleTimeChange} />
       </RBSheet>
     );
 
-    const picker = Platform.OS === 'ios' ? iosPicker : androidPicker;
-    const value = mode === 'time' ? moment(time).format('LT') : moment(time).format('H[h] m[m]');
-    const title = mode === 'time' ? 'Time' : 'Duration';
+    const value = moment(time).format('LT');
 
     return (
       <InputContainer
-        title={title}
+        title='Time'
         value={value}
         opacityOnTouch={false}
         onPress={handleInputContainerPress}
