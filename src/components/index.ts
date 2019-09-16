@@ -20,8 +20,9 @@ export * from './inputs/SwitchInput';
 export * from './inputs/ColorInput';
 export * from './inputs/DaysOfWeekInput';
 export * from './inputs/MenuLink';
-export * from './inputs/ModalTimePicker';
+export * from './inputs/TimePicker';
 export * from './inputs/ScrollablePicker';
+export * from './inputs/DurationPicker';
 
 // Navigation
 export * from './navigation/TabItem';

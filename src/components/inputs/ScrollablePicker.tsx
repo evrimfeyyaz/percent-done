@@ -1,5 +1,13 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
-import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  Text, TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import MaskedView from '@react-native-community/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import { colors, fonts } from '../../theme';
@@ -17,10 +25,15 @@ interface ScrollablePickerProps {
    * Text to show after the picker to denote its purpose.
    */
   text?: string;
+  /**
+   * Alignment of items inside the picker.
+   */
+  alignment?: 'start' | 'center' | 'end';
   onIndexChange?: (index: number) => void;
+  style?: ViewStyle;
 }
 
-export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ index, data, text, onIndexChange }) => {
+export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ index, data, text, alignment = 'end', onIndexChange, style }) => {
   const [tempIndex, setTempIndex] = useState(index);
 
   const scrollViewRef = useRef<ScrollView>(null);
@@ -54,8 +67,17 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
     }
   };
 
+  let itemAlignmentStyle: TextStyle;
+  if (alignment === 'start') {
+    itemAlignmentStyle = { alignItems: 'flex-start' };
+  } else if (alignment === 'end') {
+    itemAlignmentStyle = { alignItems: 'flex-end' };
+  } else {
+    itemAlignmentStyle = { alignItems: 'center' };
+  }
+
   const item = (itemData: { key: string, value: string }) => (
-    <View style={styles.itemContainer} key={itemData.key}>
+    <View style={StyleSheet.flatten([styles.itemContainer, itemAlignmentStyle])} key={itemData.key}>
       <Text style={styles.item}>{itemData.value}</Text>
     </View>
   );
@@ -63,7 +85,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
   const items = data.map(itemData => item(itemData));
 
   return (
-    <View style={styles.container}>
+    <View style={StyleSheet.flatten([styles.container, style])}>
       <MaskedView
         style={styles.mask}
         maskElement={
@@ -95,6 +117,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
         </ScrollView>
       </MaskedView>
       {text != null && (
+        // @ts-ignore
         <Text style={styles.text} pointerEvents='none'>{text}</Text>
       )}
     </View>
@@ -106,14 +129,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.white,
-    width: 200,
-    height: ITEM_SIZE * 5,
-    borderRadius: 10,
   },
   itemContainer: {
     height: ITEM_SIZE,
-    alignItems: 'flex-end',
     justifyContent: 'center',
     paddingHorizontal: 5,
   },

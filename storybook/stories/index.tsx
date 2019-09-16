@@ -24,7 +24,7 @@ import {
   TabInfo,
   GoalList, DaysStats,
   HeaderButton,
-  ModalTimePicker,
+  TimePicker, DurationPicker,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -288,7 +288,8 @@ storiesOf('Inputs', module)
     />
   ))
   .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />)
-  .add('Modal time picker', () => <ModalTimePicker />);
+  .add('Time picker', () => <TimePicker />)
+  .add('Duration picker', () => <DurationPicker />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (

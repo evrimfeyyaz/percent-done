@@ -1,4 +1,10 @@
-import { compareDateIndices, convertDateToIndex, convertSecondsToHoursAndMinutes } from '../../src/utilities';
+import {
+  compareDateIndices,
+  convertDateToIndex,
+  convertSecondsToHoursAndMinutes,
+  isLocale24Hours,
+} from '../../src/utilities';
+import timezone_mock from 'timezone-mock';
 
 describe('convertDateToIndex', () => {
   it('converts given date to index', () => {
@@ -31,5 +37,23 @@ describe('convertSecondsToHoursAndMinutes', () => {
 
     expect(hours).toEqual(1);
     expect(minutes).toEqual(0);
+  });
+});
+
+describe('isLocale24Hours', () => {
+  it('returns true if current locale is 24 hours', () => {
+    timezone_mock.register('Europe/London');
+    const result = isLocale24Hours();
+    timezone_mock.unregister();
+
+    expect(result).toEqual(true);
+  });
+
+  it('returns false if current locale is 12 hours', () => {
+    timezone_mock.register('US/Pacific');
+    const result = isLocale24Hours();
+    timezone_mock.unregister();
+
+    expect(result).toEqual(false);
   });
 });

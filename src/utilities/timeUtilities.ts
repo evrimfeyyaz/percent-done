@@ -99,3 +99,9 @@ export function convertSecondsToHoursAndMinutes(seconds: number): { hours: numbe
 export function getBeginningOfDay(date: Date) {
   return moment(date).startOf('day').toDate();
 }
+
+export function isLocale24Hours() {
+  const testDate = new Date(2019, 0, 1, 13);
+
+  return testDate.toLocaleString().includes('13:00:00');
+}
