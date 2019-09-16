@@ -24,6 +24,8 @@ export * from './inputs/MenuLink';
 export * from './inputs/TimePicker';
 export * from './inputs/ScrollablePicker';
 export * from './inputs/DurationPicker';
+export * from './inputs/DurationInput';
+export * from './inputs/InputContainer';
 
 // Navigation
 export * from './navigation/TabItem';

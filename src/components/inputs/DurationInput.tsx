@@ -1,21 +1,20 @@
 import React, { FunctionComponent, useRef, useState } from 'react';
-import { InputContainer, TimePicker, BottomSheet } from '..';
-import moment from 'moment';
+import { BottomSheet, DurationPicker, InputContainer } from '..';
 
-interface TimeInputProps {
-  time?: Date;
-  onTimeChange?: (time: Date) => void;
+interface DurationInputProps {
+  duration: { hours: number, minutes: number };
+  onDurationChange?: (hours: number, minutes: number) => void;
 }
 
-export const TimeInput: FunctionComponent<TimeInputProps> = ({ time = new Date(), onTimeChange }) => {
+export const DurationInput: FunctionComponent<DurationInputProps> = ({ duration, onDurationChange }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   /**
-   *  Keep the previous time, just in case the user cancels the bottom sheet.
+   *  Keep the previous duration, just in case the user cancels the bottom sheet.
    */
-  const [prevTime, setPrevTime] = useState(time);
+  const [prevDuration, setPrevDuration] = useState(duration);
 
   const showBottomSheet = () => {
-    setPrevTime(time);
+    setPrevDuration(duration);
     if (bottomSheetRef != null && bottomSheetRef.current != null) {
       bottomSheetRef.current.open();
     }
@@ -27,8 +26,8 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({ time = new Date()
     }
   };
 
-  const handleTimeChange = (date: Date) => {
-    if (onTimeChange != null) onTimeChange(date);
+  const handleDurationChange = (hours: number, minutes: number) => {
+    if (onDurationChange != null) onDurationChange(hours, minutes);
   };
 
   const handleInputContainerPress = () => {
@@ -37,8 +36,8 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({ time = new Date()
 
   const handleCancelPress = () => {
     // Reverse changes.
-    if (onTimeChange != null && prevTime != null && time.getTime() !== prevTime.getTime()) {
-      onTimeChange(prevTime);
+    if (onDurationChange != null && prevDuration != null && (duration.hours !== prevDuration.hours || duration.minutes !== prevDuration.minutes)) {
+      onDurationChange(prevDuration.hours, prevDuration.minutes);
     }
 
     hideBottomSheet();
@@ -50,15 +49,15 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({ time = new Date()
 
   const picker = (
     <BottomSheet ref={bottomSheetRef} onCancelPress={handleCancelPress} onDonePress={handleDonePress}>
-      <TimePicker onTimeChange={handleTimeChange} />
+      <DurationPicker onDurationChange={handleDurationChange} />
     </BottomSheet>
   );
 
-  const value = moment(time).format('LT');
+  const value = `${duration.hours}h ${duration.minutes}m`;
 
   return (
     <InputContainer
-      title='Time'
+      title='Duration'
       value={value}
       opacityOnTouch={false}
       onPress={handleInputContainerPress}

@@ -154,6 +154,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: fonts.regular,
     fontSize: 24,
-    color: colors.orange,
+    color: colors.gray,
   },
 });

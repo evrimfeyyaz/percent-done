@@ -24,7 +24,7 @@ import {
   TabInfo,
   GoalList, DaysStats,
   HeaderButton,
-  TimePicker, DurationPicker,
+  TimePicker, DurationPicker, DurationInput,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -260,9 +260,8 @@ storiesOf('Inputs', module)
   )
   .add('Time input', () => <TimeInput time={dateKnobReturningDateObj('Date', new Date())}
                                       onTimeChange={action('time-changed')} />)
-  .add('Duration input', () => <TimeInput mode='duration'
-                                          time={dateKnobReturningDateObj('Date', new Date(0, 0, 0, 1, 0))}
-                                          onTimeChange={action('duration-changed')}
+  .add('Duration input', () => <DurationInput duration={{ hours: 1, minutes: 0 }}
+                                              onDurationChange={action('duration-changed')}
     />,
   )
   .add('Switch input', () => <SwitchInput title="Time tracking" value={boolean('Value', false)}
