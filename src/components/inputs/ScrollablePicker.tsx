@@ -1,8 +1,9 @@
-import React, { FunctionComponent, useRef } from 'react';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaskedView from '@react-native-community/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import { colors, fonts } from '../../theme';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 const ITEM_SIZE = 40;
 
@@ -20,11 +21,17 @@ interface ScrollablePickerProps {
 }
 
 export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ index, data, text, onIndexChange }) => {
+  const [tempIndex, setTempIndex] = useState(index);
+
   const scrollViewRef = useRef<ScrollView>(null);
 
   const getScrollLocationByIndex = (index: number) => index * ITEM_SIZE;
 
-  const handleScrollViewLayout = () => {
+  useEffect(() => {
+    ReactNativeHapticFeedback.trigger('impactLight');
+  }, [tempIndex]);
+
+  const handleLayout = () => {
     if (scrollViewRef != null && scrollViewRef.current != null) {
       const location = getScrollLocationByIndex(index);
 
@@ -32,10 +39,19 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
     }
   };
 
-  const handleScrollViewMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = event.nativeEvent.contentOffset.y / ITEM_SIZE;
 
     if (onIndexChange != null) onIndexChange(index);
+  };
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const errorMargin = 10;
+
+    if (event.nativeEvent.contentOffset.y % ITEM_SIZE < errorMargin) {
+      const index = Math.round(event.nativeEvent.contentOffset.y / ITEM_SIZE);
+      if (index !== tempIndex) setTempIndex(index);
+    }
   };
 
   const item = (itemData: { key: string, value: string }) => (
@@ -70,8 +86,10 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
           ref={scrollViewRef}
-          onLayout={handleScrollViewLayout}
-          onMomentumScrollEnd={handleScrollViewMomentumScrollEnd}
+          onLayout={handleLayout}
+          onMomentumScrollEnd={handleMomentumScrollEnd}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
         >
           {items}
         </ScrollView>
