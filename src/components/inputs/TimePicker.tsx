@@ -11,18 +11,29 @@ interface TimePickerProps {
 
 export const TimePicker: FunctionComponent<TimePickerProps> = ({ time, onTimeChange }) => {
   const is24Hours = isLocale24Hours();
-
   const hour = time.getHours();
   const periodIndex = hour < 12 ? 0 : 1;
-  const hourIndex = is24Hours ? hour : (hour) % 12;
+  const hourIndex = getHourIndexFromHour(hour);
   const minuteIndex = time.getMinutes();
 
-  const handleHourIndexChange = (index: number) => {
-    let newHour = index;
+  function getHourIndexFromHour(hour: number) {
+    return is24Hours ? hour : (hour - 1 + 12) % 12;
+  }
 
-    if (!is24Hours && periodIndex === 1) { // PM
-      newHour += 12;
+  function getHourFromHourIndex(index: number) {
+    debugger;
+    if (is24Hours) {
+      return index;
+    } else if (periodIndex === 0) {
+      return (index + 1) % 12;
+    } else {
+      return ((index + 1) % 12 + 12);
     }
+  }
+
+  const handleHourIndexChange = (index: number) => {
+    let newHour = getHourFromHourIndex(index);
+    debugger;
 
     const newTimeStamp = time.setHours(newHour);
 
@@ -48,7 +59,7 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ time, onTimeCha
     if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
   };
 
-  let hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  let hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   if (is24Hours) hours = hours.concat([12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);
   const hourData = hours.map(hour => ({ key: `hour-${hour.toString()}`, value: hour.toString() }));
 
