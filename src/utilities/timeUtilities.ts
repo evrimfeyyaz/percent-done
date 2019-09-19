@@ -1,4 +1,6 @@
 import moment, { Moment } from 'moment';
+import 'moment/min/locales';
+import { NativeModules, Platform } from 'react-native';
 
 export function durationInHoursAndMinutes(
   startHour: number,
@@ -101,7 +103,15 @@ export function getBeginningOfDay(date: Date) {
 }
 
 export function isLocale24Hours() {
-  const testDate = new Date(2019, 0, 1, 13);
+  const oneOClock = momentWithDeviceLocale(new Date(2019, 0, 1, 13));
 
-  return testDate.toLocaleString().includes('13:00:00');
+  return oneOClock.format('LT') === '13:00';
+}
+
+export function momentWithDeviceLocale(inp?: moment.MomentInput, format?: moment.MomentFormatSpecification, strict?: boolean) {
+  let deviceLocale = Platform.OS === 'ios'
+    ? NativeModules.SettingsManager.settings.AppleLocale
+    : NativeModules.I18nManager.localeIdentifier;
+
+  return moment(inp, format, strict).locale(deviceLocale);
 }

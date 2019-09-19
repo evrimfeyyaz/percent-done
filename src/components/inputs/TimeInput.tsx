@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useRef, useState } from 'react';
 import { InputContainer, TimePicker, BottomSheet } from '..';
-import moment from 'moment';
+import { momentWithDeviceLocale } from '../../utilities';
 
 interface TimeInputProps {
   time?: Date;
@@ -54,7 +54,7 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({ time = new Date()
     </BottomSheet>
   );
 
-  const value = moment(time).format('LT');
+  const value = momentWithDeviceLocale(time).format('LT');
 
   return (
     <InputContainer

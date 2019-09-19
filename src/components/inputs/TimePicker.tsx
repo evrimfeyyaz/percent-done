@@ -1,8 +1,9 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
 import { isLocale24Hours } from '../../utilities';
 import { colors, fonts } from '../../theme';
+import { useEffectAfterInitialRender } from '../../utilities/useEffectAfterInitialRender';
 
 interface TimePickerProps {
   initialValue?: Date;
@@ -12,12 +13,12 @@ interface TimePickerProps {
 export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialValue = new Date(), onTimeChange }) => {
   const is24Hours = isLocale24Hours();
 
-  const currentHour = initialValue.getHours();
-  const [periodIndex, setPeriodIndex] = useState(currentHour < 12 ? 0 : 1);
-  const [hourIndex, setHourIndex] = useState(is24Hours ? currentHour : (currentHour) % 12);
+  const initialValueHour = initialValue.getHours();
+  const [periodIndex, setPeriodIndex] = useState(initialValueHour < 12 ? 0 : 1);
+  const [hourIndex, setHourIndex] = useState(is24Hours ? initialValueHour : (initialValueHour) % 12);
   const [minuteIndex, setMinuteIndex] = useState(initialValue.getMinutes());
 
-  useEffect(() => {
+  useEffectAfterInitialRender(() => {
     let time = new Date();
 
     let hours = hourIndex;

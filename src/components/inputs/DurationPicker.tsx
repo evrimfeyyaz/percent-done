@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
+import { useEffectAfterInitialRender } from '../../utilities/useEffectAfterInitialRender';
 
 interface DurationPickerProps {
   initialValue?: { hours: number, minutes: number }
@@ -16,7 +17,7 @@ export const DurationPicker: FunctionComponent<DurationPickerProps> = ({
   const [selectedHours, setSelectedHours] = useState(initialValue.hours);
   const [selectedMinutes, setSelectedMinutes] = useState(initialValue.minutes);
 
-  useEffect(() => {
+  useEffectAfterInitialRender(() => {
     if (onDurationChange != null) onDurationChange(selectedHours, selectedMinutes);
   }, [selectedHours, selectedMinutes]);
 
