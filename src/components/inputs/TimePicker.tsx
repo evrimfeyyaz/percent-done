@@ -21,7 +21,6 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ time, onTimeCha
   }
 
   function getHourFromHourIndex(index: number) {
-    debugger;
     if (is24Hours) {
       return index;
     } else if (periodIndex === 0) {
@@ -33,7 +32,6 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ time, onTimeCha
 
   const handleHourIndexChange = (index: number) => {
     let newHour = getHourFromHourIndex(index);
-    debugger;
 
     const newTimeStamp = time.setHours(newHour);
 
