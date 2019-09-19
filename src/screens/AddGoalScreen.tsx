@@ -4,7 +4,7 @@ import { NavigationScreenComponent } from 'react-navigation';
 import {
   BackgroundView,
   ColorInput,
-  DaysOfWeekInput,
+  DaysOfWeekInput, DurationInput,
   Section,
   SwitchInput,
   TextInput,
@@ -14,7 +14,7 @@ import {
 export const AddGoalScreen: NavigationScreenComponent = () => {
   const [title, setTitle] = useState('');
   const [timeTracking, setTimeTracking] = useState(false);
-  const [duration, setDuration] = useState(new Date(2019, 0, 0, 1));
+  const [duration, setDuration] = useState({ hours: 1, minutes: 0 });
   const [recurring, setRecurring] = useState(false);
   const [reminder, setReminder] = useState(false);
 
@@ -26,8 +26,8 @@ export const AddGoalScreen: NavigationScreenComponent = () => {
     setTimeTracking(value);
   };
 
-  const handleDurationChange = (duration: Date) => {
-    setDuration(duration);
+  const handleDurationChange = (hours: number, minutes: number) => {
+    setDuration({ hours, minutes });
   };
 
   const handleRecurringChange = (value: boolean) => {
@@ -47,14 +47,13 @@ export const AddGoalScreen: NavigationScreenComponent = () => {
 
         <Section title='Time Tracking' bottomSeparator={false}>
           <SwitchInput title='Time tracking' value={timeTracking} onValueChange={handleTimeTrackingChange} />
-          {timeTracking && <TimeInput time={duration} onTimeChange={handleDurationChange} mode='duration' />}
+          {timeTracking && <DurationInput duration={duration} onDurationChange={handleDurationChange} />}
         </Section>
 
         <Section title='Recurring' bottomSeparator={false}>
           <SwitchInput title='Recurring' value={recurring} onValueChange={handleRecurringChange} />
           {recurring && <DaysOfWeekInput />}
         </Section>
-
 
 
         <Section title='Color' bottomSeparator={false}>

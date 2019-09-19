@@ -49,7 +49,7 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({ duration,
 
   const picker = (
     <BottomSheet ref={bottomSheetRef} onCancelPress={handleCancelPress} onDonePress={handleDonePress}>
-      <DurationPicker onDurationChange={handleDurationChange} />
+      <DurationPicker value={duration} onDurationChange={handleDurationChange} />
     </BottomSheet>
   );
 

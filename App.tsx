@@ -5,8 +5,6 @@ import {
   createAppContainer,
   TabRouter,
   createNavigator,
-  NavigationScreenProp,
-  NavigationState,
 } from 'react-navigation';
 import Storybook from './storybook';
 import { colors, fonts } from './src/theme';
@@ -30,7 +28,7 @@ YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
-export default Storybook;
+// export default Storybook;
 
 const router = TabRouter(
   {
@@ -161,15 +159,15 @@ const rootReducer = combineReducers({
 });
 const store = createStore(rootReducer, seedData, composeWithDevTools());
 
-// export default class App extends React.Component {
-//   render() {
-//     return (
-//       <Provider store={store}>
-//         <AppContainer />
-//       </Provider>
-//     );
-//   }
-// }
+export default class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    );
+  }
+}
 
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {

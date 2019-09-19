@@ -1,28 +1,20 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
-import { useEffectAfterInitialRender } from '../../utilities/useEffectAfterInitialRender';
 
 interface DurationPickerProps {
-  initialValue?: { hours: number, minutes: number }
+  value: { hours: number, minutes: number }
   onDurationChange?: (hours: number, minutes: number) => void;
 }
 
-export const DurationPicker: FunctionComponent<DurationPickerProps> = ({
-                                                                         initialValue = {
-                                                                           hours: 1,
-                                                                           minutes: 0,
-                                                                         }, onDurationChange,
-                                                                       }) => {
-  const [selectedHours, setSelectedHours] = useState(initialValue.hours);
-  const [selectedMinutes, setSelectedMinutes] = useState(initialValue.minutes);
+export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ value, onDurationChange }) => {
+  const handleHoursChange = (index: number) => {
+    if (onDurationChange != null) onDurationChange(index, value.minutes);
+  };
 
-  useEffectAfterInitialRender(() => {
-    if (onDurationChange != null) onDurationChange(selectedHours, selectedMinutes);
-  }, [selectedHours, selectedMinutes]);
-
-  const handleHoursChange = (index: number) => setSelectedHours(index);
-  const handleMinutesChange = (index: number) => setSelectedMinutes(index);
+  const handleMinutesChange = (index: number) => {
+    if (onDurationChange != null) onDurationChange(value.hours, index);
+  };
 
   const hours = [];
   for (let i = 0; i < 24; i++) hours.push(i);
@@ -34,9 +26,9 @@ export const DurationPicker: FunctionComponent<DurationPickerProps> = ({
 
   return (
     <View style={styles.container}>
-      <ScrollablePicker data={hourData} index={selectedHours} style={styles.picker}
+      <ScrollablePicker data={hourData} index={value.hours} style={styles.picker}
                         onIndexChange={handleHoursChange} text='H' />
-      <ScrollablePicker data={minuteData} index={selectedMinutes} style={styles.picker}
+      <ScrollablePicker data={minuteData} index={value.minutes} style={styles.picker}
                         onIndexChange={handleMinutesChange} text='M' />
     </View>
   );
