@@ -47,12 +47,6 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({ duration,
     hideBottomSheet();
   };
 
-  const picker = (
-    <BottomSheet ref={bottomSheetRef} onCancelPress={handleCancelPress} onDonePress={handleDonePress}>
-      <DurationPicker value={duration} onDurationChange={handleDurationChange} />
-    </BottomSheet>
-  );
-
   const value = `${duration.hours}h ${duration.minutes}m`;
 
   return (
@@ -62,7 +56,9 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({ duration,
       opacityOnTouch={false}
       onPress={handleInputContainerPress}
     >
-      {picker}
+      <BottomSheet ref={bottomSheetRef} onCancelPress={handleCancelPress} onDonePress={handleDonePress}>
+        <DurationPicker duration={duration} onDurationChange={handleDurationChange} />
+      </BottomSheet>
     </InputContainer>
   );
 };

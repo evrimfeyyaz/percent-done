@@ -3,17 +3,17 @@ import { StyleSheet, View } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
 
 interface DurationPickerProps {
-  value: { hours: number, minutes: number }
+  duration: { hours: number, minutes: number }
   onDurationChange?: (hours: number, minutes: number) => void;
 }
 
-export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ value, onDurationChange }) => {
+export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ duration, onDurationChange }) => {
   const handleHoursChange = (index: number) => {
-    if (onDurationChange != null) onDurationChange(index, value.minutes);
+    if (onDurationChange != null) onDurationChange(index, duration.minutes);
   };
 
   const handleMinutesChange = (index: number) => {
-    if (onDurationChange != null) onDurationChange(value.hours, index);
+    if (onDurationChange != null) onDurationChange(duration.hours, index);
   };
 
   const hours = [];
@@ -26,9 +26,9 @@ export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ value, 
 
   return (
     <View style={styles.container}>
-      <ScrollablePicker data={hourData} index={value.hours} style={styles.picker}
+      <ScrollablePicker data={hourData} index={duration.hours} style={styles.picker}
                         onIndexChange={handleHoursChange} text='H' />
-      <ScrollablePicker data={minuteData} index={value.minutes} style={styles.picker}
+      <ScrollablePicker data={minuteData} index={duration.minutes} style={styles.picker}
                         onIndexChange={handleMinutesChange} text='M' />
     </View>
   );

@@ -1,37 +1,52 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
 import { isLocale24Hours } from '../../utilities';
 import { colors, fonts } from '../../theme';
-import { useEffectAfterInitialRender } from '../../utilities/useEffectAfterInitialRender';
 
 interface TimePickerProps {
-  initialValue?: Date;
+  time: Date;
   onTimeChange?: (date: Date) => void;
 }
 
-export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialValue = new Date(), onTimeChange }) => {
+export const TimePicker: FunctionComponent<TimePickerProps> = ({ time, onTimeChange }) => {
   const is24Hours = isLocale24Hours();
 
-  const initialValueHour = initialValue.getHours();
-  const [periodIndex, setPeriodIndex] = useState(initialValueHour < 12 ? 0 : 1);
-  const [hourIndex, setHourIndex] = useState(is24Hours ? initialValueHour : (initialValueHour) % 12);
-  const [minuteIndex, setMinuteIndex] = useState(initialValue.getMinutes());
+  const hour = time.getHours();
+  const periodIndex = hour < 12 ? 0 : 1;
+  const hourIndex = is24Hours ? hour : (hour) % 12;
+  const minuteIndex = time.getMinutes();
 
-  useEffectAfterInitialRender(() => {
-    let time = new Date();
+  const handleHourIndexChange = (index: number) => {
+    let newHour = index;
 
-    let hours = hourIndex;
-    if (!is24Hours && periodIndex === 1) hours += 12;
+    if (!is24Hours && periodIndex === 1) { // PM
+      newHour += 12;
+    }
 
-    time = new Date(time.setHours(hours, minuteIndex));
+    const newTimeStamp = time.setHours(newHour);
 
-    if (onTimeChange != null) onTimeChange(time);
-  }, [periodIndex, hourIndex, minuteIndex]);
+    if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
+  };
 
-  const handleHourIndexChange = (index: number) => setHourIndex(index);
-  const handleMinuteIndexChange = (index: number) => setMinuteIndex(index);
-  const handlePeriodIndexChange = (index: number) => setPeriodIndex(index);
+  const handleMinuteIndexChange = (index: number) => {
+    const newTimeStamp = time.setMinutes(index);
+    if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
+  };
+
+  const handlePeriodIndexChange = (index: number) => {
+    let newHour = time.getHours();
+
+    if (index === 1) { // PM
+      newHour += 12;
+    } else {
+      newHour -= 12;
+    }
+
+    const newTimeStamp = time.setHours(newHour);
+
+    if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
+  };
 
   let hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   if (is24Hours) hours = hours.concat([12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);

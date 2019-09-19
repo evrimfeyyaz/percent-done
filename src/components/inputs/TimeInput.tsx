@@ -3,19 +3,19 @@ import { InputContainer, TimePicker, BottomSheet } from '..';
 import { momentWithDeviceLocale } from '../../utilities';
 
 interface TimeInputProps {
-  time?: Date;
+  time: Date;
   onTimeChange?: (time: Date) => void;
 }
 
-export const TimeInput: FunctionComponent<TimeInputProps> = ({ time = new Date(), onTimeChange }) => {
+export const TimeInput: FunctionComponent<TimeInputProps> = ({ time, onTimeChange }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   /**
    *  Keep the previous time, just in case the user cancels the bottom sheet.
    */
-  const [prevTime, setPrevTime] = useState(time);
+  const [prevTime, setPrevTime] = useState(new Date());
 
   const showBottomSheet = () => {
-    setPrevTime(time);
+    setPrevTime(new Date(time.getTime()));
     if (bottomSheetRef != null && bottomSheetRef.current != null) {
       bottomSheetRef.current.open();
     }
@@ -48,12 +48,6 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({ time = new Date()
     hideBottomSheet();
   };
 
-  const picker = (
-    <BottomSheet ref={bottomSheetRef} onCancelPress={handleCancelPress} onDonePress={handleDonePress}>
-      <TimePicker onTimeChange={handleTimeChange} />
-    </BottomSheet>
-  );
-
   const value = momentWithDeviceLocale(time).format('LT');
 
   return (
@@ -63,7 +57,9 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({ time = new Date()
       opacityOnTouch={false}
       onPress={handleInputContainerPress}
     >
-      {picker}
+      <BottomSheet ref={bottomSheetRef} onCancelPress={handleCancelPress} onDonePress={handleDonePress}>
+        <TimePicker time={time} onTimeChange={handleTimeChange} />
+      </BottomSheet>
     </InputContainer>
   );
 };
