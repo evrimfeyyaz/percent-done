@@ -1,6 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { InputContainer } from './InputContainer';
-import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+  TouchableNativeFeedback,
+} from 'react-native';
 import { colors, fonts } from '../../theme';
 
 export enum DayOfWeek {
@@ -14,14 +21,23 @@ export enum DayOfWeek {
 }
 
 interface DaysOfWeekInputProps {
-  selectedDays?: DayOfWeek[] | string[];
-  onDayChange?: (day: DayOfWeek) => void;
+  selectedDays: DayOfWeek[] | string[];
+  onDaysChange?: (days: (DayOfWeek[] | string[])) => void;
 }
 
-export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({
-                                                                           selectedDays = [],
-                                                                           onDayChange,
-                                                                         }) => {
+export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ selectedDays, onDaysChange }) => {
+  const handleDayChange = (changedDay: DayOfWeek) => {
+    let newSelectedDays = [...selectedDays];
+
+    if (selectedDays.includes(changedDay)) {
+      newSelectedDays = newSelectedDays.filter(day => day !== changedDay);
+    } else {
+      newSelectedDays.push(changedDay);
+    }
+
+    if (onDaysChange != null) onDaysChange(newSelectedDays);
+  };
+
   const dayButton = (day: DayOfWeek) => {
     const selectedStyle = { opacity: 1 };
     const isSelected = selectedDays.includes(day);
@@ -30,17 +46,14 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({
       : styles.dayButton;
 
     return (
-      <TouchableOpacity
-        style={dayButtonStyle}
-        key={day}
-        onPress={() => {
-          if (onDayChange != null) {
-            onDayChange(day);
-          }
-        }}
+      <TouchableWithoutFeedback
+        key={`${day}-${isSelected ? 'selected' : 'unselected'}`}
+        onPress={() => handleDayChange(day)}
       >
-        <Text style={styles.dayButtonTitle}>{day.toString().charAt(0)}</Text>
-      </TouchableOpacity>
+        <View style={dayButtonStyle}>
+          <Text style={styles.dayButtonTitle}>{day.toString().charAt(0)}</Text>
+        </View>
+      </TouchableWithoutFeedback>
     );
   };
 
@@ -64,6 +77,7 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({
 
 const styles = StyleSheet.create({
   inputContainer: {
+    marginTop: 8,
     flexDirection: 'column',
     alignItems: 'stretch',
   },
@@ -71,8 +85,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 5,
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 22,
   },
   dayButton: {
     height: 24,

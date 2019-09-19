@@ -283,7 +283,7 @@ storiesOf('Inputs', module)
   .add('Days of week input', () => (
     <DaysOfWeekInput
       selectedDays={array('Selected days', ['Sunday', 'Monday'])}
-      onDayChange={action('day-changed')}
+      onDaysChange={action('day-changed')}
     />
   ))
   .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />)
