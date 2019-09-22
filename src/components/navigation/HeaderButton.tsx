@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     textTransform: 'uppercase',
     fontFamily: fonts.regular,
-    marginRight: 15,
+    marginHorizontal: 15,
   },
   textPrimary: {
     fontFamily: fonts.bold,

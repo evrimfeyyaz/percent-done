@@ -2,6 +2,8 @@ import { StoreState } from '../types';
 import { Goal } from './types';
 import { GoalListProps } from '../../components';
 import { convertDateToIndex } from '../../utilities';
+import { TimetableEntry } from '../timetableEntries/types';
+import moment from 'moment';
 
 /**
  * Returns the goals that the user has for a given date.
@@ -26,10 +28,11 @@ export const getCompleteGoals = (state: StoreState, date: Date): Goal[] =>
  */
 export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], date: Date): GoalListProps => {
   const convertedGoals = goals.map(goal => {
-    const { title, color, chainLength, isTimeTracked, id: key } = goal;
+    const { title, color, id: key } = goal;
+    const chainLength = getChainLength(state, goal, date);
 
     let completedSeconds, totalSeconds, completed;
-    if (isTimeTracked) {
+    if (goal.durationInSeconds != null) {
       completedSeconds = getCompletedSeconds(state, goal, date);
       totalSeconds = goal.durationInSeconds;
     } else {
@@ -56,19 +59,10 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
  * Returns the total time spent on a goal for given date.
  */
 export const getCompletedSeconds = (state: StoreState, goal: Goal, date: Date): number => {
-  const dateIdx = convertDateToIndex(date);
-  const timetableEntryIds = goal.timetableEntryIds.byDate[dateIdx];
+  const timetableEntries = getTimetableEntriesForGoal(state, goal, date);
 
-  if (timetableEntryIds == null) return 0;
-
-  return timetableEntryIds.reduce((total, id) => {
-    const timetableEntry = state.timetableEntries.byId[id];
-
-    if (timetableEntry == null) {
-      throw Error('Cannot find timetable entry');
-    }
-
-    const msSpent = timetableEntry.endTime - timetableEntry.startTime;
+  return timetableEntries.reduce((total, entry) => {
+    const msSpent = entry.endTime - entry.startTime;
 
     return total + (msSpent / 1000);
   }, 0);
@@ -91,7 +85,7 @@ export const getRemainingSecondsForDate = (state: StoreState, date: Date): numbe
   const totalSeconds = goals.reduce((total, goal) => {
     if (goal.durationInSeconds == null) return total;
 
-    return total + goal.durationInSeconds
+    return total + goal.durationInSeconds;
   }, 0);
   const completedSeconds = getTotalCompletedSecondsForDate(state, date);
 
@@ -102,21 +96,13 @@ export const getRemainingSecondsForDate = (state: StoreState, date: Date): numbe
  * Returns whether a goal has been completed on the given day.
  */
 export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean => {
-  if (goal.isTimeTracked) {
-    const completedSeconds = getCompletedSeconds(state, goal, date);
-    const totalSeconds = goal.durationInSeconds;
-
-    if (totalSeconds == null) {
-      throw Error('A time tracked goal should have a set duration.');
-    }
-
-    return completedSeconds >= totalSeconds;
-  } else {
-    const dateIdx = convertDateToIndex(date);
-    const entries = goal.timetableEntryIds.byDate[dateIdx];
-
+  if (goal.durationInSeconds == null || goal.durationInSeconds === 0) {
+    const entries = getTimetableEntriesForGoal(state, goal, date);
     return entries != null && entries.length > 0;
   }
+
+  const completedSeconds = getCompletedSeconds(state, goal, date);
+  return completedSeconds >= goal.durationInSeconds;
 };
 
 /**
@@ -125,15 +111,10 @@ export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean 
 export const getProgress = (state: StoreState, goal: Goal, date: Date): number => {
   let progress = 0;
 
-  if (goal.isTimeTracked) {
+  if (goal.durationInSeconds != null) {
     const completedSeconds = getCompletedSeconds(state, goal, date);
-    const totalSeconds = goal.durationInSeconds;
 
-    if (totalSeconds == null) {
-      throw Error('A time tracked goal should have a total duration.');
-    }
-
-    progress = completedSeconds / totalSeconds;
+    progress = completedSeconds / goal.durationInSeconds;
   } else {
     progress = isCompleted(state, goal, date) ? 1 : 0;
   }
@@ -151,4 +132,40 @@ export const getTotalProgressForDate = (state: StoreState, date: Date): number =
   return goals.reduce((progress, goal) => {
     return progress + getProgress(state, goal, date) / numOfGoals;
   }, 0);
+};
+
+export const getTimetableEntriesForGoal = (state: StoreState, goal: Goal, date: Date): TimetableEntry[] => {
+  const dateIdx = convertDateToIndex(date);
+  const entryIds = state.timetableEntries.idsByDate[dateIdx];
+
+  if (entryIds == null) return [];
+
+  return entryIds.reduce((result: TimetableEntry[], entryId) => {
+    const entry = state.timetableEntries.byId[entryId];
+
+    if (entry.goalId === goal.id) {
+      result.push(entry);
+    }
+
+    return result;
+  }, []);
+};
+
+/**
+ * Returns the number of days that given goal has been completed
+ * in a row up to today.
+ */
+export const getChainLength = (state: StoreState, goal: Goal, date: Date): number => {
+  let chainLength = 0;
+  for (let daysBefore = 1; daysBefore < 10; daysBefore++) {
+    const dateBefore = moment(date).subtract(daysBefore, 'day').toDate();
+
+    if (isCompleted(state, goal, dateBefore)) {
+      chainLength++;
+    } else {
+      break;
+    }
+  }
+
+  return chainLength;
 };

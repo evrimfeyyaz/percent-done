@@ -20,12 +20,15 @@ export enum DayOfWeek {
   Saturday = 'Saturday'
 }
 
+export type WeekDaysArray = ('Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday')[];
+
 interface DaysOfWeekInputProps {
-  selectedDays: DayOfWeek[] | string[];
-  onDaysChange?: (days: (DayOfWeek[] | string[])) => void;
+  title: string;
+  selectedDays: DayOfWeek[] | WeekDaysArray;
+  onDaysChange?: (days: (DayOfWeek[] | WeekDaysArray)) => void;
 }
 
-export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ selectedDays, onDaysChange }) => {
+export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title, selectedDays, onDaysChange }) => {
   const handleDayChange = (changedDay: DayOfWeek) => {
     let newSelectedDays = [...selectedDays];
 
@@ -66,7 +69,7 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ selec
 
   return (
     <InputContainer
-      title="Days of the week"
+      title={title}
       opacityOnTouch={false}
       style={styles.inputContainer}
     >

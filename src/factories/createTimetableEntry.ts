@@ -1,4 +1,4 @@
-import { createRandomId } from '../store/utilities';
+import { createRandomId } from '../utilities/createRandomId';
 import { TimetableEntry } from '../store/timetableEntries/types';
 
 interface CreateTimetableEntryArguments {

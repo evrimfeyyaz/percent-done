@@ -24,7 +24,7 @@ import {
   TabInfo,
   GoalList, DaysStats,
   HeaderButton,
-  TimePicker, DurationPicker, DurationInput,
+  TimePicker, DurationPicker, DurationInput, GoalForm,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -287,8 +287,8 @@ storiesOf('Inputs', module)
     />
   ))
   .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />)
-  .add('Time picker', () => <TimePicker />)
-  .add('Duration picker', () => <DurationPicker />);
+  .add('Time picker', () => <TimePicker time={new Date()} />)
+  .add('Duration picker', () => <DurationPicker duration={{ hours: 1, minutes: 0 }} />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
@@ -324,6 +324,11 @@ storiesOf('Navigation', module)
       style={{ backgroundColor: 'white', width: '100%', height: 150, justifyContent: 'center', alignItems: 'center' }}>
       <HeaderButton title='Add Goal' primary onPress={action('header-button-press')} />
     </View>
+  ));
+
+storiesOf('Forms', module)
+  .add('Goal form', () => (
+    <GoalForm />
   ));
 
 // Utilities

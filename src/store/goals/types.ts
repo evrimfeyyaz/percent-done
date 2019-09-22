@@ -4,30 +4,19 @@ export interface Goal {
   id: string;
   title: string;
   color: string;
-
-  isTimeTracked: boolean;
-  /**
-   * Total duration of the goal in seconds.
-   */
   durationInSeconds?: number;
-
-  /**
-   * Days that the goal should be recurring.
-   * 0 is for Sunday and 6 is for Saturday.
-   */
-  recurringDays: boolean[];
-
-  hasReminder: boolean;
+  recurringDays: ('Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday')[];
   reminderTime?: Date;
-
-  chainLength: number;
-
-  timetableEntryIds: {
-    byDate: {
-      [date: string]: string[],
-    }
-  }
 }
+
+export const ADD_GOAL = 'ADD_GOAL';
+
+export interface AddGoalAction {
+  type: typeof ADD_GOAL;
+  payload: Goal;
+}
+
+export type GoalActionTypes = AddGoalAction | { type: undefined };
 
 export interface GoalsState extends NormalizedEntityState<Goal> {
 }

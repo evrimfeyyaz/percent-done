@@ -23,12 +23,31 @@ import { timetableEntriesReducer } from './src/store/timetableEntries/reducers';
 import { createGoal, createStoreState, createTimetableEntry } from './src/factories';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { AddGoalScreen } from './src/screens/AddGoalScreen';
+import { Goal } from './src/store/goals/types';
+import { TimetableEntry } from './src/store/timetableEntries/types';
 
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
 // export default Storybook;
+
+const AddGoalStack = createStackNavigator({
+  AddGoal: AddGoalScreen,
+}, {
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: colors.offWhite,
+    },
+    headerTitleStyle: {
+      fontFamily: fonts.semibold,
+      fontWeight: '600',
+      color: colors.offBlack,
+      fontSize: 14,
+      textTransform: 'uppercase',
+    },
+  },
+});
 
 const router = TabRouter(
   {
@@ -47,7 +66,6 @@ const TodayTabsNavigator = createNavigator(
 );
 
 const TodayStack = createStackNavigator({
-    AddGoal: AddGoalScreen,
     Today: TodayTabsNavigator,
   },
   {
@@ -67,7 +85,6 @@ const TodayStack = createStackNavigator({
       ),
       title: 'Today',
     }),
-    mode: 'modal',
   },
 );
 
@@ -83,7 +100,7 @@ const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
 });
 
-const AppNavigator = createBottomTabNavigator(
+const MainTabsNavigator = createBottomTabNavigator(
   {
     Today: TodayStack,
     Tomorrow: TomorrowStack,
@@ -119,30 +136,34 @@ const AppNavigator = createBottomTabNavigator(
   },
 );
 
+const AppNavigator = createStackNavigator({
+  MainTabs: MainTabsNavigator,
+  AddGoal: AddGoalStack,
+}, {
+  mode: 'modal',
+  headerMode: 'none',
+});
+
 const AppContainer = createAppContainer(AppNavigator);
 
 const today = new Date();
-const incompleteGoal = createGoal({
+const incompleteGoal: Goal = createGoal({
   title: 'Work on PercentDone',
-  durationInSeconds: 1 * 60 * 60,
-  chainLength: 23,
+  durationInMin: 60,
   color: colors.orange,
-  isTimeTracked: true,
 }, [today]);
-const completedGoal = createGoal({
+const completedGoal: Goal = createGoal({
   title: 'Read',
-  durationInSeconds: 0,
-  isTimeTracked: false,
-  chainLength: 10,
+  durationInMin: undefined,
   color: colors.blue,
 }, [today]);
-const timetableEntry = createTimetableEntry({
+const timetableEntry: TimetableEntry = createTimetableEntry({
   goalId: incompleteGoal.id,
   startHour: 10,
   durationInMin: 30,
   startDate: today,
 });
-const timetableEntry2 = createTimetableEntry({
+const timetableEntry2: TimetableEntry = createTimetableEntry({
   goalId: completedGoal.id,
   startHour: 10,
   durationInMin: 0,

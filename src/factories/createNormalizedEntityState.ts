@@ -1,14 +1,17 @@
 import { NormalizedEntityState } from '../store/types';
+import { createRandomId } from '../utilities/createRandomId';
 
-export const createNormalizedEntityState = <T extends { id: string }>(entities: T[]): NormalizedEntityState<T> => {
+export const createNormalizedEntityState = <T extends { id?: string }>(entities: T[]): NormalizedEntityState<T> => {
   const result: NormalizedEntityState<T> = {
     byId: {},
     allIds: [],
   };
 
   entities.forEach(entry => {
-    result.byId[entry.id] = entry;
-    result.allIds.push(entry.id);
+    const id = entry.id ? entry.id : createRandomId();
+
+    result.byId[id] = entry;
+    result.allIds.push(id);
   });
 
   return result;

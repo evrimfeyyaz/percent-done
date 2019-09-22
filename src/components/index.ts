@@ -32,3 +32,7 @@ export * from './navigation/TabItem';
 export * from './navigation/TabBar';
 export * from './navigation/TabNavigationView';
 export * from './navigation/HeaderButton';
+export * from './navigation/HeaderCancelButton';
+
+// Forms
+export * from './forms/GoalForm';

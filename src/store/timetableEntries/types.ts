@@ -1,5 +1,4 @@
 import { NormalizedEntityState } from '../types';
-import { Goal } from '../goals/types';
 
 export interface TimetableEntry {
   id: string,

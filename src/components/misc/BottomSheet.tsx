@@ -43,7 +43,7 @@ export class BottomSheet extends Component<BottomSheetProps> {
       </RBSheet>
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   container: {

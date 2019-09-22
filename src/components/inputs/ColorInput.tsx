@@ -1,39 +1,34 @@
 import React, { FunctionComponent } from 'react';
 import { InputContainer } from './InputContainer';
-import { FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, Image, ImageStyle, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Icons } from '../../../assets';
 
 interface ColorInputProps {
-  colors?: string[];
-  selectedColor?: string;
+  colors: string[];
+  selectedColor: string;
   onColorChange?: (color: string) => void;
 }
 
 export const ColorInput: FunctionComponent<ColorInputProps> = ({
-                                                                 colors = [],
+                                                                 colors,
                                                                  selectedColor,
                                                                  onColorChange,
                                                                }) => {
   const colorButton = (color: string) => {
-    let selectedIndicatorStyle = { display: 'none' };
+    if (color === 'transparent') {
+      return <View style={styles.colorButton} />;
+    }
+
+    let selectedIndicatorStyle: ImageStyle = { display: 'none' };
     if (selectedColor === color) {
       selectedIndicatorStyle = { display: 'flex' };
     }
 
     return (
       <TouchableOpacity
-        style={StyleSheet.flatten([
-          styles.colorButton,
-          { backgroundColor: color },
-        ])}
-        onPress={() => {
-          if (onColorChange != null) {
-            onColorChange(color);
-          }
-        }}
+        style={StyleSheet.flatten([styles.colorButton, { backgroundColor: color }])}
+        onPress={() => onColorChange && onColorChange(color)}
       >
-        {/*
-       // @ts-ignore */}
         <Image style={selectedIndicatorStyle} source={Icons.checkmark} />
       </TouchableOpacity>
     );
@@ -45,8 +40,7 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({
   // Add an extra item to the end to make the rows equal length
   // if there are odd number of colors.
   if (colors.length % 2 !== 0) {
-    const transparentItem = 'rgba(0, 0, 0, 0)';
-    data.push({ color: transparentItem, key: transparentItem });
+    data.push({ color: 'transparent', key: 'transparent-item' });
   }
 
   return (
@@ -63,7 +57,7 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({
 
 const styles = StyleSheet.create({
   colorListRow: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   colorButton: {
     height: 24,

@@ -8,6 +8,8 @@ export const Icons = {
   settingsInactive: require('./settings-inactive.png'),
   settingsActive: require('./settings-active.png'),
 
+  headerCancel: require('./header-cancel.png'),
+
   checkmark: require('./checkmark.png'),
 
   chevronRight: require('./chevron-right.png'),
