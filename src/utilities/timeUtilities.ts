@@ -112,6 +112,7 @@ export function momentWithDeviceLocale(inp?: moment.MomentInput, format?: moment
   let deviceLocale = Platform.OS === 'ios'
     ? NativeModules.SettingsManager.settings.AppleLocale
     : NativeModules.I18nManager.localeIdentifier;
+  deviceLocale = deviceLocale || 'en-US';
 
   return moment(inp, format, strict).locale(deviceLocale);
 }
