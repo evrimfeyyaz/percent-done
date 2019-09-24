@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import {
-  GestureResponderEvent,
+  GestureResponderEvent, LayoutChangeEvent,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  TouchableOpacity, View,
   ViewStyle,
 } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
@@ -26,11 +26,17 @@ interface InputContainerProps {
   rightItem?: Element;
 
   onPress?: (event: GestureResponderEvent) => void;
+  onLayout?: (event: LayoutChangeEvent) => void;
 
   /**
    * Whether this item should flash when tapped.
    */
   opacityOnTouch?: boolean;
+
+  /**
+   * Error message for the input.
+   */
+  error?: string;
 
   style?: ViewStyle;
 }
@@ -42,7 +48,9 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
                                                                          style,
                                                                          opacityOnTouch = true,
                                                                          onPress,
+                                                                         onLayout,
                                                                          children,
+                                                                         error,
                                                                        }) => {
   let titleText = null;
   if (title != null) {
@@ -59,18 +67,29 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
     activeOpacity = 1;
   }
 
+  let bottomLineColor = colors.darkGray;
+  let errorText;
+  if (error != null) {
+    bottomLineColor = colors.lightRed;
+    errorText = <Text style={styles.errorText}>{error}</Text>;
+  }
+
   return (
     <TouchableOpacity
       style={StyleSheet.flatten([styles.container, style])}
       onPress={onPress}
+      onLayout={onLayout}
       activeOpacity={activeOpacity}
     >
-      {titleText}
-      {children}
-      {valueText}
-      {rightItem}
+      <View style={styles.innerContainer}>
+        {titleText}
+        {children}
+        {valueText}
+        {rightItem}
+      </View>
+      {errorText}
       <Svg height={1} style={styles.bottomLine}>
-        <Line x1="0%" x2="100%" stroke={colors.darkGray} strokeWidth={1} />
+        <Line x1="0%" x2="100%" stroke={bottomLineColor} strokeWidth={1} />
       </Svg>
     </TouchableOpacity>
   );
@@ -79,11 +98,12 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    minHeight: 45,
-    display: 'flex',
+    paddingHorizontal: 20,
+  },
+  innerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    minHeight: 45,
   },
   title: {
     flex: 1,
@@ -104,5 +124,12 @@ const styles = StyleSheet.create({
     left: 20,
     bottom: 5,
     right: 0,
+  },
+  errorText: {
+    fontFamily: fonts.regular,
+    fontSize: 14,
+    color: colors.lightRed,
+    marginBottom: 10,
+    marginTop: -10,
   },
 });

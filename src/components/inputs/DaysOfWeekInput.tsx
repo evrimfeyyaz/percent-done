@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   TouchableHighlight,
-  TouchableNativeFeedback,
+  TouchableNativeFeedback, LayoutChangeEvent,
 } from 'react-native';
 import { colors, fonts } from '../../theme';
 
@@ -26,9 +26,11 @@ interface DaysOfWeekInputProps {
   title: string;
   selectedDays: DayOfWeek[] | WeekDaysArray;
   onDaysChange?: (days: (DayOfWeek[] | WeekDaysArray)) => void;
+  error?: string;
+  onLayout?: (event: LayoutChangeEvent) => void;
 }
 
-export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title, selectedDays, onDaysChange }) => {
+export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title, selectedDays, onDaysChange, onLayout, error }) => {
   const handleDayChange = (changedDay: DayOfWeek) => {
     let newSelectedDays = [...selectedDays];
 
@@ -72,6 +74,8 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
       title={title}
       opacityOnTouch={false}
       style={styles.inputContainer}
+      error={error}
+      onLayout={onLayout}
     >
       <View style={styles.dayButtonsContainer}>{dayButtons}</View>
     </InputContainer>

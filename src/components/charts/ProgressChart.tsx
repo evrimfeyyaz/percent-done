@@ -26,7 +26,7 @@ export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => 
       />
       <View style={styles.infoContainer}>
         <Text style={styles.percentDone}>
-          {percentDone}
+          {Math.floor(percentDone)}
           <Text style={styles.percentSign}>%</Text>
         </Text>
         <Text style={styles.doneText}>Done</Text>

@@ -24,7 +24,7 @@ import {
   TabInfo,
   GoalList, DaysStats,
   HeaderButton,
-  TimePicker, DurationPicker, DurationInput, GoalForm,
+  TimePicker, DurationPicker, DurationInput, GoalForm, InputContainer,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -255,6 +255,8 @@ storiesOf('Inputs', module)
       onPress={action('button-with-icon-pressed')}
     />
   ))
+  .add('Input container', () => <InputContainer title='Test Input' value='123' />)
+  .add('Input container with error', () => <InputContainer title='Test Input' value='123' error='Test error' />)
   .add('Text input', () => <TextInput placeholder="What is your goal?" value={text('Text', null)}
                                       onChangeText={action('text-changed')} />,
   )

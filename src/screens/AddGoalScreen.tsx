@@ -14,8 +14,9 @@ export const AddGoalScreen: NavigationScreenComponent = ({ navigation }) => {
 
   const submitFormAndClose = () => {
     if (formRef != null && formRef.current != null) {
-      formRef.current.submit();
-      navigation.goBack(null);
+      if (formRef.current.submit()) {
+        navigation.goBack(null);
+      }
     }
   };
 

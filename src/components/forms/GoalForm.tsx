@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { Component, createRef } from 'react';
+import { LayoutChangeEvent, ScrollView, StyleSheet, View } from 'react-native';
 import {
   ColorInput,
   DaysOfWeekInput,
@@ -12,6 +12,7 @@ import {
 } from '..';
 import { goalColors } from '../../theme';
 import { Goal } from '../../store/goals/types';
+import { createRandomId } from '../../utilities/createRandomId';
 
 const allDays: WeekDaysArray = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -23,6 +24,20 @@ interface GoalFormState {
   recurringDays: WeekDaysArray;
   reminder: boolean;
   reminderTime: Date;
+  /**
+   * Y position of the title input.
+   */
+  titleInputPosition?: number;
+  titleInputError?: string;
+  /**
+   * Y position of the recurring days input.
+   */
+  recurringDaysInputPosition?: number;
+  recurringDaysInputError?: string;
+  /**
+   * Y positions of all inputs that failed validation.
+   */
+  failedInputPositions?: number[];
 }
 
 export interface GoalFormProps {
@@ -30,6 +45,8 @@ export interface GoalFormProps {
 }
 
 export class GoalForm extends Component<GoalFormProps, GoalFormState> {
+  private scrollViewRef: React.RefObject<ScrollView>;
+
   constructor(props: GoalFormProps) {
     super(props);
 
@@ -42,14 +59,61 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       reminderTime: new Date(),
       color: goalColors[0],
     };
+    this.scrollViewRef = createRef<ScrollView>();
   }
 
-  submit() {
+  validate(): boolean {
+    const { title, recurringDays, titleInputPosition, recurringDaysInputPosition } = this.state;
+    let validates = true;
+    let titleInputError = this.state.titleInputError;
+    let recurringDaysInputError = this.state.recurringDaysInputError;
+    let failedInputPositions = [];
+
+    if (title == null || title.trim().length === 0) {
+      titleInputError = 'You need to enter a title.';
+      if (titleInputPosition != null) failedInputPositions.push(titleInputPosition);
+      validates = false;
+    }
+
+    if (recurringDays.length === 0) {
+      recurringDaysInputError = 'You should select at least one day.';
+      if (recurringDaysInputPosition != null) failedInputPositions.push(recurringDaysInputPosition);
+      validates = false;
+    }
+
+    this.setState({ titleInputError, recurringDaysInputError, failedInputPositions });
+
+    return validates;
+  }
+
+  componentDidUpdate(prevProps: Readonly<GoalFormProps>, prevState: Readonly<GoalFormState>, snapshot?: any): void {
+    const failedInputPositions = this.state.failedInputPositions;
+    let topFailedInput;
+    if (failedInputPositions != null && failedInputPositions.length > 0) {
+      topFailedInput = Math.min(...failedInputPositions);
+    }
+
+    if (topFailedInput != null && this.scrollViewRef != null && this.scrollViewRef.current != null) {
+      this.scrollViewRef.current.scrollTo({ x: 0, y: topFailedInput, animated: true });
+    }
+  }
+
+  /**
+   * Submits the form, and returns `true` if the submission is successful,
+   * and `false` otherwise.
+   */
+  submit(): boolean {
+    if (!this.validate()) {
+      return false;
+    }
+
     const { title, isTimeTracked, duration, recurringDays, reminder, reminderTime, color } = this.state;
 
     const durationInSeconds = isTimeTracked ? duration.hours * 60 * 60 + duration.minutes * 60 : undefined;
+    const id = createRandomId();
 
     const goal: Goal = {
+      id,
       title,
       color,
       durationInSeconds,
@@ -58,10 +122,15 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     };
 
     this.props.onSubmit(goal);
+
+    return true;
   }
 
   handleTitleChange = (title: string) => {
-    this.setState({ title });
+    this.setState({
+      title,
+      titleInputError: undefined,
+    });
   };
 
   handleTimeTrackingChange = (timeTracking: boolean) => {
@@ -73,7 +142,10 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   };
 
   handleRecurringDaysChange = (recurringDays: WeekDaysArray) => {
-    this.setState({ recurringDays });
+    this.setState({
+      recurringDays,
+      recurringDaysInputError: undefined,
+    });
   };
 
   handleReminderChange = (reminder: boolean) => {
@@ -88,14 +160,32 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     this.setState({ color });
   };
 
+  handleTitleInputLayout = (event: LayoutChangeEvent) => {
+    this.setState({
+      titleInputPosition: event.nativeEvent.layout.y,
+    });
+  };
+
+  handleRecurringDaysInputLayout = (event: LayoutChangeEvent) => {
+    this.setState({
+      recurringDaysInputPosition: event.nativeEvent.layout.y,
+    });
+  };
+
   render() {
-    const { title, isTimeTracked, duration, recurringDays, reminder, reminderTime, color } = this.state;
+    const {
+      title, isTimeTracked, duration, recurringDays,
+      reminder, reminderTime, color, titleInputError, recurringDaysInputError,
+    } = this.state;
 
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} ref={this.scrollViewRef} scrollToOverflowEnabled={true}>
         <View style={styles.topInputGroup}>
-          <TextInput placeholder='What is your goal?' onChangeText={this.handleTitleChange} value={title} />
+          <TextInput placeholder='What is your goal?' onChangeText={this.handleTitleChange} value={title}
+                     onLayout={this.handleTitleInputLayout} error={titleInputError} />
           <DaysOfWeekInput title='Repeat on following days' selectedDays={recurringDays}
+                           onLayout={this.handleRecurringDaysInputLayout}
+                           error={recurringDaysInputError}
                            onDaysChange={this.handleRecurringDaysChange} />
         </View>
 

@@ -85,8 +85,6 @@ PODS:
     - React-fishhook (= 0.60.4)
   - RNCMaskedView (0.1.1):
     - React
-  - RNDateTimePicker (2.0.0):
-    - React
   - RNGestureHandler (1.3.0):
     - React
   - RNReactNativeHapticFeedback (1.8.2):
@@ -119,7 +117,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
-  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -176,8 +173,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/WebSocket"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
-  RNDateTimePicker:
-    :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReactNativeHapticFeedback:
@@ -212,7 +207,6 @@ SPEC CHECKSUMS:
   React-RCTVibration: 0bea40cd51bd089bd591a8f74c86e91fdf2666c5
   React-RCTWebSocket: 163873f4cdd5f1058a9483443404fc3801581cb6
   RNCMaskedView: b79e193409a90bf6b5170d421684f437ff4e2278
-  RNDateTimePicker: 0443103a1deefc342039432d615a0c2a53c9d81c
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNReactNativeHapticFeedback: e11a4da0ce174e9f88b03cbaf5d76d94633cdee2
   RNSVG: 90c76b7cf235654d45e54655b6c189ea4041057c

@@ -1299,13 +1299,6 @@
     shell-quote "1.6.1"
     ws "^1.1.0"
 
-"@react-native-community/datetimepicker@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-2.0.0.tgz#7b001b07c795899c915da476a1fb9d4ce347cdf0"
-  integrity sha512-G6F0Hi8Qtw8dQl8pYJ+9B60UEkOHVpDxSdlP7hRRscWeb8jdDFZodQnP8fxGdpS6EK8bv/IY2oNfUaYpxtp1SQ==
-  dependencies:
-    invariant "^2.2.4"
-
 "@react-native-community/eslint-config@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-config/-/eslint-config-0.0.5.tgz#584f6493258202a57efc22e7be66966e43832795"
@@ -1855,15 +1848,6 @@
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
   integrity sha512-CFzn9idOEpHrgdw8JsoTkaDDyRWk1jrzIV8djzcgpq0y9tG4B4lFT+Nxh52DVpDXV+n4+NPNv7M1Dj5uMp6XFg==
-
-"@types/react-native-datepicker@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@types/react-native-datepicker/-/react-native-datepicker-1.7.0.tgz#b4dc63ed3bd356ac30c9195b7987aea45f79fe8d"
-  integrity sha512-YbhwgveJSmJRsUNl82UcZbMdNDBzd+RiMmyev3+yiEepGYk56yh/Q3Ypi2dw7XjMEQ5GSNUehcVKVP31EWcUlw==
-  dependencies:
-    "@types/react" "*"
-    "@types/react-native" "*"
-    moment ">=2.14.0"
 
 "@types/react-native-svg-charts@^5.0.2":
   version "5.0.2"
@@ -7651,7 +7635,7 @@ mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
-moment@>=2.14.0, moment@^2.22.0, moment@^2.24.0:
+moment@^2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
@@ -9023,13 +9007,6 @@ react-native-color-picker@^0.4.0:
   dependencies:
     prop-types "^15.5.10"
     tinycolor2 "^1.4.1"
-
-react-native-datepicker@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/react-native-datepicker/-/react-native-datepicker-1.7.2.tgz#58d0822591a0ac9b32aba082650222a0ee29669d"
-  integrity sha1-WNCCJZGgrJsyq6CCZQIioO4pZp0=
-  dependencies:
-    moment "^2.22.0"
 
 react-native-gesture-handler@^1.3.0:
   version "1.3.0"
@@ -10591,11 +10568,6 @@ timers-browserify@^2.0.4:
   integrity sha512-YvC1SV1XdOUaL6gx5CoGroT3Gu49pK9+TZ38ErPldOWW4j49GI1HKs9DV+KGq/w6y+LZ72W1c8cKz2vzY+qpzg==
   dependencies:
     setimmediate "^1.0.4"
-
-timezone-mock@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/timezone-mock/-/timezone-mock-1.0.8.tgz#1b9f7af13f2bf84b7aa3d3d6e24aa17255b6037d"
-  integrity sha512-7dgx34HJPY8O/c5dbqG+I9S3TVDjrfssXmS8BNqiy8sdYvYDfM7shHpNA6VTDQWcDGyv43bE3El6YuFDQf1X3g==
 
 tiny-emitter@^2.0.0:
   version "2.1.0"
