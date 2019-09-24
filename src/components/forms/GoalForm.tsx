@@ -179,6 +179,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     } = this.state;
 
     return (
+      // @ts-ignore
       <ScrollView style={styles.container} ref={this.scrollViewRef} scrollToOverflowEnabled={true}>
         <View style={styles.topInputGroup}>
           <TextInput placeholder='What is your goal?' onChangeText={this.handleTitleChange} value={title}
