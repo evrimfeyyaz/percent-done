@@ -1,16 +1,18 @@
 import React, { FunctionComponent, useState } from 'react';
-import { LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
+import { LayoutChangeEvent, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { colors, fonts } from '../../theme';
 
 interface Props {
   title: string;
   bottomSeparator?: boolean;
+  contentStyle?: ViewStyle;
 }
 
 export const Section: FunctionComponent<Props> = ({
                                                     title,
                                                     bottomSeparator = true,
-                                                    children = null,
+                                                    children,
+                                                    contentStyle,
                                                   }) => {
   const MARGIN = 20;
 
@@ -61,7 +63,7 @@ export const Section: FunctionComponent<Props> = ({
         {title}
       </Text>
 
-      <View style={styles.content}>{children}</View>
+      <View style={StyleSheet.flatten([styles.content, contentStyle])}>{children}</View>
 
       {bottomSeparatorComponent}
     </View>

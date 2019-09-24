@@ -73,7 +73,7 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
     <InputContainer
       title={title}
       opacityOnTouch={false}
-      style={styles.inputContainer}
+      contentStyle={styles.inputContainer}
       error={error}
       onLayout={onLayout}
     >
@@ -89,9 +89,8 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   dayButtonsContainer: {
-    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     marginTop: 10,
     marginBottom: 22,
   },

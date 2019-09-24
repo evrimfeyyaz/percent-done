@@ -71,7 +71,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
         min={min}
         max={max}
       />
-      <View style={styles.innerContainer}>
+      <View style={styles.content}>
         <LineChart
           style={styles.chart}
           data={data}
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     width: 40,
     marginEnd: -12,
   },
-  innerContainer: {
+  content: {
     flex: 1,
   },
   chart: {

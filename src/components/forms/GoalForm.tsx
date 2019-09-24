@@ -13,6 +13,7 @@ import {
 import { goalColors } from '../../theme';
 import { Goal } from '../../store/goals/types';
 import { createRandomId } from '../../utilities/createRandomId';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const allDays: WeekDaysArray = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -45,7 +46,7 @@ export interface GoalFormProps {
 }
 
 export class GoalForm extends Component<GoalFormProps, GoalFormState> {
-  private scrollViewRef: React.RefObject<ScrollView>;
+  private readonly scrollViewRef: React.RefObject<KeyboardAwareScrollView>;
 
   constructor(props: GoalFormProps) {
     super(props);
@@ -59,7 +60,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       reminderTime: new Date(),
       color: goalColors[0],
     };
-    this.scrollViewRef = createRef<ScrollView>();
+    this.scrollViewRef = createRef<KeyboardAwareScrollView>();
   }
 
   validate(): boolean {
@@ -94,7 +95,8 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     }
 
     if (topFailedInput != null && this.scrollViewRef != null && this.scrollViewRef.current != null) {
-      this.scrollViewRef.current.scrollTo({ x: 0, y: topFailedInput, animated: true });
+      this.scrollViewRef.current.scrollToPosition(0, topFailedInput, true);
+      this.setState({ failedInputPositions: undefined });
     }
   }
 
@@ -180,7 +182,8 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
 
     return (
       // @ts-ignore
-      <ScrollView style={styles.container} ref={this.scrollViewRef} scrollToOverflowEnabled={true}>
+      <KeyboardAwareScrollView style={styles.container} ref={this.scrollViewRef} keyboardDismissMode='on-drag'
+                               keyboardOpeningTime={100} scrollToOverflowEnabled={true}>
         <View style={styles.topInputGroup}>
           <TextInput placeholder='What is your goal?' onChangeText={this.handleTitleChange} value={title}
                      onLayout={this.handleTitleInputLayout} error={titleInputError} />
@@ -190,20 +193,20 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
                            onDaysChange={this.handleRecurringDaysChange} />
         </View>
 
-        <Section title='Time Tracking' bottomSeparator={false}>
+        <Section title='Time Tracking' bottomSeparator={false} contentStyle={styles.sectionContent}>
           <SwitchInput title='Track your time?' value={isTimeTracked} onValueChange={this.handleTimeTrackingChange} />
           {isTimeTracked && <DurationInput duration={duration} onDurationChange={this.handleDurationChange} />}
         </Section>
 
-        <Section title='Reminder' bottomSeparator={false}>
+        <Section title='Reminder' bottomSeparator={false} contentStyle={styles.sectionContent}>
           <SwitchInput title='Set a reminder?' value={reminder} onValueChange={this.handleReminderChange} />
           {reminder && <TimeInput time={reminderTime} onTimeChange={this.handleReminderTimeChange} />}
         </Section>
 
-        <Section title='Color' bottomSeparator={false}>
+        <Section title='Color' bottomSeparator={false} contentStyle={styles.sectionContent}>
           <ColorInput colors={goalColors} selectedColor={color} onColorChange={this.handleColorChange} />
         </Section>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -214,5 +217,9 @@ const styles = StyleSheet.create({
   },
   topInputGroup: {
     marginBottom: 40,
+  },
+  sectionContent: {
+    paddingStart: 40,
+    paddingEnd: 0,
   },
 });

@@ -38,14 +38,14 @@ interface InputContainerProps {
    */
   error?: string;
 
-  style?: ViewStyle;
+  contentStyle?: ViewStyle;
 }
 
 export const InputContainer: FunctionComponent<InputContainerProps> = ({
                                                                          title,
                                                                          value,
                                                                          rightItem,
-                                                                         style,
+                                                                         contentStyle,
                                                                          opacityOnTouch = true,
                                                                          onPress,
                                                                          onLayout,
@@ -76,12 +76,12 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
 
   return (
     <TouchableOpacity
-      style={StyleSheet.flatten([styles.container, style])}
+      style={styles.container}
       onPress={onPress}
       onLayout={onLayout}
       activeOpacity={activeOpacity}
     >
-      <View style={styles.innerContainer}>
+      <View style={StyleSheet.flatten([styles.content, contentStyle])}>
         {titleText}
         {children}
         {valueText}
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
   },
-  innerContainer: {
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
     minHeight: 45,
