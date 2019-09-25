@@ -50,6 +50,12 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     setStartTimestamp(time.getTime());
   };
 
+  const handleStopPress = () => {
+    if (onStopPress != null) {
+      onStopPress(startTimestamp, Date.now());
+    }
+  };
+
   const titleColorStyle = { color };
 
   const secondsPassed = msPassed / 1000;
@@ -69,7 +75,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
         {msToHoursMinutes(remainingSeconds * 1000)}&nbsp;
         <Text style={styles.timeLeftLabel}>left</Text>
       </Text>
-      <Button iconSource={Icons.stop} title='Stop' style={styles.stopButton} />
+      <Button iconSource={Icons.stop} title='Stop' style={styles.stopButton} onPress={handleStopPress} />
       <TouchableOpacity onPress={handleStartedAtPress}>
         <View style={styles.startedAtContainer}>
           <Text style={styles.startedAtLabel}>Started at</Text>

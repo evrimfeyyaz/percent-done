@@ -104,7 +104,7 @@ storiesOf('Miscellaneous', module)
   })
   .add('Time tracker', () => (
     <TimeTracker title='Work on Awesome App' color='#3394FA' durationInSeconds={60 * 60}
-                 initialRemainingSeconds={30 * 60} />
+                 initialRemainingSeconds={30 * 60} onStopPress={action('time-tracker-stop-pressed')}/>
   ));
 
 storiesOf('Charts', module)
