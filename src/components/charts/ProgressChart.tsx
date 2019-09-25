@@ -37,7 +37,7 @@ export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => 
 
 const styles = StyleSheet.create({
   container: {
-    width: 125,
+    width: 126,
   },
   infoContainer: {
     ...StyleSheet.absoluteFillObject,
