@@ -5,16 +5,17 @@ import { isLocale24Hours } from '../../utilities';
 import { colors, fonts } from '../../theme';
 
 interface TimePickerProps {
-  time: Date;
+  initialTime: Date;
   onTimeChange?: (date: Date) => void;
 }
 
-export const TimePicker: FunctionComponent<TimePickerProps> = ({ time, onTimeChange }) => {
+export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, onTimeChange }) => {
+  const initialTimeClone = new Date(initialTime.getTime());
   const is24Hours = isLocale24Hours();
-  const hour = time.getHours();
+  const hour = initialTimeClone.getHours();
   const periodIndex = hour < 12 ? 0 : 1;
   const hourIndex = getHourIndexFromHour(hour);
-  const minuteIndex = time.getMinutes();
+  const minuteIndex = initialTimeClone.getMinutes();
 
   function getHourIndexFromHour(hour: number) {
     return is24Hours ? hour : (hour - 1 + 12) % 12;
@@ -33,18 +34,18 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ time, onTimeCha
   const handleHourIndexChange = (index: number) => {
     let newHour = getHourFromHourIndex(index);
 
-    const newTimeStamp = time.setHours(newHour);
+    const newTimeStamp = initialTimeClone.setHours(newHour);
 
     if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
   };
 
   const handleMinuteIndexChange = (index: number) => {
-    const newTimeStamp = time.setMinutes(index);
+    const newTimeStamp = initialTimeClone.setMinutes(index);
     if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
   };
 
   const handlePeriodIndexChange = (index: number) => {
-    let newHour = time.getHours();
+    let newHour = initialTimeClone.getHours();
 
     if (index === 1) { // PM
       newHour += 12;
@@ -52,7 +53,7 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ time, onTimeCha
       newHour -= 12;
     }
 
-    const newTimeStamp = time.setHours(newHour);
+    const newTimeStamp = initialTimeClone.setHours(newHour);
 
     if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
   };

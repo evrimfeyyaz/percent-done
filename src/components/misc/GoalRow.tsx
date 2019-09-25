@@ -1,11 +1,21 @@
 import React, { FunctionComponent } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
 import { convertSecondsToHoursAndMinutes } from '../../utilities';
 
 export interface GoalRowProps {
+  /**
+   * Goal ID.
+   */
+  id: string;
   title: string;
   color: string;
   /**
@@ -21,18 +31,21 @@ export interface GoalRowProps {
    * For non-time-tracked goals. Should be `undefined` for time-tracked goals.
    */
   isCompleted?: boolean;
+  onPress?: (goalId: string) => void;
 }
 
 /**
  * A row that shows information on a given goal.
  */
 export const GoalRow: FunctionComponent<GoalRowProps> = ({
+                                                           id,
                                                            title,
                                                            color,
                                                            chainLength = null,
                                                            totalSeconds = null,
                                                            completedSeconds = null,
                                                            isCompleted = false,
+                                                           onPress,
                                                          }) => {
   const nameStyle = StyleSheet.flatten([styles.name, { color }]);
 
@@ -70,22 +83,28 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
     );
   }
 
+  const handlePress = () => {
+    if (onPress != null) onPress(id);
+  };
+
   return (
-    <View style={styles.container}>
-      <ProgressCircle
-        style={styles.circle}
-        progress={progressPercentage}
-        backgroundColor={colors.darkGray}
-        progressColor={color}
-        strokeWidth={4}
-        endAngle={-Math.PI * 2}
-      />
-      <View style={styles.details}>
-        <Text style={nameStyle}>{title}</Text>
-        {chainInfo}
+    <TouchableOpacity onPress={handlePress}>
+      <View style={styles.container}>
+        <ProgressCircle
+          style={styles.circle}
+          progress={progressPercentage}
+          backgroundColor={colors.darkGray}
+          progressColor={color}
+          strokeWidth={4}
+          endAngle={-Math.PI * 2}
+        />
+        <View style={styles.details}>
+          <Text style={nameStyle}>{title}</Text>
+          {chainInfo}
+        </View>
+        {durationInfo}
       </View>
-      {durationInfo}
-    </View>
+    </TouchableOpacity>
   );
 };
 

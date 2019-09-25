@@ -24,7 +24,7 @@ import {
   TabInfo,
   GoalList, DaysStats,
   HeaderButton,
-  TimePicker, DurationPicker, DurationInput, GoalForm, InputContainer,
+  TimePicker, DurationPicker, DurationInput, GoalForm, InputContainer, TimeTracker,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -48,8 +48,8 @@ storiesOf('Text styles', module)
   ))
   .add('Info', () => (
     <Text style={textStyles.info}>
-      1<Text style={textStyles.infoSmall}>H</Text> 30
-      <Text style={textStyles.infoSmall}>M</Text>
+      1<Text style={textStyles.infoLabel}>H</Text> 30
+      <Text style={textStyles.infoLabel}>M</Text>
       <Text style={textStyles.infoTail}> done</Text>
     </Text>
   ));
@@ -62,6 +62,7 @@ storiesOf('Miscellaneous', module)
   ))
   .add('Goal row', () => (
     <GoalRow
+      id='goal-id'
       title="Write"
       color={colors.yellow}
       chainLength={10}
@@ -72,6 +73,7 @@ storiesOf('Miscellaneous', module)
   .add('Goals list', () => {
     const goals: (GoalRowProps & { key: string })[] = [
       {
+        id: 'goal1',
         title: 'Write',
         color: colors.white,
         chainLength: 10,
@@ -80,6 +82,7 @@ storiesOf('Miscellaneous', module)
         key: 'goal1',
       },
       {
+        id: 'goal2',
         title: 'Write',
         color: colors.orange,
         chainLength: 20,
@@ -88,6 +91,7 @@ storiesOf('Miscellaneous', module)
         key: 'goal2',
       },
       {
+        id: 'goal3',
         title: 'Write',
         color: colors.blue,
         chainLength: 0,
@@ -97,7 +101,11 @@ storiesOf('Miscellaneous', module)
     ];
 
     return <GoalList goals={goals} />;
-  });
+  })
+  .add('Time tracker', () => (
+    <TimeTracker title='Work on Awesome App' color='#3394FA' durationInSeconds={60 * 60}
+                 initialRemainingSeconds={30 * 60} />
+  ));
 
 storiesOf('Charts', module)
   .add('Progress chart', () => {
@@ -284,12 +292,13 @@ storiesOf('Inputs', module)
   })
   .add('Days of week input', () => (
     <DaysOfWeekInput
+      title='Days of week'
       selectedDays={array('Selected days', ['Sunday', 'Monday'])}
       onDaysChange={action('day-changed')}
     />
   ))
   .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />)
-  .add('Time picker', () => <TimePicker time={new Date()} />)
+  .add('Time picker', () => <TimePicker initialTime={new Date()} />)
   .add('Duration picker', () => <DurationPicker duration={{ hours: 1, minutes: 0 }} />);
 
 storiesOf('Navigation', module)
@@ -330,7 +339,7 @@ storiesOf('Navigation', module)
 
 storiesOf('Forms', module)
   .add('Goal form', () => (
-    <GoalForm />
+    <GoalForm onSubmit={action('goal-form-submission')} />
   ));
 
 // Utilities

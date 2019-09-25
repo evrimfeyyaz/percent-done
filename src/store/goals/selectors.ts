@@ -28,7 +28,7 @@ export const getCompleteGoals = (state: StoreState, date: Date): Goal[] =>
  */
 export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], date: Date): GoalListProps => {
   const convertedGoals = goals.map(goal => {
-    const { title, color, id: key } = goal;
+    const { title, color, id } = goal;
     const chainLength = getChainLength(state, goal, date);
 
     let completedSeconds, totalSeconds, completed;
@@ -40,7 +40,8 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
     }
 
     return {
-      key,
+      key: id,
+      id,
       title,
       color,
       chainLength,
@@ -62,7 +63,7 @@ export const getCompletedSeconds = (state: StoreState, goal: Goal, date: Date): 
   const timetableEntries = getTimetableEntriesForGoal(state, goal, date);
 
   return timetableEntries.reduce((total, entry) => {
-    const msSpent = entry.endTime - entry.startTime;
+    const msSpent = entry.endTimestamp - entry.startTimestamp;
 
     return total + (msSpent / 1000);
   }, 0);

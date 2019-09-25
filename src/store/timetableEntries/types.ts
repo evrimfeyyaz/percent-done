@@ -6,11 +6,11 @@ export interface TimetableEntry {
   /**
    * In milliseconds since the Unix Epoch.
    */
-  startTime: number,
+  startTimestamp: number,
   /**
    * In milliseconds since the Unix Epoch.
    */
-  endTime: number,
+  endTimestamp: number,
 }
 
 export interface TimetableEntriesState extends NormalizedEntityState<TimetableEntry> {

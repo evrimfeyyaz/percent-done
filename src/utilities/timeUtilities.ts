@@ -1,4 +1,4 @@
-import moment, { Moment } from 'moment';
+import moment, { min, Moment } from 'moment';
 import 'moment/min/locales';
 import { NativeModules, Platform } from 'react-native';
 
@@ -39,28 +39,6 @@ export function compareTimes(
   }
 
   return hour2 - hour1;
-}
-
-export function compareDays(date1: Moment, date2: Moment) {
-  return date1.isSame(date2, 'day');
-}
-
-export function isToday(date: Moment) {
-  const today = moment();
-
-  return compareDays(date, today);
-}
-
-export function isTomorrow(date: Moment) {
-  const tomorrow = moment().add(1, 'day');
-
-  return compareDays(date, tomorrow);
-}
-
-export function shortDayName(date: Date) {
-  return moment(date)
-    .format('ddd')
-    .toUpperCase();
 }
 
 /**
@@ -115,4 +93,20 @@ export function momentWithDeviceLocale(inp?: moment.MomentInput, format?: moment
   deviceLocale = deviceLocale || 'en-US';
 
   return moment(inp, format, strict).locale(deviceLocale);
+}
+
+export function msToHoursMinutesSeconds(ms: number): string {
+  const totalSeconds = ms / 1000;
+  const totalMinutes = totalSeconds / 60;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = Math.floor(totalMinutes - (hours * 60));
+  const seconds = Math.floor(totalSeconds - (minutes * 60) - (hours * 60 * 60));
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+export function msToHoursMinutes(ms: number): string {
+  const [hour, min] = msToHoursMinutesSeconds(ms).split(':');
+
+  return `${hour}:${min}`;
 }

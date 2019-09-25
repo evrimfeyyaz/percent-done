@@ -5,8 +5,9 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { colors, fonts } from '../../theme';
 
 interface BottomSheetProps {
-  onCancelPress: () => void;
-  onDonePress: () => void;
+  onCancelPress?: () => void;
+  onDonePress?: () => void;
+  onClose?: () => void;
 }
 
 export class BottomSheet extends Component<BottomSheetProps> {
@@ -26,11 +27,11 @@ export class BottomSheet extends Component<BottomSheetProps> {
   }
 
   render() {
-    const { children, onCancelPress, onDonePress } = this.props;
+    const { children, onCancelPress, onDonePress, onClose } = this.props;
 
     return (
       <RBSheet ref={this.rbSheetRef} height={250} duration={200} animationType='fade'
-               customStyles={{ container: styles.container }}>
+               customStyles={{ container: styles.container }} onClose={onClose}>
         <View>
           <View style={styles.buttonsContainer}>
             <TextButton title='Cancel' onPress={onCancelPress} style={styles.cancelButton} />

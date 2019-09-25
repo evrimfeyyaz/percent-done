@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
+  ViewStyle,
 } from 'react-native';
 import { colors, fonts } from '../../theme';
 
@@ -18,7 +20,8 @@ interface ButtonProps {
    * Icon for the button. Should be white and 24x24.
    */
   iconSource?: ImageSourcePropType;
-  onPress: (event: GestureResponderEvent) => void;
+  onPress?: (event: GestureResponderEvent) => void;
+  style?: ViewStyle;
 }
 
 /**
@@ -28,6 +31,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
                                                          title,
                                                          iconSource = null,
                                                          onPress,
+                                                         style,
                                                        }) => {
   let icon = null;
   if (iconSource != null) {
@@ -35,10 +39,12 @@ export const Button: FunctionComponent<ButtonProps> = ({
   }
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      {icon}
-      <Text style={styles.title}>{title}</Text>
-    </TouchableOpacity>
+    <View style={style}>
+      <TouchableOpacity style={styles.container} onPress={onPress}>
+        {icon}
+        <Text style={styles.title}>{title}</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 

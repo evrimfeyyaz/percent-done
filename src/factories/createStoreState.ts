@@ -13,7 +13,7 @@ interface Arguments {
 export const createStoreState = ({ goals = [], timetableEntries = [] }: Arguments): StoreState => {
   const timetableEntryIdsByDate: { [date: string]: string[] } = {};
   timetableEntries.forEach((entry) => {
-    const dateIdx = convertDateToIndex(new Date(entry.startTime));
+    const dateIdx = convertDateToIndex(new Date(entry.startTimestamp));
     timetableEntryIdsByDate[dateIdx] = timetableEntryIdsByDate[dateIdx] || [];
     timetableEntryIdsByDate[dateIdx].push(entry.id);
   });

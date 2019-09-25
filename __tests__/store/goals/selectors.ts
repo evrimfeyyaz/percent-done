@@ -85,6 +85,7 @@ describe('goals selectors', () => {
         goals: [
           {
             key: goal.id,
+            id: goal.id,
             title: goal.title,
             color: goal.color,
             totalSeconds: goal.durationInSeconds,
@@ -114,6 +115,7 @@ describe('goals selectors', () => {
         goals: [
           {
             key: goal.id,
+            id: goal.id,
             title: goal.title,
             color: goal.color,
             totalSeconds: undefined,

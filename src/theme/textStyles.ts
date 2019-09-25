@@ -13,7 +13,7 @@ export const textStyles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 27,
   },
-  infoSmall: {
+  infoLabel: {
     color: colors.white,
     fontSize: 16,
     textTransform: 'uppercase',

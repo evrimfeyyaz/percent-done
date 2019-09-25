@@ -9,7 +9,7 @@ import { colors, fonts } from '../../theme';
 
 interface TextButtonProps {
   title: string;
-  onPress: (event: GestureResponderEvent) => void;
+  onPress?: (event: GestureResponderEvent) => void;
   style?: TextStyle;
 }
 

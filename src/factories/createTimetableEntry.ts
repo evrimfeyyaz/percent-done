@@ -14,13 +14,13 @@ export const createTimetableEntry = ({
                                        id = createRandomId(), goalId = createRandomId(),
                                        startDate, startHour, startMinute = 0, durationInMin,
                                      }: CreateTimetableEntryArguments): TimetableEntry => {
-  const startTime = startDate.setHours(startHour, startMinute);
-  const endTime = startTime + durationInMin * 60 * 1000;
+  const startTimestamp = startDate.setHours(startHour, startMinute);
+  const endTimestamp = startTimestamp + durationInMin * 60 * 1000;
 
   return {
     id,
     goalId,
-    startTime,
-    endTime,
+    startTimestamp,
+    endTimestamp,
   };
 };
