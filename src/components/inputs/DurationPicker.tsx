@@ -1,18 +1,23 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
+import _ from 'lodash';
 
 interface DurationPickerProps {
-  duration: { hours: number, minutes: number }
+  initialDuration: { hours: number, minutes: number }
   onDurationChange?: (hours: number, minutes: number) => void;
 }
 
-export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ duration, onDurationChange }) => {
+export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ initialDuration, onDurationChange }) => {
+  const [duration, setDuration] = useState(_.clone(initialDuration));
+
   const handleHoursChange = (index: number) => {
+    setDuration({ hours: index, minutes: duration.minutes });
     if (onDurationChange != null) onDurationChange(index, duration.minutes);
   };
 
   const handleMinutesChange = (index: number) => {
+    setDuration({ hours: duration.hours, minutes: index });
     if (onDurationChange != null) onDurationChange(duration.hours, index);
   };
 

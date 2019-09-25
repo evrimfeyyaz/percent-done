@@ -28,6 +28,7 @@ export * from './inputs/DurationPicker';
 export * from './inputs/DurationInput';
 export * from './inputs/InputContainer';
 export * from './inputs/BottomSheetTimePicker';
+export * from './inputs/BottomSheetDurationPicker';
 
 // Navigation
 export * from './navigation/TabItem';

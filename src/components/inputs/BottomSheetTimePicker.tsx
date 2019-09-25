@@ -17,7 +17,7 @@ export class BottomSheetTimePicker extends Component<BottomSheetTimePickerProps,
     super(props);
 
     this.state = {
-      time: new Date(this.props.initialTime.getTime()),
+      time: new Date(props.initialTime.getTime()),
     };
     this.bottomSheetRef = createRef<BottomSheet>();
   }
@@ -40,7 +40,7 @@ export class BottomSheetTimePicker extends Component<BottomSheetTimePickerProps,
   };
 
   handleCancelPress = () => {
-    this.setState({ time: this.props.initialTime }, () => {
+    this.setState({ time: new Date(this.props.initialTime.getTime()) }, () => {
       this.hide();
     });
   };
@@ -53,7 +53,6 @@ export class BottomSheetTimePicker extends Component<BottomSheetTimePickerProps,
     const { initialTime, onTimeChange } = this.props;
     const { time } = this.state;
 
-    debugger;
     if (initialTime.getTime() !== time.getTime() && onTimeChange != null) {
       onTimeChange(time);
     }

@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
 import { isLocale24Hours } from '../../utilities';
@@ -10,12 +10,13 @@ interface TimePickerProps {
 }
 
 export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, onTimeChange }) => {
-  const initialTimeClone = new Date(initialTime.getTime());
+  const [time, setTime] = useState(new Date(initialTime.getTime()));
+
   const is24Hours = isLocale24Hours();
-  const hour = initialTimeClone.getHours();
+  const hour = time.getHours();
   const periodIndex = hour < 12 ? 0 : 1;
   const hourIndex = getHourIndexFromHour(hour);
-  const minuteIndex = initialTimeClone.getMinutes();
+  const minuteIndex = time.getMinutes();
 
   function getHourIndexFromHour(hour: number) {
     return is24Hours ? hour : (hour - 1 + 12) % 12;
@@ -34,18 +35,21 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, on
   const handleHourIndexChange = (index: number) => {
     let newHour = getHourFromHourIndex(index);
 
-    const newTimeStamp = initialTimeClone.setHours(newHour);
+    const newTimeStamp = time.setHours(newHour);
+    setTime(new Date(newTimeStamp));
 
     if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
   };
 
   const handleMinuteIndexChange = (index: number) => {
-    const newTimeStamp = initialTimeClone.setMinutes(index);
+    const newTimeStamp = time.setMinutes(index);
+    setTime(new Date(newTimeStamp));
+
     if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
   };
 
   const handlePeriodIndexChange = (index: number) => {
-    let newHour = initialTimeClone.getHours();
+    let newHour = time.getHours();
 
     if (index === 1) { // PM
       newHour += 12;
@@ -53,7 +57,8 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, on
       newHour -= 12;
     }
 
-    const newTimeStamp = initialTimeClone.setHours(newHour);
+    const newTimeStamp = time.setHours(newHour);
+    setTime(new Date(newTimeStamp));
 
     if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
   };

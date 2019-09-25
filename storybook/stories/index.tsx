@@ -299,7 +299,7 @@ storiesOf('Inputs', module)
   ))
   .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />)
   .add('Time picker', () => <TimePicker initialTime={new Date()} />)
-  .add('Duration picker', () => <DurationPicker duration={{ hours: 1, minutes: 0 }} />);
+  .add('Duration picker', () => <DurationPicker initialDuration={{ hours: 1, minutes: 0 }} />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
