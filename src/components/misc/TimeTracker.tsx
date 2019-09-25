@@ -45,6 +45,8 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   };
 
   const handleStartedAtTimeChange = (time: Date) => {
+    if (time.getTime() > Date.now()) return;
+
     setStartTimestamp(time.getTime());
   };
 
