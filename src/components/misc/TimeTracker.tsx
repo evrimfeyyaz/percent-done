@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { momentWithDeviceLocale, msToHoursMinutes, msToHoursMinutesSeconds } from '../../utilities';
-import { BottomSheet, Button, ProgressChart, TimePicker } from '..';
+import { BottomSheet, BottomSheetTimePicker, Button, ProgressChart, TimePicker } from '..';
 import { Icons } from '../../../assets';
 
 interface TimeTrackerProps {
@@ -17,6 +17,8 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
                                                                    title, color, durationInSeconds,
                                                                    initialRemainingSeconds, onStopPress,
                                                                  }) => {
+  const bottomSheetTimePickerRef = useRef<BottomSheetTimePicker>(null);
+
   const [startTimestamp, setStartTimestamp] = useState(0);
   const [msPassed, setMsPassed] = useState(0);
 
@@ -35,6 +37,16 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   function tick() {
     setMsPassed(Date.now() - startTimestamp);
   }
+
+  const handleStartedAtPress = () => {
+    if (bottomSheetTimePickerRef != null && bottomSheetTimePickerRef.current != null) {
+      bottomSheetTimePickerRef.current.show();
+    }
+  };
+
+  const handleStartedAtTimeChange = (time: Date) => {
+    setStartTimestamp(time.getTime());
+  };
 
   const titleColorStyle = { color };
 
@@ -56,7 +68,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
         <Text style={styles.timeLeftLabel}>left</Text>
       </Text>
       <Button iconSource={Icons.stop} title='Stop' style={styles.stopButton} />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleStartedAtPress}>
         <View style={styles.startedAtContainer}>
           <Text style={styles.startedAtLabel}>Started at</Text>
           <View style={styles.startedAtBottomLine}>
@@ -64,6 +76,8 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
           </View>
         </View>
       </TouchableOpacity>
+      <BottomSheetTimePicker ref={bottomSheetTimePickerRef} initialTime={new Date(startTimestamp)}
+                             onTimeChange={handleStartedAtTimeChange} />
     </View>
   );
 };
