@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { momentWithDeviceLocale, msToHoursMinutes, msToHoursMinutesSeconds } from '../../utilities';
-import { BottomSheet, BottomSheetTimePicker, Button, ProgressChart, TimePicker } from '..';
+import { BottomSheetTimePicker, Button, ProgressChart } from '..';
 import { Icons } from '../../../assets';
 
 interface TimeTrackerProps {
