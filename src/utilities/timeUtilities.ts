@@ -1,4 +1,4 @@
-import moment, { min, Moment } from 'moment';
+import moment from 'moment';
 import 'moment/min/locales';
 import { NativeModules, Platform } from 'react-native';
 

@@ -1,4 +1,5 @@
 import { NormalizedEntityState } from '../types';
+import { Action } from 'redux';
 
 export interface TimetableEntry {
   id: string,
@@ -16,3 +17,11 @@ export interface TimetableEntry {
 export interface TimetableEntriesState extends NormalizedEntityState<TimetableEntry> {
   idsByDate: { [date: string]: string[] }
 }
+
+export const ADD_TIMETABLE_ENTRY = 'ADD_TIMETABLE_ENTRY';
+
+export interface AddTimetableEntryAction extends Action<typeof ADD_TIMETABLE_ENTRY> {
+  timetableEntry: TimetableEntry;
+}
+
+export type TimetableEntryActionTypes = AddTimetableEntryAction;

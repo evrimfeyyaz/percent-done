@@ -4,6 +4,11 @@ import { GoalListProps } from '../../components';
 import { convertDateToIndex } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import moment from 'moment';
+import { isTimeTracked } from './utilities';
+
+export const getGoalById = (state: StoreState, id: string): Goal => {
+  return state.goals.byId[id] || null;
+};
 
 /**
  * Returns the goals that the user has for a given date.
@@ -97,10 +102,12 @@ export const getRemainingSecondsForDate = (state: StoreState, date: Date): numbe
  * Returns whether a goal has been completed on the given day.
  */
 export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean => {
-  if (goal.durationInSeconds == null || goal.durationInSeconds === 0) {
+  if (!isTimeTracked(goal)) {
     const entries = getTimetableEntriesForGoal(state, goal, date);
     return entries != null && entries.length > 0;
   }
+
+  if (typeof goal.durationInSeconds !== 'number') throw Error('A time-tracked goal should have duration.');
 
   const completedSeconds = getCompletedSeconds(state, goal, date);
   return completedSeconds >= goal.durationInSeconds;

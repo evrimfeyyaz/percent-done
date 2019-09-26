@@ -2,7 +2,7 @@ import { createGoal, createStoreState, createTimetableEntry } from '../../../src
 import {
   convertGoalsToGoalListProps, getChainLength,
   getCompletedSeconds,
-  getCompleteGoals,
+  getCompleteGoals, getGoalById,
   getGoals,
   getIncompleteGoals,
   getProgress,
@@ -17,6 +17,27 @@ import { Goal } from '../../../src/store/goals/types';
 
 describe('goals selectors', () => {
   const today = new Date();
+
+  describe('getGoalById', () => {
+    it('returns the goal with given ID', () => {
+      const goal = createGoal({});
+      const goalId = goal.id;
+      const state = createStoreState({ goals: [goal] });
+
+      const returnedGoal = getGoalById(state, goalId);
+
+      expect(returnedGoal).toEqual(goal);
+    });
+
+    it('returns null if no goal exists with given ID', () => {
+      const goalId = 'non-existent-goal-id';
+      const state = createStoreState({});
+
+      const returnedGoal = getGoalById(state, goalId);
+
+      expect(returnedGoal).toBeNull();
+    });
+  });
 
   describe('getGoals', () => {
     it('returns all goals that should be completed for given date', () => {

@@ -16,7 +16,7 @@ import {
 import { Image, YellowBox } from 'react-native';
 import { Icons } from './assets';
 import { HeaderButton, TabNavigationView } from './src/components';
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { goalsReducer } from './src/store/goals/reducers';
 import { Provider } from 'react-redux';
 import { timetableEntriesReducer } from './src/store/timetableEntries/reducers';
@@ -25,12 +25,13 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { AddGoalScreen } from './src/screens/AddGoalScreen';
 import { Goal } from './src/store/goals/types';
 import { TimetableEntry } from './src/store/timetableEntries/types';
+import thunk from 'redux-thunk';
 
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 
-export default Storybook;
+// export default Storybook;
 
 const AddGoalStack = createStackNavigator({
   AddGoal: AddGoalScreen,
@@ -152,6 +153,11 @@ const incompleteGoal: Goal = createGoal({
   durationInMin: 60,
   color: colors.orange,
 }, [today]);
+const incompleteGoal2: Goal = createGoal({
+  title: 'Exercise',
+  durationInMin: undefined,
+  color: colors.citrus,
+}, [today]);
 const completedGoal: Goal = createGoal({
   title: 'Read',
   durationInMin: undefined,
@@ -170,7 +176,7 @@ const timetableEntry2: TimetableEntry = createTimetableEntry({
   startDate: today,
 });
 const seedData = createStoreState({
-  goals: [incompleteGoal, completedGoal],
+  goals: [incompleteGoal, incompleteGoal2, completedGoal],
   timetableEntries: [timetableEntry, timetableEntry2],
 });
 
@@ -178,17 +184,17 @@ const rootReducer = combineReducers({
   goals: goalsReducer,
   timetableEntries: timetableEntriesReducer,
 });
-const store = createStore(rootReducer, seedData, composeWithDevTools());
+const store = createStore(rootReducer, seedData, composeWithDevTools(applyMiddleware(thunk)));
 
-// export default class App extends React.Component {
-//   render() {
-//     return (
-//       <Provider store={store}>
-//         <AppContainer />
-//       </Provider>
-//     );
-//   }
-// }
+export default class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    );
+  }
+}
 
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {
