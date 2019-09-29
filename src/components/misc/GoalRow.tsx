@@ -3,8 +3,8 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  View,
+  View, ViewStyle,
+  Animated,
 } from 'react-native';
 import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
@@ -31,7 +31,7 @@ export interface GoalRowProps {
    * For non-time-tracked goals. Should be `undefined` for time-tracked goals.
    */
   isCompleted?: boolean;
-  onPress?: (goalId: string) => void;
+  style?: ViewStyle;
 }
 
 /**
@@ -45,7 +45,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
                                                            totalSeconds = null,
                                                            completedSeconds = null,
                                                            isCompleted = false,
-                                                           onPress,
+                                                           style,
                                                          }) => {
   const nameStyle = StyleSheet.flatten([styles.name, { color }]);
 
@@ -83,37 +83,30 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
     );
   }
 
-  const handlePress = () => {
-    if (onPress != null) onPress(id);
-  };
-
   return (
-    <TouchableOpacity onPress={handlePress}>
-      <View style={styles.container}>
-        <ProgressCircle
-          style={styles.circle}
-          progress={progressPercentage}
-          backgroundColor={colors.darkGray}
-          progressColor={color}
-          strokeWidth={4}
-          endAngle={-Math.PI * 2}
-        />
-        <View style={styles.details}>
-          <Text style={nameStyle}>{title}</Text>
-          {chainInfo}
-        </View>
-        {durationInfo}
+    <Animated.View style={StyleSheet.flatten([styles.container, style])}>
+      <ProgressCircle
+        style={styles.circle}
+        progress={progressPercentage}
+        backgroundColor={colors.darkGray}
+        progressColor={color}
+        strokeWidth={4}
+        endAngle={-Math.PI * 2}
+      />
+      <View style={styles.details}>
+        <Text style={nameStyle}>{title}</Text>
+        {chainInfo}
       </View>
-    </TouchableOpacity>
+      {durationInfo}
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
     flexDirection: 'row',
     height: 60,
-    width: '100%',
+    flex: 1,
     alignItems: 'center',
     paddingHorizontal: 20,
   },
@@ -152,5 +145,15 @@ const styles = StyleSheet.create({
   circle: {
     height: 34,
     width: 34,
+  },
+  leftActionContainer: {
+    backgroundColor: colors.blue,
+    justifyContent: 'center',
+    flex: 1,
+  },
+  leftActionText: {
+    fontFamily: fonts.regular,
+    fontSize: 14,
+    color: colors.white,
   },
 });

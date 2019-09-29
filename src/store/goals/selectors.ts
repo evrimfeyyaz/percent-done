@@ -45,7 +45,6 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
     }
 
     return {
-      key: id,
       id,
       title,
       color,

@@ -12,6 +12,10 @@ export const Icons = {
 
   checkmark: require('./checkmark.png'),
 
+  checkmarkLarge: require('./checkmark-large.png'),
+  stopwatch: require('./stopwatch.png'),
+  undo: require('./undo.png'),
+
   chevronRight: require('./chevron-right.png'),
 
   oneTimeGoal: require('./one-time-goal.png'),

@@ -3,12 +3,12 @@ import { ThunkAction } from 'redux-thunk';
 import { StoreState } from '../types';
 import { GoalActionTypes } from './types';
 import { TimetableEntry, TimetableEntryActionTypes } from '../timetableEntries/types';
-import { getGoalById } from './selectors';
+import { getGoalById, getTimetableEntriesForGoal, isCompleted } from './selectors';
 import { createRandomId } from '../../utilities/createRandomId';
-import { addTimetableEntry } from '../timetableEntries/actions';
+import { addTimetableEntry, removeTimetableEntry } from '../timetableEntries/actions';
 import { isTimeTracked } from './utilities';
 
-export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
+export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
   return (dispatch, getState) => {
     const state = getState();
     const goal = getGoalById(state, goalId);
@@ -18,16 +18,24 @@ export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void
     if (isTimeTracked(goal)) {
 
     } else {
-      const timestamp = Date.now();
+      const today = new Date();
 
-      const timetableEntry: TimetableEntry = {
-        id: createRandomId(),
-        goalId,
-        startTimestamp: timestamp,
-        endTimestamp: timestamp,
-      };
+      if (isCompleted(state, goal, today)) {
+        const todaysTimetableEntries = getTimetableEntriesForGoal(state, goal, today);
 
-      dispatch(addTimetableEntry(timetableEntry));
+        todaysTimetableEntries.forEach(entry => dispatch(removeTimetableEntry(entry)));
+      } else {
+        const timestamp = Date.now();
+
+        const timetableEntry: TimetableEntry = {
+          id: createRandomId(),
+          goalId,
+          startTimestamp: timestamp,
+          endTimestamp: timestamp,
+        };
+
+        dispatch(addTimetableEntry(timetableEntry));
+      }
     }
   };
 };

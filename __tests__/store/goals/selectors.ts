@@ -105,7 +105,6 @@ describe('goals selectors', () => {
       const expected: GoalListProps = {
         goals: [
           {
-            key: goal.id,
             id: goal.id,
             title: goal.title,
             color: goal.color,
@@ -135,7 +134,6 @@ describe('goals selectors', () => {
       const expected: GoalListProps = {
         goals: [
           {
-            key: goal.id,
             id: goal.id,
             title: goal.title,
             color: goal.color,
