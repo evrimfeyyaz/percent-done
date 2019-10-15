@@ -10,11 +10,7 @@ interface TimeInputProps {
 export const TimeInput: FunctionComponent<TimeInputProps> = ({ time, onTimeChange }) => {
   const bottomSheetTimePickerRef = useRef<BottomSheetTimePicker>(null);
 
-  const showBottomSheet = () => {
-    if (bottomSheetTimePickerRef != null && bottomSheetTimePickerRef.current != null) {
-      bottomSheetTimePickerRef.current.show();
-    }
-  };
+  const showBottomSheet = () => bottomSheetTimePickerRef?.current?.show();
 
   const handleInputContainerPress = () => {
     showBottomSheet();

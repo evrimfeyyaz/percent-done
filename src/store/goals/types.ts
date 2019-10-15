@@ -6,7 +6,7 @@ export interface Goal {
   title: string;
   color: string;
   durationInSeconds?: number;
-  recurringDays: ('Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday')[];
+  recurringDays: string[];
   reminderTime?: Date;
 }
 

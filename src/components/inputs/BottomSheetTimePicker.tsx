@@ -24,15 +24,11 @@ export class BottomSheetTimePicker extends Component<BottomSheetTimePickerProps,
 
   show() {
     this.setState({ time: new Date(this.props.initialTime.getTime()) });
-    if (this.bottomSheetRef != null && this.bottomSheetRef.current != null) {
-      this.bottomSheetRef.current.open();
-    }
+    this.bottomSheetRef?.current?.open();
   };
 
   hide() {
-    if (this.bottomSheetRef != null && this.bottomSheetRef.current != null) {
-      this.bottomSheetRef.current.close();
-    }
+    this.bottomSheetRef?.current?.close();
   };
 
   handleTimeChange = (time: Date) => {
@@ -53,8 +49,8 @@ export class BottomSheetTimePicker extends Component<BottomSheetTimePickerProps,
     const { initialTime, onTimeChange } = this.props;
     const { time } = this.state;
 
-    if (initialTime.getTime() !== time.getTime() && onTimeChange != null) {
-      onTimeChange(time);
+    if (initialTime.getTime() !== time.getTime()) {
+      onTimeChange?.(time);
     }
   };
 

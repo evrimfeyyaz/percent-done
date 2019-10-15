@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { LayoutChangeEvent, ScrollView, StyleSheet, View } from 'react-native';
+import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import {
   ColorInput,
   DaysOfWeekInput,
@@ -8,21 +8,20 @@ import {
   SwitchInput,
   TextInput,
   TimeInput,
-  WeekDaysArray,
 } from '..';
 import { goalColors } from '../../theme';
 import { Goal } from '../../store/goals/types';
-import { createRandomId } from '../../utilities/createRandomId';
+import { createRandomId } from '../../utilities';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const allDays: WeekDaysArray = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const allDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 interface GoalFormState {
   title: string;
   color: string;
   isTimeTracked: boolean;
   duration: { hours: number, minutes: number };
-  recurringDays: WeekDaysArray;
+  recurringDays: string[];
   reminder: boolean;
   reminderTime: Date;
   /**
@@ -143,7 +142,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     this.setState({ duration: { hours, minutes } });
   };
 
-  handleRecurringDaysChange = (recurringDays: WeekDaysArray) => {
+  handleRecurringDaysChange = (recurringDays: string[]) => {
     this.setState({
       recurringDays,
       recurringDaysInputError: undefined,
@@ -181,8 +180,8 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     } = this.state;
 
     return (
-      // @ts-ignore
       <KeyboardAwareScrollView style={styles.container} ref={this.scrollViewRef} keyboardDismissMode='on-drag'
+        // @ts-ignore
                                keyboardOpeningTime={100} scrollToOverflowEnabled={true}>
         <View style={styles.topInputGroup}>
           <TextInput placeholder='What is your goal?' onChangeText={this.handleTitleChange} value={title}

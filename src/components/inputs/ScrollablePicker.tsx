@@ -45,17 +45,14 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
   }, [tempIndex]);
 
   const handleLayout = () => {
-    if (scrollViewRef != null && scrollViewRef.current != null) {
-      const location = getScrollLocationByIndex(index);
-
-      scrollViewRef.current.scrollTo({ y: location, animated: true });
-    }
+    const location = getScrollLocationByIndex(index);
+    scrollViewRef?.current?.scrollTo({ y: location, animated: true });
   };
 
   const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = event.nativeEvent.contentOffset.y / ITEM_SIZE;
 
-    if (onIndexChange != null) onIndexChange(index);
+    onIndexChange?.(index);
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {

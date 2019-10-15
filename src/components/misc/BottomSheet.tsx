@@ -19,11 +19,11 @@ export class BottomSheet extends Component<BottomSheetProps> {
   }
 
   open() {
-    if (this.rbSheetRef != null && this.rbSheetRef.current != null) this.rbSheetRef.current.open();
+    this.rbSheetRef?.current?.open();
   }
 
   close() {
-    if (this.rbSheetRef != null && this.rbSheetRef.current != null) this.rbSheetRef.current.close();
+    this.rbSheetRef?.current?.close();
   }
 
   render() {

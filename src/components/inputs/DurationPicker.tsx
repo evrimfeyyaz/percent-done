@@ -13,12 +13,12 @@ export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ initial
 
   const handleHoursChange = (index: number) => {
     setDuration({ hours: index, minutes: duration.minutes });
-    if (onDurationChange != null) onDurationChange(index, duration.minutes);
+    onDurationChange?.(index, duration.minutes);
   };
 
   const handleMinutesChange = (index: number) => {
     setDuration({ hours: duration.hours, minutes: index });
-    if (onDurationChange != null) onDurationChange(duration.hours, index);
+    onDurationChange?.(duration.hours, index);
   };
 
   const hours = [];

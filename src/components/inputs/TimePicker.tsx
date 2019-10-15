@@ -38,14 +38,14 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, on
     const newTimeStamp = time.setHours(newHour);
     setTime(new Date(newTimeStamp));
 
-    if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
+    onTimeChange?.(new Date(newTimeStamp));
   };
 
   const handleMinuteIndexChange = (index: number) => {
     const newTimeStamp = time.setMinutes(index);
     setTime(new Date(newTimeStamp));
 
-    if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
+    onTimeChange?.(new Date(newTimeStamp));
   };
 
   const handlePeriodIndexChange = (index: number) => {
@@ -60,7 +60,7 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, on
     const newTimeStamp = time.setHours(newHour);
     setTime(new Date(newTimeStamp));
 
-    if (onTimeChange != null) onTimeChange(new Date(newTimeStamp));
+    onTimeChange?.(new Date(newTimeStamp));
   };
 
   let hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];

@@ -21,17 +21,9 @@ export const TabItem: FunctionComponent<Props> = ({
                                                     title, index, onPress, disabled, onLayout,
                                                     selectionStatus = new Animated.Value(0), style,
                                                   }) => {
-  const handlePress = () => {
-    if (onPress != null) {
-      onPress(index);
-    }
-  };
+  const handlePress = () => onPress?.(index);
 
-  const handleLayout = (event: LayoutChangeEvent) => {
-    if (onLayout != null) {
-      onLayout(index, event);
-    }
-  };
+  const handleLayout = (event: LayoutChangeEvent) => onLayout?.(index, event);
 
   const titleColor = Animated.diffClamp(selectionStatus, 0, 1).interpolate({
     inputRange: [0, 1],

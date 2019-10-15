@@ -9,11 +9,7 @@ interface DurationInputProps {
 export const DurationInput: FunctionComponent<DurationInputProps> = ({ duration, onDurationChange }) => {
   const bottomSheetDurationPickerRef = useRef<BottomSheetDurationPicker>(null);
 
-  const showBottomSheet = () => {
-    if (bottomSheetDurationPickerRef != null && bottomSheetDurationPickerRef.current != null) {
-      bottomSheetDurationPickerRef.current.show();
-    }
-  };
+  const showBottomSheet = () => bottomSheetDurationPickerRef?.current?.show();
 
   const handleInputContainerPress = () => {
     showBottomSheet();

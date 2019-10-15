@@ -5,33 +5,22 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
-  TouchableHighlight,
-  TouchableNativeFeedback, LayoutChangeEvent,
+  LayoutChangeEvent,
 } from 'react-native';
 import { colors, fonts } from '../../theme';
 
-export enum DayOfWeek {
-  Sunday = 'Sunday',
-  Monday = 'Monday',
-  Tuesday = 'Tuesday',
-  Wednesday = 'Wednesday',
-  Thursday = 'Thursday',
-  Friday = 'Friday',
-  Saturday = 'Saturday'
-}
-
-export type WeekDaysArray = ('Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday')[];
-
 interface DaysOfWeekInputProps {
   title: string;
-  selectedDays: DayOfWeek[] | WeekDaysArray;
-  onDaysChange?: (days: (DayOfWeek[] | WeekDaysArray)) => void;
+  selectedDays: string[];
+  onDaysChange?: (days: string[]) => void;
   error?: string;
   onLayout?: (event: LayoutChangeEvent) => void;
 }
 
 export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title, selectedDays, onDaysChange, onLayout, error }) => {
-  const handleDayChange = (changedDay: DayOfWeek) => {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  const handleDayChange = (changedDay: string) => {
     let newSelectedDays = [...selectedDays];
 
     if (selectedDays.includes(changedDay)) {
@@ -40,10 +29,10 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
       newSelectedDays.push(changedDay);
     }
 
-    if (onDaysChange != null) onDaysChange(newSelectedDays);
+    onDaysChange?.(newSelectedDays);
   };
 
-  const dayButton = (day: DayOfWeek) => {
+  const dayButton = (day: string) => {
     const selectedStyle = { opacity: 1 };
     const isSelected = selectedDays.includes(day);
     const dayButtonStyle = isSelected
@@ -63,11 +52,7 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
   };
 
   const dayButtons: Element[] = [];
-  for (let day in DayOfWeek) {
-    if (isNaN(Number(day))) {
-      dayButtons.push(dayButton(DayOfWeek[day] as DayOfWeek));
-    }
-  }
+  days.forEach((day: string) => dayButtons.push(dayButton(day)));
 
   return (
     <InputContainer

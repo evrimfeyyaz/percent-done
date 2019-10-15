@@ -8,6 +8,7 @@ export const GoalsScreen: NavigationScreenComponent = () => {
   return (
     <ScrollView>
       <Section title="Today's Stats">
+        // @ts-ignore
         <TodaysStats />
       </Section>
 

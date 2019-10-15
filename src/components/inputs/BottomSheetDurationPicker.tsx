@@ -25,15 +25,11 @@ export class BottomSheetDurationPicker extends Component<BottomSheetDurationPick
 
   show() {
     this.setState({ duration: _.clone(this.props.initialDuration) });
-    if (this.bottomSheetRef != null && this.bottomSheetRef.current != null) {
-      this.bottomSheetRef.current.open();
-    }
+    this.bottomSheetRef?.current?.open();
   };
 
   hide() {
-    if (this.bottomSheetRef != null && this.bottomSheetRef.current != null) {
-      this.bottomSheetRef.current.close();
-    }
+    this.bottomSheetRef?.current?.close();
   };
 
   handleDurationChange = (hours: number, minutes: number) => {
@@ -54,8 +50,8 @@ export class BottomSheetDurationPicker extends Component<BottomSheetDurationPick
     const { initialDuration, onDurationChange } = this.props;
     const { duration } = this.state;
 
-    if ((initialDuration.hours !== duration.hours || initialDuration.minutes !== duration.minutes) && onDurationChange != null) {
-      onDurationChange(duration.hours, duration.minutes);
+    if ((initialDuration.hours !== duration.hours || initialDuration.minutes !== duration.minutes)) {
+      onDurationChange?.(duration.hours, duration.minutes);
     }
   };
 
