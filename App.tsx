@@ -26,10 +26,13 @@ import { AddGoalScreen } from './src/screens/AddGoalScreen';
 import { Goal } from './src/store/goals/types';
 import { TimetableEntry } from './src/store/timetableEntries/types';
 import thunk from 'redux-thunk';
+import { NavigationService } from './src/utilities';
+import { TrackGoalScreen } from './src/screens/TrackGoalScreen';
 
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
+YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
 
 // export default Storybook;
 
@@ -140,6 +143,7 @@ const MainTabsNavigator = createBottomTabNavigator(
 const AppNavigator = createStackNavigator({
   MainTabs: MainTabsNavigator,
   AddGoal: AddGoalStack,
+  TrackGoal: TrackGoalScreen,
 }, {
   mode: 'modal',
   headerMode: 'none',
@@ -190,7 +194,7 @@ export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <AppContainer />
+        <AppContainer ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
       </Provider>
     );
   }

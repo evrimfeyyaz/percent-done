@@ -60,7 +60,7 @@
     "babel-loader": "^8.0.6",
     "react-dom": "16.8.6",
     "redux-devtools-extension": "^2.13.8",
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.0-beta"
   },
   "jest": {
     "preset": "react-native"

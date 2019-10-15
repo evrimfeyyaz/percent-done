@@ -18,7 +18,10 @@ export const createStoreState = ({ goals = [], timetableEntries = [] }: Argument
     timetableEntryIdsByDate[dateIdx].push(entry.id);
   });
 
-  const goalsState: GoalsState = { ...createNormalizedEntityState(goals), currentTrackedGoalId: '' };
+  const goalsState: GoalsState = {
+    ...createNormalizedEntityState(goals),
+    trackedGoal: {},
+  };
   const timetableEntriesState: TimetableEntriesState = {
     ...createNormalizedEntityState(timetableEntries),
     idsByDate: timetableEntryIdsByDate,

@@ -4,9 +4,10 @@ import { StoreState } from '../types';
 import { GoalActionTypes } from './types';
 import { TimetableEntry, TimetableEntryActionTypes } from '../timetableEntries/types';
 import { getGoalById, getTimetableEntriesForGoal, isCompleted } from './selectors';
-import { createRandomId } from '../../utilities/createRandomId';
 import { addTimetableEntry, removeTimetableEntry } from '../timetableEntries/actions';
 import { isTimeTracked } from './utilities';
+import { NavigationService, createRandomId } from '../../utilities';
+import { removeTrackedGoal, setTrackedGoal } from './actions';
 
 export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
   return (dispatch, getState) => {
@@ -16,7 +17,7 @@ export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, 
     if (goal == null) throw Error('Can\'t find goal.');
 
     if (isTimeTracked(goal)) {
-
+      dispatch(startGoalTracking(goal.id));
     } else {
       const today = new Date();
 
@@ -37,5 +38,37 @@ export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, 
         dispatch(addTimetableEntry(timetableEntry));
       }
     }
+  };
+};
+
+export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
+  return (dispatch) => {
+    const startTimestamp = Date.now();
+
+    dispatch(setTrackedGoal(goalId, startTimestamp));
+    NavigationService.navigate('TrackGoal', {});
+  };
+};
+
+export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (endTimestamp: number) => {
+  return (dispatch, getState) => {
+    const { startTimestamp, id: goalId } = getState().goals.trackedGoal;
+
+    if (startTimestamp == null || goalId == null) {
+      throw Error('Tracked goal data is corrupt.');
+    }
+
+    NavigationService.goBack();
+    dispatch(removeTrackedGoal());
+
+    // TODO: Handle the case where the start and end timestamps spawn multiple days.
+    const timetableEntry: TimetableEntry = {
+      id: createRandomId(),
+      goalId,
+      startTimestamp,
+      endTimestamp,
+    };
+
+    dispatch(addTimetableEntry(timetableEntry));
   };
 };

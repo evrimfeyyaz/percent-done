@@ -4,7 +4,9 @@ import {
   Goal,
   GoalActionTypes,
   GoalsState,
-  SET_CURRENT_TRACKED_GOAL_ID,
+  REMOVE_TRACKED_GOAL,
+  SET_TRACKED_GOAL,
+  TrackedGoalState,
 } from './types';
 import { NormalizedEntityById } from '../types';
 import _ from 'lodash';
@@ -29,10 +31,15 @@ const allIds: Reducer<string[], GoalActionTypes> = (state = [], action) => {
   }
 };
 
-const currentTrackedGoalId: Reducer<string, GoalActionTypes> = (state = '', action) => {
+const trackedGoal: Reducer<TrackedGoalState, GoalActionTypes> = (state = {}, action) => {
   switch (action.type) {
-    case SET_CURRENT_TRACKED_GOAL_ID:
-      return action.goalId;
+    case SET_TRACKED_GOAL:
+      return {
+        id: action.id,
+        startTimestamp: action.startTimestamp,
+      };
+    case REMOVE_TRACKED_GOAL:
+      return {};
     default:
       return state;
   }
@@ -41,5 +48,5 @@ const currentTrackedGoalId: Reducer<string, GoalActionTypes> = (state = '', acti
 export const goalsReducer: Reducer<GoalsState, GoalActionTypes> = combineReducers({
   byId,
   allIds,
-  currentTrackedGoalId,
+  trackedGoal,
 });

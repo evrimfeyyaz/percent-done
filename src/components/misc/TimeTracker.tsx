@@ -9,22 +9,25 @@ interface TimeTrackerProps {
   title: string;
   color: string;
   durationInSeconds: number;
+  /**
+   * Remaining seconds for the goal.
+   */
   initialRemainingSeconds: number;
+  /**
+   * Starting timestamp for the time tracker.
+   */
+  startTimestamp: number;
   onStopPress?: (startTimestamp: number, endTimestamp: number) => void;
+  onStartTimestampChange?: (newTimestamp: number) => void;
 }
 
 export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
-                                                                   title, color, durationInSeconds,
-                                                                   initialRemainingSeconds, onStopPress,
+                                                                   title, color, durationInSeconds, startTimestamp,
+                                                                   initialRemainingSeconds, onStopPress, onStartTimestampChange,
                                                                  }) => {
   const bottomSheetTimePickerRef = useRef<BottomSheetTimePicker>(null);
 
-  const [startTimestamp, setStartTimestamp] = useState(0);
   const [msPassed, setMsPassed] = useState(0);
-
-  useEffect(() => {
-    setStartTimestamp(Date.now());
-  }, []);
 
   let interval: NodeJS.Timeout;
   useEffect(() => {
@@ -38,23 +41,17 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     setMsPassed(Date.now() - startTimestamp);
   }
 
-  const handleStartedAtPress = () => {
-    if (bottomSheetTimePickerRef != null && bottomSheetTimePickerRef.current != null) {
-      bottomSheetTimePickerRef.current.show();
-    }
-  };
+  const handleStartedAtPress = () => bottomSheetTimePickerRef?.current?.show();
 
   const handleStartedAtTimeChange = (time: Date) => {
-    if (time.getTime() > Date.now()) return;
+    const newTimestamp = time.getTime();
 
-    setStartTimestamp(time.getTime());
+    if (newTimestamp > Date.now()) return;
+
+    onStartTimestampChange?.(newTimestamp);
   };
 
-  const handleStopPress = () => {
-    if (onStopPress != null) {
-      onStopPress(startTimestamp, Date.now());
-    }
-  };
+  const handleStopPress = () => onStopPress?.(startTimestamp, Date.now());
 
   const titleColorStyle = { color };
 

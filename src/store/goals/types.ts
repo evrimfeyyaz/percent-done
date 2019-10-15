@@ -10,22 +10,39 @@ export interface Goal {
   reminderTime?: Date;
 }
 
+export interface TrackedGoalState {
+  id?: string;
+  startTimestamp?: number;
+}
+
 export interface GoalsState extends NormalizedEntityState<Goal> {
-  currentTrackedGoalId: string;
+  trackedGoal: TrackedGoalState;
 }
 
 
 export const ADD_GOAL = 'ADD_GOAL';
-export const SET_CURRENT_TRACKED_GOAL_ID = 'SET_CURRENT_TRACKED_GOAL_ID';
+export const SET_TRACKED_GOAL = 'SET_TRACKED_GOAL';
+export const REMOVE_TRACKED_GOAL = 'REMOVE_TRACKED_GOAL';
+export const UPDATE_TRACKED_GOAL_START_TIMESTAMP = 'UPDATE_TRACKED_GOAL_START_TIMESTAMP';
 
 export interface AddGoalAction extends Action<typeof ADD_GOAL> {
   goal: Goal;
 }
 
-export interface SetCurrentTrackedGoalIdAction extends Action<typeof SET_CURRENT_TRACKED_GOAL_ID> {
-  goalId: string;
+export interface SetTrackedGoalAction extends Action<typeof SET_TRACKED_GOAL> {
+  id: string;
+  startTimestamp: number;
+}
+
+export interface RemoveTrackedGoalAction extends Action<typeof REMOVE_TRACKED_GOAL> {
+}
+
+export interface UpdateTrackedGoalStartTimestampAction extends Action<typeof UPDATE_TRACKED_GOAL_START_TIMESTAMP> {
+  startTimestamp: number;
 }
 
 export type GoalActionTypes =
   AddGoalAction |
-  SetCurrentTrackedGoalIdAction;
+  SetTrackedGoalAction |
+  RemoveTrackedGoalAction |
+  UpdateTrackedGoalStartTimestampAction;

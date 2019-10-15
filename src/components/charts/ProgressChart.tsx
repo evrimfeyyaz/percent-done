@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { StyleSheet, View, Text, Animated } from 'react-native';
 import { colors, fonts } from '../../theme';
-import { usePrevious } from '../../utilities/usePrevious';
+import { usePrevious } from '../../utilities';
 import { AnimatedProgressCircle } from './AnimatedProgressCircle';
 
 interface Props {

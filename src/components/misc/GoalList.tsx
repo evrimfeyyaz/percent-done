@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { GoalRow, GoalRowProps } from './GoalRow';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 import { Animated, Image, LayoutChangeEvent, StyleSheet } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
-import { usePrevious } from '../../utilities/usePrevious';
+import { usePrevious } from '../../utilities';
 import _ from 'lodash';
 
 export interface GoalListProps {
@@ -57,10 +57,28 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals = [], onGoalR
       if (goal != null && isGoalTracked(goal)) return;
 
       isSwipeAnimationRunning = true;
+
       Animated.timing(goalVisibilityValues[key], { toValue: 0, duration: 300 }).start(() => {
-        if (onGoalRightSwipe != null) onGoalRightSwipe(key);
+        onGoalRightSwipe?.(key);
         isSwipeAnimationRunning = false;
       });
+    }
+  };
+
+  const handleRowOpen = (key: string) => {
+    const goal = goals.find(goal => goal.id === key);
+
+    if (goal != null && isGoalTracked(goal)) { // Goal is a time-tracked goal.
+      onGoalRightSwipe?.(key);
+    }
+  };
+
+  const handleRowDidOpen = (key: string, rowMap: RowMap<GoalRowProps>) => {
+    const goal = goals.find(goal => goal.id === key);
+
+    if (goal != null && isGoalTracked(goal)) { // Goal is a time-tracked goal.
+      goalVisibilityValues[key].setValue(1);
+      rowMap[key].closeRow();
     }
   };
 
@@ -117,7 +135,13 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals = [], onGoalR
       )}
       keyExtractor={item => item.id}
       onSwipeValueChange={handleSwipeValueChange}
+      closeOnRowOpen={false}
+      closeOnRowBeginSwipe={false}
+      closeOnRowPress={false}
+      closeOnScroll={false}
       disableLeftSwipe
+      onRowOpen={handleRowOpen}
+      onRowDidOpen={handleRowDidOpen}
       onLayout={handleSwipeListViewLayout}
       leftOpenValue={listWidth}
       swipeToOpenPercent={30}
