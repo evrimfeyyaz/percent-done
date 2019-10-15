@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -28,6 +28,7 @@ import { TimetableEntry } from './src/store/timetableEntries/types';
 import thunk from 'redux-thunk';
 import { NavigationService } from './src/utilities';
 import { TrackGoalScreen } from './src/screens/TrackGoalScreen';
+import { startGoalTracking } from './src/store/goals/thunks';
 
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
@@ -183,6 +184,10 @@ const seedData = createStoreState({
   goals: [incompleteGoal, incompleteGoal2, completedGoal],
   timetableEntries: [timetableEntry, timetableEntry2],
 });
+// seedData.goals.trackedGoal = {
+//   id: seedData.goals.allIds[0],
+//   startTimestamp: Date.now(),
+// };
 
 const rootReducer = combineReducers({
   goals: goalsReducer,
@@ -190,15 +195,22 @@ const rootReducer = combineReducers({
 });
 const store = createStore(rootReducer, seedData, composeWithDevTools(applyMiddleware(thunk)));
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <AppContainer ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
-      </Provider>
-    );
-  }
-}
+const App: FunctionComponent = () => {
+  useEffect(() => {
+    const { id, startTimestamp } = store.getState().goals.trackedGoal;
+
+    if (id != null && startTimestamp != null) {
+      NavigationService.navigate('TrackGoal', {});
+    }
+  }, []);
+
+  return (
+    <Provider store={store}>
+      <AppContainer ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
+    </Provider>
+  );
+};
+export default App;
 
 function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {
