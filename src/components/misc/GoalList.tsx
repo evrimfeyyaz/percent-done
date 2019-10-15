@@ -68,7 +68,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals = [], onGoalR
   const handleRowOpen = (key: string) => {
     const goal = goals.find(goal => goal.id === key);
 
-    if (goal != null && isGoalTracked(goal)) { // Goal is a time-tracked goal.
+    if (goal != null && isGoalTracked(goal)) {
       onGoalRightSwipe?.(key);
     }
   };
@@ -76,7 +76,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals = [], onGoalR
   const handleRowDidOpen = (key: string, rowMap: RowMap<GoalRowProps>) => {
     const goal = goals.find(goal => goal.id === key);
 
-    if (goal != null && isGoalTracked(goal)) { // Goal is a time-tracked goal.
+    if (goal != null && isGoalTracked(goal)) {
       goalVisibilityValues[key].setValue(1);
       rowMap[key].closeRow();
     }
