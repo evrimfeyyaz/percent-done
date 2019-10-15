@@ -20,18 +20,18 @@ export const DaysStats: FunctionComponent<DaysStatsProps> = ({ percentDone, comp
       <View style={styles.infoContainer}>
         <View>
           <Text style={textStyles.info}>
-            {completedHours}
+            {Math.floor(completedHours)}
             <Text style={textStyles.infoLabel}>H</Text>
-            &nbsp;{completedMinutes}
+            &nbsp;{Math.floor(completedMinutes)}
             <Text style={textStyles.infoLabel}>M</Text>
             <Text style={textStyles.infoTail}> done</Text>
           </Text>
         </View>
         <View>
           <Text style={textStyles.info}>
-            {remainingHours}
+            {Math.floor(remainingHours)}
             <Text style={textStyles.infoLabel}>H</Text>
-            &nbsp;{remainingMinutes}
+            &nbsp;{Math.floor(remainingMinutes)}
             <Text style={textStyles.infoLabel}>M</Text>
             <Text style={textStyles.infoTail}> left</Text>
           </Text>
