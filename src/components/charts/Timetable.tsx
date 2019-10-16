@@ -1,20 +1,14 @@
 import React, { FunctionComponent } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, fonts } from '../../theme';
-import {
-  compareTimes,
-  durationInHoursAndMinutes,
-  formattedTimeFromHoursAndMinutes,
-} from '../../utilities';
+import { formatDurationInMs, formatTimeInTimestamp } from '../../utilities';
 import Svg, { Line } from 'react-native-svg';
 
 export interface TimetableRow {
   title: string;
   timeTracked: boolean;
-  startHour: number;
-  startMinute: number;
-  endHour: number;
-  endMinute: number;
+  startTimestamp: number;
+  endTimestamp: number;
   color: string;
   id: string;
 }
@@ -29,38 +23,21 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
                                                                onEntryPress,
                                                              }) => {
   const entriesSortedByStartingTime = entries.sort((e1, e2) => {
-    // If starting times are equal, compare by ending times.
-    if (e1.startHour === e2.startHour && e1.startMinute === e2.startMinute) {
-      return compareTimes(e1.endHour, e1.endMinute, e2.endHour, e2.endMinute);
+    if (e1.startTimestamp === e2.startTimestamp) {
+      return e2.endTimestamp - e1.startTimestamp;
     }
 
-    return compareTimes(
-      e1.startHour,
-      e1.startMinute,
-      e2.startHour,
-      e2.startMinute,
-    );
+    return e2.startTimestamp - e1.startTimestamp;
   });
 
-  const makeEntry = (entry: TimetableRow) => {
-    const { hours, minutes } = durationInHoursAndMinutes(
-      entry.startHour,
-      entry.startMinute,
-      entry.endHour,
-      entry.endMinute,
-    );
-    const startTime = formattedTimeFromHoursAndMinutes(
-      entry.startHour,
-      entry.startMinute,
-    );
-    const endTime = formattedTimeFromHoursAndMinutes(
-      entry.endHour,
-      entry.endMinute,
-    );
+  const makeRow = (entry: TimetableRow) => {
+    const duration = formatDurationInMs(entry.endTimestamp - entry.startTimestamp);
+    const startTime = formatTimeInTimestamp(entry.startTimestamp);
+    const endTime = formatTimeInTimestamp(entry.endTimestamp);
 
     const titleColorStyle = { color: entry.color };
     const durationOrCompletion = entry.timeTracked
-      ? `${hours}h ${minutes}m`
+      ? duration
       : 'Completed';
     const times = entry.timeTracked
       ? `${startTime} - ${endTime}`
@@ -81,7 +58,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
     );
   };
 
-  const makeUnusedTimeLine = (hours: number, minutes: number, key: string) => {
+  const makeUnusedTimeLine = (durationInMs: number, key: string) => {
     const verticalSeparator = (
       <Svg height={16} width={4}>
         <Line
@@ -99,7 +76,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
       <View style={styles.unusedTime} key={key}>
         {verticalSeparator}
         <Text style={styles.unusedTimeLength}>
-          {hours}h {minutes}m
+          {formatDurationInMs(durationInMs)}
         </Text>
         {verticalSeparator}
       </View>
@@ -113,7 +90,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
     for (let i = 0; i < entriesLength; i++) {
       const entry = timetableEntries[i];
 
-      timetable.push(makeEntry(entry));
+      timetable.push(makeRow(entry));
 
       if (i + 1 === entriesLength) {
         continue;
@@ -121,26 +98,13 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
 
       const prevEntry = timetableEntries[i + 1];
 
-      if (
-        entry.startHour === prevEntry.startHour &&
-        entry.startMinute === prevEntry.startMinute
-      ) {
-        continue;
-      }
+      if (entry.startTimestamp === prevEntry.startTimestamp) continue;
 
-      const {
-        hours: hoursUntilNextEntry,
-        minutes: minutesUntilNextEntry,
-      } = durationInHoursAndMinutes(
-        prevEntry.endHour,
-        prevEntry.endMinute,
-        entry.startHour,
-        entry.startMinute,
-      );
+      const durationUntilNextEntry = entry.startTimestamp - prevEntry.endTimestamp;
 
       const key = `${i}-unused`;
       timetable.push(
-        makeUnusedTimeLine(hoursUntilNextEntry, minutesUntilNextEntry, key),
+        makeUnusedTimeLine(durationUntilNextEntry, key),
       );
     }
 

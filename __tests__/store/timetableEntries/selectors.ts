@@ -89,10 +89,8 @@ describe('timetable entries selectors', () => {
       const expected: TimetableRow[] = [{
         title: goal.title,
         timeTracked: true,
-        startHour: startHour,
-        startMinute: startMinute,
-        endHour: 10,
-        endMinute: durationInMin,
+        startTimestamp: timetableEntry.startTimestamp,
+        endTimestamp: timetableEntry.endTimestamp,
         color: goal.color,
         id: timetableEntry.id,
       }];

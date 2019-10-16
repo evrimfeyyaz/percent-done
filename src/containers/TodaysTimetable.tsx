@@ -11,4 +11,4 @@ const mapStateToProps = (state: StoreState) => ({
   entries: convertTimetableEntriesToTimetableRows(state, getTimetableEntries(state, today)),
 });
 
-export const TodaysTimetable = connect(mapStateToProps, null)(Timetable);
+export const TodaysTimetable = connect(mapStateToProps, null)(Timetable) as any;

@@ -18,16 +18,12 @@ export const getTimetableEntries = (state: StoreState, date: Date): TimetableEnt
 export const convertTimetableEntriesToTimetableRows = (state: StoreState, timetableEntries: TimetableEntry[]): TimetableRow[] => {
   return timetableEntries.map(entry => {
     const goal = getGoalById(state, entry.goalId);
-    const startTime = new Date(entry.startTimestamp);
-    const endTime = new Date(entry.endTimestamp);
 
     return ({
       title: goal.title,
       timeTracked: isTimeTracked(goal),
-      startHour: startTime.getHours(),
-      startMinute: startTime.getMinutes(),
-      endHour: endTime.getHours(),
-      endMinute: endTime.getMinutes(),
+      startTimestamp: entry.startTimestamp,
+      endTimestamp: entry.endTimestamp,
       color: goal.color,
       id: entry.id,
     });

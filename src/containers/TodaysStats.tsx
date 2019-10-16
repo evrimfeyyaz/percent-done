@@ -17,4 +17,4 @@ const mapStateToProps = (state: StoreState) => ({
   remainingSeconds: getRemainingSecondsForDate(state, today),
 });
 
-export const TodaysStats = connect(mapStateToProps, null)(DaysStats);
+export const TodaysStats = connect(mapStateToProps, null)(DaysStats) as any;

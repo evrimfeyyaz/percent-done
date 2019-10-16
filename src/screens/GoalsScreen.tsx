@@ -8,8 +8,6 @@ export const GoalsScreen: NavigationMaterialTabScreenComponent = () => {
   return (
     <ScrollView>
       <Section title="Today's Stats">
-        {/*
-         // @ts-ignore */}
         <TodaysStats />
       </Section>
 

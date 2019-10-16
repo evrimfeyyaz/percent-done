@@ -1,7 +1,7 @@
 import {
   compareDateIndices,
   convertDateToIndex,
-  convertSecondsToHoursAndMinutes, msToHoursMinutes, msToHoursMinutesSeconds,
+  convertSecondsToHoursAndMinutes, formatDurationInMs, msToHoursMinutesSeconds,
 } from '../../src/utilities';
 
 describe('time utilities', () => {
@@ -40,31 +40,36 @@ describe('time utilities', () => {
   });
 
   describe('msToHoursMinutesSeconds', () => {
-    it('converts given ms to HH:MM:SS', () => {
+    it('dissects given amount in ms into hours, minutes and seconds', () => {
       const fiveSecondsInMs = 5 * 1000;
       const fiveMinutesInMs = 5 * 60 * 1000;
       const fiveHoursInMs = 5 * 60 * 60 * 1000;
 
-      const fiveSeconds = msToHoursMinutesSeconds(fiveSecondsInMs);
-      const fiveMinutes = msToHoursMinutesSeconds(fiveMinutesInMs);
-      const fiveHours = msToHoursMinutesSeconds(fiveHoursInMs);
+      const ms = fiveHoursInMs + fiveMinutesInMs + fiveSecondsInMs;
 
-      expect(fiveSeconds).toEqual('00:00:05');
-      expect(fiveMinutes).toEqual('00:05:00');
-      expect(fiveHours).toEqual('05:00:00');
+      expect(msToHoursMinutesSeconds(ms)).toEqual({
+        hours: 5,
+        minutes: 5,
+        seconds: 5,
+      });
     });
   });
 
-  describe('msToHoursMinutes', () => {
-    it('converts given ms to HH:MM', () => {
-      const fiveMinutesInMs = 5 * 60 * 1000;
-      const fiveHoursInMs = 5 * 60 * 60 * 1000;
+  describe('formatDurationInMs', () => {
+    const fiveSecondsInMs = 5 * 1000;
+    const fiveMinutesInMs = 5 * 60 * 1000;
+    const fiveHoursInMs = 5 * 60 * 60 * 1000;
 
-      const fiveMinutes = msToHoursMinutes(fiveMinutesInMs);
-      const fiveHours = msToHoursMinutes(fiveHoursInMs);
+    it('returns hours and minutes when time is more than one hour', () => {
+      const time = fiveHoursInMs + fiveMinutesInMs + fiveSecondsInMs;
 
-      expect(fiveMinutes).toEqual('00:05');
-      expect(fiveHours).toEqual('05:00');
+      expect(formatDurationInMs(time)).toEqual('05h 05m');
+    });
+
+    it('returns minutes and seconds when time is less than one hour', () => {
+      const time = fiveMinutesInMs + fiveSecondsInMs;
+
+      expect(formatDurationInMs(time)).toEqual('05m 05s');
     });
   });
 });

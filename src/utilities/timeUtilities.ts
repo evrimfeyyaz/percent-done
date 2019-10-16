@@ -2,45 +2,6 @@ import moment from 'moment';
 import 'moment/min/locales';
 import { NativeModules, Platform } from 'react-native';
 
-export function durationInHoursAndMinutes(
-  startHour: number,
-  startMinute: number,
-  endHour: number,
-  endMinute: number,
-): { hours: number; minutes: number } {
-  let minutes = endMinute - startMinute;
-  let hours = endHour - startHour;
-
-  if (minutes < 0) {
-    // Means less than one hour difference.
-    hours -= 1;
-    minutes += 60;
-  }
-
-  return { hours, minutes };
-}
-
-// TODO: Add time localization.
-export function formattedTimeFromHoursAndMinutes(
-  hours: number,
-  minutes: number,
-): string {
-  return `${hours}:${minutes.toString().padStart(2, '0')}`;
-}
-
-export function compareTimes(
-  hour1: number,
-  minute1: number,
-  hour2: number,
-  minute2: number,
-) {
-  if (hour1 === hour2) {
-    return minute2 - minute1;
-  }
-
-  return hour2 - hour1;
-}
-
 /**
  * Creates a string from a given date that can be
  * used as an index denoting the day in an object.
@@ -95,18 +56,33 @@ export function momentWithDeviceLocale(inp?: moment.MomentInput, format?: moment
   return moment(inp, format, strict).locale(deviceLocale);
 }
 
-export function msToHoursMinutesSeconds(ms: number): string {
+export function msToHoursMinutesSeconds(ms: number): { hours: number, minutes: number, seconds: number } {
   const totalSeconds = ms / 1000;
   const totalMinutes = totalSeconds / 60;
   const hours = Math.floor(totalMinutes / 60);
   const minutes = Math.floor(totalMinutes - (hours * 60));
   const seconds = Math.floor(totalSeconds - (minutes * 60) - (hours * 60 * 60));
 
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  return { hours, minutes, seconds };
 }
 
-export function msToHoursMinutes(ms: number): string {
-  const [hour, min] = msToHoursMinutesSeconds(ms).split(':');
+export function formatDurationInMs(durationInMs: number): string {
+  const { hours, minutes, seconds } = msToHoursMinutesSeconds(durationInMs);
+  const hoursStr = `${hours.toString().padStart(2, '0')}h`;
+  const minutesStr = `${minutes.toString().padStart(2, '0')}m`;
+  const secondsStr = `${seconds.toString().padStart(2, '0')}s`;
 
-  return `${hour}:${min}`;
+  if (hours > 0) {
+    return `${hoursStr} ${minutesStr}`;
+  } else {
+    return `${minutesStr} ${secondsStr}`;
+  }
+}
+
+export function formatTimeInTimestamp(timestamp: number, short: boolean = true): string {
+  const moment = momentWithDeviceLocale(timestamp);
+
+  if (short) return moment.format('LT');
+
+  return moment.format('LTS');
 }
