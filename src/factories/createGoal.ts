@@ -20,9 +20,7 @@ export const createGoal = ({
   const recurringDays = Array(7).fill(false);
   const durationInSeconds = durationInMin != null ? durationInMin * 60 : undefined;
 
-  dates
-    ?.map(date => date.getDay())
-    .forEach(dayOfWeek => recurringDays[dayOfWeek] = true);
+  dates?.map(date => date.getDay()).forEach(dayOfWeek => recurringDays[dayOfWeek] = true);
 
   return {
     id,

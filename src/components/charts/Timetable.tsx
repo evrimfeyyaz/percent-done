@@ -8,11 +8,7 @@ import {
 } from '../../utilities';
 import Svg, { Line } from 'react-native-svg';
 
-/**
- * Type for timetable entries. Start hour-minute should be the same as
- * end hour-minute for entries that are not time tracked.
- */
-export interface TimetableEntry {
+export interface TimetableRow {
   title: string;
   timeTracked: boolean;
   startHour: number;
@@ -24,7 +20,7 @@ export interface TimetableEntry {
 }
 
 interface TimetableProps {
-  entries: TimetableEntry[];
+  entries: TimetableRow[];
   onEntryPress: (id: string) => void;
 }
 
@@ -46,7 +42,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
     );
   });
 
-  const makeEntry = (entry: TimetableEntry) => {
+  const makeEntry = (entry: TimetableRow) => {
     const { hours, minutes } = durationInHoursAndMinutes(
       entry.startHour,
       entry.startMinute,
@@ -73,7 +69,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
     return (
       <TouchableOpacity
         style={styles.entry}
-        onPress={() => onEntryPress(entry.id)}
+        onPress={() => onEntryPress?.(entry.id)}
         key={entry.id}
       >
         <Text style={[styles.entryTitle, titleColorStyle]} numberOfLines={1}>
@@ -110,7 +106,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
     );
   };
 
-  const makeTimetable = (timetableEntries: TimetableEntry[]) => {
+  const makeTimetable = (timetableEntries: TimetableRow[]) => {
     const timetable: Element[] = [];
 
     const entriesLength = timetableEntries.length;
@@ -172,7 +168,7 @@ const styles = StyleSheet.create({
     borderColor: colors.darkGray,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    width: '80%',
+    minWidth: '50%',
   },
   entryTitle: {
     fontFamily: fonts.semibold,

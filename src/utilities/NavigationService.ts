@@ -1,8 +1,4 @@
-import {
-  NavigationActions,
-  NavigationContainerComponent,
-  NavigationParams,
-} from 'react-navigation';
+import { NavigationActions, NavigationContainerComponent, NavigationParams } from 'react-navigation';
 
 let navigator: NavigationContainerComponent;
 

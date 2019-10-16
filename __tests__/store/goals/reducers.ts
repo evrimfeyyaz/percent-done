@@ -6,6 +6,7 @@ describe('goals reducer', () => {
     expect(goalsReducer(undefined, { type: undefined })).toEqual({
       byId: {},
       allIds: [],
+      trackedGoal: {},
     });
   });
 });
