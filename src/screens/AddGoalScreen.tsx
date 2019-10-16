@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
-import { NavigationScreenComponent } from 'react-navigation';
 import {
   BackgroundView,
   GoalForm,
@@ -8,8 +7,9 @@ import {
   HeaderCancelButton,
 } from '../components';
 import { AddGoalForm } from '../containers';
+import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
-export const AddGoalScreen: NavigationScreenComponent = ({ navigation }) => {
+export const AddGoalScreen: NavigationStackScreenComponent = ({ navigation }) => {
   const formRef = useRef<GoalForm>(null);
 
   const submitFormAndClose = () => {

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { NavigationScreenComponent } from 'react-navigation';
 import { BackgroundView } from '../components';
 import { textStyles } from '../theme';
+import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
-export const SettingsScreen: NavigationScreenComponent = () => {
+export const SettingsScreen: NavigationStackScreenComponent = () => {
   return (
     <BackgroundView>
       <Text style={textStyles.body}>Settings Screen</Text>

@@ -1,14 +1,15 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { NavigationScreenComponent } from 'react-navigation';
 import { Section } from '../components';
 import { TodaysCompletedGoals, TodaysIncompleteGoals, TodaysStats } from '../containers';
+import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 
-export const GoalsScreen: NavigationScreenComponent = () => {
+export const GoalsScreen: NavigationMaterialTabScreenComponent = () => {
   return (
     <ScrollView>
       <Section title="Today's Stats">
-        // @ts-ignore
+        {/*
+         // @ts-ignore */}
         <TodaysStats />
       </Section>
 
