@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors, fonts } from '../../theme';
-import { formatDurationInMs, momentWithDeviceLocale } from '../../utilities';
+import { formatDurationInMs, leftOrOver, momentWithDeviceLocale } from '../../utilities';
 import { BottomSheetTimePicker, Button, ProgressChart } from '..';
 import { Icons } from '../../../assets';
 
@@ -69,7 +69,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
       <ProgressChart percentDone={percentDone} />
       <Text style={styles.timeLeft}>
         {formatDurationInMs(remainingMs, true)}&nbsp;
-        <Text style={styles.timeLeftLabel}>left</Text>
+        <Text style={styles.timeLeftLabel}>{leftOrOver(remainingMs)}</Text>
       </Text>
       <Button iconSource={Icons.stop} title='Stop' style={styles.stopButton} onPress={handleStopPress} />
       <TouchableOpacity onPress={handleStartedAtPress}>

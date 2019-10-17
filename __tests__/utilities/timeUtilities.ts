@@ -42,6 +42,20 @@ describe('time utilities', () => {
         seconds: 5,
       });
     });
+
+    it('given a negative number, considers it positive', () => {
+      const fiveSecondsInMs = 5 * 1000;
+      const fiveMinutesInMs = 5 * 60 * 1000;
+      const fiveHoursInMs = 5 * 60 * 60 * 1000;
+
+      const ms = -(fiveHoursInMs + fiveMinutesInMs + fiveSecondsInMs);
+
+      expect(msToHoursMinutesSeconds(ms)).toEqual({
+        hours: 5,
+        minutes: 5,
+        seconds: 5,
+      });
+    });
   });
 
   describe('formatDurationInMs', () => {

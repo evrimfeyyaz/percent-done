@@ -9,7 +9,7 @@ import {
 import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
-import { formatDurationInMs } from '../../utilities';
+import { formatDurationInMs, leftOrOver } from '../../utilities';
 
 export interface GoalRowProps {
   /**
@@ -69,12 +69,14 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
 
   let durationInfo = null;
   if (totalMs != null && completedMs != null) {
+    const remainingMs = totalMs - completedMs;
+
     durationInfo = (
       <View>
         <Text style={styles.timeLeft}>
-          {formatDurationInMs(totalMs - completedMs, true)}
+          {formatDurationInMs(remainingMs, true)}
         </Text>
-        <Text style={styles.leftText}>Left</Text>
+        <Text style={styles.leftText}>{leftOrOver(remainingMs)}</Text>
       </View>
     );
   }

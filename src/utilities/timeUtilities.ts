@@ -48,7 +48,7 @@ export function momentWithDeviceLocale(inp?: moment.MomentInput, format?: moment
 }
 
 export function msToHoursMinutesSeconds(ms: number): { hours: number, minutes: number, seconds: number } {
-  const totalSeconds = ms / 1000;
+  const totalSeconds = Math.abs(ms) / 1000;
   const totalMinutes = totalSeconds / 60;
   const hours = Math.floor(totalMinutes / 60);
   const minutes = Math.floor(totalMinutes - (hours * 60));
@@ -117,4 +117,8 @@ export function formatTimeInTimestamp(timestamp: number, short: boolean = true):
   if (short) return moment.format('LT');
 
   return moment.format('LTS');
+}
+
+export function leftOrOver(remainingMs: number) {
+  return remainingMs >= 0 ? 'left' : 'over';
 }
