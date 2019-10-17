@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 
 export const TimetableScreen: NavigationMaterialTabScreenComponent = () => {
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer}>
+    <ScrollView contentContainerStyle={styles.contentContainer} centerContent>
       <TodaysTimetable />
     </ScrollView>
   );
@@ -13,8 +13,7 @@ export const TimetableScreen: NavigationMaterialTabScreenComponent = () => {
 
 const styles = StyleSheet.create({
   contentContainer: {
-    flex: 1,
-    justifyContent: 'center',
     paddingBottom: 100,
+    paddingTop: 30,
   },
 });
