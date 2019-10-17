@@ -110,7 +110,7 @@ describe('goals selectors', () => {
             color: goal.color,
             totalMs: goal.durationInMs,
             completedMs: 30 * 60 * 1000,
-            chainLength: 1,
+            chainLength: 2,
           },
         ],
       };
@@ -139,7 +139,7 @@ describe('goals selectors', () => {
             color: goal.color,
             totalMs: undefined,
             completedMs: undefined,
-            chainLength: 0,
+            chainLength: 1,
             isCompleted: true,
           },
         ],
@@ -500,6 +500,21 @@ describe('goals selectors', () => {
       const chainLength = getChainLength(state, goal, today);
 
       expect(chainLength).toEqual(2);
+    });
+
+    it('includes today in the chain as well if the goal is completed today', () => {
+      const entryToday = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 0,
+      });
+
+      const state = createStoreState({ goals: [goal], timetableEntries: [entryToday] });
+
+      const chainLength = getChainLength(state, goal, today);
+
+      expect(chainLength).toEqual(1);
     });
 
     it('returns the length given a broken chain', () => {

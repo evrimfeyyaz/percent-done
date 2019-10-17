@@ -118,7 +118,3 @@ export function formatTimeInTimestamp(timestamp: number, short: boolean = true):
 
   return moment.format('LTS');
 }
-
-export function leftOrOver(remainingMs: number) {
-  return remainingMs >= 0 ? 'left' : 'over';
-}

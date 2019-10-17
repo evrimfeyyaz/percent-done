@@ -9,7 +9,7 @@ import {
 import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
-import { formatDurationInMs, leftOrOver } from '../../utilities';
+import { formatDurationInMs, leftOrOver, pluralize } from '../../utilities';
 
 export interface GoalRowProps {
   /**
@@ -62,7 +62,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
     chainInfo = (
       <View style={styles.chainInfo}>
         <Image source={Icons.link} />
-        <Text style={styles.chainLength}>{chainLength} days</Text>
+        <Text style={styles.chainLength}>{chainLength} {pluralize('day', chainLength)}</Text>
       </View>
     );
   }

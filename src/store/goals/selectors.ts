@@ -173,8 +173,8 @@ export const getTimetableEntriesForGoal = (state: StoreState, goal: Goal, date: 
  * in a row up to today.
  */
 export const getChainLength = (state: StoreState, goal: Goal, date: Date): number => {
-  let chainLength = 0;
-  for (let daysBefore = 1; daysBefore < 10; daysBefore++) {
+  let chainLength = isCompleted(state, goal, new Date()) ? 1 : 0;
+  for (let daysBefore = 1; true; daysBefore++) {
     const dateBefore = moment(date).subtract(daysBefore, 'day').toDate();
 
     if (isCompleted(state, goal, dateBefore)) {
