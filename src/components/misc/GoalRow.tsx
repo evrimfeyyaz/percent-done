@@ -9,7 +9,7 @@ import {
 import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
-import { convertSecondsToHoursAndMinutes } from '../../utilities';
+import { formatDurationInMs } from '../../utilities';
 
 export interface GoalRowProps {
   /**
@@ -23,10 +23,10 @@ export interface GoalRowProps {
    */
   chainLength: number;
   /**
-   * Total duration of the goal in seconds.
+   * Total duration of the goal in milliseconds.
    */
-  totalSeconds?: number;
-  completedSeconds?: number;
+  totalMs?: number;
+  completedMs?: number;
   /**
    * For non-time-tracked goals. Should be `undefined` for time-tracked goals.
    */
@@ -42,8 +42,8 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
                                                            title,
                                                            color,
                                                            chainLength = null,
-                                                           totalSeconds = null,
-                                                           completedSeconds = null,
+                                                           totalMs = null,
+                                                           completedMs = null,
                                                            isCompleted = false,
                                                            style,
                                                          }) => {
@@ -52,8 +52,8 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
   let progressPercentage = 0;
   if (isCompleted) {
     progressPercentage = 100;
-  } else if (totalSeconds != null && completedSeconds != null) {
-    progressPercentage = completedSeconds / totalSeconds;
+  } else if (totalMs != null && completedMs != null) {
+    progressPercentage = completedMs / totalMs;
   }
 
 
@@ -68,15 +68,11 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
   }
 
   let durationInfo = null;
-  if (totalSeconds != null && completedSeconds != null) {
-    let { hours, minutes } = convertSecondsToHoursAndMinutes(totalSeconds - completedSeconds);
-    hours = Math.floor(hours);
-    minutes = Math.floor(minutes);
-
+  if (totalMs != null && completedMs != null) {
     durationInfo = (
       <View>
         <Text style={styles.timeLeft}>
-          {hours}h {minutes}m
+          {formatDurationInMs(totalMs - completedMs, true)}
         </Text>
         <Text style={styles.leftText}>Left</Text>
       </View>

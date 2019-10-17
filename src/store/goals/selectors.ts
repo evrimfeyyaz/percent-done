@@ -36,10 +36,10 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
     const { title, color, id } = goal;
     const chainLength = getChainLength(state, goal, date);
 
-    let completedSeconds, totalSeconds, completed;
-    if (goal.durationInSeconds != null) {
-      completedSeconds = getCompletedSeconds(state, goal, date);
-      totalSeconds = goal.durationInSeconds;
+    let completedMs, totalMs, completed;
+    if (goal.durationInMs != null) {
+      completedMs = getCompletedMs(state, goal, date);
+      totalMs = goal.durationInMs;
     } else {
       completed = isCompleted(state, goal, date);
     }
@@ -49,8 +49,8 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
       title,
       color,
       chainLength,
-      completedSeconds,
-      totalSeconds,
+      completedMs,
+      totalMs,
       isCompleted: completed,
     };
   });
@@ -61,40 +61,50 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
 };
 
 /**
- * Returns the total time spent on a goal for given date.
+ * Returns the total time spent on a goal for given date in milliseconds.
  */
-export const getCompletedSeconds = (state: StoreState, goal: Goal, date: Date): number => {
+export const getCompletedMs = (state: StoreState, goal: Goal, date: Date): number => {
   const timetableEntries = getTimetableEntriesForGoal(state, goal, date);
 
-  return timetableEntries.reduce((total, entry) => {
-    const msSpent = entry.endTimestamp - entry.startTimestamp;
-
-    return total + (msSpent / 1000);
-  }, 0);
+  return timetableEntries.reduce((total, entry) => total + entry.endTimestamp - entry.startTimestamp, 0);
 };
 
 /**
- * Returns the total number of seconds spent on all goals on given day.
+ * Returns the total number of milliseconds spent on all goals on given day.
  */
-export const getTotalCompletedSecondsForDate = (state: StoreState, date: Date): number => {
+export const getTotalCompletedMsForDate = (state: StoreState, date: Date): number => {
   const goals = getGoals(state, date);
 
-  return goals.reduce((totalSeconds, goal) => totalSeconds + getCompletedSeconds(state, goal, date), 0);
+  return goals.reduce((total, goal) => total + getCompletedMs(state, goal, date), 0);
 };
 
 /**
- * Returns the total number of seconds remaining for all goals on given day.
+ * Returns the remaining time for a goal on a given date in milliseconds.
  */
-export const getRemainingSecondsForDate = (state: StoreState, date: Date): number => {
+export const getRemainingMs = (state: StoreState, goal: Goal, date: Date): number => {
+  if (!isTimeTracked(goal)) return 0;
+
+  const duration = goal.durationInMs;
+  if (duration == null) throw Error('A time-tracked goal cannot have `null` or `undefined` duration.');
+
+  const completedMs = getCompletedMs(state, goal, date);
+
+  return duration - completedMs;
+};
+
+/**
+ * Returns the total number of milliseconds remaining for all goals on given day.
+ */
+export const getTotalRemainingMsForDate = (state: StoreState, date: Date): number => {
   const goals = getGoals(state, date);
-  const totalSeconds = goals.reduce((total, goal) => {
-    if (goal.durationInSeconds == null) return total;
+  const totalMs = goals.reduce((total, goal) => {
+    if (goal.durationInMs == null) return total;
 
-    return total + goal.durationInSeconds;
+    return total + goal.durationInMs;
   }, 0);
-  const completedSeconds = getTotalCompletedSecondsForDate(state, date);
+  const completedMs = getTotalCompletedMsForDate(state, date);
 
-  return Math.max(totalSeconds - completedSeconds, 0);
+  return Math.max(totalMs - completedMs, 0);
 };
 
 /**
@@ -106,10 +116,10 @@ export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean 
     return entries != null && entries.length > 0;
   }
 
-  if (typeof goal.durationInSeconds !== 'number') throw Error('A time-tracked goal should have duration.');
+  if (typeof goal.durationInMs !== 'number') throw Error('A time-tracked goal should have duration.');
 
-  const completedSeconds = getCompletedSeconds(state, goal, date);
-  return completedSeconds >= goal.durationInSeconds;
+  const completedMs = getCompletedMs(state, goal, date);
+  return completedMs >= goal.durationInMs;
 };
 
 /**
@@ -118,10 +128,10 @@ export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean 
 export const getProgress = (state: StoreState, goal: Goal, date: Date): number => {
   let progress = 0;
 
-  if (goal.durationInSeconds != null) {
-    const completedSeconds = getCompletedSeconds(state, goal, date);
+  if (goal.durationInMs != null) {
+    const completedMs = getCompletedMs(state, goal, date);
 
-    progress = completedSeconds / goal.durationInSeconds;
+    progress = completedMs / goal.durationInMs;
   } else {
     progress = isCompleted(state, goal, date) ? 1 : 0;
   }

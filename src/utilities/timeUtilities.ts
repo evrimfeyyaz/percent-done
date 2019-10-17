@@ -23,15 +23,6 @@ export function compareDateIndices(dateIdx1: string, dateIdx2: string) {
   }
 }
 
-export function convertSecondsToHoursAndMinutes(seconds: number): { hours: number, minutes: number } {
-  const totalMinutes = seconds / 60;
-
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  return { hours, minutes };
-}
-
 /**
  * This returns the beginning of day, as new Date() also includes the time,
  * which would prevent selectors to be memoized properly as the time changes
@@ -66,9 +57,16 @@ export function msToHoursMinutesSeconds(ms: number): { hours: number, minutes: n
   return { hours, minutes, seconds };
 }
 
-export function formatDurationInMs(durationInMs: number): string {
-  const { hours, minutes, seconds } = msToHoursMinutesSeconds(durationInMs);
+export function formatDurationInMs(durationInMs: number, roundLastValueUp = false): string {
+  let { hours, minutes, seconds } = msToHoursMinutesSeconds(durationInMs);
   const hoursStr = `${hours.toString().padStart(2, '0')}h`;
+
+  if (roundLastValueUp && hours > 0 && !hasWholeMinutes(durationInMs)) {
+    minutes++;
+  } else if (roundLastValueUp && hours === 0 && !hasWholeSeconds(durationInMs)) {
+    seconds++;
+  }
+
   const minutesStr = `${minutes.toString().padStart(2, '0')}m`;
   const secondsStr = `${seconds.toString().padStart(2, '0')}s`;
 
@@ -77,6 +75,40 @@ export function formatDurationInMs(durationInMs: number): string {
   } else {
     return `${minutesStr} ${secondsStr}`;
   }
+}
+
+/**
+ * Returns `true` when the ms given has a whole number of seconds.
+ */
+function hasWholeSeconds(ms: number): boolean {
+  const secondsInMs = 1000;
+  return ms % secondsInMs === 0;
+}
+
+/**
+ * Returns `true` when the ms given has a whole number of seconds.
+ */
+function hasWholeMinutes(ms: number): boolean {
+  const minutesInMs = 1000 * 60;
+  return ms % minutesInMs === 0;
+}
+
+interface DeconstructFormattedDurationResult {
+  firstPart: string,
+  firstDenotation: string,
+  secondPart: string,
+  secondDenotation: string,
+}
+
+export function deconstructFormattedDuration(formattedDuration: string): DeconstructFormattedDurationResult {
+  const parts = formattedDuration.split(' ');
+
+  const firstPart = parts[0].substr(0, 2);
+  const firstDenotation = parts[0].substr(2, 1);
+  const secondPart = parts[1].substr(0, 2);
+  const secondDenotation = parts[1].substr(2, 1);
+
+  return { firstPart, firstDenotation, secondPart, secondDenotation };
 }
 
 export function formatTimeInTimestamp(timestamp: number, short: boolean = true): string {

@@ -1,7 +1,7 @@
 import {
   compareDateIndices,
   convertDateToIndex,
-  convertSecondsToHoursAndMinutes, formatDurationInMs, msToHoursMinutesSeconds,
+  deconstructFormattedDuration, formatDurationInMs, msToHoursMinutesSeconds,
 } from '../../src/utilities';
 
 describe('time utilities', () => {
@@ -25,17 +25,6 @@ describe('time utilities', () => {
       expect(compareDateIndices(dateIdx1, dateIdx2)).toBeLessThan(0);
       expect(compareDateIndices(dateIdx1, dateIdx1)).toEqual(0);
       expect(compareDateIndices(dateIdx2, dateIdx1)).toBeGreaterThan(0);
-    });
-  });
-
-  describe('convertSecondsToHoursAndMinutes', () => {
-    it('converts seconds to hours and minutes', () => {
-      const seconds = 3600; // 1 hour.
-
-      const { hours, minutes } = convertSecondsToHoursAndMinutes(seconds);
-
-      expect(hours).toEqual(1);
-      expect(minutes).toEqual(0);
     });
   });
 
@@ -70,6 +59,42 @@ describe('time utilities', () => {
       const time = fiveMinutesInMs + fiveSecondsInMs;
 
       expect(formatDurationInMs(time)).toEqual('05m 05s');
+    });
+
+    describe('when roundLastValueUp is true', () => {
+      it('rounds up the last value', () => {
+        const time1 = fiveHoursInMs + fiveMinutesInMs + fiveSecondsInMs + 1;
+        const time2 = fiveMinutesInMs + fiveSecondsInMs + 1;
+
+        expect(formatDurationInMs(time1, true)).toEqual('05h 06m');
+        expect(formatDurationInMs(time2, true)).toEqual('05m 06s');
+      });
+
+      it('does not round up the last value when the last value is a whole number', () => {
+        const time1 = fiveHoursInMs + fiveMinutesInMs;
+        const time2 = fiveMinutesInMs + fiveSecondsInMs;
+
+        expect(formatDurationInMs(time1, true)).toEqual('05h 05m');
+        expect(formatDurationInMs(time2, true)).toEqual('05m 05s');
+      });
+    });
+  });
+
+  describe('deconstructFormattedDuration', () => {
+    const fiveSecondsInMs = 5 * 1000;
+    const fiveMinutesInMs = 5 * 60 * 1000;
+    const fiveHoursInMs = 5 * 60 * 60 * 1000;
+
+    it('returns all parts of a duration as an object', () => {
+      const time = fiveHoursInMs + fiveMinutesInMs + fiveSecondsInMs;
+      const duration = formatDurationInMs(time);
+
+      expect(deconstructFormattedDuration(duration)).toEqual({
+        firstPart: '05',
+        firstDenotation: 'h',
+        secondPart: '05',
+        secondDenotation: 'm',
+      });
     });
   });
 });

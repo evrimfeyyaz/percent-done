@@ -1,15 +1,15 @@
 import { createGoal, createStoreState, createTimetableEntry } from '../../../src/factories';
 import {
   convertGoalsToGoalListProps, getChainLength,
-  getCompletedSeconds,
+  getCompletedMs,
   getCompleteGoals, getGoalById,
   getGoals,
   getIncompleteGoals,
   getProgress,
-  getRemainingSecondsForDate, getTimetableEntriesForGoal,
-  getTotalCompletedSecondsForDate,
+  getTotalRemainingMsForDate, getTimetableEntriesForGoal,
+  getTotalCompletedMsForDate,
   getTotalProgressForDate,
-  isCompleted,
+  isCompleted, getRemainingMs,
 } from '../../../src/store/goals/selectors';
 import { GoalListProps } from '../../../src/components';
 import moment from 'moment';
@@ -108,8 +108,8 @@ describe('goals selectors', () => {
             id: goal.id,
             title: goal.title,
             color: goal.color,
-            totalSeconds: goal.durationInSeconds,
-            completedSeconds: 30 * 60,
+            totalMs: goal.durationInMs,
+            completedMs: 30 * 60 * 1000,
             chainLength: 1,
           },
         ],
@@ -137,8 +137,8 @@ describe('goals selectors', () => {
             id: goal.id,
             title: goal.title,
             color: goal.color,
-            totalSeconds: undefined,
-            completedSeconds: undefined,
+            totalMs: undefined,
+            completedMs: undefined,
             chainLength: 0,
             isCompleted: true,
           },
@@ -277,8 +277,8 @@ describe('goals selectors', () => {
     });
   });
 
-  describe('getCompletedSeconds', () => {
-    it('returns the number of seconds that have been spent given goal and date', () => {
+  describe('getCompletedMs', () => {
+    it('returns the number of milliseconds that have been spent given goal and date', () => {
       const goal = createGoal({ durationInMin: 60 }, [today]);
       const timetableEntry = createTimetableEntry({
         goalId: goal.id,
@@ -288,32 +288,32 @@ describe('goals selectors', () => {
       });
       const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry] });
 
-      const seconds = getCompletedSeconds(state, goal, today);
+      const ms = getCompletedMs(state, goal, today);
 
-      expect(seconds).toEqual(30 * 60);
+      expect(ms).toEqual(30 * 60 * 1000);
     });
 
     it('returns `0` when there are no timetable entries for a goal', () => {
       const goal = createGoal({}, [today]);
       const state = createStoreState({ goals: [goal] });
 
-      const seconds = getCompletedSeconds(state, goal, today);
+      const ms = getCompletedMs(state, goal, today);
 
-      expect(seconds).toEqual(0);
+      expect(ms).toEqual(0);
     });
 
     it('returns `0` when given goal is not time-tracked', () => {
       const goal = createGoal({ durationInMin: undefined }, [today]);
       const state = createStoreState({ goals: [goal] });
 
-      const seconds = getCompletedSeconds(state, goal, today);
+      const ms = getCompletedMs(state, goal, today);
 
-      expect(seconds).toEqual(0);
+      expect(ms).toEqual(0);
     });
   });
 
-  describe('getTotalCompletedSecondsForDate', () => {
-    it('returns number of seconds spent on all goals on given date', () => {
+  describe('getTotalCompletedMsForDate', () => {
+    it('returns number of milliseconds spent on all goals on given date', () => {
       const goal1 = createGoal({ durationInMin: 30 }, [today]);
       const goal2 = createGoal({ durationInMin: 60 }, [today]);
       const timetableEntry1 = createTimetableEntry({
@@ -330,14 +330,61 @@ describe('goals selectors', () => {
       });
       const state = createStoreState({ goals: [goal1, goal2], timetableEntries: [timetableEntry1, timetableEntry2] });
 
-      const seconds = getTotalCompletedSecondsForDate(state, today);
+      const ms = getTotalCompletedMsForDate(state, today);
 
-      expect(seconds).toEqual((30 + 15) * 60);
+      expect(ms).toEqual((30 + 15) * 60 * 1000);
     });
   });
 
-  describe('getRemainingSecondsForDate', () => {
-    it('returns the total number of seconds remaining for all goals on given day', () => {
+  describe('getRemainingMs', () => {
+    const goal = createGoal({ durationInMin: 60 }, [today]);
+    const timetableEntry1 = createTimetableEntry({
+      goalId: goal.id,
+      startDate: today,
+      startHour: 10,
+      durationInMin: 15,
+    });
+
+    it('returns the number of milliseconds remaining for a given goal', () => {
+      const timetableEntry2 = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 11,
+        durationInMin: 30,
+      });
+      const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry1, timetableEntry2] });
+
+      const ms = getRemainingMs(state, goal, today);
+
+      expect(ms).toEqual((60 - 30 - 15) * 60 * 1000);
+    });
+
+    it('returns a negative number when a goal is over its duration', () => {
+      const timetableEntry2 = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 11,
+        durationInMin: 60,
+      });
+      const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry1, timetableEntry2] });
+
+      const ms = getRemainingMs(state, goal, today);
+
+      expect(ms).toEqual((60 - 60 - 15) * 60 * 1000);
+    });
+
+    it('returns `0` when given goal is not time-tracked', () => {
+      const goal = createGoal({ durationInMin: undefined }, [today]);
+      const state = createStoreState({ goals: [goal] });
+
+      const ms = getRemainingMs(state, goal, today);
+
+      expect(ms).toEqual(0);
+    });
+  });
+
+  describe('getTotalRemainingMsForDate', () => {
+    it('returns the total number of milliseconds remaining for all goals on given day', () => {
       const goal1 = createGoal({ durationInMin: 30 }, [today]);
       const goal2 = createGoal({ durationInMin: 60 }, [today]);
       const timetableEntry = createTimetableEntry({
@@ -348,12 +395,12 @@ describe('goals selectors', () => {
       });
       const state = createStoreState({ goals: [goal1, goal2], timetableEntries: [timetableEntry] });
 
-      const seconds = getRemainingSecondsForDate(state, today);
+      const ms = getTotalRemainingMsForDate(state, today);
 
-      expect(seconds).toEqual((15 + 60) * 60);
+      expect(ms).toEqual((15 + 60) * 60 * 1000);
     });
 
-    it('returns `0` when completed seconds surpasses total seconds', () => {
+    it('returns `0` when completed milliseconds surpasses total milliseconds', () => {
       const goal = createGoal({ durationInMin: 30 }, [today]);
       const timetableEntry = createTimetableEntry({
         goalId: goal.id,
@@ -363,9 +410,9 @@ describe('goals selectors', () => {
       });
       const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry] });
 
-      const seconds = getRemainingSecondsForDate(state, today);
+      const ms = getTotalRemainingMsForDate(state, today);
 
-      expect(seconds).toEqual(0);
+      expect(ms).toEqual(0);
     });
   });
 

@@ -110,14 +110,14 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
 
     const { title, isTimeTracked, duration, recurringDays, reminder, reminderTime, color } = this.state;
 
-    const durationInSeconds = isTimeTracked ? duration.hours * 60 * 60 + duration.minutes * 60 : undefined;
+    const durationInMs = isTimeTracked ? duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000 : undefined;
     const id = createRandomId();
 
     const goal: Goal = {
       id,
       title,
       color,
-      durationInSeconds,
+      durationInMs,
       recurringDays,
       reminderTime: (reminder ? reminderTime : undefined),
     };

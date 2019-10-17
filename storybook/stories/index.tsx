@@ -20,7 +20,7 @@ import {
   TextInput,
   TimeInput,
   Timetable,
-  TimetableEntry,
+  TimetableRow,
   TabInfo,
   GoalList, DaysStats,
   HeaderButton,
@@ -66,8 +66,8 @@ storiesOf('Miscellaneous', module)
       title="Write"
       color={colors.yellow}
       chainLength={10}
-      completedSeconds={30}
-      totalSeconds={60}
+      completedMs={30}
+      totalMs={60}
     />
   ))
   .add('Goals list', () => {
@@ -77,8 +77,8 @@ storiesOf('Miscellaneous', module)
         title: 'Write',
         color: colors.white,
         chainLength: 10,
-        completedSeconds: 30 * 60,
-        totalSeconds: 60 * 60,
+        completedMs: 30 * 60,
+        totalMs: 60 * 60,
         key: 'goal1',
       },
       {
@@ -86,8 +86,8 @@ storiesOf('Miscellaneous', module)
         title: 'Write',
         color: colors.orange,
         chainLength: 20,
-        completedSeconds: 40 * 60,
-        totalSeconds: 120 * 60,
+        completedMs: 40 * 60,
+        totalMs: 120 * 60,
         key: 'goal2',
       },
       {
@@ -103,8 +103,8 @@ storiesOf('Miscellaneous', module)
     return <GoalList goals={goals} />;
   })
   .add('Time tracker', () => (
-    <TimeTracker title='Work on Awesome App' color='#3394FA' durationInSeconds={60 * 60} startTimestamp={Date.now()}
-                 initialRemainingSeconds={30 * 60} onStopPress={action('time-tracker-stop-pressed')} />
+    <TimeTracker title='Work on Awesome App' color='#3394FA' durationInMs={60 * 60} startTimestamp={Date.now()}
+                 initialRemainingMs={30 * 60} onStopPress={action('time-tracker-stop-pressed')} />
   ));
 
 storiesOf('Charts', module)
@@ -123,44 +123,45 @@ storiesOf('Charts', module)
     return <ProgressChart percentDone={percentDone} />;
   })
   .add('Timetable', () => {
-    const entries: TimetableEntry[] = [
+    const firstStart = new Date(2019, 0, 1, 10, 30).getTime();
+    const firstEnd = new Date(2019, 0, 1, 12, 0).getTime();
+    const secondStart = new Date(2019, 0, 1, 12, 30).getTime();
+    const secondEnd = new Date(2019, 0, 1, 12, 30).getTime();
+    const thirdStart = new Date(2019, 0, 1, 15, 12).getTime();
+    const thirdEnd = new Date(2019, 0, 1, 15, 37).getTime();
+    const fourthStart = new Date(2019, 0, 1, 19, 22).getTime();
+    const fourthEnd = new Date(2019, 0, 1, 20, 13).getTime();
+
+    const entries: TimetableRow[] = [
       {
         title: 'Research vacation spots',
         timeTracked: true,
-        startHour: 1,
-        startMinute: 25,
-        endHour: 2,
-        endMinute: 0,
+        startTimestamp: firstStart,
+        endTimestamp: firstEnd,
         color: '#19C403',
         id: '1',
       },
       {
         title: 'Clean up the kitchen',
         timeTracked: false,
-        startHour: 5,
-        startMinute: 30,
-        endHour: 5,
-        endMinute: 30,
+        startTimestamp: secondStart,
+        endTimestamp: secondEnd,
         color: '#3394FA',
         id: '2',
       },
       {
         title: 'Write',
         timeTracked: true,
-        startHour: 3,
-        startMinute: 12,
-        endHour: 4,
-        endMinute: 37,
+        startTimestamp: thirdStart,
+        endTimestamp: thirdEnd,
         color: '#DDD046',
         id: '3',
       },
       {
         title: 'Write',
         timeTracked: true,
-        startHour: 5,
-        startMinute: 30,
-        endHour: 7,
-        endMinute: 58,
+        startTimestamp: fourthStart,
+        endTimestamp: fourthEnd,
         color: '#DDD046',
         id: '4',
       },
@@ -246,10 +247,10 @@ storiesOf('Charts', module)
   })
   .add('Day\'s Stats', () => {
     const progress = 42;
-    const completedSeconds = 1 * 60 * 60;
-    const remainingSeconds = 30 * 60;
+    const completedMs = 1 * 60 * 60 * 1000;
+    const remainingMs = 30 * 60 * 10000;
 
-    return <DaysStats percentDone={progress} completedSeconds={completedSeconds} remainingSeconds={remainingSeconds} />;
+    return <DaysStats percentDone={progress} completedMs={completedMs} remainingMs={remainingMs} />;
   });
 
 storiesOf('Inputs', module)

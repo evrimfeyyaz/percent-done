@@ -5,7 +5,7 @@ export interface Goal {
   id: string;
   title: string;
   color: string;
-  durationInSeconds?: number;
+  durationInMs?: number;
   recurringDays: string[];
   reminderTime?: Date;
 }

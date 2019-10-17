@@ -1,4 +1,4 @@
-import { createRandomId } from '../utilities/createRandomId';
+import { createRandomId } from '../utilities';
 import { colors } from '../theme';
 import { Goal } from '../store/goals/types';
 
@@ -18,7 +18,7 @@ export const createGoal = ({
                              reminderTime = undefined,
                            }: CreateGoalParams, dates?: Date[]): Goal => {
   const recurringDays = Array(7).fill(false);
-  const durationInSeconds = durationInMin != null ? durationInMin * 60 : undefined;
+  const durationInMs = durationInMin != null ? durationInMin * 60 * 1000 : undefined;
 
   dates?.map(date => date.getDay()).forEach(dayOfWeek => recurringDays[dayOfWeek] = true);
 
@@ -26,7 +26,7 @@ export const createGoal = ({
     id,
     title,
     color,
-    durationInSeconds,
+    durationInMs,
     recurringDays,
     reminderTime,
   };

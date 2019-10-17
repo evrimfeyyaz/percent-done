@@ -5,14 +5,14 @@ import { formatDurationInMs, momentWithDeviceLocale } from '../../utilities';
 import { BottomSheetTimePicker, Button, ProgressChart } from '..';
 import { Icons } from '../../../assets';
 
-interface TimeTrackerProps {
+export interface TimeTrackerProps {
   title: string;
   color: string;
-  durationInSeconds: number;
+  durationInMs: number;
   /**
-   * Remaining seconds for the goal.
+   * Remaining milliseconds for the goal.
    */
-  initialRemainingSeconds: number;
+  initialRemainingMs: number;
   /**
    * Starting timestamp for the time tracker.
    */
@@ -22,8 +22,8 @@ interface TimeTrackerProps {
 }
 
 export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
-                                                                   title, color, durationInSeconds, startTimestamp,
-                                                                   initialRemainingSeconds, onStopPress, onStartTimestampChange,
+                                                                   title, color, durationInMs, startTimestamp,
+                                                                   initialRemainingMs, onStopPress, onStartTimestampChange,
                                                                  }) => {
   const bottomSheetTimePickerRef = useRef<BottomSheetTimePicker>(null);
 
@@ -55,21 +55,20 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
   const titleColorStyle = { color };
 
-  const secondsPassed = msPassed / 1000;
-  const completedSeconds = (durationInSeconds - initialRemainingSeconds) + secondsPassed;
-  const percentDone = completedSeconds / durationInSeconds * 100;
+  const completedMs = (durationInMs - initialRemainingMs) + msPassed;
+  const percentDone = completedMs / durationInMs * 100;
 
-  const remainingSeconds = durationInSeconds - initialRemainingSeconds - secondsPassed;
+  const remainingMs = initialRemainingMs - msPassed;
 
   const startedAt = momentWithDeviceLocale(startTimestamp).format('LT');
 
   return (
     <View style={styles.container}>
       <Text style={StyleSheet.flatten([styles.title, titleColorStyle])}>{title}</Text>
-      <Text style={styles.timePassed}>{formatDurationInMs(msPassed, 'regular')}</Text>
+      <Text style={styles.timePassed}>{formatDurationInMs(msPassed)}</Text>
       <ProgressChart percentDone={percentDone} />
       <Text style={styles.timeLeft}>
-        {formatDurationInMs(remainingSeconds * 1000, 'short')}&nbsp;
+        {formatDurationInMs(remainingMs, true)}&nbsp;
         <Text style={styles.timeLeftLabel}>left</Text>
       </Text>
       <Button iconSource={Icons.stop} title='Stop' style={styles.stopButton} onPress={handleStopPress} />
