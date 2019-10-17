@@ -1,14 +1,14 @@
 import React from 'react';
 import { createNavigator, TabRouter } from 'react-navigation';
 import { HeaderButton, TabNavigationView } from '../components';
-import { GoalsScreen, TimetableScreen } from '../screens';
+import { TodaysGoalsScreen, TodaysTimetableScreen } from '../screens';
 import { headerConfig } from './headerConfig';
 import { createStackNavigator } from 'react-navigation-stack';
 
 const router = TabRouter(
   {
-    Goals: GoalsScreen,
-    Timetable: TimetableScreen,
+    Goals: TodaysGoalsScreen,
+    Timetable: TodaysTimetableScreen,
   },
   {
     initialRouteName: 'Goals',

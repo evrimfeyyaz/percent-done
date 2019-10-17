@@ -3,7 +3,7 @@ import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 import { TodaysTimetable } from '../containers';
 import { ScrollView, StyleSheet } from 'react-native';
 
-export const TimetableScreen: NavigationMaterialTabScreenComponent = () => {
+export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = () => {
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} centerContent>
       <TodaysTimetable />

@@ -4,7 +4,7 @@ import { Section } from '../components';
 import { TodaysCompletedGoals, TodaysIncompleteGoals, TodaysStats } from '../containers';
 import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 
-export const GoalsScreen: NavigationMaterialTabScreenComponent = () => {
+export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = () => {
   return (
     <ScrollView>
       <Section title="Today's Stats">
