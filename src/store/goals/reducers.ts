@@ -7,6 +7,7 @@ import {
   REMOVE_TRACKED_GOAL,
   SET_TRACKED_GOAL,
   TrackedGoalState,
+  UPDATE_TRACKED_GOAL_START_TIMESTAMP,
 } from './types';
 import { NormalizedEntityById } from '../types';
 import _ from 'lodash';
@@ -40,6 +41,11 @@ const trackedGoal: Reducer<TrackedGoalState, GoalActionTypes> = (state = {}, act
       };
     case REMOVE_TRACKED_GOAL:
       return {};
+    case UPDATE_TRACKED_GOAL_START_TIMESTAMP:
+      return {
+        ...state,
+        startTimestamp: action.startTimestamp,
+      };
     default:
       return state;
   }
