@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
+import { LayoutAnimation, LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import {
   ColorInput,
   DaysOfWeekInput,
@@ -135,6 +135,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   };
 
   handleTimeTrackingChange = (timeTracking: boolean) => {
+    LayoutAnimation.easeInEaseOut();
     this.setState({ isTimeTracked: timeTracking });
   };
 
@@ -150,6 +151,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   };
 
   handleReminderChange = (reminder: boolean) => {
+    LayoutAnimation.easeInEaseOut();
     this.setState({ reminder });
   };
 
