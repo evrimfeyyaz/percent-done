@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   title: {
     color: colors.gray,

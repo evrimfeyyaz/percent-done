@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import Storybook from './storybook';
-import { YellowBox } from 'react-native';
+import { Platform, UIManager, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
@@ -10,6 +10,10 @@ YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
 YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
 YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 // export default Storybook;
 

@@ -1,18 +1,38 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { GoalRow, GoalRowProps } from './GoalRow';
 import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
-import { Animated, Image, LayoutChangeEvent, StyleSheet } from 'react-native';
+import {
+  Animated,
+  Image,
+  LayoutChangeEvent,
+  StyleSheet,
+  View,
+  Text,
+  UIManager,
+  Platform,
+  LayoutAnimation,
+} from 'react-native';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
-import { usePrevious } from '../../utilities';
-import _ from 'lodash';
 
 export interface GoalListProps {
   goals: (GoalRowProps)[];
+  /**
+   * Text to show then this list is empty.
+   */
+  emptyText?: string;
   onGoalRightSwipe?: (goalId: string) => void;
 }
 
-export const GoalList: FunctionComponent<GoalListProps> = ({ goals = [], onGoalRightSwipe }) => {
+export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = '', onGoalRightSwipe }) => {
+  if (goals.length === 0) {
+    return (
+      <View style={styles.emptyTextContainer}>
+        <Text style={styles.emptyText}>{emptyText}</Text>
+      </View>
+    );
+  }
+
   let isSwipeAnimationRunning = false;
 
   const leftItemSwipeValues: { [key: string]: Animated.Value } = {};
@@ -24,18 +44,15 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals = [], onGoalR
 
   const [listWidth, setListWidth] = useState(0);
 
-  const prevGoals = usePrevious(goals);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (goals == null || prevGoals == null) return;
+    if (!loaded) {
+      setLoaded(true);
+      return;
+    }
 
-    const newGoals = _.differenceBy<GoalRowProps, GoalRowProps>(goals, prevGoals, goal => goal.id);
-
-    newGoals.map(goal => goal.id).forEach((goalId) => {
-      goalVisibilityValues[goalId].setValue(0);
-
-      Animated.timing(goalVisibilityValues[goalId], { toValue: 1, duration: 300 }).start();
-    });
+    LayoutAnimation.easeInEaseOut();
   }, [goals]);
 
   const handleSwipeListViewLayout = (event: LayoutChangeEvent) => {
@@ -167,5 +184,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     maxWidth: 74,
+  },
+  emptyTextContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  emptyText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    color: colors.white,
+    textAlign: 'center',
+    opacity: .3,
   },
 });

@@ -12,6 +12,7 @@ const today = getBeginningOfDay(new Date());
 
 const mapStateToProps = (state: StoreState) => ({
   goals: convertGoalsToGoalListProps(state, getCompleteGoals(state, today), today).goals,
+  emptyText: 'Nothing completed yet,\nbetter get started.',
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>) => ({
