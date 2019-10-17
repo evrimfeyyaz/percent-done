@@ -227,6 +227,25 @@ describe('goals selectors', () => {
       expect(progress).toEqual(50);
     });
 
+    it('returns `100` for a goal that is over its duration', () => {
+      const goal = createGoal({ durationInMin: 60 });
+      const timetableEntry = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 100,
+      });
+
+      const state = createStoreState({
+        goals: [goal],
+        timetableEntries: [timetableEntry],
+      });
+
+      const progress = getProgress(state, goal, today);
+
+      expect(progress).toEqual(100);
+    });
+
     it('returns the current progress of a non-time-tracked goal', () => {
       const goal = createGoal({ durationInMin: undefined });
       const timetableEntry = createTimetableEntry({

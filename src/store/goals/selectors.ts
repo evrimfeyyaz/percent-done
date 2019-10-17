@@ -136,7 +136,7 @@ export const getProgress = (state: StoreState, goal: Goal, date: Date): number =
     progress = isCompleted(state, goal, date) ? 1 : 0;
   }
 
-  return progress * 100;
+  return Math.min(progress * 100, 100);
 };
 
 /**
