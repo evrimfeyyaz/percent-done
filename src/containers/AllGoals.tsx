@@ -13,6 +13,7 @@ const today = getBeginningOfDay(new Date());
 const mapStateToProps = (state: StoreState) => ({
   goals: convertGoalsToGoalListProps(state, getAllGoals(state), today).goals,
   emptyText: 'You haven\'t added any goals yet.',
+  disableRightSwipe: true,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>) => ({
