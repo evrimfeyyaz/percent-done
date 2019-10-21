@@ -10,6 +10,10 @@ export const getGoalById = (state: StoreState, id: string): Goal => {
   return state.goals.byId[id] || null;
 };
 
+export const getAllGoals = (state: StoreState): Goal[] => {
+  return state.goals.allIds.map(id => getGoalById(state, id));
+};
+
 /**
  * Returns the goals that the user has for a given date.
  */

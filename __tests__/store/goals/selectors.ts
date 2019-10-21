@@ -9,7 +9,7 @@ import {
   getTotalRemainingMsForDate, getTimetableEntriesForGoal,
   getTotalCompletedMsForDate,
   getTotalProgressForDate,
-  isCompleted, getRemainingMs,
+  isCompleted, getRemainingMs, getAllGoals,
 } from '../../../src/store/goals/selectors';
 import { GoalListProps } from '../../../src/components';
 import moment from 'moment';
@@ -36,6 +36,18 @@ describe('goals selectors', () => {
       const returnedGoal = getGoalById(state, goalId);
 
       expect(returnedGoal).toBeNull();
+    });
+  });
+
+  describe('getAllGoals', () => {
+    it('returns all goals', () => {
+      const goal1 = createGoal({});
+      const goal2 = createGoal({});
+      const state = createStoreState({ goals: [goal1, goal2] });
+
+      const result = getAllGoals(state);
+
+      expect(result).toEqual([goal1, goal2]);
     });
   });
 

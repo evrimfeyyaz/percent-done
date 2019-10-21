@@ -4,14 +4,14 @@ import { colors, fonts } from '../theme';
 import { Icons } from '../../assets';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { TodayTab } from './TodayTab';
-import { TomorrowTab } from './TomorrowTab';
+import { GoalsTab } from './GoalsTab';
 import { StatsTab } from './StatsTab';
 import { SettingsTab } from './SettingsTab';
 
 export const MainNavigator = createBottomTabNavigator(
   {
     Today: TodayTab,
-    Tomorrow: TomorrowTab,
+    Goals: GoalsTab,
     Stats: StatsTab,
     Settings: SettingsTab,
   },
@@ -48,8 +48,8 @@ function getTabIcon(routeName: string, focused: boolean) {
   switch (routeName) {
     case 'Today':
       return focused ? Icons.todayActive : Icons.todayInactive;
-    case 'Tomorrow':
-      return focused ? Icons.tomorrowActive : Icons.tomorrowInactive;
+    case 'Goals':
+      return focused ? Icons.goalsActive : Icons.goalsInactive;
     case 'Stats':
       return focused ? Icons.statsActive : Icons.statsInactive;
     case 'Settings':

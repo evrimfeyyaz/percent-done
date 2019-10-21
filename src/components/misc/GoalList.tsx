@@ -8,9 +8,7 @@ import {
   StyleSheet,
   View,
   Text,
-  UIManager,
-  Platform,
-  LayoutAnimation,
+  LayoutAnimation, TouchableWithoutFeedback,
 } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
@@ -22,9 +20,10 @@ export interface GoalListProps {
    */
   emptyText?: string;
   onGoalRightSwipe?: (goalId: string) => void;
+  onRightActionPress?: (goalId: string) => void;
 }
 
-export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = '', onGoalRightSwipe }) => {
+export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = '', onGoalRightSwipe, onRightActionPress }) => {
   if (goals.length === 0) {
     return (
       <View style={styles.emptyTextContainer}>
@@ -35,16 +34,25 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = 
 
   let isSwipeAnimationRunning = false;
 
-  const leftItemSwipeValues: { [key: string]: Animated.Value } = {};
+  const [listWidth, setListWidth] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [itemSwipeDirections, setItemSwipeDirections] = useState<{ [key: string]: 'left' | 'right' }>({});
+
+  const itemSwipeValues: { [key: string]: Animated.Value } = {};
   const goalVisibilityValues: { [key: string]: Animated.Value } = {};
   goals.forEach(goal => {
-    leftItemSwipeValues[goal.id] = new Animated.Value(0);
+    itemSwipeValues[goal.id] = new Animated.Value(0);
     goalVisibilityValues[goal.id] = new Animated.Value(1);
   });
 
-  const [listWidth, setListWidth] = useState(0);
+  useEffect(() => {
+    const swipeDirections: typeof itemSwipeDirections = {};
+    goals.forEach(goal => {
+      swipeDirections[goal.id] = 'left';
+    });
 
-  const [loaded, setLoaded] = useState(false);
+    setItemSwipeDirections(swipeDirections);
+  }, [goals]);
 
   useEffect(() => {
     if (!loaded) {
@@ -67,9 +75,15 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = 
   }) => {
     const { key, value } = data;
 
-    leftItemSwipeValues[key].setValue(Math.max(value, 0));
+    if (value > 0 && itemSwipeDirections[key] === 'left') {
+      setItemSwipeDirections({ ...itemSwipeDirections, [key]: 'right' });
+    } else if (value < 0 && itemSwipeDirections[key] === 'right') {
+      setItemSwipeDirections({ ...itemSwipeDirections, [key]: 'left' });
+    }
 
-    if (value > listWidth && !isSwipeAnimationRunning) {
+    itemSwipeValues[key].setValue(Math.abs(value));
+
+    if (value > listWidth && !isSwipeAnimationRunning && itemSwipeDirections[key] === 'right') {
       const goal = goals.find(goal => goal.id === key);
       if (goal != null && isGoalTracked(goal)) return;
 
@@ -85,7 +99,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = 
   const handleRowOpen = (key: string) => {
     const goal = goals.find(goal => goal.id === key);
 
-    if (goal != null && isGoalTracked(goal)) {
+    if (goal != null && isGoalTracked(goal) && itemSwipeDirections[key] === 'right') {
       onGoalRightSwipe?.(key);
     }
   };
@@ -95,30 +109,49 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = 
 
     if (goal != null && isGoalTracked(goal)) {
       goalVisibilityValues[key].setValue(1);
-      rowMap[key].closeRow();
+      if (itemSwipeDirections[key] === 'right') {
+        rowMap[key].closeRow();
+      }
     }
   };
 
-  const leftActionStyle = (goalId: string) => {
-    // @ts-ignore
-    return StyleSheet.flatten([
-      styles.leftAction, {
-        opacity: goalVisibilityValues[goalId],
-        width: leftItemSwipeValues[goalId],
-      },
-    ]);
+  const handleHiddenItemPress = (goalId: string) => {
+    if (itemSwipeDirections[goalId] === 'left') {
+      onRightActionPress?.(goalId);
+    }
   };
 
-  // @ts-ignore
-  const leftActionIconStyle = (goalId: string) => StyleSheet.flatten([styles.leftActionIconContainer, {
-    transform: [{
-      scale: leftItemSwipeValues[goalId].interpolate({
+  const actionStyle = (goalId: string) => {
+    return StyleSheet.flatten([
+      styles.action, {
+        right: itemSwipeDirections[goalId] === 'left' ? 0 : undefined,
+        backgroundColor: itemSwipeDirections[goalId] === 'left' ? colors.yellow : colors.blue,
+        opacity: goalVisibilityValues[goalId],
+        width: itemSwipeValues[goalId],
+      },
+    ] as any);
+  };
+
+  const actionIconStyle = (goalId: string) => StyleSheet.flatten([
+    styles.actionIconContainer, {
+      right: itemSwipeDirections[goalId] === 'left' ? itemSwipeValues[goalId].interpolate({
         inputRange: [30, 60],
-        outputRange: [0, 1],
+        outputRange: [0, 24],
         extrapolate: 'clamp',
-      }),
-    }],
-  }]);
+      }) : undefined,
+      left: itemSwipeDirections[goalId] === 'right' ? itemSwipeValues[goalId].interpolate({
+        inputRange: [30, 60],
+        outputRange: [0, 24],
+        extrapolate: 'clamp',
+      }) : undefined,
+      transform: [{
+        scale: itemSwipeValues[goalId].interpolate({
+          inputRange: [30, 60],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        }),
+      }],
+    }] as any);
 
   const goalStyle = (goalId: string) => ({
     opacity: goalVisibilityValues[goalId],
@@ -126,7 +159,11 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = 
 
   const isGoalTracked = (goal: GoalRowProps) => (goal.isCompleted == null);
 
-  const leftActionIcon = (goal: GoalRowProps) => {
+  const actionIcon = (goal: GoalRowProps) => {
+    if (itemSwipeDirections[goal.id] === 'left') {
+      return Icons.edit;
+    }
+
     if (isGoalTracked(goal)) {
       return Icons.stopwatch;
     }
@@ -143,24 +180,25 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = 
       data={goals}
       renderItem={(data: any) => <GoalRow {...data.item} style={goalStyle(data.item.id)} />}
       renderHiddenItem={(data: any) => (
-        <Animated.View
-          style={leftActionStyle(data.item.id)}>
-          <Animated.View style={leftActionIconStyle(data.item.id)}>
-            <Image source={leftActionIcon(data.item)} />
+        <TouchableWithoutFeedback onPress={() => handleHiddenItemPress(data.item.id)}>
+          <Animated.View
+            style={actionStyle(data.item.id)}>
+            <Animated.View style={actionIconStyle(data.item.id)}>
+              <Image source={actionIcon(data.item)} />
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
+        </TouchableWithoutFeedback>
       )}
       keyExtractor={item => item.id}
       onSwipeValueChange={handleSwipeValueChange}
       closeOnRowOpen={false}
-      closeOnRowBeginSwipe={false}
-      closeOnRowPress={false}
-      closeOnScroll={false}
-      disableLeftSwipe
+      closeOnRowBeginSwipe={true}
+      closeOnRowPress={true}
       onRowOpen={handleRowOpen}
       onRowDidOpen={handleRowDidOpen}
       onLayout={handleSwipeListViewLayout}
       leftOpenValue={listWidth}
+      rightOpenValue={-70}
       swipeToOpenPercent={30}
       swipeToOpenVelocityContribution={15}
     />
@@ -168,22 +206,15 @@ export const GoalList: FunctionComponent<GoalListProps> = ({ goals, emptyText = 
 };
 
 const styles = StyleSheet.create({
-  leftAction: {
+  action: {
     height: '100%',
     overflow: 'hidden',
-    backgroundColor: colors.blue,
     justifyContent: 'center',
+    position: 'absolute',
   },
-  leftActionText: {
-    fontFamily: fonts.semibold,
-    fontSize: 14,
-    color: colors.white,
-    marginStart: 12,
-  },
-  leftActionIconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  actionIconContainer: {
     maxWidth: 74,
+    position: 'absolute',
   },
   emptyTextContainer: {
     justifyContent: 'center',

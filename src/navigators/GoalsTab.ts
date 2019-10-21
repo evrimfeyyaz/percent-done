@@ -1,10 +1,10 @@
 import React from 'react';
-import { StatsScreen } from '../screens';
+import { GoalsScreen } from '../screens';
 import { createStackNavigator } from 'react-navigation-stack';
 import { headerConfig } from './headerConfig';
 
-export const StatsTab = createStackNavigator({
-  Stats: StatsScreen,
+export const GoalsTab = createStackNavigator({
+  Goals: GoalsScreen,
 }, {
   defaultNavigationOptions: { ...headerConfig },
 });

@@ -1,8 +1,9 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { Section } from '../components';
+import { HeaderButton, HeaderCancelButton, Section } from '../components';
 import { TodaysCompletedGoals, TodaysIncompleteGoals, TodaysStats } from '../containers';
 import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
+import { AddGoalScreen } from './AddGoalScreen';
 
 export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = () => {
   return (
@@ -20,4 +21,8 @@ export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = () => {
       </Section>
     </ScrollView>
   );
+};
+
+TodaysGoalsScreen.navigationOptions = {
+  title: 'Goals',
 };
