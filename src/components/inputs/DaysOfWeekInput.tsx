@@ -8,33 +8,29 @@ import {
   LayoutChangeEvent,
 } from 'react-native';
 import { colors, fonts } from '../../theme';
+import _ from 'lodash';
 
 interface DaysOfWeekInputProps {
   title: string;
-  selectedDays: string[];
-  onDaysChange?: (days: string[]) => void;
+  selectedDays: boolean[];
+  onDaysChange?: (days: boolean[]) => void;
   error?: string;
   onLayout?: (event: LayoutChangeEvent) => void;
 }
 
+const dayInitials = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
 export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title, selectedDays, onDaysChange, onLayout, error }) => {
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  const handleDayChange = (changedDay: string) => {
-    let newSelectedDays = [...selectedDays];
-
-    if (selectedDays.includes(changedDay)) {
-      newSelectedDays = newSelectedDays.filter(day => day !== changedDay);
-    } else {
-      newSelectedDays.push(changedDay);
-    }
+  const handleDayChange = (changedDay: number) => {
+    const newSelectedDays = _.clone(selectedDays);
+    newSelectedDays[changedDay] = !newSelectedDays[changedDay];
 
     onDaysChange?.(newSelectedDays);
   };
 
-  const dayButton = (day: string) => {
+  const dayButton = (day: number) => {
     const selectedStyle = { opacity: 1 };
-    const isSelected = selectedDays.includes(day);
+    const isSelected = selectedDays[day];
     const dayButtonStyle = isSelected
       ? StyleSheet.flatten([styles.dayButton, selectedStyle])
       : styles.dayButton;
@@ -45,14 +41,16 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
         onPress={() => handleDayChange(day)}
       >
         <View style={dayButtonStyle}>
-          <Text style={styles.dayButtonTitle}>{day.toString().charAt(0)}</Text>
+          <Text style={styles.dayButtonTitle}>{dayInitials[day]}</Text>
         </View>
       </TouchableWithoutFeedback>
     );
   };
 
   const dayButtons: Element[] = [];
-  days.forEach((day: string) => dayButtons.push(dayButton(day)));
+  for (let day = 0; day < 7; day++) {
+    dayButtons.push(dayButton(day));
+  }
 
   return (
     <InputContainer

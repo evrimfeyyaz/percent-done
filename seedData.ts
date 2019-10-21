@@ -2,8 +2,10 @@ import { Goal } from './src/store/goals/types';
 import { createGoal, createStoreState, createTimetableEntry } from './src/factories';
 import { colors } from './src/theme';
 import { TimetableEntry } from './src/store/timetableEntries/types';
+import moment from 'moment';
 
 const today = new Date();
+const tomorrow = moment(today).add(1, 'day').toDate();
 const incompleteGoal: Goal = createGoal({
   title: 'Work on PercentDone',
   durationInMin: 60,
@@ -19,6 +21,11 @@ const completedGoal: Goal = createGoal({
   durationInMin: undefined,
   color: colors.blue,
 }, [today]);
+const tomorrowsGoal: Goal = createGoal({
+  title: 'Write an essay',
+  durationInMin: 60,
+  color: colors.violet,
+}, [tomorrow]);
 const timetableEntry: TimetableEntry = createTimetableEntry({
   goalId: incompleteGoal.id,
   startHour: 10,
@@ -33,7 +40,7 @@ const timetableEntry2: TimetableEntry = createTimetableEntry({
 });
 
 const seedData = createStoreState({
-  goals: [incompleteGoal, incompleteGoal2, completedGoal],
+  goals: [incompleteGoal, incompleteGoal2, completedGoal, tomorrowsGoal],
   timetableEntries: [timetableEntry, timetableEntry2],
 });
 

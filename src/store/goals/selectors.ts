@@ -4,7 +4,7 @@ import { GoalListProps } from '../../components';
 import { convertDateToIndex } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import moment from 'moment';
-import { isTimeTracked } from './utilities';
+import { isActiveToday, isTimeTracked } from './utilities';
 
 export const getGoalById = (state: StoreState, id: string): Goal => {
   return state.goals.byId[id] || null;
@@ -39,6 +39,7 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
   const convertedGoals = goals.map(goal => {
     const { title, color, id } = goal;
     const chainLength = getChainLength(state, goal, date);
+    const activeToday = isActiveToday(goal);
 
     let completedMs, totalMs, completed;
     if (goal.durationInMs != null) {
@@ -55,6 +56,7 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
       chainLength,
       completedMs,
       totalMs,
+      isActiveToday: activeToday,
       isCompleted: completed,
     };
   });

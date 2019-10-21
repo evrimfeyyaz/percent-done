@@ -6,7 +6,10 @@ export interface Goal {
   title: string;
   color: string;
   durationInMs?: number;
-  recurringDays: string[];
+  /**
+   *
+   */
+  recurringDays: boolean[];
   reminderTime?: Date;
 }
 

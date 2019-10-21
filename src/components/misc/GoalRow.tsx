@@ -10,6 +10,7 @@ import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
 import { formatDurationInMs, leftOrOver, pluralize } from '../../utilities';
+import { isActiveToday } from '../../store/goals/utilities';
 
 export interface GoalRowProps {
   /**
@@ -31,6 +32,10 @@ export interface GoalRowProps {
    * For non-time-tracked goals. Should be `undefined` for time-tracked goals.
    */
   isCompleted?: boolean;
+  /**
+   * Whether or not today is included among the recurring days of the goal.
+   */
+  isActiveToday: boolean;
   style?: ViewStyle;
 }
 
@@ -44,6 +49,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
                                                            chainLength = null,
                                                            totalMs = null,
                                                            completedMs = null,
+                                                           isActiveToday,
                                                            isCompleted = false,
                                                            style,
                                                          }) => {
@@ -95,7 +101,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
         <Text style={nameStyle}>{title}</Text>
         {chainInfo}
       </View>
-      {durationInfo}
+      {isActiveToday && durationInfo}
     </Animated.View>
   );
 };

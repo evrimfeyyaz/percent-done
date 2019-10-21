@@ -14,14 +14,12 @@ import { Goal } from '../../store/goals/types';
 import { createRandomId } from '../../utilities';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const allDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
 interface GoalFormState {
   title: string;
   color: string;
   isTimeTracked: boolean;
   duration: { hours: number, minutes: number };
-  recurringDays: string[];
+  recurringDays: boolean[];
   reminder: boolean;
   reminderTime: Date;
   /**
@@ -54,7 +52,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       title: '',
       isTimeTracked: false,
       duration: { hours: 1, minutes: 0 },
-      recurringDays: allDays,
+      recurringDays: new Array(7).fill(true),
       reminder: false,
       reminderTime: new Date(),
       color: goalColors[0],
@@ -143,7 +141,8 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     this.setState({ duration: { hours, minutes } });
   };
 
-  handleRecurringDaysChange = (recurringDays: string[]) => {
+  handleRecurringDaysChange = (recurringDays: boolean[]) => {
+    console.log(recurringDays);
     this.setState({
       recurringDays,
       recurringDaysInputError: undefined,
