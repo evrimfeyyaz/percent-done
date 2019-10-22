@@ -24,11 +24,16 @@ export interface GoalsState extends NormalizedEntityState<Goal> {
 
 
 export const ADD_GOAL = 'ADD_GOAL';
+export const EDIT_GOAL = 'EDIT_GOAL';
 export const SET_TRACKED_GOAL = 'SET_TRACKED_GOAL';
 export const REMOVE_TRACKED_GOAL = 'REMOVE_TRACKED_GOAL';
 export const UPDATE_TRACKED_GOAL_START_TIMESTAMP = 'UPDATE_TRACKED_GOAL_START_TIMESTAMP';
 
 export interface AddGoalAction extends Action<typeof ADD_GOAL> {
+  goal: Goal;
+}
+
+export interface EditGoalAction extends Action<typeof EDIT_GOAL> {
   goal: Goal;
 }
 
@@ -46,6 +51,7 @@ export interface UpdateTrackedGoalStartTimestampAction extends Action<typeof UPD
 
 export type GoalActionTypes =
   AddGoalAction |
+  EditGoalAction |
   SetTrackedGoalAction |
   RemoveTrackedGoalAction |
   UpdateTrackedGoalStartTimestampAction;

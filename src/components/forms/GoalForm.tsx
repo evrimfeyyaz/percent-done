@@ -39,7 +39,8 @@ interface GoalFormState {
 }
 
 export interface GoalFormProps {
-  onSubmit: (goal: Goal) => void;
+  onSubmit?: (goal: Goal) => void;
+  goal?: Goal;
 }
 
 export class GoalForm extends Component<GoalFormProps, GoalFormState> {
@@ -49,13 +50,13 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     super(props);
 
     this.state = {
-      title: '',
+      title: props.goal?.title || '',
       isTimeTracked: false,
       duration: { hours: 1, minutes: 0 },
       recurringDays: new Array(7).fill(true),
-      reminder: false,
-      reminderTime: new Date(),
-      color: goalColors[0],
+      reminder: props.goal?.reminderTime != null || false,
+      reminderTime: props.goal?.reminderTime || new Date(),
+      color: props.goal?.color || goalColors[0],
     };
     this.scrollViewRef = createRef<KeyboardAwareScrollView>();
   }
@@ -73,7 +74,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       validates = false;
     }
 
-    if (recurringDays.length === 0) {
+    if (recurringDays.indexOf(true) === -1) {
       recurringDaysInputError = 'You should select at least one day.';
       if (recurringDaysInputPosition != null) failedInputPositions.push(recurringDaysInputPosition);
       validates = false;
@@ -106,10 +107,19 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       return false;
     }
 
-    const { title, isTimeTracked, duration, recurringDays, reminder, reminderTime, color } = this.state;
+    let { title, isTimeTracked, duration, recurringDays, reminder, reminderTime, color } = this.state;
+    let durationInMs: number | undefined;
+    let id: string;
 
-    const durationInMs = isTimeTracked ? duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000 : undefined;
-    const id = createRandomId();
+    if (this.isAddNewForm()) {
+      durationInMs = isTimeTracked ? duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000 : undefined;
+      id = createRandomId();
+    } else {
+      if (this.props.goal == null) throw Error('Goal cannot be null on the edit form.');
+
+      id = this.props.goal.id;
+      durationInMs = this.props.goal.durationInMs;
+    }
 
     const goal: Goal = {
       id,
@@ -120,7 +130,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       reminderTime: (reminder ? reminderTime : undefined),
     };
 
-    this.props.onSubmit(goal);
+    this.props.onSubmit?.(goal);
 
     return true;
   }
@@ -174,6 +184,14 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     });
   };
 
+  /**
+   * Returns `true` when this form is an "add new goal" form, and `false`
+   * when it is an "edit goal' form.
+   */
+  isAddNewForm = () => {
+    return this.props.goal == null;
+  };
+
   render() {
     const {
       title, isTimeTracked, duration, recurringDays,
@@ -187,16 +205,20 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
         <View style={styles.topInputGroup}>
           <TextInput placeholder='What is your goal?' onChangeText={this.handleTitleChange} value={title}
                      onLayout={this.handleTitleInputLayout} error={titleInputError} />
-          <DaysOfWeekInput title='Repeat on following days' selectedDays={recurringDays}
-                           onLayout={this.handleRecurringDaysInputLayout}
-                           error={recurringDaysInputError}
-                           onDaysChange={this.handleRecurringDaysChange} />
+          {this.isAddNewForm() && (
+            <DaysOfWeekInput title='Repeat on following days' selectedDays={recurringDays}
+                             onLayout={this.handleRecurringDaysInputLayout}
+                             error={recurringDaysInputError}
+                             onDaysChange={this.handleRecurringDaysChange} />
+          )}
         </View>
 
-        <Section title='Time Tracking' bottomSeparator={false} contentStyle={styles.sectionContent}>
-          <SwitchInput title='Track your time?' value={isTimeTracked} onValueChange={this.handleTimeTrackingChange} />
-          {isTimeTracked && <DurationInput duration={duration} onDurationChange={this.handleDurationChange} />}
-        </Section>
+        {this.isAddNewForm() && (
+          <Section title='Time Tracking' bottomSeparator={false} contentStyle={styles.sectionContent}>
+            <SwitchInput title='Track your time?' value={isTimeTracked} onValueChange={this.handleTimeTrackingChange} />
+            {isTimeTracked && <DurationInput duration={duration} onDurationChange={this.handleDurationChange} />}
+          </Section>
+        )}
 
         <Section title='Reminder' bottomSeparator={false} contentStyle={styles.sectionContent}>
           <SwitchInput title='Set a reminder?' value={reminder} onValueChange={this.handleReminderChange} />

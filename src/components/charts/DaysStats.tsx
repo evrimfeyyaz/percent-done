@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { textStyles } from '../../theme';
 import { deconstructFormattedDuration, formatDurationInMs } from '../../utilities';
 
-interface DaysStatsProps {
+export interface DaysStatsProps {
   percentDone: number;
   completedMs: number;
   remainingMs: number;

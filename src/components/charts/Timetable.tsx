@@ -13,9 +13,9 @@ export interface TimetableRow {
   id: string;
 }
 
-interface TimetableProps {
+export interface TimetableProps {
   entries: TimetableRow[];
-  onEntryPress: (id: string) => void;
+  onEntryPress?: (id: string) => void;
 }
 
 export const Timetable: FunctionComponent<TimetableProps> = ({

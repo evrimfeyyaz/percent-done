@@ -5,3 +5,4 @@ export * from './TodaysGoalsScreen';
 export * from './TodaysTimetableScreen';
 export * from './AddGoalScreen';
 export * from './TrackGoalScreen';
+export * from './EditGoalScreen';

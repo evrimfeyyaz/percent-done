@@ -3,11 +3,11 @@ import { StoreState } from '../store/types';
 import { convertTimetableEntriesToTimetableRows, getTimetableEntries } from '../store/timetableEntries/selectors';
 import { getBeginningOfDay } from '../utilities';
 import { connect } from 'react-redux';
-import { Timetable } from '../components';
+import { Timetable, TimetableProps } from '../components';
 
 const today = getBeginningOfDay(new Date());
 
-const mapStateToProps = (state: StoreState) => ({
+const mapStateToProps = (state: StoreState): TimetableProps => ({
   entries: convertTimetableEntriesToTimetableRows(state, getTimetableEntries(state, today)),
 });
 

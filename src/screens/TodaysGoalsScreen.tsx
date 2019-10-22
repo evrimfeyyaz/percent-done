@@ -1,11 +1,14 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { HeaderButton, HeaderCancelButton, Section } from '../components';
+import { Section } from '../components';
 import { TodaysCompletedGoals, TodaysIncompleteGoals, TodaysStats } from '../containers';
 import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
-import { AddGoalScreen } from './AddGoalScreen';
 
-export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = () => {
+export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
+  const handleRightActionPress = (goalId: string) => {
+    navigation.navigate('EditGoal', { goalId });
+  };
+
   return (
     <ScrollView>
       <Section title="Today's Stats">
@@ -13,11 +16,11 @@ export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = () => {
       </Section>
 
       <Section title='Incomplete Goals'>
-        <TodaysIncompleteGoals />
+        <TodaysIncompleteGoals onRightActionPress={handleRightActionPress} />
       </Section>
 
       <Section title='Completed Goals'>
-        <TodaysCompletedGoals />
+        <TodaysCompletedGoals onRightActionPress={handleRightActionPress} />
       </Section>
     </ScrollView>
   );

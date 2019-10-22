@@ -120,9 +120,10 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       }
     };
 
-    const handleHiddenItemPress = (goalId: string) => {
+    const handleHiddenItemPress = (goalId: string, rowMap: RowMap<GoalRowProps>) => {
       if (itemSwipeDirections[goalId] === 'left') {
         onRightActionPress?.(goalId);
+        rowMap[goalId].closeRow();
       }
     };
 
@@ -184,8 +185,8 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       <SwipeListView
         data={goals}
         renderItem={(data: any) => <GoalRow {...data.item} style={goalStyle(data.item.id)} />}
-        renderHiddenItem={(data: any) => (
-          <TouchableWithoutFeedback onPress={() => handleHiddenItemPress(data.item.id)}>
+        renderHiddenItem={(data: any, rowMap) => (
+          <TouchableWithoutFeedback onPress={() => handleHiddenItemPress(data.item.id, rowMap)}>
             <Animated.View
               style={actionStyle(data.item.id)}>
               <Animated.View style={actionIconStyle(data.item.id)}>

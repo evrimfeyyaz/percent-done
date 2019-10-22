@@ -6,6 +6,7 @@ interface DurationInputProps {
   onDurationChange?: (hours: number, minutes: number) => void;
 }
 
+// TODO: Convert the duration to durationInMs.
 export const DurationInput: FunctionComponent<DurationInputProps> = ({ duration, onDurationChange }) => {
   const bottomSheetDurationPickerRef = useRef<BottomSheetDurationPicker>(null);
 
