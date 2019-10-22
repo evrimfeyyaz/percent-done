@@ -68,6 +68,7 @@ storiesOf('Miscellaneous', module)
       chainLength={10}
       completedMs={30}
       totalMs={60}
+      isActiveToday={true}
     />
   ))
   .add('Goals list', () => {
@@ -80,6 +81,7 @@ storiesOf('Miscellaneous', module)
         completedMs: 30 * 60,
         totalMs: 60 * 60,
         key: 'goal1',
+        isActiveToday: true
       },
       {
         id: 'goal2',
@@ -89,6 +91,7 @@ storiesOf('Miscellaneous', module)
         completedMs: 40 * 60,
         totalMs: 120 * 60,
         key: 'goal2',
+        isActiveToday: true
       },
       {
         id: 'goal3',
@@ -97,6 +100,7 @@ storiesOf('Miscellaneous', module)
         chainLength: 0,
         isCompleted: true,
         key: 'goal3',
+        isActiveToday: true
       },
     ];
 
@@ -294,7 +298,7 @@ storiesOf('Inputs', module)
   .add('Days of week input', () => (
     <DaysOfWeekInput
       title='Days of week'
-      selectedDays={array('Selected days', ['Sunday', 'Monday'])}
+      selectedDays={array('Selected days', [true, true, true, true, true, true, true])}
       onDaysChange={action('day-changed')}
     />
   ))

@@ -161,6 +161,7 @@ describe('goals selectors', () => {
             totalMs: goal.durationInMs,
             completedMs: 30 * 60 * 1000,
             chainLength: 2,
+            isActiveToday: true,
           },
         ],
       };
@@ -191,6 +192,7 @@ describe('goals selectors', () => {
             completedMs: undefined,
             chainLength: 1,
             isCompleted: true,
+            isActiveToday: true,
           },
         ],
       };
