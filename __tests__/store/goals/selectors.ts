@@ -1,15 +1,20 @@
 import { createGoal, createStoreState, createTimetableEntry } from '../../../src/factories';
 import {
-  convertGoalsToGoalListProps, getChainLength,
+  convertGoalsToGoalListProps,
+  getAllGoals,
+  getChainLength,
   getCompletedMs,
-  getCompleteGoals, getGoalById,
+  getCompleteGoals,
+  getGoalById,
   getGoals,
   getIncompleteGoals,
   getProgress,
-  getTotalRemainingMsForDate, getTimetableEntriesForGoal,
+  getRemainingMs,
+  getTimetableEntriesForGoal,
   getTotalCompletedMsForDate,
   getTotalProgressForDate,
-  isCompleted, getRemainingMs, getAllGoals,
+  getTotalRemainingMsForDate,
+  isCompleted,
 } from '../../../src/store/goals/selectors';
 import { GoalListProps } from '../../../src/components';
 import moment from 'moment';
@@ -49,20 +54,53 @@ describe('goals selectors', () => {
 
       expect(result).toEqual([goal1, goal2]);
     });
+
+    it('does not return deleted goals', () => {
+      const goal = createGoal({});
+      const deletedGoal = createGoal({ deletedAt: new Date() });
+      const state = createStoreState({ goals: [goal, deletedGoal] });
+
+      const result = getAllGoals(state);
+
+      expect(result).toEqual([goal]);
+    });
   });
 
   describe('getGoals', () => {
+    const tomorrow = moment(today).add(1, 'day').toDate();
+    let goal: Goal;
+
+    beforeEach(() => {
+      goal = createGoal({}, [today]);
+    });
+
     it('returns all goals that should be completed for given date', () => {
-      const tomorrow = moment(today).add(1, 'day').toDate();
-
-      const goalForToday = createGoal({}, [today]);
       const goalForTomorrow = createGoal({}, [tomorrow]);
-      const state = createStoreState({ goals: [goalForToday, goalForTomorrow] });
 
-      const goalsForToday = getGoals(state, today);
+      const state = createStoreState({ goals: [goal, goalForTomorrow] });
 
-      expect(goalsForToday).toContain(goalForToday);
-      expect(goalsForToday).not.toContain(goalForTomorrow);
+      const result = getGoals(state, today);
+
+      expect(result).toContain(goal);
+      expect(result).not.toContain(goalForTomorrow);
+    });
+
+    it('does not return deleted goals if they were deleted before given date', () => {
+      goal.deletedAt = moment(today).subtract(1, 'day').toDate();
+      const state = createStoreState({ goals: [goal] });
+
+      const result = getGoals(state, today);
+
+      expect(result).toEqual([]);
+    });
+
+    it('returns deleted goals if they were deleted after given date', () => {
+      goal.deletedAt = tomorrow;
+      const state = createStoreState({ goals: [goal] });
+
+      const result = getGoals(state, today);
+
+      expect(result).toEqual([goal]);
     });
   });
 

@@ -4,14 +4,14 @@ import { GoalListProps } from '../../components';
 import { convertDateToIndex } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import moment from 'moment';
-import { isActiveToday, isTimeTracked } from './utilities';
+import { isActiveToday, isDeleted, isTimeTracked } from './utilities';
 
 export const getGoalById = (state: StoreState, id: string): Goal => {
   return state.goals.byId[id] || null;
 };
 
 export const getAllGoals = (state: StoreState): Goal[] => {
-  return state.goals.allIds.map(id => getGoalById(state, id));
+  return state.goals.allIds.map(id => getGoalById(state, id)).filter(goal => goal.deletedAt == null);
 };
 
 /**
@@ -23,7 +23,7 @@ export const getGoals = (state: StoreState, date: Date): Goal[] => {
 
   const goalsArr = goals.allIds.map(id => goals.byId[id]);
 
-  return goalsArr.filter(goal => goal.recurringDays[dayOfWeek]);
+  return goalsArr.filter(goal => !isDeleted(goal, date) && goal.recurringDays[dayOfWeek]);
 };
 
 export const getIncompleteGoals = (state: StoreState, date: Date): Goal[] =>

@@ -28,7 +28,7 @@ export const EditGoalScreen: NavigationStackScreenComponent = ({ navigation }) =
     <BackgroundView style={styles.container}>
       {/*
       // @ts-ignore */}
-      <EditGoalForm ref={formRef} goalId={navigation.getParam('goalId')} />
+      <EditGoalForm ref={formRef} goalId={navigation.getParam('goalId')} onDelete={() => navigation.goBack(null)} />
     </BackgroundView>
   );
 };

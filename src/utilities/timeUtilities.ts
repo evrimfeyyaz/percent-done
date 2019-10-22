@@ -40,7 +40,7 @@ export function isLocale24Hours() {
 
 export function momentWithDeviceLocale(inp?: moment.MomentInput, format?: moment.MomentFormatSpecification, strict?: boolean) {
   let deviceLocale = Platform.OS === 'ios'
-    ? NativeModules.SettingsManager.settings.AppleLocale
+    ? (NativeModules.SettingsManager?.settings.AppleLocale)
     : NativeModules.I18nManager.localeIdentifier;
   deviceLocale = deviceLocale || 'en-US';
 

@@ -1,6 +1,8 @@
 import { combineReducers, Reducer } from 'redux';
 import {
-  ADD_GOAL, EDIT_GOAL,
+  ADD_GOAL,
+  DELETE_GOAL,
+  EDIT_GOAL,
   Goal,
   GoalActionTypes,
   GoalsState,
@@ -15,10 +17,22 @@ import _ from 'lodash';
 const byId: Reducer<NormalizedEntityById<Goal>, GoalActionTypes> = (state = {}, action) => {
   switch (action.type) {
     case ADD_GOAL:
-    case EDIT_GOAL:
+    case EDIT_GOAL: {
       const goal = action.goal;
 
       return { ...state, [goal.id]: goal };
+    }
+    case DELETE_GOAL: {
+      const goal = state[action.goalId];
+
+      return {
+        ...state,
+        [goal.id]: {
+          ...goal,
+          deletedAt: new Date(),
+        },
+      };
+    }
     default:
       return state;
   }
