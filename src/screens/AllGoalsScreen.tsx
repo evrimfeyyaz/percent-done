@@ -4,7 +4,7 @@ import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { AllGoals } from '../containers/AllGoals';
 import { StyleSheet } from 'react-native';
 
-export const GoalsScreen: NavigationStackScreenComponent = ({ navigation }) => {
+export const AllGoalsScreen: NavigationStackScreenComponent = ({ navigation }) => {
   const handleRightActionPress = (goalId: string) => {
     navigation.navigate('EditGoal', { goalId });
   };
@@ -23,6 +23,6 @@ const styles = StyleSheet.create({
   },
 });
 
-GoalsScreen.navigationOptions = {
-  title: 'Goals',
+AllGoalsScreen.navigationOptions = {
+  title: 'All Goals',
 };

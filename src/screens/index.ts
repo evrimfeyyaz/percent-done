@@ -1,5 +1,5 @@
 export * from './SettingsScreen';
-export * from './GoalsScreen';
+export * from './AllGoalsScreen';
 export * from './StatsScreen';
 export * from './TodaysGoalsScreen';
 export * from './TodaysTimetableScreen';
