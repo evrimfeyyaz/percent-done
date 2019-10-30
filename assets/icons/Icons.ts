@@ -19,8 +19,7 @@ export const Icons = {
 
   chevronRight: require('./chevron-right.png'),
 
-  oneTimeGoal: require('./one-time-goal.png'),
-
   link: require('./link.png'),
   stop: require('./stop.png'),
+  addEntry: require('./add-entry.png'),
 };

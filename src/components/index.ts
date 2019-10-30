@@ -9,7 +9,6 @@ export * from './misc/TimeTracker';
 // Charts
 export * from './charts/ProgressChart';
 export * from './charts/Timetable';
-export * from './charts/Achievement';
 export * from './charts/StatChart';
 export * from './charts/DaysStats';
 export * from './charts/AnimatedProgressCircle';
@@ -30,6 +29,7 @@ export * from './inputs/DurationInput';
 export * from './inputs/InputContainer';
 export * from './inputs/BottomSheetTimePicker';
 export * from './inputs/BottomSheetDurationPicker';
+export * from './inputs/DatePicker';
 
 // Navigation
 export * from './navigation/TabItem';
@@ -40,3 +40,4 @@ export * from './navigation/HeaderCancelButton';
 
 // Forms
 export * from './forms/GoalForm';
+export * from './forms/TimetableEntryForm';

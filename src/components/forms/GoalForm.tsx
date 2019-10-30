@@ -244,7 +244,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
 
         <Section title='Reminder' bottomSeparator={false} contentStyle={styles.sectionContent}>
           <SwitchInput title='Set a reminder?' value={reminder} onValueChange={this.handleReminderChange} />
-          {reminder && <TimeInput time={reminderTime} onTimeChange={this.handleReminderTimeChange} />}
+          {reminder && <TimeInput title='Time' time={reminderTime} onTimeChange={this.handleReminderTimeChange} />}
         </Section>
 
         <Section title='Color' bottomSeparator={false} contentStyle={styles.sectionContent}>

@@ -3,6 +3,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { formatDurationInMs, formatTimeInTimestamp } from '../../utilities';
 import Svg, { Line } from 'react-native-svg';
+import { Button } from '..';
+import { Icons } from '../../../assets';
 
 export interface TimetableRow {
   title: string;
@@ -113,6 +115,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
 
   return (
     <View style={styles.container}>
+      <Button title='Add Entry' iconSource={Icons.addEntry} style={styles.addEntryButton} />
       {makeTimetable(entriesSortedByStartingTime)}
     </View>
   );
@@ -122,6 +125,10 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     alignItems: 'center',
+  },
+  addEntryButton: {
+    marginBottom: 24,
+    minWidth: '50%',
   },
   entry: {
     display: 'flex',

@@ -4,7 +4,6 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
 import {
-  Achievement,
   Button,
   ColorInput,
   DaysOfWeekInput,
@@ -24,11 +23,10 @@ import {
   TabInfo,
   GoalList, DaysStats,
   HeaderButton,
-  TimePicker, DurationPicker, DurationInput, GoalForm, InputContainer, TimeTracker,
+  TimePicker, DurationPicker, DurationInput, GoalForm, InputContainer, TimeTracker, TimetableEntryForm, DatePicker,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
-  array,
   boolean,
   date as dateKnob,
   number,
@@ -81,7 +79,7 @@ storiesOf('Miscellaneous', module)
         completedMs: 30 * 60,
         totalMs: 60 * 60,
         key: 'goal1',
-        isActiveToday: true
+        isActiveToday: true,
       },
       {
         id: 'goal2',
@@ -91,7 +89,7 @@ storiesOf('Miscellaneous', module)
         completedMs: 40 * 60,
         totalMs: 120 * 60,
         key: 'goal2',
-        isActiveToday: true
+        isActiveToday: true,
       },
       {
         id: 'goal3',
@@ -100,7 +98,7 @@ storiesOf('Miscellaneous', module)
         chainLength: 0,
         isCompleted: true,
         key: 'goal3',
-        isActiveToday: true
+        isActiveToday: true,
       },
     ];
 
@@ -178,19 +176,6 @@ storiesOf('Charts', module)
       />
     );
   })
-  .add('Achievement', () => (
-    <Achievement
-      title="Added a one‑time goal"
-      iconSource={require('../../assets/icons/one-time-goal.png')}
-    />
-  ))
-  .add('Achievement (done)', () => (
-    <Achievement
-      title="Added a one‑time goal"
-      iconSource={require('../../assets/icons/one-time-goal.png')}
-      done
-    />
-  ))
   .add('Weekly percent done chart', () => {
     const data = [
       { label: 'THU', value: 42 },
@@ -270,10 +255,10 @@ storiesOf('Inputs', module)
   ))
   .add('Input container', () => <InputContainer title='Test Input' value='123' />)
   .add('Input container with error', () => <InputContainer title='Test Input' value='123' error='Test error' />)
-  .add('Text input', () => <TextInput placeholder="What is your goal?" value={text('Text', null)}
+  .add('Text input', () => <TextInput placeholder="What is your goal?" value={text('Text', '')}
                                       onChangeText={action('text-changed')} />,
   )
-  .add('Time input', () => <TimeInput time={dateKnobReturningDateObj('Date', new Date())}
+  .add('Time input', () => <TimeInput title='Time' time={dateKnobReturningDateObj('Date', new Date())}
                                       onTimeChange={action('time-changed')} />)
   .add('Duration input', () => <DurationInput duration={{ hours: 1, minutes: 0 }}
                                               onDurationChange={action('duration-changed')}
@@ -298,13 +283,14 @@ storiesOf('Inputs', module)
   .add('Days of week input', () => (
     <DaysOfWeekInput
       title='Days of week'
-      selectedDays={array('Selected days', [true, true, true, true, true, true, true])}
+      selectedDays={[true, true, true, true, true, true, true]}
       onDaysChange={action('day-changed')}
     />
   ))
   .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />)
   .add('Time picker', () => <TimePicker initialTime={new Date()} />)
-  .add('Duration picker', () => <DurationPicker initialDuration={{ hours: 1, minutes: 0 }} />);
+  .add('Duration picker', () => <DurationPicker initialDuration={{ hours: 1, minutes: 0 }} />)
+  .add('Date picker', () => <DatePicker initialDate={new Date()} />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
@@ -345,6 +331,9 @@ storiesOf('Navigation', module)
 storiesOf('Forms', module)
   .add('Goal form', () => (
     <GoalForm onSubmit={action('goal-form-submission')} />
+  ))
+  .add('Timetable entry form', () => (
+    <TimetableEntryForm />
   ));
 
 // Utilities

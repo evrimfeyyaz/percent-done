@@ -3,11 +3,12 @@ import { InputContainer, BottomSheetTimePicker } from '..';
 import { momentWithDeviceLocale } from '../../utilities';
 
 interface TimeInputProps {
+  title: string;
   time: Date;
   onTimeChange?: (time: Date) => void;
 }
 
-export const TimeInput: FunctionComponent<TimeInputProps> = ({ time, onTimeChange }) => {
+export const TimeInput: FunctionComponent<TimeInputProps> = ({ title, time, onTimeChange }) => {
   const bottomSheetTimePickerRef = useRef<BottomSheetTimePicker>(null);
 
   const showBottomSheet = () => bottomSheetTimePickerRef?.current?.show();
@@ -20,7 +21,7 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({ time, onTimeChang
 
   return (
     <InputContainer
-      title='Time'
+      title={title}
       value={value}
       opacityOnTouch={false}
       onPress={handleInputContainerPress}

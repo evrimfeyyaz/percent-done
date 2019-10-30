@@ -21,6 +21,7 @@ export default CenterView;
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+    alignSelf: 'stretch',
   },
   scrollView: {
     flex: 1,
