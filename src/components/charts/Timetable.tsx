@@ -18,11 +18,13 @@ export interface TimetableRow {
 export interface TimetableProps {
   entries: TimetableRow[];
   onEntryPress?: (id: string) => void;
+  onAddButtonPress?: () => void;
 }
 
 export const Timetable: FunctionComponent<TimetableProps> = ({
                                                                entries,
                                                                onEntryPress,
+                                                               onAddButtonPress,
                                                              }) => {
   const entriesSortedByStartingTime = entries.sort((e1, e2) => {
     if (e1.startTimestamp === e2.startTimestamp) {
@@ -115,7 +117,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
 
   return (
     <View style={styles.container}>
-      <Button title='Add Entry' iconSource={Icons.addEntry} style={styles.addEntryButton} />
+      <Button title='Add Entry' iconSource={Icons.addEntry} style={styles.addEntryButton} onPress={onAddButtonPress} />
       {makeTimetable(entriesSortedByStartingTime)}
     </View>
   );

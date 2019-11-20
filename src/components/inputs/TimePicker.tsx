@@ -5,12 +5,12 @@ import { isLocale24Hours } from '../../utilities';
 import { colors, fonts } from '../../theme';
 
 interface TimePickerProps {
-  initialTime: Date;
-  onTimeChange?: (date: Date) => void;
+  initialValue: Date;
+  onValueChange?: (value: Date) => void;
 }
 
-export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, onTimeChange }) => {
-  const [time, setTime] = useState(new Date(initialTime.getTime()));
+export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialValue, onValueChange }) => {
+  const [time, setTime] = useState(new Date(initialValue.getTime()));
 
   const is24Hours = isLocale24Hours();
   const hour = time.getHours();
@@ -38,14 +38,14 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, on
     const newTimeStamp = time.setHours(newHour);
     setTime(new Date(newTimeStamp));
 
-    onTimeChange?.(new Date(newTimeStamp));
+    onValueChange?.(new Date(newTimeStamp));
   };
 
   const handleMinuteIndexChange = (index: number) => {
     const newTimeStamp = time.setMinutes(index);
     setTime(new Date(newTimeStamp));
 
-    onTimeChange?.(new Date(newTimeStamp));
+    onValueChange?.(new Date(newTimeStamp));
   };
 
   const handlePeriodIndexChange = (index: number) => {
@@ -60,7 +60,7 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialTime, on
     const newTimeStamp = time.setHours(newHour);
     setTime(new Date(newTimeStamp));
 
-    onTimeChange?.(new Date(newTimeStamp));
+    onValueChange?.(new Date(newTimeStamp));
   };
 
   let hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];

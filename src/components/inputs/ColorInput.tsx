@@ -37,10 +37,10 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({
   const numOfColumns = Math.ceil(colors.length / 2);
   const data = colors.map(color => ({ color, key: color }));
 
-  // Add an extra item to the end to make the rows equal length
+  // Add an extra itemKey to the end to make the rows equal length
   // if there are odd number of colors.
   if (colors.length % 2 !== 0) {
-    data.push({ color: 'transparent', key: 'transparent-item' });
+    data.push({ color: 'transparent', key: 'transparent-itemKey' });
   }
 
   return (

@@ -124,7 +124,7 @@ module.exports = {
     'no-reserved-keys': 0, // disallow reserved words being used as object literal keys (off by default)
     'no-sparse-arrays': 1, // disallow sparse arrays
     'no-unreachable': 2, // disallow unreachable statements after a return, throw, continue, or break statement
-    'use-isnan': 1, // disallow comparisons with the value NaN
+    'use-isnan': 1, // disallow comparisons with the duration NaN
     'valid-jsdoc': 0, // Ensure JSDoc comments are valid (off by default)
     'valid-typeof': 1, // Ensure that the results of typeof are compared against a valid string
 

@@ -14,7 +14,7 @@ export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, 
     const state = getState();
     const goal = getGoalById(state, goalId);
 
-    if (goal == null) throw Error('Can\'t find goal.');
+    if (goal == null) throw new Error('Can\'t find goal.');
 
     if (isTimeTracked(goal)) {
       dispatch(startGoalTracking(goal.id));
@@ -55,7 +55,7 @@ export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void,
     const { startTimestamp, id: goalId } = getState().goals.trackedGoal;
 
     if (startTimestamp == null || goalId == null) {
-      throw Error('Tracked goal data is corrupt.');
+      throw new Error('Tracked goal data is corrupt.');
     }
 
     NavigationService.goBack();

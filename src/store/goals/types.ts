@@ -7,7 +7,7 @@ export interface Goal {
   color: string;
   durationInMs?: number;
   /**
-   *
+   * Index `0` is "Sunday," and so on.
    */
   recurringDays: boolean[];
   reminderTime?: Date;

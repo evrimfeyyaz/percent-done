@@ -5,16 +5,18 @@ import { Icons } from '../../../assets';
 
 interface MenuLinkProps {
   title: string;
+  value?: string;
   onPress?: (event: GestureResponderEvent) => void;
 }
 
 export const MenuLink: FunctionComponent<MenuLinkProps> = ({
                                                              title,
                                                              onPress,
+                                                             value,
                                                            }) => {
   const rightItem = <Image source={Icons.chevronRight} />;
 
   return (
-    <InputContainer title={title} rightItem={rightItem} onPress={onPress} />
+    <InputContainer title={title} rightItem={rightItem} onPress={onPress} value={value} />
   );
 };

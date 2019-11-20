@@ -10,7 +10,7 @@ interface Props {
   disabled?: boolean;
   onLayout?: (index: number, event: LayoutChangeEvent) => void;
   /**
-   * An animated value between 0 and 1, used for transitioning during tab selection animations.
+   * An animated duration between 0 and 1, used for transitioning during tab selection animations.
    * 0 means not selected, and 1 means selected. Anything in between means tab selection is
    * changing.
    */

@@ -6,9 +6,7 @@ import { NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
 import configureStore from './src/store/configureStore';
 
-YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from']);
-YellowBox.ignoreWarnings(['Warning: componentWillReceiveProps is deprecated']);
-YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated']);
+YellowBox.ignoreWarnings(['Warning:']);
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -18,7 +16,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 export default Storybook;
 
 // const store = configureStore();
-
+//
 // const App: FunctionComponent = () => {
 //   useEffect(() => {
 //     const { id, startTimestamp } = store.getState().goals.trackedGoal;

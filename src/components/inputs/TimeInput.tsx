@@ -5,12 +5,14 @@ import { momentWithDeviceLocale } from '../../utilities';
 interface TimeInputProps {
   title: string;
   time: Date;
+  error?: string;
   onTimeChange?: (time: Date) => void;
 }
 
-export const TimeInput: FunctionComponent<TimeInputProps> = ({ title, time, onTimeChange }) => {
-  const bottomSheetTimePickerRef = useRef<BottomSheetTimePicker>(null);
+export const TimeInput: FunctionComponent<TimeInputProps> = ({ title, time, onTimeChange, error }) => {
+  const bottomSheetTimePickerRef = useRef(null);
 
+  // @ts-ignore
   const showBottomSheet = () => bottomSheetTimePickerRef?.current?.show();
 
   const handleInputContainerPress = () => {
@@ -24,9 +26,10 @@ export const TimeInput: FunctionComponent<TimeInputProps> = ({ title, time, onTi
       title={title}
       value={value}
       opacityOnTouch={false}
+      error={error}
       onPress={handleInputContainerPress}
     >
-      <BottomSheetTimePicker ref={bottomSheetTimePickerRef} onTimeChange={onTimeChange} initialTime={time} />
+      <BottomSheetTimePicker ref={bottomSheetTimePickerRef} onValueChange={onTimeChange} initialValue={time} />
     </InputContainer>
   );
 };

@@ -16,7 +16,7 @@ interface InputContainerProps {
   title?: string;
 
   /**
-   * Current value of the input, shown on the right side.
+   * Current duration of the input, shown on the right side.
    */
   value?: string;
 
@@ -29,7 +29,7 @@ interface InputContainerProps {
   onLayout?: (event: LayoutChangeEvent) => void;
 
   /**
-   * Whether this item should flash when tapped.
+   * Whether this itemKey should flash when tapped.
    */
   opacityOnTouch?: boolean;
 

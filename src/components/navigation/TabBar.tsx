@@ -37,14 +37,14 @@ export const TabBar: FunctionComponent<Props> = ({
   const [translateX] = useState(new Animated.Value(SELECTED_TAB_ITEM_LEFT_MARGIN));
 
   /**
-   * X position each tab item should have when they are selected.
+   * X position each tab itemKey should have when they are selected.
    */
   const [selectedTabPositions, setSelectedTabPositions] = useState<{ [index: number]: number }>({});
 
   /**
    * Selection status of each tab. 1 means selected, 0 means not selected.
    * Any number between 0 and 1 indicates there is a transition between tabs.
-   * This value is used for transition effects between tabs.
+   * This duration is used for transition effects between tabs.
    */
   const [tabSelectionStatus, setTabSelectionStatus] = useState<{ [index: number]: Animated.Value }>({});
 
@@ -62,7 +62,7 @@ export const TabBar: FunctionComponent<Props> = ({
 
   /**
    * Returns a config object for the animation used for the color
-   * change between the selected and the next potential tab item.
+   * change between the selected and the next potential tab itemKey.
    */
   const colorChangeAnimationConfig = (toValue: number) => {
     return {
@@ -202,13 +202,13 @@ export const TabBar: FunctionComponent<Props> = ({
   };
 
   /**
-   * Returns the index for the item that we should move to based on
+   * Returns the index for the itemKey that we should move to based on
    * user's gesture.
    */
   const getIndexOfTabToSelect = (dragAmount: number) => {
-    if (dragAmount < MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged left, go to next item.
+    if (dragAmount < MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged left, go to next itemKey.
       return Math.min(selectedTabIndex + 1, tabs.length - 1);
-    } else if (dragAmount > MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged right, go to previous item.
+    } else if (dragAmount > MIN_DRAG_AMOUNT_TO_CHANGE_TABS) { // Dragged right, go to previous itemKey.
       return Math.max(selectedTabIndex - 1, 0);
     }
 
@@ -216,7 +216,7 @@ export const TabBar: FunctionComponent<Props> = ({
   };
 
   /**
-   * Returns the index for the item that the user is swiping towards.
+   * Returns the index for the itemKey that the user is swiping towards.
    */
   const getPotentialTabIndex = (dragAmount: number) => {
     if (dragAmount < 0) { // Dragging left.

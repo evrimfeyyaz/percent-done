@@ -21,9 +21,18 @@ import {
   Timetable,
   TimetableRow,
   TabInfo,
-  GoalList, DaysStats,
+  GoalList,
+  DaysStats,
   HeaderButton,
-  TimePicker, DurationPicker, DurationInput, GoalForm, InputContainer, TimeTracker, TimetableEntryForm, DatePicker,
+  TimePicker,
+  DurationPicker,
+  DurationInput,
+  GoalForm,
+  InputContainer,
+  TimeTracker,
+  TimetableEntryForm,
+  DatePicker,
+  DateInput, ItemPicker, ItemInput,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -36,6 +45,8 @@ import {
 } from '@storybook/addon-knobs';
 import { colors, textStyles } from '../../src/theme';
 import moment from 'moment';
+import { Goal } from '../../src/store/goals/types';
+import { createGoal } from '../../src/factories';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -260,10 +271,22 @@ storiesOf('Inputs', module)
   )
   .add('Time input', () => <TimeInput title='Time' time={dateKnobReturningDateObj('Date', new Date())}
                                       onTimeChange={action('time-changed')} />)
+  .add('Date input', () => <DateInput title='Date' date={dateKnobReturningDateObj('Date', new Date())}
+                                      onDateChange={action('date-changed')} />)
   .add('Duration input', () => <DurationInput duration={{ hours: 1, minutes: 0 }}
                                               onDurationChange={action('duration-changed')}
     />,
   )
+  .add('Item input', () => {
+    const allItems = [
+      { key: '0', value: 'Read' },
+      { key: '1', value: 'Work on PercentDone' },
+      { key: '2', value: 'Write' },
+    ];
+
+    return <ItemInput title='Goal' itemKey={allItems[0].key} onItemChange={action('item-changed')}
+                      allItems={allItems} />;
+  })
   .add('Switch input', () => <SwitchInput title="Time tracking" value={boolean('Value', false)}
                                           onValueChange={action('switch-value-changed')}
     />,
@@ -288,9 +311,18 @@ storiesOf('Inputs', module)
     />
   ))
   .add('Menu link', () => <MenuLink title="Terms & Conditions" onPress={action('menu-link-pressed')} />)
-  .add('Time picker', () => <TimePicker initialTime={new Date()} />)
-  .add('Duration picker', () => <DurationPicker initialDuration={{ hours: 1, minutes: 0 }} />)
-  .add('Date picker', () => <DatePicker initialDate={new Date()} />);
+  .add('Time picker', () => <TimePicker initialValue={new Date()} />)
+  .add('Duration picker', () => <DurationPicker initialValue={{ hours: 1, minutes: 0 }} />)
+  .add('Item picker', () => {
+    const allValues = [
+      { key: '0', value: 'Read' },
+      { key: '1', value: 'Work on PercentDone' },
+      { key: '2', value: 'Write' },
+    ];
+
+    return <ItemPicker initialValue={allValues[0]} allValues={allValues} />;
+  })
+  .add('Date picker', () => <DatePicker initialValue={new Date()} />);
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
@@ -332,9 +364,15 @@ storiesOf('Forms', module)
   .add('Goal form', () => (
     <GoalForm onSubmit={action('goal-form-submission')} />
   ))
-  .add('Timetable entry form', () => (
-    <TimetableEntryForm />
-  ));
+  .add('Timetable entry form', () => {
+    const goal1 = createGoal({ title: 'Work on PercentDone', durationInMin: 1 });
+    const goal2 = createGoal({ title: 'Exercise' });
+    const goal3 = createGoal({ title: 'Read', durationInMin: 1 });
+    const allGoals = [goal1, goal2, goal3];
+
+    return <TimetableEntryForm goalId={goal1.id} allGoals={allGoals}
+                               onSubmit={action('timetable-entry-form-submission')} />;
+  });
 
 // Utilities
 

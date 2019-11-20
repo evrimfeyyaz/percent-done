@@ -119,7 +119,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       createdAt = new Date();
     } else {
       const { goal } = this.props;
-      if (goal == null) throw Error('Goal cannot be null on the edit form.');
+      if (goal == null) throw new Error('Goal cannot be null on the edit form.');
 
       id = goal.id;
       durationInMs = goal.durationInMs;
@@ -153,8 +153,8 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     this.setState({ isTimeTracked: timeTracking });
   };
 
-  handleDurationChange = (hours: number, minutes: number) => {
-    this.setState({ duration: { hours, minutes } });
+  handleDurationChange = (duration: { hours: number, minutes: number }) => {
+    this.setState({ duration });
   };
 
   handleRecurringDaysChange = (recurringDays: boolean[]) => {
@@ -193,7 +193,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   handleDeletePress = () => {
     const { onDelete, goal } = this.props;
 
-    if (goal == null) throw Error('Goal cannot be null on the edit form.');
+    if (goal == null) throw new Error('Goal cannot be null on the edit form.');
 
     Alert.alert(
       'Delete Goal?',

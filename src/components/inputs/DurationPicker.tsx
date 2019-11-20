@@ -4,21 +4,21 @@ import { ScrollablePicker } from './ScrollablePicker';
 import _ from 'lodash';
 
 interface DurationPickerProps {
-  initialDuration: { hours: number, minutes: number }
-  onDurationChange?: (hours: number, minutes: number) => void;
+  initialValue: { hours: number, minutes: number }
+  onValueChange?: ({ hours, minutes }: { hours: number, minutes: number }) => void;
 }
 
-export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ initialDuration, onDurationChange }) => {
-  const [duration, setDuration] = useState(_.clone(initialDuration));
+export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ initialValue, onValueChange }) => {
+  const [duration, setDuration] = useState(_.clone(initialValue));
 
   const handleHoursChange = (index: number) => {
     setDuration({ hours: index, minutes: duration.minutes });
-    onDurationChange?.(index, duration.minutes);
+    onValueChange?.({ hours: index, minutes: duration.minutes });
   };
 
   const handleMinutesChange = (index: number) => {
     setDuration({ hours: duration.hours, minutes: index });
-    onDurationChange?.(duration.hours, index);
+    onValueChange?.({ hours: duration.hours, minutes: index });
   };
 
   const hours = [];

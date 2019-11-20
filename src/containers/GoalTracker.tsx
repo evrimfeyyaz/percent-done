@@ -16,7 +16,7 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   const goal = getGoalById(state, trackedGoalId);
   const { title, color, durationInMs } = goal;
 
-  if (durationInMs == null) throw Error('Goal is not a time-tracked goal.');
+  if (durationInMs == null) throw new Error('Goal is not a time-tracked goal.');
   const initialRemainingMs = getRemainingMs(state, goal, new Date());
 
   return {

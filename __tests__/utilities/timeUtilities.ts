@@ -76,7 +76,7 @@ describe('time utilities', () => {
     });
 
     describe('when roundLastValueUp is true', () => {
-      it('rounds up the last value', () => {
+      it('rounds up the last duration', () => {
         const time1 = fiveHoursInMs + fiveMinutesInMs + fiveSecondsInMs + 1;
         const time2 = fiveMinutesInMs + fiveSecondsInMs + 1;
 
@@ -84,7 +84,7 @@ describe('time utilities', () => {
         expect(formatDurationInMs(time2, true)).toEqual('05m 06s');
       });
 
-      it('does not round up the last value when the last value is a whole number', () => {
+      it('does not round up the last duration when the last duration is a whole number', () => {
         const time1 = fiveHoursInMs + fiveMinutesInMs;
         const time2 = fiveMinutesInMs + fiveSecondsInMs;
 

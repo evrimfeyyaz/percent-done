@@ -4,30 +4,30 @@ import { ScrollablePicker } from './ScrollablePicker';
 import { momentWithDeviceLocale } from '../../utilities';
 
 interface DatePickerProps {
-  initialDate: Date;
-  onDateChange?: (date: Date) => void;
+  initialValue: Date;
+  onValueChange?: (value: Date) => void;
 }
 
-export const DatePicker: FunctionComponent<DatePickerProps> = ({ initialDate, onDateChange }) => {
+export const DatePicker: FunctionComponent<DatePickerProps> = ({ initialValue, onValueChange }) => {
   const today = new Date();
   const currentYear = today.getFullYear();
   const minYear = currentYear - 100;
 
-  const [selectedDate, setSelectedDate] = useState(initialDate);
+  const [selectedDate, setSelectedDate] = useState(initialValue);
 
   const handleYearChange = (index: number) => {
     const newYear = index + minYear;
     const newDate = adjustDate(selectedDate, newYear, selectedDate.getMonth(), selectedDate.getDate());
 
     setSelectedDate(newDate);
-    onDateChange?.(newDate);
+    onValueChange?.(newDate);
   };
 
   const handleMonthChange = (index: number) => {
     const newDate = adjustDate(selectedDate, selectedDate.getFullYear(), index, selectedDate.getDate());
 
     setSelectedDate(newDate);
-    onDateChange?.(newDate);
+    onValueChange?.(newDate);
   };
 
   const handleDayChange = (index: number) => {
@@ -35,7 +35,7 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({ initialDate, on
     const newDate = adjustDate(selectedDate, selectedDate.getFullYear(), selectedDate.getMonth(), newDay);
 
     setSelectedDate(newDate);
-    onDateChange?.(newDate);
+    onValueChange?.(newDate);
   };
 
   /**

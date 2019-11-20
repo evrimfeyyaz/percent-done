@@ -23,13 +23,18 @@ export * from './inputs/ColorInput';
 export * from './inputs/DaysOfWeekInput';
 export * from './inputs/MenuLink';
 export * from './inputs/TimePicker';
+export * from './inputs/DatePicker';
+export * from './inputs/ItemPicker';
 export * from './inputs/ScrollablePicker';
 export * from './inputs/DurationPicker';
 export * from './inputs/DurationInput';
+export * from './inputs/DateInput';
+export * from './inputs/ItemInput';
 export * from './inputs/InputContainer';
 export * from './inputs/BottomSheetTimePicker';
+export * from './inputs/BottomSheetDatePicker';
 export * from './inputs/BottomSheetDurationPicker';
-export * from './inputs/DatePicker';
+export * from './inputs/BottomSheetItemPicker';
 
 // Navigation
 export * from './navigation/TabItem';
