@@ -16,7 +16,6 @@ interface TimetableEntryFormState {
 
 export interface TimetableEntryFormProps {
   allGoals: Goal[];
-  goalId: string;
   onSubmit?: (timetableEntry: TimetableEntry) => void;
   onDelete?: (timetableEntryId: string) => void;
   timetableEntry?: TimetableEntry;
@@ -27,11 +26,17 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
   constructor(props: TimetableEntryFormProps) {
     super(props);
 
+    const { timetableEntry, allGoals } = props;
+    const now = Date.now();
+    const goalId = timetableEntry?.goalId || allGoals[0].id;
+    const goal = allGoals.find(goal => goal.id === goalId);
+
+    // TODO: Allow adding entries without a goal.
     this.state = {
-      goalId: props.goalId,
-      startTimestamp: Date.now(),
-      endTimestamp: Date.now(),
-      isSelectedGoalTimeTracked: false,
+      goalId,
+      startTimestamp: timetableEntry?.startTimestamp || now,
+      endTimestamp: timetableEntry?.endTimestamp || now,
+      isSelectedGoalTimeTracked: goal != null ? isTimeTracked(goal) : true,
     };
   }
 
