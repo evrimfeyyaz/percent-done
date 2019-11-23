@@ -43,7 +43,7 @@ const idsByDate: Reducer<{ [date: string]: string[] }, TimetableEntryActionTypes
       dateIdx = convertDateToIndex(new Date(entry.startTimestamp));
       ids = state[dateIdx] || [];
 
-      let previousDateIdx;
+      let previousDateIdx = dateIdx;
       if (ids.indexOf(entry.id) === -1) {
         const stateKeys = Object.keys(state);
 
@@ -54,7 +54,7 @@ const idsByDate: Reducer<{ [date: string]: string[] }, TimetableEntryActionTypes
         }
       }
 
-      if (previousDateIdx != null) {
+      if (previousDateIdx !== dateIdx) {
         const previousDateIds = _.without(state[previousDateIdx], entry.id);
 
         return {
@@ -64,7 +64,7 @@ const idsByDate: Reducer<{ [date: string]: string[] }, TimetableEntryActionTypes
         };
       }
 
-      return { ...state, [dateIdx]: [...ids, entry.id] };
+      return { ...state, [dateIdx]: [...ids] };
     case ADD_TIMETABLE_ENTRY:
       entry = action.timetableEntry;
       dateIdx = convertDateToIndex(new Date(entry.startTimestamp));
