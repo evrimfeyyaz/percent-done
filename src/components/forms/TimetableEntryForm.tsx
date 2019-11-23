@@ -17,7 +17,7 @@ interface TimetableEntryFormState {
 export interface TimetableEntryFormProps {
   allGoals: Goal[];
   onSubmit?: (timetableEntry: TimetableEntry) => void;
-  onDelete?: (timetableEntryId: string) => void;
+  onDelete?: (timetableEntryId: string, timetableEntryStartTimestamp: number) => void;
   timetableEntry?: TimetableEntry;
 }
 
@@ -154,12 +154,17 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
       'This timetable entry will be permanently deleted.',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete Entry', onPress: () => onDelete?.(timetableEntry.id), style: 'destructive' },
+        {
+          text: 'Delete Entry',
+          onPress: () => onDelete?.(timetableEntry.id, timetableEntry.startTimestamp),
+          style: 'destructive',
+        },
       ],
       { cancelable: true },
     );
   };
 
+  // TODO: Delete doesn't work.
   render() {
     const { startTimestamp, endTimestamp, goalId, isSelectedGoalTimeTracked, finishedAtError } = this.state;
     const { allGoals } = this.props;
@@ -182,7 +187,7 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
 
         {!this.isAddNewForm() && (
           <View style={styles.deleteButtonContainer}>
-            <TextButton title='Delete Goal' onPress={this.handleDeletePress} />
+            <TextButton title='Delete Entry' onPress={this.handleDeletePress} />
           </View>
         )}
       </ScrollView>
@@ -195,7 +200,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   deleteButtonContainer: {
-    marginTop: -10,
+    marginTop: 40,
     alignItems: 'center',
   },
 });

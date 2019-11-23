@@ -4,7 +4,7 @@ import { StoreState } from '../types';
 import { GoalActionTypes } from './types';
 import { TimetableEntry, TimetableEntryActionTypes } from '../timetableEntries/types';
 import { getGoalById, getTimetableEntriesForGoal, isCompleted } from './selectors';
-import { addTimetableEntry, removeTimetableEntry } from '../timetableEntries/actions';
+import { addTimetableEntry, deleteTimetableEntry } from '../timetableEntries/actions';
 import { isTimeTracked } from './utilities';
 import { NavigationService, createRandomId } from '../../utilities';
 import { removeTrackedGoal, setTrackedGoal } from './actions';
@@ -24,7 +24,7 @@ export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, 
       if (isCompleted(state, goal, today)) {
         const todaysTimetableEntries = getTimetableEntriesForGoal(state, goal, today);
 
-        todaysTimetableEntries.forEach(entry => dispatch(removeTimetableEntry(entry)));
+        todaysTimetableEntries.forEach(entry => dispatch(deleteTimetableEntry(entry)));
       } else {
         const timestamp = Date.now();
 

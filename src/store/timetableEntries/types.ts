@@ -19,14 +19,23 @@ export interface TimetableEntriesState extends NormalizedEntityState<TimetableEn
 }
 
 export const ADD_TIMETABLE_ENTRY = 'ADD_TIMETABLE_ENTRY';
-export const REMOVE_TIMETABLE_ENTRY = 'REMOVE_TIMETABLE_ENTRY';
+export const EDIT_TIMETABLE_ENTRY = 'EDIT_TIMETABLE_ENTRY';
+export const DELETE_TIMETABLE_ENTRY = 'DELETE_TIMETABLE_ENTRY';
 
 export interface AddTimetableEntryAction extends Action<typeof ADD_TIMETABLE_ENTRY> {
   timetableEntry: TimetableEntry;
 }
 
-export interface RemoveTimetableEntry extends Action<typeof REMOVE_TIMETABLE_ENTRY> {
+export interface EditTimetableEntryAction extends Action<typeof EDIT_TIMETABLE_ENTRY> {
   timetableEntry: TimetableEntry;
 }
 
-export type TimetableEntryActionTypes = AddTimetableEntryAction | RemoveTimetableEntry;
+export interface DeleteTimetableEntry extends Action<typeof DELETE_TIMETABLE_ENTRY> {
+  timetableEntryId: string;
+  timetableEntryStartTimestamp: number;
+}
+
+export type TimetableEntryActionTypes =
+  AddTimetableEntryAction |
+  EditTimetableEntryAction |
+  DeleteTimetableEntry;
