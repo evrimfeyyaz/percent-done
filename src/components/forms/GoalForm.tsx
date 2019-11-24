@@ -38,6 +38,7 @@ interface GoalFormState {
   failedInputPositions?: number[];
 }
 
+// TODO: Require unique goal names (don't include deleted goals in the uniqueness check).
 export interface GoalFormProps {
   onSubmit?: (goal: Goal) => void;
   onDelete?: (goalId: string) => void;

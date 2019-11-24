@@ -16,6 +16,11 @@ const incompleteGoal2: Goal = createGoal({
   durationInMin: undefined,
   color: colors.citrus,
 }, [today]);
+const longGoal: Goal = createGoal({
+  title: 'This is a Goal with a Really Really Really Long Title',
+  durationInMin: 60,
+  color: colors.violet,
+}, [today]);
 const completedGoal: Goal = createGoal({
   title: 'Read',
   durationInMin: undefined,
@@ -40,7 +45,7 @@ const timetableEntry2: TimetableEntry = createTimetableEntry({
 });
 
 const seedData = createStoreState({
-  goals: [incompleteGoal, incompleteGoal2, completedGoal, tomorrowsGoal],
+  goals: [incompleteGoal, incompleteGoal2, longGoal, completedGoal, tomorrowsGoal],
   timetableEntries: [timetableEntry, timetableEntry2],
 });
 

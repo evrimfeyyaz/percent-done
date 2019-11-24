@@ -10,7 +10,6 @@ import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
 import { formatDurationInMs, leftOrOver, pluralize } from '../../utilities';
-import { isActiveToday } from '../../store/goals/utilities';
 
 export interface GoalRowProps {
   /**
@@ -43,7 +42,6 @@ export interface GoalRowProps {
  * A row that shows information on a given goal.
  */
 export const GoalRow: FunctionComponent<GoalRowProps> = ({
-                                                           id,
                                                            title,
                                                            color,
                                                            chainLength = null,
@@ -98,7 +96,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
         endAngle={-Math.PI * 2}
       />
       <View style={styles.details}>
-        <Text style={nameStyle}>{title}</Text>
+        <Text style={nameStyle} numberOfLines={1}>{title}</Text>
         {chainInfo}
       </View>
       {isActiveToday && durationInfo}

@@ -164,7 +164,7 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
     );
   };
 
-  // TODO: Delete doesn't work.
+  // TODO: Don't show deleted goals here.
   render() {
     const { startTimestamp, endTimestamp, goalId, isSelectedGoalTimeTracked, finishedAtError } = this.state;
     const { allGoals } = this.props;
