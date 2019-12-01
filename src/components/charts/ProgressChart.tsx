@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: -5,
   },
   percentDone: {
     fontFamily: fonts.semibold,

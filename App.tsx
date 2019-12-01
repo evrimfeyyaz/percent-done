@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
 import configureStore from './src/store/configureStore';
+import { PersistGate } from 'redux-persist/integration/react';
 
 YellowBox.ignoreWarnings(['Warning:']);
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
@@ -15,7 +16,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 // export default Storybook;
 
-const store = configureStore();
+const { store, persistor } = configureStore();
 
 const App: FunctionComponent = () => {
   useEffect(() => {
@@ -28,7 +29,9 @@ const App: FunctionComponent = () => {
 
   return (
     <Provider store={store}>
-      <AppContainer ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
+      <PersistGate persistor={persistor} loading={null}>
+        <AppContainer ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
+      </PersistGate>
     </Provider>
   );
 };

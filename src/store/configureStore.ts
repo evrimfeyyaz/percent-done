@@ -1,9 +1,13 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { goalsReducer } from './goals/reducers';
 import { timetableEntriesReducer } from './timetableEntries/reducers';
-import seedData from '../../seedData';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
+import { persistStore, persistReducer } from 'redux-persist';
+import AsyncStorage from '@react-native-community/async-storage';
+import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
+import { PersistConfig } from 'redux-persist/es/types';
+import { StoreState } from './types';
 
 export default function configureStore() {
   const rootReducer = combineReducers({
@@ -11,7 +15,16 @@ export default function configureStore() {
     timetableEntries: timetableEntriesReducer,
   });
 
-  const preloadedState = __DEV__ ? seedData : undefined;
+  const persistConfig: PersistConfig<StoreState> = {
+    key: 'root',
+    storage: AsyncStorage,
+    stateReconciler: autoMergeLevel2,
+  };
 
-  return createStore(rootReducer, preloadedState, composeWithDevTools(applyMiddleware(thunk)));
+  const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+  const store = createStore(persistedReducer, undefined, composeWithDevTools(applyMiddleware(thunk)));
+  const persistor = persistStore(store);
+
+  return { store, persistor };
 }
