@@ -75,7 +75,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
 
   const item = (itemData: { key: string, value: string }) => (
     <View style={StyleSheet.flatten([styles.itemContainer, itemAlignmentStyle])} key={itemData.key}>
-      <Text style={styles.item}>{itemData.value}</Text>
+      <Text style={styles.item} numberOfLines={1}>{itemData.value}</Text>
     </View>
   );
 

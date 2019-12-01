@@ -17,7 +17,7 @@ const incompleteGoal2: Goal = createGoal({
   color: colors.citrus,
 }, [today]);
 const longGoal: Goal = createGoal({
-  title: 'This is a Goal with a Really Really Really Long Title',
+  title: 'This is a Goal with a Really Really Really Really Really Really Long Title',
   durationInMin: 60,
   color: colors.violet,
 }, [today]);
