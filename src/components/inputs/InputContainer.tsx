@@ -54,12 +54,12 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
                                                                        }) => {
   let titleText = null;
   if (title != null) {
-    titleText = <Text style={styles.title}>{title}</Text>;
+    titleText = <Text style={styles.title} numberOfLines={1}>{title}</Text>;
   }
 
   let valueText = null;
   if (value != null) {
-    valueText = <Text style={styles.value}>{value}</Text>;
+    valueText = <Text style={styles.value} numberOfLines={1}>{value}</Text>;
   }
 
   let activeOpacity = 0.2;
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   value: {
+    flex: 1,
     fontFamily: fonts.semibold,
     fontSize: 14,
     color: colors.yellow,
