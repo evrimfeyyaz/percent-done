@@ -5,6 +5,7 @@ export * from './misc/GoalRow';
 export * from './misc/GoalList';
 export * from './misc/BottomSheet';
 export * from './misc/TimeTracker';
+export * from './misc/EmptyContainer';
 
 // Charts
 export * from './charts/ProgressChart';

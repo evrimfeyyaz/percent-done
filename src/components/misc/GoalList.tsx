@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
+import { EmptyContainer } from './EmptyContainer';
 
 export interface GoalListProps {
   goals: (GoalRowProps)[];
@@ -30,11 +31,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
                                                              onGoalRightSwipe, onRightActionPress,
                                                            }) => {
   if (goals.length === 0) {
-    return (
-      <View style={styles.emptyTextContainer}>
-        <Text style={styles.emptyText}>{emptyText}</Text>
-      </View>
-    );
+    return <EmptyContainer text={emptyText} />;
   }
 
   let isSwipeAnimationRunning = false;
@@ -227,17 +224,5 @@ const styles = StyleSheet.create({
   actionIconContainer: {
     maxWidth: 74,
     position: 'absolute',
-  },
-  emptyTextContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  emptyText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    color: colors.white,
-    textAlign: 'center',
-    opacity: .3,
   },
 });

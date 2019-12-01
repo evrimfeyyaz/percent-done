@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { formatDurationInMs, formatTimeInTimestamp } from '../../utilities';
 import Svg, { Line } from 'react-native-svg';
-import { Button } from '..';
+import { Button, EmptyContainer } from '..';
 import { Icons } from '../../../assets';
 
 export interface TimetableRow {
@@ -91,6 +91,11 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
     const timetable: Element[] = [];
 
     const entriesLength = timetableEntries.length;
+
+    if (entriesLength === 0) {
+      return <EmptyContainer text='There are no entries.' style={styles.emptyContainer} />;
+    }
+
     for (let i = 0; i < entriesLength; i++) {
       const entry = timetableEntries[i];
 
@@ -125,7 +130,6 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
     alignItems: 'center',
   },
   addEntryButton: {
@@ -170,5 +174,8 @@ const styles = StyleSheet.create({
     color: colors.gray,
     marginBottom: 5,
     marginTop: 5,
+  },
+  emptyContainer: {
+    marginTop: 30,
   },
 });
