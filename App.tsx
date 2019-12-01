@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import Storybook from './storybook';
-import { Platform, UIManager, YellowBox } from 'react-native';
+import { Platform, UIManager, View, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
@@ -19,18 +19,25 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 const { store, persistor } = configureStore();
 
 const App: FunctionComponent = () => {
+  const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
     const { id, startTimestamp } = store.getState().goals.trackedGoal;
 
     if (id != null && startTimestamp != null) {
       NavigationService.navigate('TrackGoal', {});
     }
-  }, []);
+  }, [loaded]);
+
+  const handleFirstLoad = () => {
+    setLoaded(true);
+  };
 
   return (
     <Provider store={store}>
-      <PersistGate persistor={persistor} loading={null}>
-        <AppContainer ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)} />
+      <PersistGate persistor={persistor}>
+        <AppContainer ref={navigatorRef => NavigationService.setTopLevelNavigator(navigatorRef)}
+                      onNavigationStateChange={handleFirstLoad} />
       </PersistGate>
     </Provider>
   );
