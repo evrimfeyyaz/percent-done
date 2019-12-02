@@ -31,7 +31,6 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
     const goalId = timetableEntry?.goalId || allGoals[0].id;
     const goal = allGoals.find(goal => goal.id === goalId);
 
-    // TODO: Allow adding entries without a goal.
     this.state = {
       goalId,
       startTimestamp: timetableEntry?.startTimestamp || now,
@@ -107,6 +106,14 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
     return this.props.timetableEntry == null;
   };
 
+  isGoalDeleted = () => {
+    const { allGoals, timetableEntry } = this.props;
+
+    if (timetableEntry == null) return false;
+
+    return allGoals.map(goal => goal.id).indexOf(timetableEntry.goalId) === -1;
+  };
+
   handleGoalChange = (goalId: string) => {
     const { allGoals } = this.props;
     const goal = allGoals.find(goal => goal.id === goalId);
@@ -164,7 +171,6 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
     );
   };
 
-  // TODO: Don't show deleted goals here.
   render() {
     const { startTimestamp, endTimestamp, goalId, isSelectedGoalTimeTracked, finishedAtError } = this.state;
     const { allGoals } = this.props;
@@ -172,7 +178,9 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
 
     return (
       <ScrollView style={styles.container}>
-        <ItemInput title='Goal' itemKey={goalId} allItems={goalItems} onItemChange={this.handleGoalChange} />
+        {!this.isGoalDeleted() && (
+          <ItemInput title='Goal' itemKey={goalId} allItems={goalItems} onItemChange={this.handleGoalChange} />
+        )}
         <DateInput title='Date' date={new Date(startTimestamp)} onDateChange={this.handleDateChange} />
         {isSelectedGoalTimeTracked && (
           <>
