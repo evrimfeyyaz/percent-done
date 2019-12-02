@@ -6,22 +6,22 @@ import {
 } from './types';
 import { ActionCreator } from 'redux';
 
-export const addGoal: ActionCreator<AddGoalAction> = (goal: Goal) => ({
+export const addGoal = (goal: Goal): AddGoalAction => ({
   type: ADD_GOAL,
   goal,
 });
 
-export const editGoal: ActionCreator<EditGoalAction> = (goal: Goal) => ({
+export const editGoal = (goal: Goal): EditGoalAction => ({
   type: EDIT_GOAL,
   goal,
 });
 
-export const deleteGoal: ActionCreator<DeleteGoalAction> = (goalId: string) => ({
+export const deleteGoal = (goalId: string): DeleteGoalAction => ({
   type: DELETE_GOAL,
   goalId,
 });
 
-export const setTrackedGoal: ActionCreator<SetTrackedGoalAction> = (goalId: string, startTimestamp: number) => ({
+export const setTrackedGoal = (goalId: string, startTimestamp: number): SetTrackedGoalAction => ({
   type: SET_TRACKED_GOAL,
   id: goalId,
   startTimestamp,

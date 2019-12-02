@@ -54,6 +54,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
     });
 
     setItemSwipeDirections(swipeDirections);
+    LayoutAnimation.easeInEaseOut();
   }, [goals]);
 
   useEffect(() => {
@@ -85,7 +86,8 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
 
     itemSwipeValues[key].setValue(Math.abs(value));
 
-    if (value > listWidth && !isSwipeAnimationRunning && itemSwipeDirections[key] === 'right') {
+    console.log(`value: ${value}  listWidth: ${listWidth}  isSwipeAnimationRunning: ${isSwipeAnimationRunning}  itemSwipeDirection: ${itemSwipeDirections[key]}`);
+    if (value >= listWidth && !isSwipeAnimationRunning && itemSwipeDirections[key] === 'right') {
       const goal = goals.find(goal => goal.id === key);
       if (goal != null && isGoalTracked(goal)) return;
 
@@ -203,7 +205,6 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       leftOpenValue={listWidth}
       rightOpenValue={-70}
       swipeToOpenPercent={30}
-      friction={10}
       disableRightSwipe={disableRightSwipe}
       style={styles.swipeListView}
     />

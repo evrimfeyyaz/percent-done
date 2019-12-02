@@ -30,7 +30,7 @@ export interface EditTimetableEntryAction extends Action<typeof EDIT_TIMETABLE_E
   timetableEntry: TimetableEntry;
 }
 
-export interface DeleteTimetableEntry extends Action<typeof DELETE_TIMETABLE_ENTRY> {
+export interface DeleteTimetableEntryAction extends Action<typeof DELETE_TIMETABLE_ENTRY> {
   timetableEntryId: string;
   timetableEntryStartTimestamp: number;
 }
@@ -38,4 +38,4 @@ export interface DeleteTimetableEntry extends Action<typeof DELETE_TIMETABLE_ENT
 export type TimetableEntryActionTypes =
   AddTimetableEntryAction |
   EditTimetableEntryAction |
-  DeleteTimetableEntry;
+  DeleteTimetableEntryAction;

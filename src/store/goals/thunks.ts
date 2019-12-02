@@ -24,7 +24,7 @@ export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, 
       if (isCompleted(state, goal, today)) {
         const todaysTimetableEntries = getTimetableEntriesForGoal(state, goal, today);
 
-        todaysTimetableEntries.forEach(entry => dispatch(deleteTimetableEntry(entry)));
+        todaysTimetableEntries.forEach(entry => dispatch(deleteTimetableEntry(entry.id, entry.startTimestamp)));
       } else {
         const timestamp = Date.now();
 
