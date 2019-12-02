@@ -20,11 +20,6 @@ interface GoalFormState {
   isTimeTracked: boolean;
   duration: { hours: number, minutes: number };
   recurringDays: boolean[];
-  reminder: boolean;
-  reminderTime: Date;
-  /**
-   * Y position of the title input.
-   */
   titleInputPosition?: number;
   titleInputError?: string;
   /**
@@ -56,8 +51,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       isTimeTracked: false,
       duration: { hours: 1, minutes: 0 },
       recurringDays: new Array(7).fill(true),
-      reminder: props.goal?.reminderTime != null || false,
-      reminderTime: props.goal?.reminderTime || new Date(),
       color: props.goal?.color || goalColors[0],
     };
     this.scrollViewRef = createRef<KeyboardAwareScrollView>();
@@ -109,7 +102,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       return false;
     }
 
-    let { title, isTimeTracked, duration, recurringDays, reminder, reminderTime, color } = this.state;
+    let { title, isTimeTracked, duration, recurringDays, color } = this.state;
     let durationInMs: number | undefined;
     let id: string;
     let createdAt: Date;
@@ -133,7 +126,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       color,
       durationInMs,
       recurringDays,
-      reminderTime: (reminder ? reminderTime : undefined),
       createdAt,
     };
 
@@ -164,15 +156,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       recurringDays,
       recurringDaysInputError: undefined,
     });
-  };
-
-  handleReminderChange = (reminder: boolean) => {
-    LayoutAnimation.easeInEaseOut();
-    this.setState({ reminder });
-  };
-
-  handleReminderTimeChange = (reminderTime: Date) => {
-    this.setState({ reminderTime });
   };
 
   handleColorChange = (color: string) => {
@@ -218,7 +201,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   render() {
     const {
       title, isTimeTracked, duration, recurringDays,
-      reminder, reminderTime, color, titleInputError, recurringDaysInputError,
+      color, titleInputError, recurringDaysInputError,
     } = this.state;
 
     return (
@@ -242,11 +225,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
             {isTimeTracked && <DurationInput duration={duration} onDurationChange={this.handleDurationChange} />}
           </Section>
         )}
-
-        <Section title='Reminder' bottomSeparator={false} contentStyle={styles.sectionContent}>
-          <SwitchInput title='Set a reminder?' value={reminder} onValueChange={this.handleReminderChange} />
-          {reminder && <TimeInput title='Time' time={reminderTime} onTimeChange={this.handleReminderTimeChange} />}
-        </Section>
 
         <Section title='Color' bottomSeparator={false} contentStyle={styles.sectionContent}>
           <ColorInput colors={goalColors} selectedColor={color} onColorChange={this.handleColorChange} />

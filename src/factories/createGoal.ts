@@ -7,7 +7,6 @@ interface CreateGoalParams {
   title?: string,
   color?: string,
   durationInMin?: number,
-  reminderTime?: Date,
   deletedAt?: Date,
 }
 
@@ -16,7 +15,6 @@ export const createGoal = ({
                              title = 'Goal',
                              color = colors.orange,
                              durationInMin = undefined,
-                             reminderTime = undefined,
                              deletedAt = undefined,
                            }: CreateGoalParams, dates?: Date[]): Goal => {
   const recurringDays = Array(7).fill(false);
@@ -30,7 +28,6 @@ export const createGoal = ({
     color,
     durationInMs,
     recurringDays,
-    reminderTime,
     createdAt: new Date(),
     deletedAt,
   };

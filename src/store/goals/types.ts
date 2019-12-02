@@ -10,7 +10,6 @@ export interface Goal {
    * Index `0` is "Sunday," and so on.
    */
   recurringDays: boolean[];
-  reminderTime?: Date;
   createdAt: Date;
   deletedAt?: Date;
 }
