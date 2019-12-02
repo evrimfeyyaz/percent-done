@@ -346,6 +346,14 @@ describe('goals selectors', () => {
 
       expect(progress).toEqual(50);
     });
+
+    it('returns 100 when there are no goals for a given day', () => {
+      const state = createStoreState({});
+
+      const result = getTotalProgressForDate(state, today);
+
+      expect(result).toEqual(100);
+    })
   });
 
   describe('getCompletedMs', () => {

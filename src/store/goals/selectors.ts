@@ -152,6 +152,8 @@ export const getTotalProgressForDate = (state: StoreState, date: Date): number =
   const goals = getGoals(state, date);
   const numOfGoals = goals.length;
 
+  if (numOfGoals === 0) return 100;
+
   return goals.reduce((progress, goal) => {
     return progress + getProgress(state, goal, date) / numOfGoals;
   }, 0);
