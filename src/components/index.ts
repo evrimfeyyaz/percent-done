@@ -36,6 +36,7 @@ export * from './inputs/BottomSheetTimePicker';
 export * from './inputs/BottomSheetDatePicker';
 export * from './inputs/BottomSheetDurationPicker';
 export * from './inputs/BottomSheetItemPicker';
+export * from './inputs/SelectBox';
 
 // Navigation
 export * from './navigation/TabItem';

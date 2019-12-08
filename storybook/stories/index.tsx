@@ -32,7 +32,7 @@ import {
   TimeTracker,
   TimetableEntryForm,
   DatePicker,
-  DateInput, ItemPicker, ItemInput,
+  DateInput, ItemPicker, ItemInput, SelectBox,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -322,7 +322,19 @@ storiesOf('Inputs', module)
 
     return <ItemPicker initialValue={allValues[0]} allValues={allValues} />;
   })
-  .add('Date picker', () => <DatePicker initialValue={new Date()} />);
+  .add('Date picker', () => <DatePicker initialValue={new Date()} />)
+  .add('Select box', () => {
+    const data = [
+      { key: 'second-item', title: 'Second item' },
+      { key: 'first-item', title: 'First item' },
+      {
+        key: 'super-long-item',
+        title: 'This is a super long item that has way too much text in its title, I mean why?',
+      },
+    ];
+    return <SelectBox data={data} onItemPress={action('select-box-item-pressed')}
+                      onCreatePress={action('select-box-create-pressed')} />;
+  });
 
 storiesOf('Navigation', module)
   .add('Tab Item', () => (
@@ -370,8 +382,8 @@ storiesOf('Forms', module)
     const goal3 = createGoal({ title: 'Read', durationInMin: 1 });
     const allGoals = [goal1, goal2, goal3];
 
-    return <TimetableEntryForm goalId={goal1.id} allGoals={allGoals}
-                               onSubmit={action('timetable-entry-form-submission')} />;
+    return <TimetableEntryForm allGoals={allGoals} onSubmit={action('timetable-entry-form-submission')}
+                               onDelete={(action('timetable-entry-form-deletion'))} />;
   });
 
 // Utilities

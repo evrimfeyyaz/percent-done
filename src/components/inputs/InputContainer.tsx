@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingHorizontal: 20,
+    position: 'relative',
   },
   content: {
     flexDirection: 'row',

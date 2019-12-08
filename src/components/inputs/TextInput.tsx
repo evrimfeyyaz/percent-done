@@ -11,14 +11,17 @@ import { InputContainer } from './InputContainer';
 interface TextInputProps extends RNTextInputProps {
   error?: string;
   onLayout?: (event: LayoutChangeEvent) => void;
+  placeholderColor?: string;
 }
 
 export const TextInput: FunctionComponent<TextInputProps> = props => {
+  const placeholderColor = props.placeholderColor || colors.gray;
+
   return (
     <InputContainer opacityOnTouch={false} error={props.error} onLayout={props.onLayout}>
       <RNTextInput
         style={StyleSheet.flatten([styles.input, props.style])}
-        placeholderTextColor={colors.gray}
+        placeholderTextColor={placeholderColor}
         {...props}
         onLayout={undefined}
       />
