@@ -132,7 +132,7 @@ describe('goals selectors', () => {
   describe('convertGoalsToGoalListProps', () => {
     it('converts Goal array to GoalListProps array', () => {
       const durationInMinutes = 30;
-      const goal = createGoal({ durationInMin: durationInMinutes });
+      const goal = createGoal({ durationInMin: durationInMinutes }, [today]);
 
       const todaysEntry = createTimetableEntry({
         goalId: goal.id,
@@ -162,6 +162,7 @@ describe('goals selectors', () => {
             completedMs: 30 * 60 * 1000,
             chainLength: 2,
             isActiveToday: true,
+            isCompleted: undefined,
           },
         ],
       };
@@ -172,7 +173,7 @@ describe('goals selectors', () => {
     });
 
     it('properly converts non-time-tracked goals', () => {
-      const goal = createGoal({ durationInMin: undefined });
+      const goal = createGoal({ durationInMin: undefined }, [today]);
       const timetableEntry = createTimetableEntry({
         goalId: goal.id,
         startDate: today,
@@ -206,7 +207,7 @@ describe('goals selectors', () => {
       let goal: Goal;
 
       beforeEach(() => {
-        goal = createGoal({ durationInMin: undefined });
+        goal = createGoal({ durationInMin: undefined }, [today]);
       });
 
       it('returns true when goal is completed', () => {

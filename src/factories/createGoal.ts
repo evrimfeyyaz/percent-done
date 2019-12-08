@@ -3,11 +3,11 @@ import { colors } from '../theme';
 import { Goal } from '../store/goals/types';
 
 interface CreateGoalParams {
-  id?: string,
-  title?: string,
-  color?: string,
-  durationInMin?: number,
-  deletedAt?: Date,
+  id?: string;
+  title?: string;
+  color?: string;
+  durationInMin?: number;
+  deletedAt?: Date;
 }
 
 export const createGoal = ({

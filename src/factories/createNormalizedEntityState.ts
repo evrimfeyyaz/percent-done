@@ -1,5 +1,5 @@
 import { NormalizedEntityState } from '../store/types';
-import { createRandomId } from '../utilities/createRandomId';
+import { createRandomId } from '../utilities';
 
 export const createNormalizedEntityState = <T extends { id?: string }>(entities: T[]): NormalizedEntityState<T> => {
   const result: NormalizedEntityState<T> = {
