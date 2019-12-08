@@ -25,7 +25,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
                                                                    title, color, durationInMs, startTimestamp,
                                                                    initialRemainingMs, onStopPress, onStartTimestampChange,
                                                                  }) => {
-  const bottomSheetTimePickerRef = useRef<BottomSheetTimePicker>(null);
+  const bottomSheetTimePickerRef = useRef(null);
 
   const [msPassed, setMsPassed] = useState(0);
 
@@ -41,6 +41,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     setMsPassed(Date.now() - startTimestamp);
   }
 
+  // @ts-ignore
   const handleStartedAtPress = () => bottomSheetTimePickerRef?.current?.show();
 
   const handleStartedAtTimeChange = (time: Date) => {
@@ -80,8 +81,8 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
           </View>
         </View>
       </TouchableOpacity>
-      <BottomSheetTimePicker ref={bottomSheetTimePickerRef} initialTime={new Date(startTimestamp)}
-                             onTimeChange={handleStartedAtTimeChange} />
+      <BottomSheetTimePicker ref={bottomSheetTimePickerRef} initialValue={new Date(startTimestamp)}
+                             onValueChange={handleStartedAtTimeChange} />
     </View>
   );
 };

@@ -2,16 +2,17 @@ import { NormalizedEntityState } from '../types';
 import { Action } from 'redux';
 
 export interface TimetableEntry {
-  id: string,
-  goalId: string,
+  id: string;
+  goalId: string;
+  projectId?: string;
   /**
    * In milliseconds since the Unix Epoch.
    */
-  startTimestamp: number,
+  startTimestamp: number;
   /**
    * In milliseconds since the Unix Epoch.
    */
-  endTimestamp: number,
+  endTimestamp: number;
 }
 
 export interface TimetableEntriesState extends NormalizedEntityState<TimetableEntry> {
