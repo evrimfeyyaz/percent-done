@@ -80,14 +80,13 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     color: colors.black,
-    fontFamily: fonts.regular,
   },
   itemList: {
     marginTop: 10,
   },
   item: {
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 15,
   },
   itemTitle: {
     fontFamily: fonts.regular,

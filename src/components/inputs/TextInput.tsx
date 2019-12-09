@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import {
   LayoutChangeEvent,
   StyleSheet,
@@ -20,9 +20,9 @@ export const TextInput: FunctionComponent<TextInputProps> = props => {
   return (
     <InputContainer opacityOnTouch={false} error={props.error} onLayout={props.onLayout}>
       <RNTextInput
-        style={StyleSheet.flatten([styles.input, props.style])}
-        placeholderTextColor={placeholderColor}
         {...props}
+        style={[styles.input, props.style]}
+        placeholderTextColor={placeholderColor}
         onLayout={undefined}
       />
     </InputContainer>
