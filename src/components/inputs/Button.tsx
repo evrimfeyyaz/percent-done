@@ -39,12 +39,10 @@ export const Button: FunctionComponent<ButtonProps> = ({
   }
 
   return (
-    <View style={style}>
-      <TouchableOpacity style={styles.container} onPress={onPress}>
-        {icon}
-        <Text style={styles.title}>{title}</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
+      {icon}
+      <Text style={styles.title}>{title}</Text>
+    </TouchableOpacity>
   );
 };
 

@@ -1,5 +1,5 @@
 export function leftOrOver(remainingMs: number) {
-  return remainingMs >= 0 ? 'left' : 'over';
+  return remainingMs >= 0 ? 'left' : 'overtime';
 }
 
 export function pluralize(word: string, count: number) {

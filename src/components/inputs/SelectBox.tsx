@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { colors, fonts } from '../../theme';
-import { TextInput } from '../';
+import { Button, TextInput } from '../';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { createRandomId } from '../../utilities';
 
@@ -12,17 +12,18 @@ interface SelectBoxProps {
   }[];
   onItemPress?: (key: string) => void;
   onCreatePress?: (title: string) => void;
+  onTrackWithoutProjectPress?: () => void;
 }
 
-export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, onItemPress, onCreatePress }) => {
+export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, onItemPress, onCreatePress, onTrackWithoutProjectPress }) => {
   const [value, setValue] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [createButtonItemKey] = useState(createRandomId());
 
   useEffect(() => {
     const newFilteredData = data
-      .filter(item => item.title.toLocaleLowerCase().includes(value.toLocaleLowerCase()))
-      .sort((item1, item2) => item1.title.localeCompare(item2.title));
+      ?.filter(item => item.title.toLocaleLowerCase().includes(value.toLocaleLowerCase()))
+      .sort((item1, item2) => item1.title.localeCompare(item2.title)) || [];
 
     if (
       !newFilteredData.map(item => item.title.toLocaleLowerCase()).includes(value.toLocaleLowerCase()) &&
@@ -55,6 +56,7 @@ export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, onItemPress
                  style={styles.textInputStyle} onChangeText={handleTextChange} />
 
       <KeyboardAwareFlatList style={styles.itemList} data={filteredData} initialNumToRender={30}
+                             alwaysBounceVertical={false}
                              renderItem={({ item }) => (
                                <TouchableOpacity onPress={() => handleItemPress(item)}>
                                  <View style={styles.item}>
@@ -66,6 +68,7 @@ export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, onItemPress
                                </TouchableOpacity>
                              )}
       />
+      <Button title='Track Without Project' style={styles.removeButton} onPress={onTrackWithoutProjectPress} />
     </View>
   );
 };
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'stretch',
     backgroundColor: colors.white,
-    paddingVertical: 10,
+    paddingTop: 10,
   },
   textInputStyle: {
     color: colors.black,
@@ -97,5 +100,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 14,
     color: colors.orange,
+  },
+  removeButton: {
+    borderRadius: 0,
+    backgroundColor: colors.red,
   },
 });
