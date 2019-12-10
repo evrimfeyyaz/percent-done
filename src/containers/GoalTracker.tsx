@@ -2,13 +2,12 @@ import React from 'react';
 import { StoreState } from '../store/types';
 import { AnyAction } from 'redux';
 import { getGoalById, getRemainingMs } from '../store/goals/selectors';
-import { updateTrackedGoalStartTimestamp } from '../store/goals/actions';
+import { updateTrackedGoalProjectId, updateTrackedGoalStartTimestamp } from '../store/goals/actions';
 import { stopGoalTracking } from '../store/goals/thunks';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
 import { TimeTracker, TimeTrackerProps } from '../components';
 import { getAllProjects } from '../store/projects/selectors';
-import { addProject } from '../store/projects/actions';
 import { createProjectAndSetTrackedGoalProject } from '../store/projects/thunks';
 
 const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
@@ -39,6 +38,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>
   onStartTimestampChange: (newTimestamp: number) => dispatch(updateTrackedGoalStartTimestamp(newTimestamp)),
   onStopPress: (startTimestamp: number, endTimestamp: number) => dispatch(stopGoalTracking(endTimestamp)),
   onProjectCreatePress: (title: string) => dispatch(createProjectAndSetTrackedGoalProject(title)),
+  onProjectChange: (id: string) => dispatch(updateTrackedGoalProjectId(id)),
+  onProjectRemove: () => dispatch(updateTrackedGoalProjectId(undefined)),
 });
 
 export const GoalTracker = connect(mapStateToProps, mapDispatchToProps)(TimeTracker);

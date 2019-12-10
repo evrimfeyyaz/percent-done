@@ -46,7 +46,7 @@ export const updateTrackedGoalStartTimestamp = (startTimestamp: number): UpdateT
   startTimestamp,
 });
 
-export const updateTrackedGoalProjectId = (projectId: string): UpdateTrackedGoalProjectIdAction => ({
+export const updateTrackedGoalProjectId = (projectId: string | undefined): UpdateTrackedGoalProjectIdAction => ({
   type: UPDATE_TRACKED_GOAL_PROJECT_ID,
   projectId,
 });
