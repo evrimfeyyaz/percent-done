@@ -23,6 +23,6 @@ const styles = StyleSheet.create({
   },
 });
 
-AllGoalsScreen.navigationOptions = {
-  title: 'All Goals',
-};
+// AllGoalsScreen.navigationOptions = {
+//   title: 'Goals & Projects',
+// };
