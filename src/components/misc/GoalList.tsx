@@ -86,7 +86,6 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
 
     itemSwipeValues[key].setValue(Math.abs(value));
 
-    console.log(`value: ${value}  listWidth: ${listWidth}  isSwipeAnimationRunning: ${isSwipeAnimationRunning}  itemSwipeDirection: ${itemSwipeDirections[key]}`);
     if (value >= listWidth && !isSwipeAnimationRunning && itemSwipeDirections[key] === 'right') {
       const goal = goals.find(goal => goal.id === key);
       if (goal != null && isGoalTracked(goal)) return;

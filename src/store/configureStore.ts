@@ -8,11 +8,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import { PersistConfig } from 'redux-persist/es/types';
 import { StoreState } from './types';
+import { projectsReducer } from './projects/reducers';
 
 export default function configureStore() {
   const rootReducer = combineReducers({
     goals: goalsReducer,
     timetableEntries: timetableEntriesReducer,
+    projects: projectsReducer,
   });
 
   const persistConfig: PersistConfig<StoreState> = {

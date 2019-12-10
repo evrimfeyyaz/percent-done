@@ -10,12 +10,13 @@ interface SelectBoxProps {
     key: string;
     title: string;
   }[];
+  cancelButtonTitle: string;
   onItemPress?: (key: string) => void;
   onCreatePress?: (title: string) => void;
-  onTrackWithoutProjectPress?: () => void;
+  onCancelPress?: () => void;
 }
 
-export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, onItemPress, onCreatePress, onTrackWithoutProjectPress }) => {
+export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, cancelButtonTitle, onItemPress, onCreatePress, onCancelPress }) => {
   const [value, setValue] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [createButtonItemKey] = useState(createRandomId());
@@ -44,7 +45,7 @@ export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, onItemPress
 
   const handleItemPress = (item: { key: string, title: string }) => {
     if (item.key === createButtonItemKey) {
-      onCreatePress?.(item.title);
+      onCreatePress?.(value);
     } else {
       onItemPress?.(item.key);
     }
@@ -68,7 +69,7 @@ export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, onItemPress
                                </TouchableOpacity>
                              )}
       />
-      <Button title='Track Without Project' style={styles.removeButton} onPress={onTrackWithoutProjectPress} />
+      <Button title={cancelButtonTitle} style={styles.cancelButton} onPress={onCancelPress} />
     </View>
   );
 };
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.orange,
   },
-  removeButton: {
+  cancelButton: {
     borderRadius: 0,
     backgroundColor: colors.red,
   },

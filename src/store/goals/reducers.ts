@@ -8,7 +8,7 @@ import {
   GoalsState,
   REMOVE_TRACKED_GOAL,
   SET_TRACKED_GOAL,
-  TrackedGoalState,
+  TrackedGoalState, UPDATE_TRACKED_GOAL_PROJECT_ID,
   UPDATE_TRACKED_GOAL_START_TIMESTAMP,
 } from './types';
 import { NormalizedEntityById } from '../types';
@@ -60,6 +60,11 @@ const trackedGoal: Reducer<TrackedGoalState, GoalActionTypes> = (state = {}, act
       return {
         ...state,
         startTimestamp: action.startTimestamp,
+      };
+    case UPDATE_TRACKED_GOAL_PROJECT_ID:
+      return {
+        ...state,
+        projectId: action.projectId,
       };
     default:
       return state;

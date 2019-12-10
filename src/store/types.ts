@@ -1,5 +1,6 @@
-import { Goal, GoalsState } from './goals/types';
-import { TimetableEntriesState, TimetableEntry } from './timetableEntries/types';
+import { GoalsState } from './goals/types';
+import { TimetableEntriesState } from './timetableEntries/types';
+import { ProjectsState } from './projects/types';
 
 export interface NormalizedEntityById<T> {
   [id: string]: T,
@@ -13,4 +14,5 @@ export interface NormalizedEntityState<T> {
 export interface StoreState {
   goals: GoalsState;
   timetableEntries: TimetableEntriesState;
+  projects: ProjectsState;
 }

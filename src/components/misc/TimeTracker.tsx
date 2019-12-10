@@ -66,6 +66,24 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
   const handleStopPress = () => onStopPress?.(startTimestamp, Date.now());
 
+  const handleProjectCreatePress = (title: string) => {
+    setIsProjectModalVisible(false);
+    onProjectCreatePress?.(title);
+  };
+
+  const handleProjectPress = (key: string) => {
+    setIsProjectModalVisible(false);
+
+    if (projectKey !== key) {
+      onProjectChange?.(key);
+    }
+  };
+
+  const handleCancelPress = () => {
+    setIsProjectModalVisible(false);
+    onProjectRemove?.();
+  };
+
   const titleColorStyle = { color };
 
   const completedMs = (durationInMs - initialRemainingMs) + msPassed;
@@ -87,7 +105,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
         <View style={styles.textButtonContainer}>
           <Text style={styles.textButtonLabel}>What are you working on?</Text>
           <View style={styles.textButtonBottomLine}>
-            <Text style={styles.textButton}>{project || 'Tap to select project'}</Text>
+            <Text style={styles.textButton}>{project?.title || 'Tap to select project'}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -111,8 +129,8 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
       <Modal isVisible={isProjectModalVisible} animationIn='fadeIn' animationOut='fadeOut'
              avoidKeyboard onBackButtonPress={toggleProjectModal} onBackdropPress={toggleProjectModal}>
         <View style={styles.projectModal}>
-          <SelectBox data={projects} onItemPress={onProjectChange} onCreatePress={onProjectCreatePress}
-                     onTrackWithoutProjectPress={onProjectRemove} />
+          <SelectBox data={projects} cancelButtonTitle='Track Without Project' onItemPress={handleProjectPress}
+                     onCreatePress={handleProjectCreatePress} onCancelPress={handleCancelPress} />
         </View>
       </Modal>
     </ScrollView>
@@ -177,7 +195,7 @@ const styles = StyleSheet.create({
   },
   projectModal: {
     width: '80%',
-    height: '40%',
+    height: '50%',
     borderRadius: 4,
     overflow: 'hidden',
     alignSelf: 'center',

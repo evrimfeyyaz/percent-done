@@ -1,8 +1,18 @@
 import {
   ADD_GOAL,
-  AddGoalAction, DELETE_GOAL, DeleteGoalAction, EDIT_GOAL, EditGoalAction,
-  Goal, REMOVE_TRACKED_GOAL, RemoveTrackedGoalAction, SET_TRACKED_GOAL,
-  SetTrackedGoalAction, UPDATE_TRACKED_GOAL_START_TIMESTAMP, UpdateTrackedGoalStartTimestampAction,
+  AddGoalAction,
+  DELETE_GOAL,
+  DeleteGoalAction,
+  EDIT_GOAL,
+  EditGoalAction,
+  Goal,
+  REMOVE_TRACKED_GOAL,
+  RemoveTrackedGoalAction,
+  SET_TRACKED_GOAL,
+  SetTrackedGoalAction, UPDATE_TRACKED_GOAL_PROJECT_ID,
+  UPDATE_TRACKED_GOAL_START_TIMESTAMP,
+  UpdateTrackedGoalProjectIdAction,
+  UpdateTrackedGoalStartTimestampAction,
 } from './types';
 import { ActionCreator } from 'redux';
 
@@ -27,11 +37,16 @@ export const setTrackedGoal = (goalId: string, startTimestamp: number): SetTrack
   startTimestamp,
 });
 
-export const removeTrackedGoal: ActionCreator<RemoveTrackedGoalAction> = () => ({
+export const removeTrackedGoal = (): RemoveTrackedGoalAction => ({
   type: REMOVE_TRACKED_GOAL,
 });
 
-export const updateTrackedGoalStartTimestamp: ActionCreator<UpdateTrackedGoalStartTimestampAction> = (startTimestamp: number) => ({
+export const updateTrackedGoalStartTimestamp = (startTimestamp: number): UpdateTrackedGoalStartTimestampAction => ({
   type: UPDATE_TRACKED_GOAL_START_TIMESTAMP,
   startTimestamp,
+});
+
+export const updateTrackedGoalProjectId = (projectId: string): UpdateTrackedGoalProjectIdAction => ({
+  type: UPDATE_TRACKED_GOAL_PROJECT_ID,
+  projectId,
 });
