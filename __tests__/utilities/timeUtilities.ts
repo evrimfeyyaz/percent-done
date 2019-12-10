@@ -8,7 +8,6 @@ describe('time utilities', () => {
   describe('convertDateToIndex', () => {
     it('converts given date to index', () => {
       const date = new Date(2019, 4, 31); // May 31, 2019
-      console.log(date.getTimezoneOffset());
 
       const index = convertDateToIndex(date);
       const expectedIndex = '2019-5-31';

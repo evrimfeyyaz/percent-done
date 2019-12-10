@@ -116,8 +116,14 @@ storiesOf('Miscellaneous', module)
     return <GoalList goals={goals} />;
   })
   .add('Time tracker', () => (
-    <TimeTracker title='Work on Awesome App' color='#3394FA' durationInMs={60 * 60} startTimestamp={Date.now()}
-                 initialRemainingMs={30 * 60} onStopPress={action('time-tracker-stop-pressed')} />
+    <TimeTracker title='Work on Awesome App' color='#3394FA'
+                 durationInMs={60 * 60} startTimestamp={Date.now()}
+                 projects={[]} initialRemainingMs={30 * 60}
+                 onStopPress={action('time-tracker-stop-pressed')}
+                 onProjectChange={action('time-tracker-project-changed')}
+                 onProjectCreatePress={action('time-tracker-project-create-pressed')}
+                 onProjectRemove={action('time-tracker-project-removed')}
+    />
   ));
 
 storiesOf('Charts', module)
@@ -332,7 +338,8 @@ storiesOf('Inputs', module)
         title: 'This is a super long item that has way too much text in its title, I mean why?',
       },
     ];
-    return <SelectBox data={data} onItemPress={action('select-box-item-pressed')}
+    return <SelectBox data={data} onItemPress={action('select-box-item-pressed')} cancelButtonTitle='Cancel'
+                      onCancelPress={action('select-box-cancel-pressed')}
                       onCreatePress={action('select-box-create-pressed')} />;
   });
 

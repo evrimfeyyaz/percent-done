@@ -1,4 +1,4 @@
-import { AllGoalsScreen, AllProjectsScreen, TodaysGoalsScreen, TodaysTimetableScreen } from '../screens';
+import { AllGoalsScreen, AllProjectsScreen } from '../screens';
 import { createStackNavigator } from 'react-navigation-stack';
 import { headerConfig } from './headerConfig';
 import { createNavigator, TabRouter } from 'react-navigation';

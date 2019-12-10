@@ -17,7 +17,7 @@ export const getAllGoals = (state: StoreState): Goal[] => {
 /**
  * Returns the goals that the user has for a given date.
  */
-export const getGoals = (state: StoreState, date: Date): Goal[] => {
+export const getGoalsForDate = (state: StoreState, date: Date): Goal[] => {
   const { goals } = state;
   const dayOfWeek = date.getDay();
 
@@ -27,10 +27,10 @@ export const getGoals = (state: StoreState, date: Date): Goal[] => {
 };
 
 export const getIncompleteGoals = (state: StoreState, date: Date): Goal[] =>
-  getGoals(state, date).filter(goal => !isCompleted(state, goal, date));
+  getGoalsForDate(state, date).filter(goal => !isCompleted(state, goal, date));
 
 export const getCompleteGoals = (state: StoreState, date: Date): Goal[] =>
-  getGoals(state, date).filter(goal => isCompleted(state, goal, date));
+  getGoalsForDate(state, date).filter(goal => isCompleted(state, goal, date));
 
 /**
  * Converts an array of goals to GoalListProps to be used in the GoalList component.
@@ -79,7 +79,7 @@ export const getCompletedMs = (state: StoreState, goal: Goal, date: Date): numbe
  * Returns the total number of milliseconds spent on all goals on given day.
  */
 export const getTotalCompletedMsForDate = (state: StoreState, date: Date): number => {
-  const goals = getGoals(state, date);
+  const goals = getGoalsForDate(state, date);
 
   return goals.reduce((total, goal) => total + getCompletedMs(state, goal, date), 0);
 };
@@ -102,7 +102,7 @@ export const getRemainingMs = (state: StoreState, goal: Goal, date: Date): numbe
  * Returns the total number of milliseconds remaining for all goals on given day.
  */
 export const getTotalRemainingMsForDate = (state: StoreState, date: Date): number => {
-  const goals = getGoals(state, date);
+  const goals = getGoalsForDate(state, date);
   const totalMs = goals.reduce((total, goal) => {
     if (goal.durationInMs == null) return total;
 
@@ -149,7 +149,7 @@ export const getProgress = (state: StoreState, goal: Goal, date: Date): number =
  * Returns the current overall progress for a day in percentage (0 to 100).
  */
 export const getTotalProgressForDate = (state: StoreState, date: Date): number => {
-  const goals = getGoals(state, date);
+  const goals = getGoalsForDate(state, date);
   const numOfGoals = goals.length;
 
   if (numOfGoals === 0) return 100;

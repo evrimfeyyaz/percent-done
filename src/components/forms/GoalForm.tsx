@@ -151,7 +151,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   };
 
   handleRecurringDaysChange = (recurringDays: boolean[]) => {
-    console.log(recurringDays);
     this.setState({
       recurringDays,
       recurringDaysInputError: undefined,

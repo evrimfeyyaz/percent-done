@@ -18,7 +18,7 @@ interface DaysOfWeekInputProps {
   onLayout?: (event: LayoutChangeEvent) => void;
 }
 
-const dayInitials = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+const dayInitials = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title, selectedDays, onDaysChange, onLayout, error }) => {
   const handleDayChange = (changedDay: number) => {

@@ -6,7 +6,7 @@ import {
   getCompletedMs,
   getCompleteGoals,
   getGoalById,
-  getGoals,
+  getGoalsForDate,
   getIncompleteGoals,
   getProgress,
   getRemainingMs,
@@ -66,7 +66,7 @@ describe('goals selectors', () => {
     });
   });
 
-  describe('getGoals', () => {
+  describe('getGoalsForDate', () => {
     const tomorrow = moment(today).add(1, 'day').toDate();
     let goal: Goal;
 
@@ -79,7 +79,7 @@ describe('goals selectors', () => {
 
       const state = createStoreState({ goals: [goal, goalForTomorrow] });
 
-      const result = getGoals(state, today);
+      const result = getGoalsForDate(state, today);
 
       expect(result).toContain(goal);
       expect(result).not.toContain(goalForTomorrow);
@@ -89,7 +89,7 @@ describe('goals selectors', () => {
       goal.deletedAt = moment(today).subtract(1, 'day').toDate();
       const state = createStoreState({ goals: [goal] });
 
-      const result = getGoals(state, today);
+      const result = getGoalsForDate(state, today);
 
       expect(result).toEqual([]);
     });
@@ -98,7 +98,7 @@ describe('goals selectors', () => {
       goal.deletedAt = tomorrow;
       const state = createStoreState({ goals: [goal] });
 
-      const result = getGoals(state, today);
+      const result = getGoalsForDate(state, today);
 
       expect(result).toEqual([goal]);
     });
