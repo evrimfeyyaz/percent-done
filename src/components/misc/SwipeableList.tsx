@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   ListRenderItemInfo,
   View,
-  Text,
+  Text, Easing,
 } from 'react-native';
 
 interface SwipeableListHiddenAction<T> {
@@ -31,6 +31,7 @@ interface SwipeableListProps<T> {
   disableRightSwipe?: boolean;
   autoSelectRightOuterAction?: boolean;
   autoSelectLeftOuterAction?: boolean;
+  actionContentMargin?: number | string;
 
   renderItem(rowData: ListRenderItemInfo<T>, rowMap: RowMap<T>): JSX.Element | null;
 
@@ -44,244 +45,254 @@ export const SwipeableList = <T, >({
                                      hiddenActionsRight,
                                      autoSelectLeftOuterAction,
                                      autoSelectRightOuterAction,
+                                     actionContentMargin = 10,
                                      leftOpenValue: propsLeftOpenValue,
                                      rightOpenValue: propsRightOpenValue,
                                      keyExtractor: propsKeyExtractor,
                                      disableLeftSwipe: propsDisableLeftSwipe,
                                      disableRightSwipe: propsDisableRightSwipe,
                                    }: SwipeableListProps<T>) => {
-  // LayoutAnimation.easeInEaseOut();
-  const disableLeftSwipe = propsDisableLeftSwipe === true || hiddenActionsRight == null || hiddenActionsRight.length === 0;
-  const disableRightSwipe = propsDisableRightSwipe === true || hiddenActionsLeft == null || hiddenActionsLeft.length === 0;
+    const disableLeftSwipe = propsDisableLeftSwipe === true || hiddenActionsRight == null || hiddenActionsRight.length === 0;
+    const disableRightSwipe = propsDisableRightSwipe === true || hiddenActionsLeft == null || hiddenActionsLeft.length === 0;
 
-  const keyExtractor = propsKeyExtractor ?? ((item: any, index: number): string => {
-    if (typeof (item) === 'object' && item !== null && item.hasOwnProperty('key')) {
-      return item.key ?? index.toString();
-    }
+    const keyExtractor = propsKeyExtractor ?? ((item: any, index: number): string => {
+      if (typeof (item) === 'object' && item !== null && item.hasOwnProperty('key')) {
+        return item.key ?? index.toString();
+      }
 
-    return index.toString();
-  });
-
-  let isSwipeAnimationRunning = false;
-
-  /**
-   * The width of the swipeable list.
-   */
-  const [listWidth, setListWidth] = useState(0);
-
-  /**
-   * Current direction that a given list item is being swiped in.
-   */
-  const [itemSwipeDirections, setItemSwipeDirections] = useState<{ [key: string]: 'left' | 'right' }>({});
-
-  /**
-   * Current amount that a given list item is swiped in any given horizontal direction, i.e. how much
-   * the user has moved the list item (row) in a swipe.
-   */
-  const [itemSwipeValues, setItemSwipeValues] = useState<{ [key: string]: Animated.Value }>({});
-
-  /**
-   * Current visibility value of a given list item. Used when hiding a list item when it is
-   * being removed after a swipe or tap that hides it.
-   */
-  const [itemVisibilityValues, setItemVisibilityValues] = useState<{ [key: string]: Animated.Value }>({});
-
-  /**
-   * When auto select outer action is true, the outer action has position absolute when the user swipes it
-   * far enough to auto select this action. This state variable keeps the position property based on the
-   * swipe value.
-   */
-  const [itemOuterActionPositionStyles, setItemOuterActionPositionStyles] = useState<{ [key: string]: string }>({});
-
-  useEffect(() => {
-    const swipeDirections: typeof itemSwipeDirections = {};
-    const swipeValues: typeof itemSwipeValues = {};
-    const visibilityValues: typeof itemVisibilityValues = {};
-    const outerActionPositionStyles: typeof itemOuterActionPositionStyles = {};
-
-    data?.forEach((item, index) => {
-      const key = keyExtractor(item, index);
-
-      swipeDirections[key] = 'left';
-      swipeValues[key] = new Animated.Value(0);
-      visibilityValues[key] = new Animated.Value(1);
-      outerActionPositionStyles[key] = 'relative';
-
-      swipeValues[key].addListener((animatedValue => {
-        const swipeValue = animatedValue.value;
-        const rOpenValue = rightOpenValue ?? 0;
-        const lOpenValue = leftOpenValue ?? 0;
-
-        if (itemSwipeDirections[key] === 'left' && autoSelectRightOuterAction && swipeValue >= rOpenValue) {
-          outerActionPositionStyles[key] = 'absolute';
-        } else if (itemSwipeDirections[key] === 'right' && autoSelectLeftOuterAction && swipeValue >= lOpenValue) {
-          outerActionPositionStyles[key] = 'absolute';
-        } else {
-          outerActionPositionStyles[key] = 'relative';
-        }
-      }));
+      return index.toString();
     });
 
-    setItemSwipeDirections(swipeDirections);
-    setItemSwipeValues(swipeValues);
-    setItemVisibilityValues(visibilityValues);
-    setItemOuterActionPositionStyles(outerActionPositionStyles);
+    let isSwipeAnimationRunning = false;
 
-    return () => {
-      for (let key in itemSwipeValues) {
-        itemSwipeValues[key].removeAllListeners();
-      }
+    /**
+     * The width of the swipeable list.
+     */
+    const [listWidth, setListWidth] = useState(0);
+
+    /**
+     * Current direction that a given list item is being swiped in.
+     */
+    const [itemSwipeDirections, setItemSwipeDirections] = useState<{ [key: string]: 'left' | 'right' }>({});
+
+    /**
+     * Current amount that a given list item is swiped in any given horizontal direction, i.e. how much
+     * the user has moved the list item (row) in a swipe.
+     */
+    const [itemSwipeValues, setItemSwipeValues] = useState<{ [key: string]: Animated.Value }>({});
+
+    /**
+     * Current visibility value of a given list item. Used when hiding a list item when it is
+     * being removed after a swipe or tap that hides it.
+     */
+    const [itemVisibilityValues, setItemVisibilityValues] = useState<{ [key: string]: Animated.Value }>({});
+
+    /**
+     * Similar to `itemOuterActionsPositionStyles`. Defines widths in percentage for the animation that makes the
+     * outer action take up the whole space when it is "auto selected."
+     */
+    const [itemOuterActionWidthPercentages, setItemOuterActionWidthPercentages] = useState<{ [key: string]: Animated.Value }>({});
+
+    useEffect(() => {
+      const swipeDirections: typeof itemSwipeDirections = {};
+      const swipeValues: typeof itemSwipeValues = {};
+      const visibilityValues: typeof itemVisibilityValues = {};
+      const outerActionWidthPercentages: typeof itemOuterActionWidthPercentages = {};
+
+      data?.forEach((item, index) => {
+        const key = keyExtractor(item, index);
+
+        swipeDirections[key] = 'left';
+        swipeValues[key] = new Animated.Value(0);
+        visibilityValues[key] = new Animated.Value(1);
+        outerActionWidthPercentages[key] = new Animated.Value(0);
+        // outerActionWidthPercentages[key].addListener(value => console.log(value.value));
+      });
+
+      setItemSwipeDirections(swipeDirections);
+      setItemSwipeValues(swipeValues);
+      setItemVisibilityValues(visibilityValues);
+      setItemOuterActionWidthPercentages(outerActionWidthPercentages);
+    }, [data]);
+
+    const handleSwipeListViewLayout = (event: LayoutChangeEvent) => {
+      setListWidth(event.nativeEvent.layout.width);
     };
-  }, [data]);
 
-  const handleSwipeListViewLayout = (event: LayoutChangeEvent) => {
-    setListWidth(event.nativeEvent.layout.width);
-  };
+    const handleSwipeValueChange = (data: {
+      key: string;
+      value: number;
+      direction: 'left' | 'right';
+      isOpen: boolean;
+    }) => {
+      const { key, value } = data;
 
-  const handleSwipeValueChange = (data: {
-    key: string;
-    value: number;
-    direction: 'left' | 'right';
-    isOpen: boolean;
-  }) => {
-    const { key, value } = data;
-
-    if (value > 0 && itemSwipeDirections[key] === 'left') {
-      setItemSwipeDirections({ ...itemSwipeDirections, [key]: 'right' });
-    } else if (value < 0 && itemSwipeDirections[key] === 'right') {
-      setItemSwipeDirections({ ...itemSwipeDirections, [key]: 'left' });
-    }
-
-    itemSwipeValues[key].setValue(Math.abs(value));
-
-    // if (value >= listWidth && !isSwipeAnimationRunning && itemSwipeDirections[key] === 'right') {
-    //   const goal = goals.find(goal => goal.id === key);
-    //   if (goal != null && isGoalTracked(goal)) return;
-    //
-    //   isSwipeAnimationRunning = true;
-    //
-    //   Animated.timing(itemVisibilityValues[key], { toValue: 0, duration: 300 }).start(() => {
-    //     onGoalRightSwipe?.(key);
-    //     isSwipeAnimationRunning = false;
-    //   });
-    // }
-  };
-
-  const makeHiddenActionElement = (hiddenAction: SwipeableListHiddenAction<T>, rowKey: string, outerAction = false) => {
-    const { color, title } = hiddenAction;
-
-    let style: any[];
-
-    if (outerAction) {
-      const swipeValueToAutoSelect = (itemSwipeDirections[rowKey] === 'left' ? rightOpenValue : leftOpenValue) ?? 0;
-
-      style = [styles.hiddenAction, {
-        backgroundColor: color,
-        flex: itemSwipeValues[rowKey]?.interpolate({
-          inputRange: [0, swipeValueToAutoSelect, swipeValueToAutoSelect],
-          outputRange: [1, 1, 0],
-          extrapolate: 'clamp',
-        }),
-        position: itemOuterActionPositionStyles[rowKey],
-        right: 0,
-        width: '100%',
-      }];
-    } else {
-      style = [styles.hiddenAction, {
-        backgroundColor: color,
-        flex: 1,
-      }];
-    }
-
-    // TODO: Center the text based on width.
-    return (
-      <Animated.View style={style}>
-        <Text numberOfLines={1} ellipsizeMode='clip'>{title}</Text>
-      </Animated.View>
-    );
-  };
-
-  /**
-   * When the user swipes past the value to open a row, if auto select outer action is selected,
-   * then the outer action's position is set to absolute, and this element fills its place to make
-   * sure that all other actions are not misaligned when the outer action leaves the flexbox container.
-   */
-  const makeFillerActionElement = (rowKey: string) => {
-    const swipeValueToFill = (itemSwipeDirections[rowKey] === 'left' ? rightOpenValue : leftOpenValue) ?? 0;
-
-    const style = [styles.fillerAction, {
-      flex: itemSwipeValues[rowKey]?.interpolate({
-        inputRange: [0, swipeValueToFill, swipeValueToFill],
-        outputRange: [0, 0, 1],
-        extrapolate: 'clamp',
-      }),
-    }];
-
-    return (
-      <Animated.View style={style} />
-    );
-  };
-
-  const renderHiddenItem = (rowData: ListRenderItemInfo<T>, rowMap: RowMap<T>): JSX.Element => {
-    const key = keyExtractor(rowData.item);
-    const swipeDirection = itemSwipeDirections[key];
-    const swipeValue = itemSwipeValues[key];
-    const hiddenActions = swipeDirection === 'left' ? hiddenActionsRight : hiddenActionsLeft;
-
-    const hiddenActionElements = hiddenActions?.map((item, index, array) => {
-      if (swipeDirection === 'left' && index === array.length - 1) {
-        return makeHiddenActionElement(item, key, true);
+      if (value > 0 && itemSwipeDirections[key] === 'left') {
+        setItemSwipeDirections({ ...itemSwipeDirections, [key]: 'right' });
+      } else if (value < 0 && itemSwipeDirections[key] === 'right') {
+        setItemSwipeDirections({ ...itemSwipeDirections, [key]: 'left' });
       }
 
-      if (swipeDirection === 'right' && index === 0) {
-        return makeHiddenActionElement(item, key, true);
+      itemSwipeValues[key].setValue(Math.abs(value));
+
+      const rOpenValue = rightOpenValue ?? 0;
+      const lOpenValue = leftOpenValue ?? 0;
+
+      if (!isSwipeAnimationRunning) {
+        isSwipeAnimationRunning = true;
+
+        if ((itemSwipeDirections[key] === 'left' && -value >= rOpenValue) ||
+          itemSwipeDirections[key] === 'right' && value >= lOpenValue) {
+
+          Animated.timing(
+            itemOuterActionWidthPercentages[key],
+            {
+              toValue: 100,
+              duration: 200,
+            },
+          ).start(() => {
+            isSwipeAnimationRunning = false;
+          });
+        } else {
+          Animated.timing(
+            itemOuterActionWidthPercentages[key],
+            {
+              toValue: getOuterActionWidthPercentageWhenNotAutoSelected(key),
+              duration: 200,
+            },
+          ).start(() => {
+            isSwipeAnimationRunning = false;
+          });
+        }
       }
 
-      return makeHiddenActionElement(item, key);
-    });
+      // if (value >= listWidth && !isSwipeAnimationRunning && itemSwipeDirections[key] === 'right') {
+      //   const goal = goals.find(goal => goal.id === key);
+      //   if (goal != null && isGoalTracked(goal)) return;
+      //
+      //   isSwipeAnimationRunning = true;
+      //
+      //   Animated.timing(itemVisibilityValues[key], { toValue: 0, duration: 300 }).start(() => {
+      //     onGoalRightSwipe?.(key);
+      //     isSwipeAnimationRunning = false;
+      //   });
+      // }
+    };
 
-    const style = [styles.hiddenItem, {
-      right: swipeDirection === 'left' ? 0 : undefined,
-      width: swipeValue,
-    }];
+    const makeHiddenActionElement = (hiddenAction: SwipeableListHiddenAction<T>, rowKey: string, outerAction = false) => {
+      const { color, title } = hiddenAction;
+      const swipeDirection = itemSwipeDirections[rowKey];
 
-    if (autoSelectRightOuterAction) {
-      hiddenActionElements?.push(makeFillerActionElement(key));
-    }
+      let style: any[];
 
-    if (autoSelectLeftOuterAction) {
-      hiddenActionElements?.unshift(makeFillerActionElement(key));
-    }
+      const commonStyle = {
+        backgroundColor: color,
+        alignItems: swipeDirection === 'left' ? 'flex-start' : 'flex-end',
+      };
+
+      if (outerAction) {
+        style = [styles.hiddenAction, commonStyle, {
+          position: 'absolute',
+          right: swipeDirection === 'left' ? 0 : undefined,
+          left: swipeDirection === 'right' ? 0 : undefined,
+          width: itemOuterActionWidthPercentages[rowKey].interpolate({
+            inputRange: [0, 100],
+            outputRange: ['0%', '100%'],
+            extrapolate: 'clamp',
+          }),
+        }];
+      } else {
+        style = [styles.hiddenAction, commonStyle, {
+          flex: 1,
+        }];
+      }
+
+      const titleStyle = {
+        left: swipeDirection === 'left' ? actionContentMargin : undefined,
+        right: swipeDirection === 'right' ? actionContentMargin : undefined,
+      };
+
+      return (
+        <Animated.View style={style}>
+          <Text numberOfLines={1} ellipsizeMode='clip' style={titleStyle}>{title}</Text>
+        </Animated.View>
+      );
+    };
+
+    const getOuterActionWidthPercentageWhenNotAutoSelected = (key: string) => {
+      const swipeDirection = itemSwipeDirections[key];
+      const hiddenActions = swipeDirection === 'left' ? hiddenActionsRight : hiddenActionsLeft;
+
+      return 100 / (hiddenActions?.length ?? 1);
+    };
+
+    const renderHiddenItem = (rowData: ListRenderItemInfo<T>): JSX.Element => {
+      const key = keyExtractor(rowData.item);
+      const swipeDirection = itemSwipeDirections[key];
+      const swipeValue = itemSwipeValues[key];
+      const hiddenActions = swipeDirection === 'left' ? hiddenActionsRight : hiddenActionsLeft;
+
+      const widthPercentage = getOuterActionWidthPercentageWhenNotAutoSelected(key);
+      itemOuterActionWidthPercentages[key]?.setValue(widthPercentage);
+
+      const hiddenActionElements = hiddenActions?.map((item, index, array) => {
+        if (swipeDirection === 'left' && index === array.length - 1) {
+          return makeHiddenActionElement(item, key, true);
+        }
+
+        if (swipeDirection === 'right' && index === 0) {
+          return makeHiddenActionElement(item, key, true);
+        }
+
+        return makeHiddenActionElement(item, key);
+      });
+
+      const style = [styles.hiddenItem, {
+        right: swipeDirection === 'left' ? 0 : undefined,
+        width: swipeValue,
+      }];
+
+      // As the outer action is always absolutely positioned so that
+      // it can have the "auto select" animation and cover up all other
+      // actions, this element keeps the space filled for it, so that
+      // all the other elements in the flexbox look nice.
+      const filler = (<Animated.View style={styles.fillerAction} />);
+      if (swipeDirection === 'left') {
+        hiddenActionElements?.push(filler);
+      } else {
+        hiddenActionElements?.unshift(filler);
+      }
+
+      return (
+        <Animated.View style={style}>
+          {hiddenActionElements}
+        </Animated.View>
+      );
+    };
+
+// TODO: Calculate default values when no value provided in props.
+    const leftOpenValue = propsLeftOpenValue;
+    const rightOpenValue = propsRightOpenValue;
 
     return (
-      <Animated.View style={style}>
-        {hiddenActionElements}
-      </Animated.View>
+      <SwipeListView
+        data={data}
+        renderItem={renderItem}
+        renderHiddenItem={renderHiddenItem}
+        keyExtractor={keyExtractor}
+        onSwipeValueChange={handleSwipeValueChange}
+        onLayout={handleSwipeListViewLayout}
+        style={styles.swipeListView}
+        disableLeftSwipe={disableLeftSwipe}
+        disableRightSwipe={disableRightSwipe}
+        leftOpenValue={leftOpenValue}
+        rightOpenValue={rightOpenValue ? -rightOpenValue : undefined}
+        swipeToOpenPercent={50}
+        friction={10}
+      />
     );
-  };
-
-  // TODO: Calculate default values when no value provided in props.
-  const leftOpenValue = propsLeftOpenValue;
-  const rightOpenValue = propsRightOpenValue;
-
-  return (
-    <SwipeListView
-      data={data}
-      renderItem={renderItem}
-      renderHiddenItem={renderHiddenItem}
-      keyExtractor={keyExtractor}
-      onSwipeValueChange={handleSwipeValueChange}
-      onLayout={handleSwipeListViewLayout}
-      style={styles.swipeListView}
-      disableLeftSwipe={disableLeftSwipe}
-      disableRightSwipe={disableRightSwipe}
-      leftOpenValue={leftOpenValue}
-      rightOpenValue={-rightOpenValue}
-      swipeToOpenPercent={50}
-      friction={10}
-    />
-  );
-};
+  }
+;
 
 const styles = StyleSheet.create({
   swipeListView: {
@@ -298,10 +309,10 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   fillerAction: {
     height: '100%',
+    flex: 1,
     zIndex: -1,
   },
 });

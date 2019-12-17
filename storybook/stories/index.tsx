@@ -179,6 +179,7 @@ storiesOf('Miscellaneous', module)
       hiddenActionsLeft={[hiddenItemLeft]}
       hiddenActionsRight={[hiddenItemRight1, hiddenItemRight2]}
       autoSelectRightOuterAction
+      actionContentMargin={10}
       leftOpenValue={100}
       rightOpenValue={200}
     />;
