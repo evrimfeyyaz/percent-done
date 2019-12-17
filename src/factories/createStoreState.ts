@@ -19,9 +19,20 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
     timetableEntryIdsByDate[dateIdx].push(entry.id);
   });
 
-  const projectsByTitle: { [title: string]: string } = {};
+  const projectIdsByTitle: { [title: string]: string } = {};
   projects.forEach((project) => {
-    projectsByTitle[project.title.toLocaleLowerCase()] = project.id;
+    projectIdsByTitle[project.title.toLocaleLowerCase()] = project.id;
+  });
+
+  const entryIdsByProjectId: { [projectId: string]: string[] } = {};
+  timetableEntries.forEach(entry => {
+    const projectId = entry.projectId;
+
+    if (projectId == null) return;
+
+    const entryIds = entryIdsByProjectId[projectId] || [];
+
+    entryIdsByProjectId[projectId] = [...entryIds, entry.id];
   });
 
   const goalsState: GoalsState = {
@@ -31,10 +42,11 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
   const timetableEntriesState: TimetableEntriesState = {
     ...createNormalizedEntityState(timetableEntries),
     idsByDate: timetableEntryIdsByDate,
+    idsByProjectId: entryIdsByProjectId,
   };
   const projectsState: ProjectsState = {
     ...createNormalizedEntityState(projects),
-    byTitle: projectsByTitle,
+    idByTitle: projectIdsByTitle,
   };
 
   return {

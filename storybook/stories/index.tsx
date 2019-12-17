@@ -32,7 +32,7 @@ import {
   TimeTracker,
   TimetableEntryForm,
   DatePicker,
-  DateInput, ItemPicker, ItemInput, SelectBox,
+  DateInput, ItemPicker, ItemInput, SelectBox, SwipeableList,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -45,8 +45,8 @@ import {
 } from '@storybook/addon-knobs';
 import { colors, textStyles } from '../../src/theme';
 import moment from 'moment';
-import { Goal } from '../../src/store/goals/types';
 import { createGoal } from '../../src/factories';
+import { RowMap } from 'react-native-swipe-list-view';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -124,7 +124,65 @@ storiesOf('Miscellaneous', module)
                  onProjectCreatePress={action('time-tracker-project-create-pressed')}
                  onProjectRemove={action('time-tracker-project-removed')}
     />
-  ));
+  ))
+  .add('Swipeable list', () => {
+    const goals: (GoalRowProps & { key: string })[] = [
+      {
+        id: 'goal1',
+        title: 'Write',
+        color: colors.white,
+        chainLength: 10,
+        completedMs: 30 * 60,
+        totalMs: 60 * 60,
+        key: 'goal1',
+        isActiveToday: true,
+      },
+      {
+        id: 'goal2',
+        title: 'Write',
+        color: colors.orange,
+        chainLength: 20,
+        completedMs: 40 * 60,
+        totalMs: 120 * 60,
+        key: 'goal2',
+        isActiveToday: true,
+      },
+      {
+        id: 'goal3',
+        title: 'Write',
+        color: colors.blue,
+        chainLength: 0,
+        isCompleted: true,
+        key: 'goal3',
+        isActiveToday: true,
+      },
+    ];
+
+    const hiddenItemLeft = {
+      title: 'Left',
+      color: 'blue',
+    };
+
+    const hiddenItemRight1 = {
+      title: 'Right 1',
+      color: 'yellow',
+    };
+
+    const hiddenItemRight2 = {
+      title: 'Right 2',
+      color: 'red',
+    };
+
+    return <SwipeableList
+      data={goals}
+      renderItem={item => (<View style={{ height: 50 }}><Text>{item.item.title}</Text></View>)}
+      hiddenActionsLeft={[hiddenItemLeft]}
+      hiddenActionsRight={[hiddenItemRight1, hiddenItemRight2]}
+      autoSelectRightOuterAction
+      leftOpenValue={100}
+      rightOpenValue={200}
+    />;
+  });
 
 storiesOf('Charts', module)
   .add('Progress chart', () => {

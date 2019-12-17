@@ -1,12 +1,13 @@
 import React from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { TimetableEntryForm } from '../components';
 import { StoreState } from '../store/types';
 import { getTimetableEntryById } from '../store/timetableEntries/selectors';
 import { TimetableEntry, TimetableEntryActionTypes } from '../store/timetableEntries/types';
-import { deleteTimetableEntry, editTimetableEntry } from '../store/timetableEntries/actions';
+import { deleteTimetableEntry } from '../store/timetableEntries/actions';
 import { getAllGoals } from '../store/goals/selectors';
+import { editTimetableEntry } from '../store/timetableEntries/thunks';
+import { ThunkDispatch } from 'redux-thunk';
 
 interface EditTimetableEntryFormProps {
   timetableEntryId: string;
@@ -18,11 +19,11 @@ const mapStateToProps = (state: StoreState, ownProps: EditTimetableEntryFormProp
   timetableEntry: getTimetableEntryById(state, ownProps.timetableEntryId),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<TimetableEntryActionTypes>, ownProps: EditTimetableEntryFormProps) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, TimetableEntryActionTypes>, ownProps: EditTimetableEntryFormProps) => ({
   onSubmit: (timetableEntry: TimetableEntry) => dispatch(editTimetableEntry(timetableEntry)),
-  onDelete: (timetableEntryId: string, timetableEntryStartTimestamp: number) => {
+  onDelete: (timetableEntry: TimetableEntry) => {
     ownProps.onDelete?.();
-    dispatch(deleteTimetableEntry(timetableEntryId, timetableEntryStartTimestamp));
+    dispatch(deleteTimetableEntry(timetableEntry));
   },
 });
 

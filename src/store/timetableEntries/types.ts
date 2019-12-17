@@ -17,6 +17,7 @@ export interface TimetableEntry {
 
 export interface TimetableEntriesState extends NormalizedEntityState<TimetableEntry> {
   idsByDate: { [date: string]: string[] }
+  idsByProjectId: { [projectId: string]: string[] }
 }
 
 export const ADD_TIMETABLE_ENTRY = 'ADD_TIMETABLE_ENTRY';
@@ -29,11 +30,11 @@ export interface AddTimetableEntryAction extends Action<typeof ADD_TIMETABLE_ENT
 
 export interface EditTimetableEntryAction extends Action<typeof EDIT_TIMETABLE_ENTRY> {
   timetableEntry: TimetableEntry;
+  timetableEntryPreviousState: TimetableEntry;
 }
 
 export interface DeleteTimetableEntryAction extends Action<typeof DELETE_TIMETABLE_ENTRY> {
-  timetableEntryId: string;
-  timetableEntryStartTimestamp: number;
+  timetableEntry: TimetableEntry;
 }
 
 export type TimetableEntryActionTypes =

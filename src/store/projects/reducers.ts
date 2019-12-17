@@ -14,7 +14,7 @@ const byId: Reducer<NormalizedEntityById<Project>, ProjectActionTypes> = (state 
   }
 };
 
-const byTitle: Reducer<{ [id: string]: string, }, ProjectActionTypes> = (state = {}, action) => {
+const idByTitle: Reducer<{ [title: string]: string, }, ProjectActionTypes> = (state = {}, action) => {
   switch (action.type) {
     case ADD_PROJECT:
       const project = action.project;
@@ -36,6 +36,6 @@ const allIds: Reducer<string[], ProjectActionTypes> = (state = [], action) => {
 
 export const projectsReducer: Reducer<ProjectsState> = combineReducers({
   byId,
-  byTitle,
+  idByTitle,
   allIds,
 });

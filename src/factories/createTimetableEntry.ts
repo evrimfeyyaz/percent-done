@@ -8,10 +8,11 @@ interface CreateTimetableEntryArguments {
   startHour: number;
   startMinute?: number;
   durationInMin: number;
+  projectId?: string;
 }
 
 export const createTimetableEntry = ({
-                                       id = createRandomId(), goalId = createRandomId(),
+                                       id = createRandomId(), goalId = createRandomId(), projectId,
                                        startDate, startHour, startMinute = 0, durationInMin,
                                      }: CreateTimetableEntryArguments): TimetableEntry => {
   const startTimestamp = startDate.setHours(startHour, startMinute);
@@ -22,5 +23,6 @@ export const createTimetableEntry = ({
     goalId,
     startTimestamp,
     endTimestamp,
+    projectId,
   };
 };

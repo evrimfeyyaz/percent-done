@@ -5,7 +5,7 @@ describe('projects reducer', () => {
     // @ts-ignore
     expect(projectsReducer(undefined, { type: undefined })).toEqual({
       byId: {},
-      byTitle: {},
+      idByTitle: {},
       allIds: [],
     });
   });

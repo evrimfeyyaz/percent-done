@@ -24,7 +24,7 @@ export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, 
       if (isCompleted(state, goal, today)) {
         const todaysTimetableEntries = getTimetableEntriesForGoal(state, goal, today);
 
-        todaysTimetableEntries.forEach(entry => dispatch(deleteTimetableEntry(entry.id, entry.startTimestamp)));
+        todaysTimetableEntries.forEach(entry => dispatch(deleteTimetableEntry(entry)));
       } else {
         const timestamp = Date.now();
 
@@ -52,7 +52,7 @@ export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void
 
 export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (endTimestamp: number) => {
   return (dispatch, getState) => {
-    const { startTimestamp, id: goalId } = getState().goals.trackedGoal;
+    const { startTimestamp, id: goalId, projectId } = getState().goals.trackedGoal;
 
     if (startTimestamp == null || goalId == null) {
       throw new Error('Tracked goal data is corrupt.');
@@ -67,6 +67,7 @@ export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void,
       goalId,
       startTimestamp,
       endTimestamp,
+      projectId,
     };
 
     dispatch(addTimetableEntry(timetableEntry));

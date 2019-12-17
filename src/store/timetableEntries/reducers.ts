@@ -1,4 +1,4 @@
-import { AnyAction, combineReducers, Reducer } from 'redux';
+import { combineReducers, Reducer } from 'redux';
 import {
   ADD_TIMETABLE_ENTRY,
   EDIT_TIMETABLE_ENTRY,
@@ -17,7 +17,7 @@ const byId: Reducer<NormalizedEntityById<TimetableEntry>, TimetableEntryActionTy
     case EDIT_TIMETABLE_ENTRY:
       return { ...state, [action.timetableEntry.id]: action.timetableEntry };
     case DELETE_TIMETABLE_ENTRY:
-      return _.omit(state, action.timetableEntryId);
+      return _.omit(state, action.timetableEntry.id);
     default:
       return state;
   }
@@ -28,7 +28,7 @@ const allIds: Reducer<string[], TimetableEntryActionTypes> = (state = [], action
     case ADD_TIMETABLE_ENTRY:
       return _.uniq([...state, action.timetableEntry.id]);
     case DELETE_TIMETABLE_ENTRY:
-      return _.without(state, action.timetableEntryId);
+      return _.without(state, action.timetableEntry.id);
     default:
       return state;
   }
@@ -72,8 +72,8 @@ const idsByDate: Reducer<{ [date: string]: string[] }, TimetableEntryActionTypes
 
       return { ...state, [dateIdx]: [...ids, entry.id] };
     case DELETE_TIMETABLE_ENTRY:
-      const entryId = action.timetableEntryId;
-      const entryStartTimestamp = action.timetableEntryStartTimestamp;
+      const entryId = action.timetableEntry.id;
+      const entryStartTimestamp = action.timetableEntry.startTimestamp;
       dateIdx = convertDateToIndex(new Date(entryStartTimestamp));
       ids = _.without(state[dateIdx], entryId);
 
@@ -83,8 +83,64 @@ const idsByDate: Reducer<{ [date: string]: string[] }, TimetableEntryActionTypes
   }
 };
 
-export const timetableEntriesReducer: Reducer<TimetableEntriesState, AnyAction> = combineReducers({
+const idsByProjectId: Reducer<{ [projectId: string]: string[] }, TimetableEntryActionTypes> = (state = {}, action) => {
+  let entry: TimetableEntry, projectId: (string | undefined), entryIds: string[];
+
+  switch (action.type) {
+    case EDIT_TIMETABLE_ENTRY:
+      entry = action.timetableEntry;
+      const entryPreviousState = action.timetableEntryPreviousState;
+      projectId = entry.projectId;
+      const previousProjectId = entryPreviousState.projectId;
+
+      if (projectId == null && previousProjectId == null) {
+        return state;
+      } else if (projectId == null && previousProjectId != null) {
+        const entryIds = state[previousProjectId] || [];
+
+        return { ...state, [previousProjectId]: _.without(entryIds, entry.id) };
+      } else if (projectId != null && previousProjectId == null) {
+        const entryIds = state[projectId] || [];
+
+        return { ...state, [projectId]: [...entryIds, entry.id] };
+      } else if (previousProjectId != null && projectId != null) {
+        const entryIdsForPreviousProject = state[previousProjectId] || [];
+        const entryIdsForNewProject = state[projectId] || [];
+
+        return {
+          ...state,
+          [previousProjectId]: _.without(entryIdsForPreviousProject, entry.id),
+          [projectId]: [...entryIdsForNewProject, entry.id],
+        };
+      }
+
+      return state;
+    case ADD_TIMETABLE_ENTRY:
+      entry = action.timetableEntry;
+      projectId = entry.projectId;
+
+      if (projectId == null) return state;
+
+      entryIds = state[projectId] || [];
+
+      return { ...state, [projectId]: [...entryIds, entry.id] };
+    case DELETE_TIMETABLE_ENTRY:
+      entry = action.timetableEntry;
+      projectId = entry.projectId;
+
+      if (projectId == null) return state;
+
+      entryIds = state[projectId] || [];
+
+      return { ...state, [projectId]: _.without(entryIds, entry.id) };
+    default:
+      return state;
+  }
+};
+
+export const timetableEntriesReducer: Reducer<TimetableEntriesState> = combineReducers({
   byId,
   allIds,
   idsByDate,
+  idsByProjectId,
 });

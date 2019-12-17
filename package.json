@@ -67,7 +67,7 @@
     "react-dom": "16.8.6",
     "react-test-renderer": "16.9.0",
     "redux-devtools-extension": "^2.13.8",
-    "typescript": "^3.7.0-beta"
+    "typescript": "^3.7.3"
   },
   "jest": {
     "preset": "react-native"

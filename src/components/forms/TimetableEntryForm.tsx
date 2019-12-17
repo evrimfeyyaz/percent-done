@@ -17,7 +17,7 @@ interface TimetableEntryFormState {
 export interface TimetableEntryFormProps {
   allGoals: Goal[];
   onSubmit?: (timetableEntry: TimetableEntry) => void;
-  onDelete?: (timetableEntryId: string, timetableEntryStartTimestamp: number) => void;
+  onDelete?: (timetableEntry: TimetableEntry) => void;
   timetableEntry?: TimetableEntry;
 }
 
@@ -163,7 +163,7 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Delete Entry',
-          onPress: () => onDelete?.(timetableEntry.id, timetableEntry.startTimestamp),
+          onPress: () => onDelete?.(timetableEntry),
           style: 'destructive',
         },
       ],
