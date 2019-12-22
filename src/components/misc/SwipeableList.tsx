@@ -64,11 +64,6 @@ export const SwipeableList = <T, >({
   const leftOpenValue = (hiddenActionsLeft?.length ?? 0) * actionWidth;
   const rightOpenValue = (hiddenActionsRight?.length ?? 0) * -actionWidth;
 
-  /**
-   * The width of the swipeable list.
-   */
-  const [listWidth, setListWidth] = useState(0);
-
   const isAutoSelectAnimationRunning = useRef(false);
 
   /**
@@ -120,10 +115,6 @@ export const SwipeableList = <T, >({
     setItemSwipeDirections(swipeDirections);
     setHasSwipedPastAutoSelect(swipedPastAutoSelect);
   }, [data]);
-
-  function handleSwipeListViewLayout(event: LayoutChangeEvent) {
-    setListWidth(event.nativeEvent.layout.width);
-  }
 
   function handleSwipeValueChange(data: {
     key: string;
@@ -348,7 +339,6 @@ export const SwipeableList = <T, >({
       renderHiddenItem={renderHiddenItem}
       keyExtractor={keyExtractor}
       onSwipeValueChange={handleSwipeValueChange}
-      onLayout={handleSwipeListViewLayout}
       style={styles.swipeListView}
       closeOnRowOpen={closeOnRowOpen}
       closeOnRowBeginSwipe={closeOnRowBeginSwipe}
