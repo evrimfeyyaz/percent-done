@@ -3,15 +3,14 @@ import { RowMap, SwipeListView } from 'react-native-swipe-list-view';
 import {
   Animated,
   Image,
-  LayoutChangeEvent,
   StyleSheet,
   TouchableWithoutFeedback,
   ListRenderItemInfo,
   View,
-  Text,
+  Text, ListRenderItem, SectionListRenderItem,
 } from 'react-native';
 
-interface SwipeableListHiddenAction<T> {
+export interface SwipeableListHiddenAction<T> {
   title?: string;
   icon?: any;
   color: string;
@@ -32,8 +31,7 @@ interface SwipeableListProps<T> {
   closeOnRowOpen?: boolean;
   closeOnRowBeginSwipe?: boolean;
   closeOnRowPress?: boolean;
-
-  renderItem(rowData: ListRenderItemInfo<T>, rowMap: RowMap<T>): JSX.Element | null;
+  renderItem: ListRenderItem<T> | SectionListRenderItem<T>;
 
   keyExtractor?(item: T, index?: number): string;
 }

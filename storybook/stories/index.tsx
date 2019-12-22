@@ -125,59 +125,44 @@ storiesOf('Miscellaneous', module)
     />
   ))
   .add('Swipeable list', () => {
-    const goals: (GoalRowProps & { key: string })[] = [
+    const goals = [
       {
         id: 'goal1',
         title: 'Write',
-        color: colors.white,
-        chainLength: 10,
-        completedMs: 30 * 60,
-        totalMs: 60 * 60,
-        key: 'goal1',
-        isActiveToday: true,
       },
       {
         id: 'goal2',
-        title: 'Write',
-        color: colors.orange,
-        chainLength: 20,
-        completedMs: 40 * 60,
-        totalMs: 120 * 60,
-        key: 'goal2',
-        isActiveToday: true,
+        title: 'Read',
       },
       {
         id: 'goal3',
-        title: 'Write',
-        color: colors.blue,
-        chainLength: 0,
-        isCompleted: true,
-        key: 'goal3',
-        isActiveToday: true,
+        title: 'Exercise',
       },
     ];
 
     const hiddenItemLeft = {
       title: 'Left',
       color: 'blue',
-      onInteraction: action('swipeable-list-left-action-interaction')
+      onInteraction: action('swipeable-list-left-action-interaction'),
     };
 
     const hiddenItemRight1 = {
       title: 'Right 1',
       color: 'yellow',
-      onInteraction: action('swipeable-list-right-inner-action-interaction')
+      onInteraction: action('swipeable-list-right-inner-action-interaction'),
     };
 
     const hiddenItemRight2 = {
       title: 'Long Titled Action',
       color: 'red',
-      onInteraction: action('swipeable-list-right-outer-action-interaction')
+      onInteraction: action('swipeable-list-right-outer-action-interaction'),
     };
 
     return <SwipeableList
       data={goals}
-      renderItem={item => (<View style={{ height: 50 }}><Text>{item.item.title}</Text></View>)}
+      renderItem={({ item }: { item: { id: string, title: string } }) => (
+        <View style={{ height: 50 }}><Text>{item.title}</Text></View>
+      )}
       hiddenActionsLeft={[hiddenItemLeft]}
       hiddenActionsRight={[hiddenItemRight1, hiddenItemRight2]}
       autoSelectRightOuterAction
