@@ -46,7 +46,6 @@ import {
 import { colors, textStyles } from '../../src/theme';
 import moment from 'moment';
 import { createGoal } from '../../src/factories';
-import { RowMap } from 'react-native-swipe-list-view';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -161,16 +160,19 @@ storiesOf('Miscellaneous', module)
     const hiddenItemLeft = {
       title: 'Left',
       color: 'blue',
+      onInteraction: action('swipeable-list-left-action-interaction')
     };
 
     const hiddenItemRight1 = {
       title: 'Right 1',
       color: 'yellow',
+      onInteraction: action('swipeable-list-right-inner-action-interaction')
     };
 
     const hiddenItemRight2 = {
-      title: 'Right 2',
+      title: 'Long Titled Action',
       color: 'red',
+      onInteraction: action('swipeable-list-right-outer-action-interaction')
     };
 
     return <SwipeableList
@@ -179,9 +181,7 @@ storiesOf('Miscellaneous', module)
       hiddenActionsLeft={[hiddenItemLeft]}
       hiddenActionsRight={[hiddenItemRight1, hiddenItemRight2]}
       autoSelectRightOuterAction
-      actionContentMargin={10}
-      leftOpenValue={100}
-      rightOpenValue={200}
+      actionWidth={150}
     />;
   });
 
