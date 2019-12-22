@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   ListRenderItemInfo,
   View,
-  Text, ListRenderItem, SectionListRenderItem,
+  Text, ListRenderItem, SectionListRenderItem, TextStyle,
 } from 'react-native';
 
 export interface SwipeableListHiddenAction<T> {
@@ -15,6 +15,7 @@ export interface SwipeableListHiddenAction<T> {
   icon?: any;
   color: string;
   destructive?: boolean;
+  titleStyle?: TextStyle;
   hideRowOnInteraction?: boolean | ((key: string) => boolean);
   onInteraction?: (key: string, rowMap: RowMap<T>) => void;
 }
@@ -31,6 +32,7 @@ interface SwipeableListProps<T> {
   closeOnRowOpen?: boolean;
   closeOnRowBeginSwipe?: boolean;
   closeOnRowPress?: boolean;
+  titleStyle?: TextStyle;
   renderItem: ListRenderItem<T> | SectionListRenderItem<T>;
 
   keyExtractor?(item: T, index?: number): string;
@@ -50,6 +52,7 @@ export const SwipeableList = <T, >({
                                      closeOnRowBeginSwipe,
                                      closeOnRowOpen,
                                      closeOnRowPress,
+                                     titleStyle,
                                    }: SwipeableListProps<T>) => {
   /**
    * When the user swipes past this amount multiplied by open value (the width of the hidden item
@@ -268,7 +271,10 @@ export const SwipeableList = <T, >({
       <TouchableWithoutFeedback onPress={() => handleHiddenActionPress(hiddenAction, rowKey, rowMap)}>
         <Animated.View style={style}>
           <View style={contentStyle}>
-            <Text>{title}</Text>
+            {hiddenAction.icon && (
+              <Image source={hiddenAction.icon} />
+            )}
+            <Text style={[titleStyle, hiddenAction.titleStyle]}>{title}</Text>
           </View>
         </Animated.View>
       </TouchableWithoutFeedback>

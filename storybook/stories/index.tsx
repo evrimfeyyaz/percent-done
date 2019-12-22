@@ -46,6 +46,7 @@ import {
 import { colors, textStyles } from '../../src/theme';
 import moment from 'moment';
 import { createGoal } from '../../src/factories';
+import { Icons } from '../../assets';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -140,33 +141,37 @@ storiesOf('Miscellaneous', module)
       },
     ];
 
-    const hiddenItemLeft = {
+    const hiddenActionLeft = {
       title: 'Left',
       color: 'blue',
+      icon: Icons.addEntry,
       onInteraction: action('swipeable-list-left-action-interaction'),
     };
 
-    const hiddenItemRight1 = {
+    const hiddenActionRight1 = {
       title: 'Right 1',
       color: 'yellow',
+      titleStyle: { color: 'black' },
       onInteraction: action('swipeable-list-right-inner-action-interaction'),
     };
 
-    const hiddenItemRight2 = {
+    const hiddenActionRight2 = {
       title: 'Long Titled Action',
       color: 'red',
+      icon: Icons.checkmarkLarge,
       onInteraction: action('swipeable-list-right-outer-action-interaction'),
     };
 
     return <SwipeableList
       data={goals}
       renderItem={({ item }: { item: { id: string, title: string } }) => (
-        <View style={{ height: 50 }}><Text>{item.title}</Text></View>
+        <View style={{ height: 75 }}><Text>{item.title}</Text></View>
       )}
-      hiddenActionsLeft={[hiddenItemLeft]}
-      hiddenActionsRight={[hiddenItemRight1, hiddenItemRight2]}
+      hiddenActionsLeft={[hiddenActionLeft]}
+      hiddenActionsRight={[hiddenActionRight1, hiddenActionRight2]}
       autoSelectRightOuterAction
       actionWidth={150}
+      titleStyle={{ color: 'white', marginTop: 5 }}
     />;
   });
 

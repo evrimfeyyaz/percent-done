@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 YellowBox.ignoreWarnings(['Warning:']);
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
+YellowBox.ignoreWarnings(['Story with id']);
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
