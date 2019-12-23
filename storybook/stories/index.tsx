@@ -195,6 +195,7 @@ storiesOf('Miscellaneous', module)
       color: 'red',
       icon: Icons.checkmarkLarge,
       onInteraction: action('swipeable-list-right-outer-action-interaction'),
+      hideRowOnInteraction: true,
     };
 
     return <SwipeableList
