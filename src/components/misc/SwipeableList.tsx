@@ -7,7 +7,10 @@ import {
   TouchableWithoutFeedback,
   ListRenderItemInfo,
   View,
-  Text, ListRenderItem, SectionListRenderItem, TextStyle,
+  Text,
+  ListRenderItem,
+  SectionListRenderItem,
+  TextStyle,
 } from 'react-native';
 
 export interface SwipeableListHiddenAction<T> {
@@ -16,14 +19,18 @@ export interface SwipeableListHiddenAction<T> {
   color: string;
   destructive?: boolean;
   titleStyle?: TextStyle;
-  hideRowOnInteraction?: boolean | ((key: string) => boolean);
-  onInteraction?: (key: string, rowMap: RowMap<T>) => void;
+  hideRowOnInteraction?: boolean | ((rowKey: string) => boolean);
+  onInteraction?: (rowKey: string, rowMap: RowMap<T>) => void;
 }
+
+type SwipeableListHiddenActions<T> =
+  SwipeableListHiddenAction<T>[]
+  | ((rowKey: string) => SwipeableListHiddenAction<T>[]);
 
 interface SwipeableListProps<T> {
   data?: T[];
-  hiddenActionsLeft?: SwipeableListHiddenAction<T>[];
-  hiddenActionsRight?: SwipeableListHiddenAction<T>[];
+  hiddenActionsLeft?: SwipeableListHiddenActions<T>;
+  hiddenActionsRight?: SwipeableListHiddenActions<T>;
   disableLeftSwipe?: boolean;
   disableRightSwipe?: boolean;
   autoSelectRightOuterAction?: boolean;
@@ -135,12 +142,13 @@ export const SwipeableList = <T, >({
     if (!hasSwipedPastAutoSelect[rowKey]) return;
 
     const swipeDirection = itemSwipeDirections[rowKey];
+    const hiddenActions = visibleHiddenActions(rowKey);
 
     let outerAction: SwipeableListHiddenAction<T> | undefined;
     if (swipeDirection === 'right') {
-      outerAction = hiddenActionsLeft && hiddenActionsLeft[0];
+      outerAction = hiddenActions && hiddenActions[0];
     } else {
-      outerAction = hiddenActionsRight && hiddenActionsRight[hiddenActionsRight.length - 1];
+      outerAction = hiddenActions && hiddenActions[hiddenActions.length - 1];
     }
 
     if ((swipeDirection === 'right' && autoSelectLeftOuterAction) ||
@@ -274,7 +282,9 @@ export const SwipeableList = <T, >({
             {hiddenAction.icon && (
               <Image source={hiddenAction.icon} />
             )}
-            <Text style={[titleStyle, hiddenAction.titleStyle]}>{title}</Text>
+            {hiddenAction.title && (
+              <Text style={[titleStyle, hiddenAction.titleStyle]}>{title}</Text>
+            )}
           </View>
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -284,7 +294,18 @@ export const SwipeableList = <T, >({
   function visibleHiddenActions(rowKey: string) {
     const swipeDirection = itemSwipeDirections[rowKey];
 
-    return swipeDirection === 'left' ? hiddenActionsRight : hiddenActionsLeft;
+    let actions: typeof hiddenActionsLeft;
+    try {
+      if (swipeDirection === 'right') {
+        actions = (Array.isArray(hiddenActionsLeft) || hiddenActionsLeft == null) ? hiddenActionsLeft : hiddenActionsLeft?.(rowKey);
+      } else {
+        actions = (Array.isArray(hiddenActionsRight) || hiddenActionsRight == null) ? hiddenActionsRight : hiddenActionsRight?.(rowKey);
+      }
+    } catch {
+      throw new Error('Hidden actions that were passed to SwipeableList were in wrong format.');
+    }
+
+    return actions;
   }
 
   function renderHiddenItem(rowData: ListRenderItemInfo<T>, rowMap: RowMap<T>): JSX.Element {

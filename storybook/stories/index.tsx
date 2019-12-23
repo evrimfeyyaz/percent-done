@@ -32,7 +32,7 @@ import {
   TimeTracker,
   TimetableEntryForm,
   DatePicker,
-  DateInput, ItemPicker, ItemInput, SelectBox, SwipeableList,
+  DateInput, ItemPicker, ItemInput, SelectBox, SwipeableList, GoalList2,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -114,6 +114,41 @@ storiesOf('Miscellaneous', module)
     ];
 
     return <GoalList goals={goals} />;
+  })
+  .add('Goals list 2', () => {
+    const goals: (GoalRowProps & { key: string })[] = [
+      {
+        id: 'goal1',
+        title: 'Write',
+        color: colors.white,
+        chainLength: 10,
+        completedMs: 30 * 60,
+        totalMs: 60 * 60,
+        key: 'goal1',
+        isActiveToday: true,
+      },
+      {
+        id: 'goal2',
+        title: 'Write',
+        color: colors.orange,
+        chainLength: 20,
+        completedMs: 40 * 60,
+        totalMs: 120 * 60,
+        key: 'goal2',
+        isActiveToday: true,
+      },
+      {
+        id: 'goal3',
+        title: 'Write',
+        color: colors.blue,
+        chainLength: 0,
+        isCompleted: true,
+        key: 'goal3',
+        isActiveToday: true,
+      },
+    ];
+
+    return <GoalList2 goals={goals} />;
   })
   .add('Time tracker', () => (
     <TimeTracker title='Work on Awesome App' color='#3394FA'
