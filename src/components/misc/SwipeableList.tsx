@@ -74,32 +74,32 @@ export const SwipeableList = <T, >({
   const isAutoSelectAnimationRunning = useRef(false);
 
   /**
-   * Current amount that a given list item is swiped in any given horizontal direction, i.e. how much
-   * the user has moved the list item (row) in a swipe.
+   * Current amount that a given row is swiped in any given horizontal direction, i.e. how much
+   * the user has moved the row in a swipe.
    */
-  const itemSwipeValues = useRef<{ [key: string]: Animated.Value }>({});
+  const rowSwipeValues = useRef<{ [key: string]: Animated.Value }>({});
 
   /**
-   * Current visibility value of a given list item. Used when hiding a list item when it is
+   * Current visibility value of a given row. Used when hiding a row when it is
    * being removed after a swipe or tap that hides it.
    */
-  const itemVisibilityValues = useRef<{ [key: string]: Animated.Value }>({});
+  const rowVisibilityValues = useRef<{ [key: string]: Animated.Value }>({});
 
   /**
-   * Similar to `itemOuterActionsPositionStyles`. Defines widths in percents for the animation that makes the
+   * Similar to `rowOuterActionsPositionStyles`. Defines widths in percents for the animation that makes the
    * outer action take up the whole space when it is "auto selected."
    */
-  const itemOuterActionWidthPercents = useRef<{ [key: string]: Animated.Value }>({});
+  const rowOuterActionWidthPercents = useRef<{ [key: string]: Animated.Value }>({});
 
   /**
-   * Item opacities to slowly fade item when it is being hidden.
+   * Row opacities to slowly fade a row when it is being hidden.
    */
-  const itemOpacities = useRef<{ [key: string]: Animated.Value }>({});
+  const rowOpacities = useRef<{ [key: string]: Animated.Value }>({});
 
   /**
-   * Item vertical scales to slowly shrink item when it is being hidden.
+   * Row heights to slowly shrink a row when it is being hidden.
    */
-  const itemHeights = useRef<{ [key: string]: Animated.Value }>({});
+  const rowHeights = useRef<{ [key: string]: Animated.Value }>({});
 
   /**
    * Whether a row with given key is currently in the process of closing.
@@ -112,19 +112,19 @@ export const SwipeableList = <T, >({
   const [hasSwipedPastAutoSelect, setHasSwipedPastAutoSelect] = useState<{ [key: string]: boolean }>({});
 
   /**
-   * Current direction that a given list item is being swiped in.
+   * Current direction that a given row is being swiped in.
    */
-  const [itemSwipeDirections, setItemSwipeDirections] = useState<{ [key: string]: 'left' | 'right' }>({});
+  const [rowSwipeDirections, setRowSwipeDirections] = useState<{ [key: string]: 'left' | 'right' }>({});
 
   useEffect(() => {
-    const swipeDirections: typeof itemSwipeDirections = {};
+    const swipeDirections: typeof rowSwipeDirections = {};
     const swipedPastAutoSelect: typeof hasSwipedPastAutoSelect = {};
 
-    itemSwipeValues.current = {};
-    itemVisibilityValues.current = {};
-    itemOuterActionWidthPercents.current = {};
-    itemOpacities.current = {};
-    itemHeights.current = {};
+    rowSwipeValues.current = {};
+    rowVisibilityValues.current = {};
+    rowOuterActionWidthPercents.current = {};
+    rowOpacities.current = {};
+    rowHeights.current = {};
     isRowClosing.current = {};
 
     data?.forEach((item, index) => {
@@ -132,14 +132,14 @@ export const SwipeableList = <T, >({
 
       swipeDirections[key] = 'left';
       swipedPastAutoSelect[key] = false;
-      itemSwipeValues.current[key] = new Animated.Value(0);
-      itemVisibilityValues.current[key] = new Animated.Value(1);
-      itemOuterActionWidthPercents.current[key] = new Animated.Value(0);
-      itemOpacities.current[key] = new Animated.Value(1);
+      rowSwipeValues.current[key] = new Animated.Value(0);
+      rowVisibilityValues.current[key] = new Animated.Value(1);
+      rowOuterActionWidthPercents.current[key] = new Animated.Value(0);
+      rowOpacities.current[key] = new Animated.Value(1);
       isRowClosing.current[key] = false;
     });
 
-    setItemSwipeDirections(swipeDirections);
+    setRowSwipeDirections(swipeDirections);
     setHasSwipedPastAutoSelect(swipedPastAutoSelect);
   }, [data]);
 
@@ -151,7 +151,7 @@ export const SwipeableList = <T, >({
   }) {
     const { key, value } = data;
 
-    itemSwipeValues.current[key].setValue(value);
+    rowSwipeValues.current[key].setValue(value);
     setSwipeDirectionState(key, value);
     setHasSwipedPastAutoSelectState(key, value);
     runAutoSelectOuterActionAnimation(key, value);
@@ -160,7 +160,7 @@ export const SwipeableList = <T, >({
   function handleRowOpen(rowKey: string, rowMap: RowMap<T>) {
     if (!hasSwipedPastAutoSelect[rowKey]) return;
 
-    const swipeDirection = itemSwipeDirections[rowKey];
+    const swipeDirection = rowSwipeDirections[rowKey];
     const hiddenActions = visibleHiddenActions(rowKey);
 
     let outerAction: SwipeableListHiddenAction<T> | undefined;
@@ -185,7 +185,7 @@ export const SwipeableList = <T, >({
   function handleItemLayout(event: LayoutChangeEvent, rowKey: string) {
     const { height } = event.nativeEvent.layout;
 
-    itemHeights.current[rowKey] = new Animated.Value(height);
+    rowHeights.current[rowKey] = new Animated.Value(height);
   }
 
   function handleHiddenActionInteraction(rowKey: string, rowMap: RowMap<T>, hiddenAction: SwipeableListHiddenAction<T>) {
@@ -198,14 +198,14 @@ export const SwipeableList = <T, >({
     if (shouldHideRow) {
       Animated.parallel([
         Animated.timing(
-          itemOpacities.current[rowKey],
+          rowOpacities.current[rowKey],
           {
             toValue: 0,
             duration: 200,
           },
         ),
         Animated.timing(
-          itemHeights.current[rowKey],
+          rowHeights.current[rowKey],
           {
             toValue: 0,
             duration: 200,
@@ -249,7 +249,7 @@ export const SwipeableList = <T, >({
 
       if (hasSwipedPastAutoSelect[rowKey]) {
         Animated.timing(
-          itemOuterActionWidthPercents.current[rowKey],
+          rowOuterActionWidthPercents.current[rowKey],
           {
             toValue: 100,
             duration: 200,
@@ -259,7 +259,7 @@ export const SwipeableList = <T, >({
         });
       } else {
         Animated.timing(
-          itemOuterActionWidthPercents.current[rowKey],
+          rowOuterActionWidthPercents.current[rowKey],
           {
             toValue: outerActionWidthPercentWhenNotAutoSelected(rowKey),
             duration: 200,
@@ -311,15 +311,15 @@ export const SwipeableList = <T, >({
   function setSwipeDirectionState(rowKey: string, swipeValue: number) {
     const swipeDirection = swipeDirectionFromSwipeValue(swipeValue);
 
-    if (swipeDirection === 'right' && itemSwipeDirections[rowKey] === 'left') {
-      setItemSwipeDirections({ ...itemSwipeDirections, [rowKey]: 'right' });
-    } else if (swipeDirection === 'left' && itemSwipeDirections[rowKey] === 'right') {
-      setItemSwipeDirections({ ...itemSwipeDirections, [rowKey]: 'left' });
+    if (swipeDirection === 'right' && rowSwipeDirections[rowKey] === 'left') {
+      setRowSwipeDirections({ ...rowSwipeDirections, [rowKey]: 'right' });
+    } else if (swipeDirection === 'left' && rowSwipeDirections[rowKey] === 'right') {
+      setRowSwipeDirections({ ...rowSwipeDirections, [rowKey]: 'left' });
     }
   }
 
   function makeHiddenActionElement(hiddenAction: SwipeableListHiddenAction<T>, rowKey: string, rowMap: RowMap<T>, outerAction = false) {
-    const swipeDirection = itemSwipeDirections[rowKey];
+    const swipeDirection = rowSwipeDirections[rowKey];
 
     const rowSpecificTitleStyle = getHiddenActionPropertyValue(rowKey, hiddenAction.titleStyle);
     const icon = getHiddenActionPropertyValue(rowKey, hiddenAction.icon);
@@ -339,7 +339,7 @@ export const SwipeableList = <T, >({
         position: 'absolute',
         right: swipeDirection === 'left' ? 0 : undefined,
         left: swipeDirection === 'right' ? 0 : undefined,
-        width: itemOuterActionWidthPercents.current[rowKey].interpolate({
+        width: rowOuterActionWidthPercents.current[rowKey].interpolate({
           inputRange: [0, 100],
           outputRange: ['0%', '100%'],
           extrapolate: 'clamp',
@@ -372,7 +372,7 @@ export const SwipeableList = <T, >({
   }
 
   function visibleHiddenActions(rowKey: string) {
-    const swipeDirection = itemSwipeDirections[rowKey];
+    const swipeDirection = rowSwipeDirections[rowKey];
 
     let actions: typeof hiddenActionsLeft;
     if (swipeDirection === 'right') {
@@ -386,13 +386,13 @@ export const SwipeableList = <T, >({
 
   function renderHiddenItem(rowData: (ListRenderItemInfo<T> | SectionListRenderItemInfo<T>), rowMap: RowMap<T>): JSX.Element {
     const key = keyExtractor(rowData.item, rowData.index);
-    const swipeDirection = itemSwipeDirections[key];
-    const swipeValue = itemSwipeValues.current[key];
+    const swipeDirection = rowSwipeDirections[key];
+    const swipeValue = rowSwipeValues.current[key];
     const hiddenActions = visibleHiddenActions(key);
 
     if (!isAutoSelectAnimationRunning.current) {
       const widthPercent = outerActionWidthPercentWhenNotAutoSelected(key);
-      itemOuterActionWidthPercents.current[key]?.setValue(widthPercent);
+      rowOuterActionWidthPercents.current[key]?.setValue(widthPercent);
     }
 
     const hiddenActionElements = hiddenActions?.map((item, index, array) => {
@@ -413,8 +413,8 @@ export const SwipeableList = <T, >({
         inputRange: [-1, 0, 1],
         outputRange: [1, 0, 1],
       }),
-      opacity: itemOpacities.current[key],
-      height: itemHeights.current[key],
+      opacity: rowOpacities.current[key],
+      height: rowHeights.current[key],
     }];
 
     // As the outer action is always absolutely positioned so that
@@ -440,8 +440,8 @@ export const SwipeableList = <T, >({
     const rowKey = keyExtractor(item, index);
 
     const itemStyle = {
-      opacity: itemOpacities.current[rowKey],
-      height: itemHeights.current[rowKey],
+      opacity: rowOpacities.current[rowKey],
+      height: rowHeights.current[rowKey],
     };
 
     return (
