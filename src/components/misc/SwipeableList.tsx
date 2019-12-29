@@ -114,7 +114,7 @@ export const SwipeableList = <T, >({
   /**
    * Current direction that a given row is being swiped in.
    */
-  const [rowSwipeDirections, setRowSwipeDirections] = useState<{ [key: string]: 'left' | 'right' }>({});
+  const [rowSwipeDirections, setRowSwipeDirections] = useState<{ [key: string]: 'left' | 'right' | undefined }>({});
 
   useEffect(() => {
     const swipeDirections: typeof rowSwipeDirections = {};
@@ -130,7 +130,7 @@ export const SwipeableList = <T, >({
     data?.forEach((item, index) => {
       const key = keyExtractor(item, index);
 
-      swipeDirections[key] = 'left';
+      swipeDirections[key] = undefined;
       swipedPastAutoSelect[key] = false;
       heights[key] = (rowHeights && rowHeights[key]);
       rowSwipeValues.current[key] = new Animated.Value(0);
@@ -243,6 +243,7 @@ export const SwipeableList = <T, >({
   function runAutoSelectOuterActionAnimation(rowKey: string, swipeValue: number) {
     const swipeDirection = swipeDirectionFromSwipeValue(swipeValue);
 
+    if (swipeDirection == null) return;
     if (swipeDirection === 'left' && !autoSelectRightOuterAction) return;
     if (swipeDirection === 'right' && !autoSelectLeftOuterAction) return;
 
@@ -274,6 +275,8 @@ export const SwipeableList = <T, >({
   }
 
   function swipeDirectionFromSwipeValue(swipeValue: number) {
+    if (swipeValue === 0) return undefined;
+
     return swipeValue > 0 ? 'right' : 'left';
   }
 
@@ -309,16 +312,20 @@ export const SwipeableList = <T, >({
       setHasSwipedPastAutoSelect({ ...hasSwipedPastAutoSelect, [rowKey]: true });
     } else if (swipedBehindAutoSelectForRightAction) {
       setHasSwipedPastAutoSelect({ ...hasSwipedPastAutoSelect, [rowKey]: false });
+    } else if (swipeDirection === null) {
+      setHasSwipedPastAutoSelect({ ...hasSwipedPastAutoSelect, [rowKey]: false });
     }
   }
 
   function setSwipeDirectionState(rowKey: string, swipeValue: number) {
     const swipeDirection = swipeDirectionFromSwipeValue(swipeValue);
 
-    if (swipeDirection === 'right' && rowSwipeDirections[rowKey] === 'left') {
+    if (swipeDirection === 'right' && rowSwipeDirections[rowKey] !== 'right') {
       setRowSwipeDirections({ ...rowSwipeDirections, [rowKey]: 'right' });
-    } else if (swipeDirection === 'left' && rowSwipeDirections[rowKey] === 'right') {
+    } else if (swipeDirection === 'left' && rowSwipeDirections[rowKey] !== 'left') {
       setRowSwipeDirections({ ...rowSwipeDirections, [rowKey]: 'left' });
+    } else if (swipeDirection == null && rowSwipeDirections[rowKey] != null) {
+      setRowSwipeDirections({ ...rowSwipeDirections, [rowKey]: undefined });
     }
   }
 
