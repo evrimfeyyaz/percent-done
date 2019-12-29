@@ -278,15 +278,17 @@ export const SwipeableList = <T, >({
   function outerActionWidthPercentWhenNotAutoSelected(rowKey: string) {
     const hiddenActions = visibleHiddenActions(rowKey);
 
-    return 100 / (hiddenActions?.length ?? 1);
+    if (hiddenActions == null || hiddenActions.length === 0) return 0;
+
+    return 100 / hiddenActions.length;
   }
 
   function setHasSwipedPastAutoSelectState(rowKey: string, value: number) {
     const swipeDirection = swipeDirectionFromSwipeValue(value);
 
-    const swipedPastAutoSelectForLeftAction = swipeDirection === 'right' && value >= leftOpenValue * AUTO_SELECT_CUTOFF && !hasSwipedPastAutoSelect[rowKey];
+    const swipedPastAutoSelectForLeftAction = swipeDirection === 'right' && value >= leftOpenValue * AUTO_SELECT_CUTOFF && !hasSwipedPastAutoSelect[rowKey] && !isRowClosing.current[rowKey];
     const swipedBehindAutoSelectForLeftAction = swipeDirection === 'right' && value < leftOpenValue * AUTO_SELECT_CUTOFF && hasSwipedPastAutoSelect[rowKey];
-    const swipedPastAutoSelectForRightAction = swipeDirection === 'left' && value <= rightOpenValue * AUTO_SELECT_CUTOFF && !hasSwipedPastAutoSelect[rowKey];
+    const swipedPastAutoSelectForRightAction = swipeDirection === 'left' && value <= rightOpenValue * AUTO_SELECT_CUTOFF && !hasSwipedPastAutoSelect[rowKey] && !isRowClosing.current[rowKey];
     const swipedBehindAutoSelectForRightAction = swipeDirection === 'left' && value > rightOpenValue * AUTO_SELECT_CUTOFF && hasSwipedPastAutoSelect[rowKey];
 
     if (!isRowClosing.current[rowKey]) {
@@ -359,12 +361,8 @@ export const SwipeableList = <T, >({
       <TouchableWithoutFeedback onPress={() => handleHiddenActionInteraction(rowKey, rowMap, hiddenAction)}>
         <Animated.View style={style}>
           <View style={contentStyle}>
-            {icon && (
-              <Image source={icon} />
-            )}
-            {title && (
-              <Text style={[titleStyle, rowSpecificTitleStyle]}>{title}</Text>
-            )}
+            {icon && (<Image source={icon} />)}
+            {title && (<Text style={[titleStyle, rowSpecificTitleStyle]}>{title}</Text>)}
           </View>
         </Animated.View>
       </TouchableWithoutFeedback>
