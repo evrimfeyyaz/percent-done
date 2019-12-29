@@ -13,24 +13,23 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
+type ValueOrFunction<T> = T | ((rowKey: string) => T)
 
 export interface SwipeableListHiddenAction<T> {
-  title?: string;
-  icon?: any;
-  color: string;
-  titleStyle?: TextStyle;
-  hideRowOnInteraction?: boolean | ((rowKey: string) => boolean);
+  title?: ValueOrFunction<string>;
+  icon?: ValueOrFunction<any>;
+  color: ValueOrFunction<string>;
+  titleStyle?: ValueOrFunction<TextStyle>;
+  hideRowOnInteraction?: ValueOrFunction<boolean>;
   onInteraction?: (rowKey: string, rowMap: RowMap<T>) => void;
 }
 
-type SwipeableListHiddenActions<T> =
-  SwipeableListHiddenAction<T>[]
-  | ((rowKey: string) => SwipeableListHiddenAction<T>[]);
-
 interface SwipeableListProps<T> {
   data?: T[];
-  hiddenActionsLeft?: SwipeableListHiddenActions<T>;
-  hiddenActionsRight?: SwipeableListHiddenActions<T>;
+  hiddenActionsLeft?: SwipeableListHiddenAction<T>[];
+  hiddenActionsRight?: SwipeableListHiddenAction<T>[];
   disableLeftSwipe?: boolean;
   disableRightSwipe?: boolean;
   autoSelectRightOuterAction?: boolean;
@@ -103,6 +102,11 @@ export const SwipeableList = <T, >({
   const itemHeights = useRef<{ [key: string]: Animated.Value }>({});
 
   /**
+   * Whether a row with given key is currently in the process of closing.
+   */
+  const isRowClosing = useRef<{ [key: string]: boolean }>({});
+
+  /**
    * Whether the user has swiped more than the amount required to auto select the outer action.
    */
   const [hasSwipedPastAutoSelect, setHasSwipedPastAutoSelect] = useState<{ [key: string]: boolean }>({});
@@ -121,6 +125,7 @@ export const SwipeableList = <T, >({
     itemOuterActionWidthPercents.current = {};
     itemOpacities.current = {};
     itemHeights.current = {};
+    isRowClosing.current = {};
 
     data?.forEach((item, index) => {
       const key = keyExtractor(item, index);
@@ -131,6 +136,7 @@ export const SwipeableList = <T, >({
       itemVisibilityValues.current[key] = new Animated.Value(1);
       itemOuterActionWidthPercents.current[key] = new Animated.Value(0);
       itemOpacities.current[key] = new Animated.Value(1);
+      isRowClosing.current[key] = false;
     });
 
     setItemSwipeDirections(swipeDirections);
@@ -168,7 +174,44 @@ export const SwipeableList = <T, >({
 
     if ((swipeDirection === 'right' && autoSelectLeftOuterAction) ||
       (swipeDirection === 'left' && autoSelectRightOuterAction)) {
-      handleHiddenActionInteraction(outerAction, rowKey, rowMap);
+      handleHiddenActionInteraction(rowKey, rowMap, outerAction);
+    }
+  }
+
+  function handleRowDidClose(rowKey: string) {
+    isRowClosing.current[rowKey] = false;
+  }
+
+  function handleItemLayout(event: LayoutChangeEvent, rowKey: string) {
+    const { height } = event.nativeEvent.layout;
+
+    itemHeights.current[rowKey] = new Animated.Value(height);
+  }
+
+  function handleHiddenActionInteraction(rowKey: string, rowMap: RowMap<T>, hiddenAction: SwipeableListHiddenAction<T>) {
+    hiddenAction.onInteraction?.(rowKey, rowMap);
+    isRowClosing.current[rowKey] = true;
+    rowMap[rowKey].closeRow();
+
+    const shouldHideRow = getHiddenActionPropertyValue(rowKey, hiddenAction.hideRowOnInteraction);
+
+    if (shouldHideRow) {
+      Animated.parallel([
+        Animated.timing(
+          itemOpacities.current[rowKey],
+          {
+            toValue: 0,
+            duration: 200,
+          },
+        ),
+        Animated.timing(
+          itemHeights.current[rowKey],
+          {
+            toValue: 0,
+            duration: 200,
+          },
+        ),
+      ]).start();
     }
   }
 
@@ -180,6 +223,19 @@ export const SwipeableList = <T, >({
     }
 
     return index.toString();
+  }
+
+  /**
+   * As hidden action properties can be functions that return different values for a given
+   * row key, this function checks if a property is a function, and runs it if so. Otherwise
+   * it only returns the value.
+   */
+  function getHiddenActionPropertyValue<PropertyT>(rowKey: string, property: ValueOrFunction<PropertyT>): PropertyT {
+    if (property instanceof Function) {
+      return property(rowKey);
+    }
+
+    return property;
   }
 
   function runAutoSelectOuterActionAnimation(rowKey: string, swipeValue: number) {
@@ -228,13 +284,26 @@ export const SwipeableList = <T, >({
   function setHasSwipedPastAutoSelectState(rowKey: string, value: number) {
     const swipeDirection = swipeDirectionFromSwipeValue(value);
 
-    if (swipeDirection === 'right' && value >= leftOpenValue * AUTO_SELECT_CUTOFF && !hasSwipedPastAutoSelect[rowKey]) {
+    const swipedPastAutoSelectForLeftAction = swipeDirection === 'right' && value >= leftOpenValue * AUTO_SELECT_CUTOFF && !hasSwipedPastAutoSelect[rowKey];
+    const swipedBehindAutoSelectForLeftAction = swipeDirection === 'right' && value < leftOpenValue * AUTO_SELECT_CUTOFF && hasSwipedPastAutoSelect[rowKey];
+    const swipedPastAutoSelectForRightAction = swipeDirection === 'left' && value <= rightOpenValue * AUTO_SELECT_CUTOFF && !hasSwipedPastAutoSelect[rowKey];
+    const swipedBehindAutoSelectForRightAction = swipeDirection === 'left' && value > rightOpenValue * AUTO_SELECT_CUTOFF && hasSwipedPastAutoSelect[rowKey];
+
+    if (!isRowClosing.current[rowKey]) {
+      if ((autoSelectLeftOuterAction && (swipedPastAutoSelectForLeftAction || swipedBehindAutoSelectForLeftAction))) {
+        ReactNativeHapticFeedback.trigger('impactLight');
+      } else if ((autoSelectRightOuterAction && (swipedPastAutoSelectForRightAction || swipedBehindAutoSelectForRightAction))) {
+        ReactNativeHapticFeedback.trigger('impactLight');
+      }
+    }
+
+    if (swipedPastAutoSelectForLeftAction) {
       setHasSwipedPastAutoSelect({ ...hasSwipedPastAutoSelect, [rowKey]: true });
-    } else if (swipeDirection === 'right' && value < leftOpenValue * AUTO_SELECT_CUTOFF && hasSwipedPastAutoSelect[rowKey]) {
+    } else if (swipedBehindAutoSelectForLeftAction) {
       setHasSwipedPastAutoSelect({ ...hasSwipedPastAutoSelect, [rowKey]: false });
-    } else if (swipeDirection === 'left' && value <= rightOpenValue * AUTO_SELECT_CUTOFF && !hasSwipedPastAutoSelect[rowKey]) {
+    } else if (swipedPastAutoSelectForRightAction) {
       setHasSwipedPastAutoSelect({ ...hasSwipedPastAutoSelect, [rowKey]: true });
-    } else if (swipeDirection === 'left' && value > rightOpenValue * AUTO_SELECT_CUTOFF && hasSwipedPastAutoSelect[rowKey]) {
+    } else if (swipedBehindAutoSelectForRightAction) {
       setHasSwipedPastAutoSelect({ ...hasSwipedPastAutoSelect, [rowKey]: false });
     }
   }
@@ -249,47 +318,13 @@ export const SwipeableList = <T, >({
     }
   }
 
-  function handleHiddenActionInteraction(hiddenAction: SwipeableListHiddenAction<T>, rowKey: string, rowMap: RowMap<T>) {
-    hiddenAction.onInteraction?.(rowKey, rowMap);
-    rowMap[rowKey].closeRow();
-
-    const { hideRowOnInteraction } = hiddenAction;
-    let shouldHideRow = false;
-    if (typeof hideRowOnInteraction === 'boolean') {
-      shouldHideRow = hideRowOnInteraction;
-    } else if (typeof hideRowOnInteraction === 'function') {
-      shouldHideRow = hideRowOnInteraction(rowKey);
-    }
-
-    if (shouldHideRow) {
-      Animated.parallel([
-        Animated.timing(
-          itemOpacities.current[rowKey],
-          {
-            toValue: 0,
-            duration: 200,
-          },
-        ),
-        Animated.timing(
-          itemHeights.current[rowKey],
-          {
-            toValue: 0,
-            duration: 200,
-          },
-        ),
-      ]).start();
-    }
-  }
-
-  function handleItemLayout(event: LayoutChangeEvent, rowKey: string) {
-    const { height } = event.nativeEvent.layout;
-
-    itemHeights.current[rowKey] = new Animated.Value(height);
-  }
-
   function makeHiddenActionElement(hiddenAction: SwipeableListHiddenAction<T>, rowKey: string, rowMap: RowMap<T>, outerAction = false) {
-    const { color, title } = hiddenAction;
     const swipeDirection = itemSwipeDirections[rowKey];
+
+    const rowSpecificTitleStyle = getHiddenActionPropertyValue(rowKey, hiddenAction.titleStyle);
+    const icon = getHiddenActionPropertyValue(rowKey, hiddenAction.icon);
+    const title = getHiddenActionPropertyValue(rowKey, hiddenAction.title);
+    const color = getHiddenActionPropertyValue(rowKey, hiddenAction.color);
 
     let style: any[];
 
@@ -300,6 +335,7 @@ export const SwipeableList = <T, >({
 
     if (outerAction) {
       style = [styles.hiddenAction, commonStyle, {
+        zIndex: 9999,
         position: 'absolute',
         right: swipeDirection === 'left' ? 0 : undefined,
         left: swipeDirection === 'right' ? 0 : undefined,
@@ -320,14 +356,14 @@ export const SwipeableList = <T, >({
     }];
 
     return (
-      <TouchableWithoutFeedback onPress={() => handleHiddenActionInteraction(hiddenAction, rowKey, rowMap)}>
+      <TouchableWithoutFeedback onPress={() => handleHiddenActionInteraction(rowKey, rowMap, hiddenAction)}>
         <Animated.View style={style}>
           <View style={contentStyle}>
-            {hiddenAction.icon && (
-              <Image source={hiddenAction.icon} />
+            {icon && (
+              <Image source={icon} />
             )}
-            {hiddenAction.title && (
-              <Text style={[titleStyle, hiddenAction.titleStyle]}>{title}</Text>
+            {title && (
+              <Text style={[titleStyle, rowSpecificTitleStyle]}>{title}</Text>
             )}
           </View>
         </Animated.View>
@@ -340,9 +376,9 @@ export const SwipeableList = <T, >({
 
     let actions: typeof hiddenActionsLeft;
     if (swipeDirection === 'right') {
-      actions = (Array.isArray(hiddenActionsLeft) || hiddenActionsLeft == null) ? hiddenActionsLeft : hiddenActionsLeft?.(rowKey);
+      actions = hiddenActionsLeft;
     } else {
-      actions = (Array.isArray(hiddenActionsRight) || hiddenActionsRight == null) ? hiddenActionsRight : hiddenActionsRight?.(rowKey);
+      actions = hiddenActionsRight;
     }
 
     return actions;
@@ -399,7 +435,7 @@ export const SwipeableList = <T, >({
     );
   }
 
-  function renderItem(rowData: (ListRenderItemInfo<T> | SectionListRenderItemInfo<T>), rowMap?: RowMap<T>): React.ReactElement | null {
+  function renderItem(rowData: (ListRenderItemInfo<T> | SectionListRenderItemInfo<T>)): React.ReactElement | null {
     const { item, index } = rowData;
     const rowKey = keyExtractor(item, index);
 
@@ -435,6 +471,7 @@ export const SwipeableList = <T, >({
       swipeToOpenPercent={50}
       friction={10}
       onRowOpen={handleRowOpen}
+      onRowDidClose={handleRowDidClose}
     />
   );
 };
@@ -446,7 +483,6 @@ const styles = StyleSheet.create({
   },
   hiddenItem: {
     flex: 1,
-    height: '100%',
     flexDirection: 'row',
     position: 'absolute',
   },
@@ -454,6 +490,7 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1,
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   hiddenActionContentStyle: {
     justifyContent: 'center',

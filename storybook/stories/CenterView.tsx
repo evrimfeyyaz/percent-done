@@ -10,6 +10,7 @@ const CenterView: FunctionComponent<{ children?: ReactChild }> = ({
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
+        alwaysBounceVertical={false}
       >
         {children}
       </ScrollView>

@@ -12,7 +12,7 @@ interface GoalListProps {
    */
   emptyText?: string;
   onLeftHiddenActionInteraction?: (goalId: string) => void;
-  onRightHiddenActionInteraction?: (goalId: string) => void;
+  onEditActionInteraction?: (goalId: string) => void;
   disableRightSwipe?: boolean;
 }
 
@@ -20,7 +20,7 @@ export const GoalList2: FunctionComponent<GoalListProps> = ({
                                                               goals, emptyText = '',
                                                               disableRightSwipe = false,
                                                               onLeftHiddenActionInteraction,
-                                                              onRightHiddenActionInteraction,
+                                                              onEditActionInteraction,
                                                             }) => {
   function isGoalTracked(goal: GoalRowProps) {
     return goal.isCompleted == null;
@@ -34,39 +34,34 @@ export const GoalList2: FunctionComponent<GoalListProps> = ({
     return <EmptyContainer text={emptyText} />;
   }
 
-  const hiddenActionsRight: SwipeableListHiddenAction<GoalRowProps>[] = [
-    {
-      icon: Icons.edit,
-      color: colors.yellow,
-      onInteraction: onRightHiddenActionInteraction,
+  const editAction: SwipeableListHiddenAction<GoalRowProps> = {
+    icon: Icons.edit,
+    color: colors.yellow,
+    onInteraction: onEditActionInteraction,
+  };
+
+  const trackOrCompleteAction: SwipeableListHiddenAction<GoalRowProps> = {
+    color: colors.blue,
+    onInteraction: onLeftHiddenActionInteraction,
+    icon: (goalId: string) => {
+      const goal = findGoal(goalId);
+
+      if (goal && isGoalTracked(goal)) {
+        return Icons.stopwatch;
+      } else if (goal?.isCompleted) {
+        return Icons.undo;
+      }
+
+      return Icons.checkmarkLarge;
     },
-  ];
-
-  let hiddenActionsLeft = (goalId: string): SwipeableListHiddenAction<GoalRowProps>[] => {
-    const goal = findGoal(goalId);
-
-    const hiddenAction: SwipeableListHiddenAction<GoalRowProps> = {
-      color: colors.blue,
-      onInteraction: onLeftHiddenActionInteraction,
-    };
-
-    if (goal && isGoalTracked(goal)) {
-      hiddenAction.icon = Icons.stopwatch;
-    } else if (goal?.isCompleted) {
-      hiddenAction.icon = Icons.undo;
-    } else {
-      hiddenAction.icon = Icons.checkmarkLarge;
-    }
-
-    return [hiddenAction];
   };
 
   return (
     <SwipeableList
       data={goals}
       disableRightSwipe={disableRightSwipe}
-      hiddenActionsLeft={hiddenActionsLeft}
-      hiddenActionsRight={hiddenActionsRight}
+      hiddenActionsLeft={[trackOrCompleteAction, editAction]}
+      // hiddenActionsRight={hiddenActionsRight}
       actionWidth={60}
       renderItem={({ item }: { item: GoalRowProps }) => <GoalRow {...item} />}
       autoSelectLeftOuterAction
