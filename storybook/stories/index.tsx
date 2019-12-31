@@ -169,7 +169,7 @@ storiesOf('Miscellaneous', module)
       title: 'Left',
       color: 'blue',
       icon: Icons.addEntry,
-      width: 70,
+      width: 200,
       onInteraction: action('swipeable-item-left-action-interaction'),
     };
 

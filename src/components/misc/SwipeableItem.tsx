@@ -29,6 +29,8 @@ export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActio
   const [translateX] = useState(new Animated.Value(0));
 
   const xPosition = useRef(0);
+  const areLeftActionsOpen = useRef(false);
+  const areRightActionsOpen = useRef(false);
 
   const leftActionWidthsTotal = useMemo(() => getActionWidthsTotal(leftActions), [leftActions]);
   const rightActionWidthsTotal = useMemo(() => getActionWidthsTotal(rightActions), [rightActions]);
@@ -67,17 +69,30 @@ export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActio
     onPanResponderRelease: (evt, gestureState) => {
       // The user has released all touches while this view is the
       // responder. This typically means a gesture has succeeded
-      let springToX = 0;
-      if (xPosition.current >= leftActionWidthsTotal / 2) {
-        springToX = leftActionWidthsTotal;
-      } else if (xPosition.current <= -rightActionWidthsTotal / 2) {
-        springToX = -rightActionWidthsTotal;
+      let animateTo = 0;
+      if ((!areLeftActionsOpen.current && !areRightActionsOpen.current) && (xPosition.current >= leftActionWidthsTotal / 2 || gestureState.vx > 0.5)) {
+        animateTo = leftActionWidthsTotal;
+      } else if (areLeftActionsOpen.current && xPosition.current > leftActionWidthsTotal / 2 && gestureState.vx >= -0.5) {
+        animateTo = leftActionWidthsTotal;
+      } else if ((!areRightActionsOpen.current && !areLeftActionsOpen.current) && (xPosition.current <= -rightActionWidthsTotal / 2 || gestureState.vx < -0.5)) {
+        animateTo = -rightActionWidthsTotal;
+      } else if (areRightActionsOpen.current && xPosition.current < -rightActionWidthsTotal / 2 && gestureState.vx <= 0.5) {
+        animateTo = -rightActionWidthsTotal;
       }
 
       translateX.flattenOffset();
       Animated.spring(translateX, {
-        toValue: springToX,
-      }).start();
+        toValue: animateTo,
+      }).start(() => {
+        if (animateTo === leftActionWidthsTotal) {
+          areLeftActionsOpen.current = true;
+        } else if (animateTo === -rightActionWidthsTotal) {
+          areRightActionsOpen.current = true;
+        } else {
+          areLeftActionsOpen.current = false;
+          areRightActionsOpen.current = false;
+        }
+      });
     },
     onPanResponderTerminate: (evt, gestureState) => {
       // Another component has become the responder, so this gesture
