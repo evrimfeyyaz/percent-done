@@ -32,7 +32,7 @@ import {
   TimeTracker,
   TimetableEntryForm,
   DatePicker,
-  DateInput, ItemPicker, ItemInput, SelectBox, SwipeableList, GoalList2,
+  DateInput, ItemPicker, ItemInput, SelectBox, SwipeableList, GoalList2, SwipeableItem,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -47,6 +47,7 @@ import { colors, textStyles } from '../../src/theme';
 import moment from 'moment';
 import { createGoal } from '../../src/factories';
 import { Icons } from '../../assets';
+import { createRandomId } from '../../src/utilities';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -116,39 +117,7 @@ storiesOf('Miscellaneous', module)
     return <GoalList goals={goals} />;
   })
   .add('Goals list 2', () => {
-    const goals: (GoalRowProps & { key: string })[] = [
-      {
-        id: 'goal1',
-        title: 'Write',
-        color: colors.white,
-        chainLength: 10,
-        completedMs: 30 * 60,
-        totalMs: 60 * 60,
-        key: 'goal1',
-        isActiveToday: true,
-      },
-      {
-        id: 'goal2',
-        title: 'Write',
-        color: colors.orange,
-        chainLength: 20,
-        completedMs: 40 * 60,
-        totalMs: 120 * 60,
-        key: 'goal2',
-        isActiveToday: true,
-      },
-      {
-        id: 'goal3',
-        title: 'Write',
-        color: colors.blue,
-        chainLength: 0,
-        isCompleted: true,
-        key: 'goal3',
-        isActiveToday: true,
-      },
-    ];
-
-    return <GoalList2 goals={goals} />;
+    return <GoalList2 goals={createGoals(100)} />;
   })
   .add('Time tracker', () => (
     <TimeTracker title='Work on Awesome App' color='#3394FA'
@@ -161,21 +130,6 @@ storiesOf('Miscellaneous', module)
     />
   ))
   .add('Swipeable list', () => {
-    const goals = [
-      {
-        id: 'goal1',
-        title: 'Write',
-      },
-      {
-        id: 'goal2',
-        title: 'Read',
-      },
-      {
-        id: 'goal3',
-        title: 'Exercise',
-      },
-    ];
-
     const hiddenActionLeft = {
       title: 'Left',
       color: 'blue',
@@ -199,7 +153,7 @@ storiesOf('Miscellaneous', module)
     };
 
     return <SwipeableList
-      data={goals}
+      data={createSwipeableListData(10)}
       renderItem={({ item }: { item: { id: string, title: string } }) => (
         <View style={{ height: 75 }}><Text>{item.title}</Text></View>
       )}
@@ -209,7 +163,10 @@ storiesOf('Miscellaneous', module)
       actionWidth={150}
       titleStyle={{ color: 'white', marginTop: 5 }}
     />;
-  });
+  })
+  .add('Swipeable item', () => (
+    <SwipeableItem />
+  ));
 
 storiesOf('Charts', module)
   .add('Progress chart', () => {
@@ -484,4 +441,50 @@ function dateKnobReturningDateObj(name: string, defaultValue: Date) {
   const stringTimestamp = dateKnob(name, defaultValue);
 
   return new Date(stringTimestamp);
+}
+
+function createGoals(num: number) {
+  const goals = [];
+  const allColors = [
+    colors.blue, colors.yellow, colors.red, colors.orange, colors.easternBlue,
+    colors.green, colors.violet, colors.offWhite, colors.easternBlue,
+  ];
+  const titles = ['Write', 'Read', 'Work', 'Rest'];
+  const isCompleted = [undefined, true, false];
+
+  for (let i = 0; i < num; i++) {
+    const id = createRandomId();
+    const completed = isCompleted[Math.floor(Math.random() * isCompleted.length)];
+    const total = Math.floor(Math.random() * 120) * 60 * 60;
+    const finished = total / Math.random() * 10;
+
+    goals.push({
+      id,
+      title: titles[Math.floor(Math.random() * titles.length)] + ` ${i}`,
+      color: allColors[Math.floor(Math.random() * allColors.length)],
+      chainLength: Math.floor(Math.random() * 100),
+      isCompleted: completed,
+      completedMs: completed ? undefined : total,
+      totalMs: completed ? undefined : finished,
+      isActiveToday: true,
+    });
+  }
+
+  return goals;
+}
+
+function createSwipeableListData(num: number) {
+  const data = [];
+  const titles = ['Write', 'Read', 'Work', 'Rest'];
+
+  for (let i = 0; i < num; i++) {
+    const id = createRandomId();
+
+    data.push({
+      id,
+      title: titles[Math.floor(Math.random() * titles.length)] + ` ${i}`,
+    });
+  }
+
+  return data;
 }

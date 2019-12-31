@@ -60,8 +60,8 @@ export const GoalList2: FunctionComponent<GoalListProps> = ({
     <SwipeableList
       data={goals}
       disableRightSwipe={disableRightSwipe}
-      hiddenActionsLeft={[trackOrCompleteAction, editAction]}
-      // hiddenActionsRight={hiddenActionsRight}
+      hiddenActionsLeft={[trackOrCompleteAction, editAction, trackOrCompleteAction]}
+      hiddenActionsRight={[editAction, trackOrCompleteAction]}
       actionWidth={60}
       renderItem={({ item }: { item: GoalRowProps }) => <GoalRow {...item} />}
       autoSelectLeftOuterAction
