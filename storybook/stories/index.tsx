@@ -165,7 +165,11 @@ storiesOf('Miscellaneous', module)
     />;
   })
   .add('Swipeable item', () => (
-    <SwipeableItem />
+    <SwipeableItem>
+      <View style={{ backgroundColor: 'red', height: 50, justifyContent: 'center' }}>
+        <Text style={{ color: 'white' }}>Swipeable Item</Text>
+      </View>
+    </SwipeableItem>
   ));
 
 storiesOf('Charts', module)

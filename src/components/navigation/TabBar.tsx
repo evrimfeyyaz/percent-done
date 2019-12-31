@@ -158,6 +158,7 @@ export const TabBar: FunctionComponent<Props> = ({
     />;
   });
 
+  // TODO: Avoid re-creating this in every render.
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => false,
     onMoveShouldSetPanResponder: (evt, gestureState) => {
