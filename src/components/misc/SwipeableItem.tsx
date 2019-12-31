@@ -7,7 +7,7 @@ import {
   TextStyle,
   TouchableWithoutFeedback,
   Image,
-  StyleSheet,
+  StyleSheet, Easing,
 } from 'react-native';
 
 export interface SwipeableItemAction {
@@ -70,19 +70,21 @@ export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActio
       // The user has released all touches while this view is the
       // responder. This typically means a gesture has succeeded
       let animateTo = 0;
-      if ((!areLeftActionsOpen.current && !areRightActionsOpen.current) && (xPosition.current >= leftActionWidthsTotal / 2 || gestureState.vx > 0.5)) {
+      if ((!areLeftActionsOpen.current && !areRightActionsOpen.current) && (xPosition.current >= leftActionWidthsTotal / 2 || gestureState.vx > 0.1)) {
         animateTo = leftActionWidthsTotal;
-      } else if (areLeftActionsOpen.current && xPosition.current > leftActionWidthsTotal / 2 && gestureState.vx >= -0.5) {
+      } else if (areLeftActionsOpen.current && xPosition.current > leftActionWidthsTotal / 2 && gestureState.vx >= -0.1) {
         animateTo = leftActionWidthsTotal;
-      } else if ((!areRightActionsOpen.current && !areLeftActionsOpen.current) && (xPosition.current <= -rightActionWidthsTotal / 2 || gestureState.vx < -0.5)) {
+      } else if ((!areRightActionsOpen.current && !areLeftActionsOpen.current) && (xPosition.current <= -rightActionWidthsTotal / 2 || gestureState.vx < -0.1)) {
         animateTo = -rightActionWidthsTotal;
-      } else if (areRightActionsOpen.current && xPosition.current < -rightActionWidthsTotal / 2 && gestureState.vx <= 0.5) {
+      } else if (areRightActionsOpen.current && xPosition.current < -rightActionWidthsTotal / 2 && gestureState.vx <= 0.1) {
         animateTo = -rightActionWidthsTotal;
       }
 
       translateX.flattenOffset();
-      Animated.spring(translateX, {
+      Animated.timing(translateX, {
         toValue: animateTo,
+        duration: 500,
+        easing: Easing.out(Easing.poly(4)),
       }).start(() => {
         if (animateTo === leftActionWidthsTotal) {
           areLeftActionsOpen.current = true;
