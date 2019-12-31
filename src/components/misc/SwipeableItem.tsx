@@ -1,9 +1,41 @@
 import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, PanResponder, Animated } from 'react-native';
+import {
+  View,
+  Text,
+  PanResponder,
+  Animated,
+  TextStyle,
+  TouchableWithoutFeedback,
+  Image,
+  StyleSheet,
+} from 'react-native';
 
-export const SwipeableItem: FunctionComponent = ({ children }) => {
+export interface SwipeableItemAction {
+  title?: string;
+  icon?: any;
+  color: string;
+  width?: number;
+  titleStyle?: TextStyle;
+  hideRowOnInteraction?: boolean;
+  onInteraction?: (id: string) => void;
+}
+
+interface SwipeableItemProps {
+  leftActions?: SwipeableItemAction[];
+  rightActions?: SwipeableItemAction[];
+}
+
+export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActions, rightActions, children }) => {
   const [translateX] = useState(new Animated.Value(0));
+
   const xPosition = useRef(0);
+
+  const leftActionWidthsTotal = useMemo(() => getActionWidthsTotal(leftActions), [leftActions]);
+  const rightActionWidthsTotal = useMemo(() => getActionWidthsTotal(rightActions), [rightActions]);
+
+  function getActionWidthsTotal(actions?: SwipeableItemAction[]) {
+    return actions?.reduce((total, action) => total + (action.width ?? 0), 0) ?? 0;
+  }
 
   useEffect(() => {
     translateX.addListener((animatedValue) => xPosition.current = animatedValue.value);
@@ -35,9 +67,16 @@ export const SwipeableItem: FunctionComponent = ({ children }) => {
     onPanResponderRelease: (evt, gestureState) => {
       // The user has released all touches while this view is the
       // responder. This typically means a gesture has succeeded
+      let springToX = 0;
+      if (xPosition.current >= leftActionWidthsTotal / 2) {
+        springToX = leftActionWidthsTotal;
+      } else if (xPosition.current <= -rightActionWidthsTotal / 2) {
+        springToX = -rightActionWidthsTotal;
+      }
+
       translateX.flattenOffset();
       Animated.spring(translateX, {
-        toValue: 0,
+        toValue: springToX,
       }).start();
     },
     onPanResponderTerminate: (evt, gestureState) => {
@@ -51,31 +90,79 @@ export const SwipeableItem: FunctionComponent = ({ children }) => {
     },
   }), []);
 
+  function renderAction(action: SwipeableItemAction, id: string, location: 'left' | 'right', outerAction = false) {
+    const { title, icon, color, width, titleStyle } = action;
+
+    let style: any[];
+
+    const commonStyle = {
+      backgroundColor: color,
+      alignItems: location === 'left' ? 'flex-end' : 'flex-start',
+    };
+
+    style = [styles.hiddenAction, commonStyle, {
+      flex: 1,
+    }];
+
+    const contentStyle = [styles.hiddenActionContentStyle, {
+      width,
+    }];
+
+    return (
+      <TouchableWithoutFeedback>
+        <Animated.View style={style}>
+          <View style={contentStyle}>
+            {icon && (<Image source={icon} />)}
+            {title && (<Text style={titleStyle}>{title}</Text>)}
+          </View>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+    );
+  }
+
   const transformStyle = {
     transform: [{ translateX }],
   };
 
   return (
     <View style={{ flexDirection: 'row' }}>
-      <Animated.View style={{
-        backgroundColor: 'yellow', position: 'absolute', left: 0, width: translateX.interpolate({
+      <Animated.View style={[styles.hiddenActionsContainer, {
+        backgroundColor: 'yellow', left: 0, width: translateX.interpolate({
           inputRange: [-1, 0, 1],
           outputRange: [0, 0, 1],
-        }), height: '100%',
-      }}>
-        <Text style={{alignSelf: 'center'}}>Test</Text>
+        }),
+      }]}>
+        {leftActions?.map(action => renderAction(action, 'no-id', 'left'))}
       </Animated.View>
       <Animated.View style={[{ width: '100%' }, transformStyle]} {...panResponder.panHandlers}>
         {children}
       </Animated.View>
-      <Animated.View style={{
-        backgroundColor: 'green', position: 'absolute', right: 0, width: translateX.interpolate({
+      <Animated.View style={[styles.hiddenActionsContainer, {
+        backgroundColor: 'green', right: 0, width: translateX.interpolate({
           inputRange: [-1, 0, 1],
           outputRange: [1, 0, 0],
-        }), height: '100%',
-      }}>
-        <Text style={{alignSelf: 'center'}}>Test</Text>
+        }),
+      }]}>
+        {rightActions?.map(action => renderAction(action, 'no-id', 'right'))}
       </Animated.View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  hiddenActionsContainer: {
+    flexDirection: 'row',
+    height: '100%',
+    position: 'absolute',
+  },
+  hiddenAction: {
+    height: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  hiddenActionContentStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

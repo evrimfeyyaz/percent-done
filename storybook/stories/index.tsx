@@ -164,13 +164,40 @@ storiesOf('Miscellaneous', module)
       titleStyle={{ color: 'white', marginTop: 5 }}
     />;
   })
-  .add('Swipeable item', () => (
-    <SwipeableItem>
-      <View style={{ backgroundColor: 'red', height: 50, justifyContent: 'center' }}>
-        <Text style={{ color: 'white' }}>Swipeable Item</Text>
-      </View>
-    </SwipeableItem>
-  ));
+  .add('Swipeable item', () => {
+    const leftAction = {
+      title: 'Left',
+      color: 'blue',
+      icon: Icons.addEntry,
+      width: 70,
+      onInteraction: action('swipeable-item-left-action-interaction'),
+    };
+
+    const actionRight1 = {
+      title: 'Right 1',
+      color: 'yellow',
+      titleStyle: { color: 'black' },
+      width: 70,
+      onInteraction: action('swipeable-item-right-inner-action-interaction'),
+    };
+
+    const actionRight2 = {
+      title: 'Right 2',
+      color: 'red',
+      icon: Icons.checkmarkLarge,
+      width: 70,
+      onInteraction: action('swipeable-item-right-outer-action-interaction'),
+      hideRowOnInteraction: true,
+    };
+
+    return (
+      <SwipeableItem leftActions={[leftAction]} rightActions={[actionRight1, actionRight2]}>
+        <View style={{ backgroundColor: 'red', height: 50, justifyContent: 'center' }}>
+          <Text style={{ color: 'white' }}>Swipeable Item</Text>
+        </View>
+      </SwipeableItem>
+    );
+  });
 
 storiesOf('Charts', module)
   .add('Progress chart', () => {
