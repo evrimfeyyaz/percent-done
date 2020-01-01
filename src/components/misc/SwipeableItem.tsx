@@ -74,34 +74,19 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     onPanResponderRelease: (evt, gestureState) => {
       // The user has released all touches while this view is the
       // responder. This typically means a gesture has succeeded
-      let animateTo = 0;
-      if ((!this.areLeftActionsOpen && !this.areRightActionsOpen) && (this.xPosition >= this.leftActionWidthsTotal / 2 || gestureState.vx > 0.1)) {
-        animateTo = this.leftActionWidthsTotal;
-      } else if (this.areLeftActionsOpen && this.xPosition > this.leftActionWidthsTotal / 2 && gestureState.vx >= -0.1) {
-        animateTo = this.leftActionWidthsTotal;
-      } else if ((!this.areRightActionsOpen && !this.areLeftActionsOpen) && (this.xPosition <= -this.rightActionWidthsTotal / 2 || gestureState.vx < -0.1)) {
-        animateTo = -this.rightActionWidthsTotal;
-      } else if (this.areRightActionsOpen && this.xPosition < -this.rightActionWidthsTotal / 2 && gestureState.vx <= 0.1) {
-        animateTo = -this.rightActionWidthsTotal;
-      }
-
       this.state.translateX.flattenOffset();
-      Animated.spring(this.state.translateX, {
-        toValue: animateTo,
-        overshootClamping: true,
-        velocity: gestureState.vx,
-        friction: 100,
-        tension: 100,
-      }).start(() => {
-        if (animateTo === this.leftActionWidthsTotal) {
-          this.areLeftActionsOpen = true;
-        } else if (animateTo === -this.rightActionWidthsTotal) {
-          this.areRightActionsOpen = true;
-        } else {
-          this.areLeftActionsOpen = false;
-          this.areRightActionsOpen = false;
-        }
-      });
+
+      if ((!this.areLeftActionsOpen && !this.areRightActionsOpen) && (this.xPosition >= this.leftActionWidthsTotal / 2 || gestureState.vx > 0.1)) {
+        this.openLeft(gestureState.vx);
+      } else if (this.areLeftActionsOpen && this.xPosition > this.leftActionWidthsTotal / 2 && gestureState.vx >= -0.1) {
+        this.openLeft(gestureState.vx);
+      } else if ((!this.areRightActionsOpen && !this.areLeftActionsOpen) && (this.xPosition <= -this.rightActionWidthsTotal / 2 || gestureState.vx < -0.1)) {
+        this.openRight(gestureState.vx);
+      } else if (this.areRightActionsOpen && this.xPosition < -this.rightActionWidthsTotal / 2 && gestureState.vx <= 0.1) {
+        this.openRight(gestureState.vx);
+      } else {
+        this.close(gestureState.vx);
+      }
     },
     onPanResponderTerminate: (evt, gestureState) => {
       // Another component has become the responder, so this gesture
@@ -127,6 +112,47 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   componentWillUnmount(): void {
     this.state.translateX.removeAllListeners();
   }
+
+  close(velocity = 0): void {
+    Animated.spring(
+      this.state.translateX,
+      this.openCloseAnimationConfiguration(0, velocity),
+    ).start(() => {
+      this.areLeftActionsOpen = false;
+      this.areRightActionsOpen = false;
+    });
+  }
+
+  openLeft(velocity = 0): void {
+    this.openTo(this.leftActionWidthsTotal, velocity);
+  }
+
+  openRight(velocity = 0): void {
+    this.openTo(-this.rightActionWidthsTotal, velocity);
+  }
+
+  openTo = (x: number, velocity = 0) => {
+    Animated.spring(
+      this.state.translateX,
+      this.openCloseAnimationConfiguration(x, velocity),
+    ).start(() => {
+      if (x >= this.leftActionWidthsTotal) {
+        this.areLeftActionsOpen = true;
+      } else if (x <= -this.rightActionWidthsTotal) {
+        this.areRightActionsOpen = true;
+      }
+    });
+  };
+
+  openCloseAnimationConfiguration = (toValue: number, velocity: number) => (
+    {
+      toValue,
+      overshootClamping: true,
+      velocity,
+      friction: 100,
+      tension: 100,
+    }
+  );
 
   renderOuterAction = (action: SwipeableItemAction, location: 'left' | 'right') => this.renderAction(action, location, true);
 
