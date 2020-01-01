@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { PureComponent } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   TextStyle,
   TouchableWithoutFeedback,
   Image,
-  StyleSheet, Easing,
+  StyleSheet,
 } from 'react-native';
 
 export interface SwipeableItemAction {
@@ -16,36 +16,41 @@ export interface SwipeableItemAction {
   color: string;
   titleStyle?: TextStyle;
   hideRowOnInteraction?: boolean;
-  onInteraction?: (id: string) => void;
+  onInteraction?: (key?: string) => void;
 }
 
 interface SwipeableItemProps {
-  leftActions?: SwipeableItemAction[];
-  rightActions?: SwipeableItemAction[];
-  actionWidth?: number;
+  leftActions: SwipeableItemAction[];
+  rightActions: SwipeableItemAction[];
+  actionWidth: number;
+  key?: string;
 }
 
-export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActions, rightActions, actionWidth = 100, children }) => {
-  const leftActionsLength = leftActions?.length ?? 0;
-  const rightActionsLength = rightActions?.length ?? 0;
-  const leftActionWidthsTotal = leftActionsLength * actionWidth;
-  const rightActionWidthsTotal = rightActionsLength * actionWidth;
+interface SwipeableItemState {
+  translateX: Animated.Value;
+  leftOuterActionWidthPercent: Animated.Value;
+  rightOuterActionWidthPercent: Animated.Value;
+}
 
-  const [translateX] = useState(new Animated.Value(0));
-  const [leftOuterActionWidthPercent] = useState(new Animated.Value(leftActionsLength > 0 ? 100 / leftActionsLength : 0));
-  const [rightOuterActionWidthPercent] = useState(new Animated.Value(rightActionsLength > 0 ? 100 / rightActionsLength : 0));
+export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableItemState> {
+  static defaultProps = {
+    actionWidth: 100,
+    leftActions: [],
+    rightActions: [],
+  };
 
-  const xPosition = useRef(0);
-  const areLeftActionsOpen = useRef(false);
-  const areRightActionsOpen = useRef(false);
+  xPosition = 0;
 
-  useEffect(() => {
-    translateX.addListener((animatedValue) => xPosition.current = animatedValue.value);
+  leftActionsLength = this.props.leftActions.length;
+  rightActionsLength = this.props.rightActions.length;
 
-    return () => translateX.removeAllListeners();
-  }, []);
+  leftActionWidthsTotal = this.leftActionsLength * this.props.actionWidth;
+  rightActionWidthsTotal = this.rightActionsLength * this.props.actionWidth;
 
-  const panResponder = useMemo(() => PanResponder.create({
+  areLeftActionsOpen = false;
+  areRightActionsOpen = false;
+
+  panResponder = PanResponder.create({
     // Ask to be the responder:
     onStartShouldSetPanResponder: (evt, gestureState) => true,
     onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
@@ -56,45 +61,45 @@ export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActio
       // The gesture has started. Show visual feedback so the user knows
       // what is happening!
       // gestureState.d{x,y} will be set to zero now
-      translateX.setOffset(xPosition.current);
-      translateX.setValue(0);
+      this.state.translateX.setOffset(this.xPosition);
+      this.state.translateX.setValue(0);
     },
     onPanResponderMove: (evt, gestureState) => {
       // The most recent move distance is gestureState.move{X,Y}
       // The accumulated gesture distance since becoming responder is
       // gestureState.d{x,y}
-      translateX.setValue(gestureState.dx);
+      this.state.translateX.setValue(gestureState.dx);
     },
     onPanResponderTerminationRequest: (evt, gestureState) => true,
     onPanResponderRelease: (evt, gestureState) => {
       // The user has released all touches while this view is the
       // responder. This typically means a gesture has succeeded
       let animateTo = 0;
-      if ((!areLeftActionsOpen.current && !areRightActionsOpen.current) && (xPosition.current >= leftActionWidthsTotal / 2 || gestureState.vx > 0.1)) {
-        animateTo = leftActionWidthsTotal;
-      } else if (areLeftActionsOpen.current && xPosition.current > leftActionWidthsTotal / 2 && gestureState.vx >= -0.1) {
-        animateTo = leftActionWidthsTotal;
-      } else if ((!areRightActionsOpen.current && !areLeftActionsOpen.current) && (xPosition.current <= -rightActionWidthsTotal / 2 || gestureState.vx < -0.1)) {
-        animateTo = -rightActionWidthsTotal;
-      } else if (areRightActionsOpen.current && xPosition.current < -rightActionWidthsTotal / 2 && gestureState.vx <= 0.1) {
-        animateTo = -rightActionWidthsTotal;
+      if ((!this.areLeftActionsOpen && !this.areRightActionsOpen) && (this.xPosition >= this.leftActionWidthsTotal / 2 || gestureState.vx > 0.1)) {
+        animateTo = this.leftActionWidthsTotal;
+      } else if (this.areLeftActionsOpen && this.xPosition > this.leftActionWidthsTotal / 2 && gestureState.vx >= -0.1) {
+        animateTo = this.leftActionWidthsTotal;
+      } else if ((!this.areRightActionsOpen && !this.areLeftActionsOpen) && (this.xPosition <= -this.rightActionWidthsTotal / 2 || gestureState.vx < -0.1)) {
+        animateTo = -this.rightActionWidthsTotal;
+      } else if (this.areRightActionsOpen && this.xPosition < -this.rightActionWidthsTotal / 2 && gestureState.vx <= 0.1) {
+        animateTo = -this.rightActionWidthsTotal;
       }
 
-      translateX.flattenOffset();
-      Animated.spring(translateX, {
+      this.state.translateX.flattenOffset();
+      Animated.spring(this.state.translateX, {
         toValue: animateTo,
         overshootClamping: true,
         velocity: gestureState.vx,
         friction: 100,
         tension: 100,
       }).start(() => {
-        if (animateTo === leftActionWidthsTotal) {
-          areLeftActionsOpen.current = true;
-        } else if (animateTo === -rightActionWidthsTotal) {
-          areRightActionsOpen.current = true;
+        if (animateTo === this.leftActionWidthsTotal) {
+          this.areLeftActionsOpen = true;
+        } else if (animateTo === -this.rightActionWidthsTotal) {
+          this.areRightActionsOpen = true;
         } else {
-          areLeftActionsOpen.current = false;
-          areRightActionsOpen.current = false;
+          this.areLeftActionsOpen = false;
+          this.areRightActionsOpen = false;
         }
       });
     },
@@ -107,14 +112,26 @@ export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActio
       // responder. Returns true by default. Is currently only supported on android.
       return true;
     },
-  }), []);
+  });
 
-  function renderOuterAction(action: SwipeableItemAction, id: string, location: 'left' | 'right') {
-    return renderAction(action, id, location, true);
+  state = {
+    translateX: new Animated.Value(0),
+    leftOuterActionWidthPercent: new Animated.Value(this.leftActionsLength > 0 ? 100 / this.leftActionsLength : 0),
+    rightOuterActionWidthPercent: new Animated.Value(this.rightActionsLength > 0 ? 100 / this.rightActionsLength : 0),
+  };
+
+  componentDidMount(): void {
+    this.state.translateX.addListener((animatedValue) => this.xPosition = animatedValue.value);
   }
 
-  function renderAction(action: SwipeableItemAction, id: string, location: 'left' | 'right', outerAction = false) {
-    const { title, icon, color, titleStyle } = action;
+  componentWillUnmount(): void {
+    this.state.translateX.removeAllListeners();
+  }
+
+  renderOuterAction = (action: SwipeableItemAction, location: 'left' | 'right') => this.renderAction(action, location, true);
+
+  renderAction = (action: SwipeableItemAction, location: 'left' | 'right', outerAction = false) => {
+    const { title, icon, color, titleStyle, onInteraction } = action;
 
     let style: any[];
 
@@ -124,7 +141,7 @@ export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActio
     };
 
     if (outerAction) {
-      const widthPercent = location === 'left' ? leftOuterActionWidthPercent : rightOuterActionWidthPercent;
+      const widthPercent = location === 'left' ? this.state.leftOuterActionWidthPercent : this.state.rightOuterActionWidthPercent;
 
       style = [styles.hiddenAction, commonStyle, {
         zIndex: 9999,
@@ -144,11 +161,11 @@ export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActio
     }
 
     const contentStyle = [styles.hiddenActionContentStyle, {
-      width: actionWidth,
+      width: this.props.actionWidth,
     }];
 
     return (
-      <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={() => onInteraction?.(this.props.key)}>
         <Animated.View style={style}>
           <View style={contentStyle}>
             {icon && (<Image source={icon} />)}
@@ -157,45 +174,54 @@ export const SwipeableItem: FunctionComponent<SwipeableItemProps> = ({ leftActio
         </Animated.View>
       </TouchableWithoutFeedback>
     );
-  }
-
-  const transformStyle = {
-    transform: [{ translateX }],
   };
 
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      <Animated.View style={[styles.hiddenActionsContainer, {
-        left: 0,
-        width: translateX.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [0, 0, 1],
-        }),
-      }]}>
-        {leftActionsLength > 0 && (<Animated.View style={styles.fillerAction} />)}
-        {leftActions?.map((action, index) => {
-          return index === 0 ? renderOuterAction(action, 'no-id', 'left') : renderAction(action, 'no-id', 'left');
-        })}
-      </Animated.View>
-      <Animated.View style={[{ width: '100%' }, transformStyle]} {...panResponder.panHandlers}>
-        {children}
-      </Animated.View>
-      <Animated.View style={[styles.hiddenActionsContainer, {
-        position: 'absolute',
-        right: 0,
-        width: translateX.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [1, 0, 0],
-        }),
-      }]}>
-        {rightActions?.map((action, index) => {
-          return index === rightActionsLength - 1 ? renderOuterAction(action, 'no-id', 'right') : renderAction(action, 'no-id', 'right');
-        })}
-        {rightActionsLength > 0 && (<Animated.View style={styles.fillerAction} />)}
-      </Animated.View>
-    </View>
-  );
-};
+  renderLeftActions = () => {
+    return <Animated.View style={[styles.hiddenActionsContainer, {
+      left: 0,
+      width: this.state.translateX.interpolate({
+        inputRange: [-1, 0, 1],
+        outputRange: [0, 0, 1],
+      }),
+    }]}>
+      <Animated.View style={styles.fillerAction} />
+      {this.props.leftActions?.map((action, index) => {
+        return index === 0 ? this.renderOuterAction(action, 'left') : this.renderAction(action, 'left');
+      })}
+    </Animated.View>;
+  };
+
+  renderRightActions = () => {
+    return <Animated.View style={[styles.hiddenActionsContainer, {
+      right: 0,
+      width: this.state.translateX.interpolate({
+        inputRange: [-1, 0, 1],
+        outputRange: [1, 0, 0],
+      }),
+    }]}>
+      {this.props.rightActions?.map((action, index) => {
+        return index === this.rightActionsLength - 1 ? this.renderOuterAction(action, 'right') : this.renderAction(action, 'right');
+      })}
+      <Animated.View style={styles.fillerAction} />
+    </Animated.View>;
+  };
+
+  render() {
+    const transformStyle = {
+      transform: [{ translateX: this.state.translateX }],
+    };
+
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {this.leftActionsLength > 0 && this.renderLeftActions()}
+        <Animated.View style={[{ width: '100%' }, transformStyle]} {...this.panResponder.panHandlers}>
+          {this.props.children}
+        </Animated.View>
+        {this.rightActionsLength > 0 && this.renderRightActions()}
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   hiddenActionsContainer: {
