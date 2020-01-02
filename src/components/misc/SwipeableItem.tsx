@@ -42,33 +42,41 @@ interface SwipeableItemState {
 }
 
 export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableItemState> {
-  static defaultProps = {
+  private static defaultProps = {
     actionWidth: 100,
     leftActions: [],
     rightActions: [],
     autoSelectCutOff: 1.5,
   };
+  state = {
+    translateX: new Animated.Value(0),
+    leftOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('left')),
+    rightOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('right')),
+  };
 
-  xPosition = 0;
+  private xPosition = 0;
 
-  numOfLeftActions = this.props.leftActions.length;
-  numOfRightActions = this.props.rightActions.length;
+  private numOfLeftActions = this.props.leftActions.length;
+  private numOfRightActions = this.props.rightActions.length;
 
-  leftActionWidthsTotal = this.numOfLeftActions * this.props.actionWidth;
-  rightActionWidthsTotal = this.numOfRightActions * this.props.actionWidth;
+  private leftOuterAction = this.numOfLeftActions > 0 ? this.props.leftActions[0] : undefined;
+  private rightOuterAction = this.numOfRightActions > 0 ? this.props.rightActions[this.numOfRightActions - 1] : undefined;
 
-  leftOuterActionAutoSelect = this.leftActionWidthsTotal * this.props.autoSelectCutOff;
-  rightOuterActionAutoSelect = -this.rightActionWidthsTotal * this.props.autoSelectCutOff;
+  private leftActionWidthsTotal = this.numOfLeftActions * this.props.actionWidth;
+  private rightActionWidthsTotal = this.numOfRightActions * this.props.actionWidth;
 
-  isLeftOuterActionAutoSelected = false;
-  isRightOuterActionAutoSelected = false;
+  private leftOuterActionAutoSelect = this.leftActionWidthsTotal * this.props.autoSelectCutOff;
+  private rightOuterActionAutoSelect = -this.rightActionWidthsTotal * this.props.autoSelectCutOff;
 
-  areLeftActionsOpen = false;
-  areRightActionsOpen = false;
+  private isLeftOuterActionAutoSelected = false;
+  private isRightOuterActionAutoSelected = false;
 
-  isClosing = false;
+  private areLeftActionsOpen = false;
+  private areRightActionsOpen = false;
 
-  panResponder = PanResponder.create({
+  private isClosing = false;
+
+  private panResponder = PanResponder.create({
     // Ask to be the responder:
     onStartShouldSetPanResponder: (evt, gestureState) => true,
     onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
@@ -105,6 +113,14 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       } else {
         this.close(gestureState.vx);
       }
+
+      if (this.isLeftOuterActionAutoSelected && this.leftOuterAction != null) {
+        this.handleInteraction(this.leftOuterAction.onInteraction);
+      }
+
+      if (this.isRightOuterActionAutoSelected && this.rightOuterAction != null) {
+        this.handleInteraction(this.rightOuterAction.onInteraction);
+      }
     },
     onPanResponderTerminate: (evt, gestureState) => {
       // Another component has become the responder, so this gesture
@@ -117,22 +133,27 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     },
   });
 
-  state = {
-    translateX: new Animated.Value(0),
-    leftOuterActionWidthPercent: new Animated.Value(this.numOfLeftActions > 0 ? 100 / this.numOfLeftActions : 0),
-    rightOuterActionWidthPercent: new Animated.Value(this.numOfRightActions > 0 ? 100 / this.numOfRightActions : 0),
+  private handleInteraction = (callback?: InteractionCallback) => {
+    this.close();
+    callback?.(this.props.key);
   };
 
-  componentDidMount(): void {
-    this.state.translateX.addListener(animatedValue => {
-      const { value } = animatedValue;
+  private autoSelectAnimationConfiguration = (toValue: number) => ({
+    toValue,
+    overshootClamping: true,
+    friction: 100,
+    tension: 100,
+  });
 
-      this.xPosition = value;
-      this.autoSelectOrDeselectOuterAction(value);
-    });
-  }
+  private openCloseAnimationConfiguration = (toValue: number, velocity: number) => ({
+    toValue,
+    overshootClamping: true,
+    velocity,
+    friction: 100,
+    tension: 100,
+  });
 
-  autoSelectOrDeselectOuterAction = (value: number) => {
+  private autoSelectOrDeselectOuterAction(value: number): void {
     if (value >= this.leftOuterActionAutoSelect && !this.isLeftOuterActionAutoSelected) {
       this.isLeftOuterActionAutoSelected = true;
       this.giveHapticFeedback();
@@ -156,40 +177,42 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       this.giveHapticFeedback();
       this.runAutoDeselectOuterActionAnimation('right');
     }
+  }
+
+  private runAutoSelectOuterActionAnimation(location: Location): void {
+    const widthPercent = location === 'left' ? this.state.leftOuterActionWidthPercent : this.state.rightOuterActionWidthPercent;
+
+    Animated.spring(
+      widthPercent,
+      this.autoSelectAnimationConfiguration(100),
+    ).start();
+  }
+
+  private runAutoDeselectOuterActionAnimation(location: Location): void {
+    const widthPercent = location === 'left' ? this.state.leftOuterActionWidthPercent : this.state.rightOuterActionWidthPercent;
+    const toValue = this.outerActionWidthPercentWhenNotAutoSelected(location);
+
+    Animated.spring(
+      widthPercent,
+      this.autoSelectAnimationConfiguration(toValue),
+    ).start();
+  }
+
+  private outerActionWidthPercentWhenNotAutoSelected(location: Location): number {
+    const numOfActions = location === 'left' ? this.numOfLeftActions : this.numOfRightActions;
+
+    if (numOfActions === 0) return 0;
+
+    return 100 / numOfActions;
   };
 
-  giveHapticFeedback = () => {
+  private giveHapticFeedback(): void {
     if (this.isClosing) return;
 
     ReactNativeHapticFeedback.trigger('impactLight');
-  };
-
-  componentWillUnmount(): void {
-    this.state.translateX.removeAllListeners();
   }
 
-  close(velocity = 0): void {
-    this.isClosing = true;
-
-    Animated.spring(
-      this.state.translateX,
-      this.openCloseAnimationConfiguration(0, velocity),
-    ).start(() => {
-      this.isClosing = false;
-      this.areLeftActionsOpen = false;
-      this.areRightActionsOpen = false;
-    });
-  }
-
-  openLeft(velocity = 0): void {
-    this.openTo(this.leftActionWidthsTotal, velocity);
-  }
-
-  openRight(velocity = 0): void {
-    this.openTo(-this.rightActionWidthsTotal, velocity);
-  }
-
-  openTo = (x: number, velocity = 0) => {
+  private openTo(x: number, velocity = 0) {
     Animated.spring(
       this.state.translateX,
       this.openCloseAnimationConfiguration(x, velocity),
@@ -200,58 +223,13 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
         this.areRightActionsOpen = true;
       }
     });
-  };
+  }
 
-  openCloseAnimationConfiguration = (toValue: number, velocity: number) => ({
-    toValue,
-    overshootClamping: true,
-    velocity,
-    friction: 100,
-    tension: 100,
-  });
+  private renderOuterAction(action: SwipeableItemAction, location: Location): JSX.Element {
+    return this.renderAction(action, location, true);
+  }
 
-  autoSelectAnimationConfiguration = (toValue: number) => ({
-    toValue,
-    overshootClamping: true,
-    friction: 100,
-    tension: 100,
-  });
-
-  runAutoSelectOuterActionAnimation = (location: Location) => {
-    const widthPercent = location === 'left' ? this.state.leftOuterActionWidthPercent : this.state.rightOuterActionWidthPercent;
-
-    Animated.spring(
-      widthPercent,
-      this.autoSelectAnimationConfiguration(100),
-    ).start();
-  };
-
-  runAutoDeselectOuterActionAnimation = (location: Location) => {
-    const widthPercent = location === 'left' ? this.state.leftOuterActionWidthPercent : this.state.rightOuterActionWidthPercent;
-    const toValue = this.outerActionWidthPercentWhenNotAutoSelected(location);
-
-    Animated.spring(
-      widthPercent,
-      this.autoSelectAnimationConfiguration(toValue),
-    ).start();
-  };
-
-  outerActionWidthPercentWhenNotAutoSelected = (location: Location) => {
-    const numOfActions = location === 'left' ? this.numOfLeftActions : this.numOfRightActions;
-
-    if (numOfActions === 0) return 0;
-
-    return 100 / numOfActions;
-  };
-
-  handleInteraction = (callback?: InteractionCallback) => {
-    this.close();
-    callback?.(this.props.key);
-  };
-
-  renderOuterAction = (action: SwipeableItemAction, location: Location) => this.renderAction(action, location, true);
-
-  renderAction = (action: SwipeableItemAction, location: 'left' | 'right', outerAction = false) => {
+  private renderAction(action: SwipeableItemAction, location: Location, outerAction = false): JSX.Element {
     const { title, icon, color, titleStyle, onInteraction } = action;
 
     let style: any[];
@@ -297,7 +275,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     );
   };
 
-  renderLeftActions = () => {
+  private renderLeftActions(): JSX.Element {
     return <Animated.View style={[styles.hiddenActionsContainer, {
       left: 0,
       width: this.state.translateX.interpolate({
@@ -312,7 +290,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     </Animated.View>;
   };
 
-  renderRightActions = () => {
+  private renderRightActions(): JSX.Element {
     return <Animated.View style={[styles.hiddenActionsContainer, {
       right: 0,
       width: this.state.translateX.interpolate({
@@ -326,6 +304,40 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       <Animated.View style={styles.fillerAction} />
     </Animated.View>;
   };
+
+  componentDidMount(): void {
+    this.state.translateX.addListener(animatedValue => {
+      const { value } = animatedValue;
+
+      this.xPosition = value;
+      this.autoSelectOrDeselectOuterAction(value);
+    });
+  }
+
+  componentWillUnmount(): void {
+    this.state.translateX.removeAllListeners();
+  }
+
+  close(velocity = 0): void {
+    this.isClosing = true;
+
+    Animated.spring(
+      this.state.translateX,
+      this.openCloseAnimationConfiguration(0, velocity),
+    ).start(() => {
+      this.isClosing = false;
+      this.areLeftActionsOpen = false;
+      this.areRightActionsOpen = false;
+    });
+  }
+
+  openLeft(velocity = 0): void {
+    this.openTo(this.leftActionWidthsTotal, velocity);
+  }
+
+  openRight(velocity = 0): void {
+    this.openTo(-this.rightActionWidthsTotal, velocity);
+  }
 
   render() {
     const transformStyle = {
