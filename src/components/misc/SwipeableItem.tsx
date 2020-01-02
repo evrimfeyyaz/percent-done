@@ -9,6 +9,10 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
+type Location = 'left' | 'right';
+type InteractionCallback = (key?: string) => void;
 
 export interface SwipeableItemAction {
   title?: string;
@@ -16,7 +20,7 @@ export interface SwipeableItemAction {
   color: string;
   titleStyle?: TextStyle;
   hideRowOnInteraction?: boolean;
-  onInteraction?: (key?: string) => void;
+  onInteraction?: InteractionCallback;
 }
 
 interface SwipeableItemProps {
@@ -36,9 +40,6 @@ interface SwipeableItemState {
   leftOuterActionWidthPercent: Animated.Value;
   rightOuterActionWidthPercent: Animated.Value;
 }
-
-type Location = 'left' | 'right';
-
 
 export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableItemState> {
   static defaultProps = {
@@ -64,6 +65,8 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
   areLeftActionsOpen = false;
   areRightActionsOpen = false;
+
+  isClosing = false;
 
   panResponder = PanResponder.create({
     // Ask to be the responder:
@@ -132,23 +135,33 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   autoSelectOrDeselectOuterAction = (value: number) => {
     if (value >= this.leftOuterActionAutoSelect && !this.isLeftOuterActionAutoSelected) {
       this.isLeftOuterActionAutoSelected = true;
+      this.giveHapticFeedback();
       this.runAutoSelectOuterActionAnimation('left');
     }
 
     if (value < this.leftOuterActionAutoSelect && this.isLeftOuterActionAutoSelected) {
       this.isLeftOuterActionAutoSelected = false;
+      this.giveHapticFeedback();
       this.runAutoDeselectOuterActionAnimation('left');
     }
 
     if (value <= this.rightOuterActionAutoSelect && !this.isRightOuterActionAutoSelected) {
       this.isRightOuterActionAutoSelected = true;
+      this.giveHapticFeedback();
       this.runAutoSelectOuterActionAnimation('right');
     }
 
     if (value > this.rightOuterActionAutoSelect && this.isRightOuterActionAutoSelected) {
       this.isRightOuterActionAutoSelected = false;
+      this.giveHapticFeedback();
       this.runAutoDeselectOuterActionAnimation('right');
     }
+  };
+
+  giveHapticFeedback = () => {
+    if (this.isClosing) return;
+
+    ReactNativeHapticFeedback.trigger('impactLight');
   };
 
   componentWillUnmount(): void {
@@ -156,10 +169,13 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   close(velocity = 0): void {
+    this.isClosing = true;
+
     Animated.spring(
       this.state.translateX,
       this.openCloseAnimationConfiguration(0, velocity),
     ).start(() => {
+      this.isClosing = false;
       this.areLeftActionsOpen = false;
       this.areRightActionsOpen = false;
     });
@@ -228,6 +244,11 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     return 100 / numOfActions;
   };
 
+  handleInteraction = (callback?: InteractionCallback) => {
+    this.close();
+    callback?.(this.props.key);
+  };
+
   renderOuterAction = (action: SwipeableItemAction, location: Location) => this.renderAction(action, location, true);
 
   renderAction = (action: SwipeableItemAction, location: 'left' | 'right', outerAction = false) => {
@@ -265,7 +286,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     }];
 
     return (
-      <TouchableWithoutFeedback onPress={() => onInteraction?.(this.props.key)}>
+      <TouchableWithoutFeedback onPress={() => this.handleInteraction(onInteraction)}>
         <Animated.View style={style}>
           <View style={contentStyle}>
             {icon && (<Image source={icon} />)}
