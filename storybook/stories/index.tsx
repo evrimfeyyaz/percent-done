@@ -191,7 +191,8 @@ storiesOf('Miscellaneous', module)
     };
 
     return (
-      <SwipeableItem leftActions={[leftAction]} rightActions={[actionRight1, actionRight2]}>
+      <SwipeableItem leftActions={[leftAction]}
+                     rightActions={[actionRight1, actionRight2]}>
         <View style={{ backgroundColor: 'red', height: 100, justifyContent: 'center' }}>
           <Text style={{ color: 'white' }}>Swipeable Item</Text>
         </View>
