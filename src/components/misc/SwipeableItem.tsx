@@ -48,11 +48,6 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     rightActions: [],
     autoSelectCutOff: 1.5,
   };
-  state = {
-    translateX: new Animated.Value(0),
-    leftOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('left')),
-    rightOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('right')),
-  };
 
   private xPosition = 0;
 
@@ -225,11 +220,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     });
   }
 
-  private renderOuterAction(action: SwipeableItemAction, location: Location): JSX.Element {
-    return this.renderAction(action, location, true);
-  }
-
-  private renderAction(action: SwipeableItemAction, location: Location, outerAction = false): JSX.Element {
+  private renderAction(action: SwipeableItemAction, location: Location): JSX.Element {
     const { title, icon, color, titleStyle, onInteraction } = action;
 
     let style: any[];
@@ -239,7 +230,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       alignItems: location === 'left' ? 'flex-end' : 'flex-start',
     };
 
-    if (outerAction) {
+    if (action === this.leftOuterAction || action === this.rightOuterAction) {
       const widthPercent = location === 'left' ? this.state.leftOuterActionWidthPercent : this.state.rightOuterActionWidthPercent;
 
       style = [styles.hiddenAction, commonStyle, {
@@ -275,34 +266,26 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     );
   };
 
-  private renderLeftActions(): JSX.Element {
-    return <Animated.View style={[styles.hiddenActionsContainer, {
-      left: 0,
-      width: this.state.translateX.interpolate({
-        inputRange: [-1, 0, 1],
-        outputRange: [0, 0, 1],
-      }),
-    }]}>
-      <Animated.View style={styles.fillerAction} />
-      {this.props.leftActions?.map((action, index) => {
-        return index === 0 ? this.renderOuterAction(action, 'left') : this.renderAction(action, 'left');
-      })}
-    </Animated.View>;
-  };
+  private renderActions(location: Location): JSX.Element {
+    const actions = location === 'left' ? this.props.leftActions : this.props.rightActions;
 
-  private renderRightActions(): JSX.Element {
     return <Animated.View style={[styles.hiddenActionsContainer, {
-      right: 0,
+      right: location === 'right' ? 0 : undefined,
+      left: location === 'left' ? 0 : undefined,
       width: this.state.translateX.interpolate({
         inputRange: [-1, 0, 1],
-        outputRange: [1, 0, 0],
+        outputRange: location === 'left' ? [0, 0, 1] : [1, 0, 0],
       }),
     }]}>
-      {this.props.rightActions?.map((action, index) => {
-        return index === this.numOfRightActions - 1 ? this.renderOuterAction(action, 'right') : this.renderAction(action, 'right');
-      })}
+      {actions?.map(action => this.renderAction(action, location))}
       <Animated.View style={styles.fillerAction} />
     </Animated.View>;
+  }
+
+  state = {
+    translateX: new Animated.Value(0),
+    leftOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('left')),
+    rightOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('right')),
   };
 
   componentDidMount(): void {
@@ -345,12 +328,12 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     };
 
     return (
-      <View style={{ flexDirection: 'row' }}>
-        {this.numOfLeftActions > 0 && this.renderLeftActions()}
-        <Animated.View style={[{ width: '100%' }, transformStyle]} {...this.panResponder.panHandlers}>
+      <View style={{ flexDirection: 'row' }} {...this.panResponder.panHandlers}>
+        {this.numOfLeftActions > 0 && this.renderActions('left')}
+        <Animated.View style={[{ width: '100%' }, transformStyle]}>
           {this.props.children}
         </Animated.View>
-        {this.numOfRightActions > 0 && this.renderRightActions()}
+        {this.numOfRightActions > 0 && this.renderActions('right')}
       </View>
     );
   }
