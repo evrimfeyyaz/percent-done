@@ -72,8 +72,22 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   private leftActionWidthsTotal = () => this.numOfLeftActions() * this.props.actionWidth;
   private rightActionWidthsTotal = () => this.numOfRightActions() * this.props.actionWidth;
 
-  private leftOuterActionAutoSelectSwipeValue = () => this.leftActionWidthsTotal() * this.props.autoSelectCutOff;
-  private rightOuterActionAutoSelectSwipeValue = () => -this.rightActionWidthsTotal() * this.props.autoSelectCutOff;
+  // When the user swipes past these values, the swipe
+  // is slowed down to show that there are no more actions
+  // to show.
+  private slowDownSwipeOnTheLeftAfter = () => this.props.autoSelectLeftOuterAction ? this.leftOuterActionAutoSelectSwipeValue() : this.leftOpenValue();
+  private slowDownSwipeOnTheRightAfter = () => this.props.autoSelectRightOuterAction ? this.rightOuterActionAutoSelectSwipeValue() : this.rightOpenValue();
+
+  // The "x translation" value of the swipeable item in left or
+  // right open positions.
+  private leftOpenValue = () => this.leftActionWidthsTotal();
+  private rightOpenValue = () => -this.rightActionWidthsTotal();
+
+  // When the user swipes more than or equal to these values,
+  // and the relevant auto select prop is `true`, the auto
+  // select animation is executed.
+  private leftOuterActionAutoSelectSwipeValue = () => this.leftOpenValue() * this.props.autoSelectCutOff;
+  private rightOuterActionAutoSelectSwipeValue = () => this.rightOpenValue() * this.props.autoSelectCutOff;
 
   private panResponder = PanResponder.create({
     // Ask to be the responder:
@@ -93,7 +107,31 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       // The most recent move distance is gestureState.move{X,Y}
       // The accumulated gesture distance since becoming responder is
       // gestureState.d{x,y}
-      this.state.translateX.setValue(gestureState.dx);
+      const { dx, vx } = gestureState;
+
+      if (dx > this.slowDownSwipeOnTheLeftAfter() && !this.areLeftActionsOpen) {
+        this.state.translateX.setValue(this.slowDownSwipeOnTheLeftAfter() + (dx - this.slowDownSwipeOnTheLeftAfter()) / 8);
+        return;
+      }
+
+      if (dx < this.slowDownSwipeOnTheRightAfter() && !this.areRightActionsOpen) {
+        this.state.translateX.setValue(this.slowDownSwipeOnTheRightAfter() + (dx - this.slowDownSwipeOnTheRightAfter()) / 8);
+        return;
+      }
+
+      let distBetweenOpenValueAndSlowDownValue = this.slowDownSwipeOnTheLeftAfter() - this.leftOpenValue();
+      if (this.areLeftActionsOpen && dx > distBetweenOpenValueAndSlowDownValue) {
+        this.state.translateX.setValue(distBetweenOpenValueAndSlowDownValue + dx / 8);
+        return;
+      }
+
+      distBetweenOpenValueAndSlowDownValue = this.slowDownSwipeOnTheRightAfter() - this.rightOpenValue();
+      if (this.areRightActionsOpen && dx < distBetweenOpenValueAndSlowDownValue) {
+        this.state.translateX.setValue(distBetweenOpenValueAndSlowDownValue + dx / 8);
+        return;
+      }
+
+      this.state.translateX.setValue(dx);
     },
     onPanResponderTerminationRequest: (evt, gestureState) => true,
     onPanResponderRelease: (evt, gestureState) => {
@@ -101,13 +139,13 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       // responder. This typically means a gesture has succeeded
       this.state.translateX.flattenOffset();
 
-      if ((!this.areLeftActionsOpen && !this.areRightActionsOpen) && (this.xPosition >= this.leftActionWidthsTotal() / 2 || gestureState.vx > 0.1)) {
+      if ((!this.areLeftActionsOpen && !this.areRightActionsOpen) && (this.xPosition >= this.leftOpenValue() / 2 || gestureState.vx > 0.1)) {
         this.openLeft(gestureState.vx);
-      } else if (this.areLeftActionsOpen && this.xPosition > this.leftActionWidthsTotal() / 2 && gestureState.vx >= -0.1) {
+      } else if (this.areLeftActionsOpen && this.xPosition > this.leftOpenValue() / 2 && gestureState.vx >= -0.1) {
         this.openLeft(gestureState.vx);
-      } else if ((!this.areRightActionsOpen && !this.areLeftActionsOpen) && (this.xPosition <= -this.rightActionWidthsTotal() / 2 || gestureState.vx < -0.1)) {
+      } else if ((!this.areRightActionsOpen && !this.areLeftActionsOpen) && (this.xPosition <= this.rightOpenValue() / 2 || gestureState.vx < -0.1)) {
         this.openRight(gestureState.vx);
-      } else if (this.areRightActionsOpen && this.xPosition < -this.rightActionWidthsTotal() / 2 && gestureState.vx <= 0.1) {
+      } else if (this.areRightActionsOpen && this.xPosition < this.rightOpenValue() / 2 && gestureState.vx <= 0.1) {
         this.openRight(gestureState.vx);
       } else {
         this.close(gestureState.vx);
@@ -146,7 +184,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     tension: 100,
   });
 
-  private openCloseAnimationConfiguration = (toValue: number, velocity: number) => ({
+  private openCloseAnimationsConfiguration = (toValue: number, velocity: number) => ({
     toValue,
     overshootClamping: true,
     velocity,
@@ -219,11 +257,11 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   private openTo(x: number, velocity = 0) {
     Animated.spring(
       this.state.translateX,
-      this.openCloseAnimationConfiguration(x, velocity),
+      this.openCloseAnimationsConfiguration(x, velocity),
     ).start(() => {
-      if (x >= this.leftActionWidthsTotal()) {
+      if (x >= this.leftOpenValue()) {
         this.areLeftActionsOpen = true;
-      } else if (x <= -this.rightActionWidthsTotal()) {
+      } else if (x <= this.rightOpenValue()) {
         this.areRightActionsOpen = true;
       }
     });
@@ -315,7 +353,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
     Animated.spring(
       this.state.translateX,
-      this.openCloseAnimationConfiguration(0, velocity),
+      this.openCloseAnimationsConfiguration(0, velocity),
     ).start(() => {
       this.isClosing = false;
       this.areLeftActionsOpen = false;
@@ -324,16 +362,14 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   openLeft(velocity = 0): void {
-    this.openTo(this.leftActionWidthsTotal(), velocity);
+    this.openTo(this.leftOpenValue(), velocity);
   }
 
   openRight(velocity = 0): void {
-    this.openTo(-this.rightActionWidthsTotal(), velocity);
+    this.openTo(this.rightOpenValue(), velocity);
   }
 
   render() {
-    console.log(this.leftOuterAction()?.title);
-
     const transformStyle = {
       transform: [{ translateX: this.state.translateX }],
     };

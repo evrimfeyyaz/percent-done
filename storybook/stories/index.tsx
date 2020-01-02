@@ -169,7 +169,6 @@ storiesOf('Miscellaneous', module)
       title: 'Left',
       color: 'blue',
       icon: Icons.addEntry,
-      width: 200,
       onInteraction: action('swipeable-item-left-action-interaction'),
     };
 
@@ -177,7 +176,6 @@ storiesOf('Miscellaneous', module)
       title: 'Right 1',
       color: 'yellow',
       titleStyle: { color: 'black' },
-      width: 70,
       onInteraction: action('swipeable-item-right-inner-action-interaction'),
     };
 
@@ -185,14 +183,12 @@ storiesOf('Miscellaneous', module)
       title: 'Right 2',
       color: 'red',
       icon: Icons.checkmarkLarge,
-      width: 70,
       onInteraction: action('swipeable-item-right-outer-action-interaction'),
       hideRowOnInteraction: true,
     };
 
     return (
-      <SwipeableItem leftActions={[leftAction]}
-                     rightActions={[actionRight1, actionRight2]}>
+      <SwipeableItem leftActions={[leftAction]} rightActions={[actionRight1, actionRight2]} autoSelectRightOuterAction>
         <View style={{ backgroundColor: 'red', height: 100, justifyContent: 'center' }}>
           <Text style={{ color: 'white' }}>Swipeable Item</Text>
         </View>
