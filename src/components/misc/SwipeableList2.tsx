@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { RefObject, useRef } from 'react';
 import { FlatList, FlatListProps, ListRenderItemInfo, TextStyle } from 'react-native';
 import { SwipeableItem, SwipeableItemAction } from './SwipeableItem';
 
@@ -19,15 +19,37 @@ export const SwipeableList2 = <T, >({
                                       keyExtractor: propsKeyExtractor,
                                     }: SwipeableList2Props & FlatListProps<T>) => {
   const listRef = useRef<FlatList<T>>(null);
+  const rowRefs = useRef<{ [key: string]: SwipeableItem | null }>({});
 
-  function handleSwipeBegin() {
+  function handleSwipeBegin(key: string) {
+    closeAllRows(key);
+    disableScroll();
+  }
+
+  function handleSwipeEnd() {
+    enableScroll();
+  }
+
+  function handleScrollBeginDrag() {
+    closeAllRows();
+  }
+
+  function enableScroll() {
+    // @ts-ignore
+    listRef.current?.setNativeProps({ scrollEnabled: true });
+  }
+
+  function disableScroll() {
     // @ts-ignore
     listRef.current?.setNativeProps({ scrollEnabled: false });
   }
 
-  function handleSwipeEnd() {
-    // @ts-ignore
-    listRef.current?.setNativeProps({ scrollEnabled: true });
+  function closeAllRows(skipKey?: string) {
+    Object.entries(rowRefs.current).forEach(([key, item]) => {
+      if (skipKey && skipKey === key) return;
+
+      item?.close()
+    });
   }
 
   function keyExtractor(item: any, index: number): string {
@@ -60,9 +82,11 @@ export const SwipeableList2 = <T, >({
         leftActions={itemLeftActions}
         rightActions={itemRightActions}
         autoSelectRightOuterAction
-        onSwipeBegin={handleSwipeBegin}
+        onSwipeBegin={() => handleSwipeBegin(key)}
         onSwipeEnd={handleSwipeEnd}
         titleStyle={titleStyle}
+        ref={ref => rowRefs.current[key] = ref}
+        onPress={handleScrollBeginDrag}
       >
         {propsRenderItem(info)}
       </SwipeableItem>
@@ -74,6 +98,7 @@ export const SwipeableList2 = <T, >({
       data={data}
       renderItem={renderItem}
       ref={listRef}
+      onScrollBeginDrag={handleScrollBeginDrag}
     />
   );
 };

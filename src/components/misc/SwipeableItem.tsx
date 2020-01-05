@@ -410,6 +410,8 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   close(velocity = 0): void {
+    if (this.xPosition === 0) return;
+
     if (this.areRightActionsOpen || this.areLeftActionsOpen) {
       this.props.onActionsWillClose?.();
     }

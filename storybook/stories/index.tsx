@@ -239,6 +239,7 @@ storiesOf('Miscellaneous', module)
       leftActions={[hiddenActionLeft]}
       rightActions={[hiddenActionRight1, hiddenActionRight2]}
       titleStyle={{ color: 'white' }}
+      keyExtractor={item => item.id}
     />;
   });
 
