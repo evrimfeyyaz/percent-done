@@ -32,7 +32,7 @@ import {
   TimeTracker,
   TimetableEntryForm,
   DatePicker,
-  DateInput, ItemPicker, ItemInput, SelectBox, SwipeableList, GoalList2, SwipeableItem,
+  DateInput, ItemPicker, ItemInput, SelectBox, SwipeableList, GoalList2, SwipeableItem, SwipeableList2,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -194,6 +194,38 @@ storiesOf('Miscellaneous', module)
         </View>
       </SwipeableItem>
     );
+  })
+  .add('Swipeable list 2', () => {
+    const hiddenActionLeft = {
+      title: 'Left',
+      color: 'blue',
+      icon: Icons.addEntry,
+      onInteraction: action('swipeable-list-left-action-interaction'),
+    };
+
+    const hiddenActionRight1 = {
+      title: 'Right 1',
+      color: 'yellow',
+      titleStyle: { color: 'black' },
+      onInteraction: action('swipeable-list-right-inner-action-interaction'),
+    };
+
+    const hiddenActionRight2 = {
+      title: 'Long Titled Action',
+      color: 'red',
+      icon: Icons.checkmarkLarge,
+      onInteraction: action('swipeable-list-right-outer-action-interaction'),
+      hideRowOnInteraction: true,
+    };
+
+    return <SwipeableList2
+      data={createSwipeableListData(100)}
+      renderItem={({ item }: { item: { id: string, title: string } }) => (
+        <View style={{ height: 75 }}><Text>{item.title}</Text></View>
+      )}
+      leftActions={[hiddenActionLeft]}
+      rightActions={[hiddenActionRight1, hiddenActionRight2]}
+    />;
   });
 
 storiesOf('Charts', module)

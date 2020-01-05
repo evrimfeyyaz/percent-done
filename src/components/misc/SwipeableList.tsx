@@ -517,13 +517,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
   },
-  hiddenAction: {
+  action: {
     height: '100%',
     flex: 1,
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  hiddenActionContentStyle: {
+  actionContent: {
     justifyContent: 'center',
     alignItems: 'center',
   },
