@@ -188,7 +188,20 @@ storiesOf('Miscellaneous', module)
     };
 
     return (
-      <SwipeableItem leftActions={[leftAction]} rightActions={[actionRight1, actionRight2]} autoSelectRightOuterAction>
+      <SwipeableItem
+        leftActions={[leftAction]}
+        rightActions={[actionRight1, actionRight2]}
+        autoSelectRightOuterAction
+        onSwipeBegin={action('swipeable-item-swipe-began')}
+        onSwipeEnd={action('swipeable-item-swipe-ended')}
+        onPress={action('swipeable-item-pressed')}
+        onLeftActionsWillOpen={action('swipeable-item-left-actions-will-open')}
+        onLeftActionsDidOpen={action('swipeable-item-left-actions-opened')}
+        onRightActionsWillOpen={action('swipeable-item-right-actions-will-open')}
+        onRightActionsDidOpen={action('swipeable-item-right-actions-opened')}
+        onActionsWillClose={action('swipeable-item-actions-will-close')}
+        onActionsDidClose={action('swipeable-item-actions-closed')}
+      >
         <View style={{ backgroundColor: 'red', height: 100, justifyContent: 'center' }}>
           <Text style={{ color: 'white' }}>Swipeable Item</Text>
         </View>
@@ -225,6 +238,7 @@ storiesOf('Miscellaneous', module)
       )}
       leftActions={[hiddenActionLeft]}
       rightActions={[hiddenActionRight1, hiddenActionRight2]}
+      titleStyle={{ color: 'white' }}
     />;
   });
 

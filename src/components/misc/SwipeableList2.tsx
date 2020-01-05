@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { FlatList, FlatListProps, ListRenderItemInfo } from 'react-native';
+import { FlatList, FlatListProps, ListRenderItemInfo, TextStyle } from 'react-native';
 import { SwipeableItem, SwipeableItemAction } from './SwipeableItem';
 
 type Actions = SwipeableItemAction[] | ((rowKey: string) => SwipeableItemAction[]);
@@ -7,12 +7,14 @@ type Actions = SwipeableItemAction[] | ((rowKey: string) => SwipeableItemAction[
 interface SwipeableList2Props {
   leftActions?: Actions;
   rightActions?: Actions;
+  titleStyle?: TextStyle;
 }
 
 export const SwipeableList2 = <T, >({
                                       leftActions,
                                       rightActions,
                                       data,
+                                      titleStyle,
                                       renderItem: propsRenderItem,
                                       keyExtractor: propsKeyExtractor,
                                     }: SwipeableList2Props & FlatListProps<T>) => {
@@ -38,20 +40,20 @@ export const SwipeableList2 = <T, >({
     return index.toString();
   }
 
-  function getActionsForItem(rowKey: string, actions: Actions) {
+  function getActionsForItem(key: string, actions: Actions) {
     if (Array.isArray(actions)) {
       return actions;
     }
 
-    return actions(rowKey);
+    return actions(key);
   }
 
   function renderItem(info: ListRenderItemInfo<T>): React.ReactElement | null {
     const { item, index } = info;
-    const rowKey = keyExtractor(item, index);
+    const key = keyExtractor(item, index);
 
-    const itemLeftActions = leftActions && getActionsForItem(rowKey, leftActions);
-    const itemRightActions = rightActions && getActionsForItem(rowKey, rightActions);
+    const itemLeftActions = leftActions && getActionsForItem(key, leftActions);
+    const itemRightActions = rightActions && getActionsForItem(key, rightActions);
 
     return (
       <SwipeableItem
@@ -60,6 +62,7 @@ export const SwipeableList2 = <T, >({
         autoSelectRightOuterAction
         onSwipeBegin={handleSwipeBegin}
         onSwipeEnd={handleSwipeEnd}
+        titleStyle={titleStyle}
       >
         {propsRenderItem(info)}
       </SwipeableItem>
