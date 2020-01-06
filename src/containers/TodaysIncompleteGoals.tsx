@@ -11,7 +11,8 @@ import { handleGoalSwipe } from '../store/goals/thunks';
 const today = getBeginningOfDay(new Date());
 
 interface TodaysIncompleteGoalsProps {
-  onRightActionPress?: (goalId: string) => void;
+  onEditActionPress?: (goalId: string) => void;
+  onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
 }
 
 const mapStateToProps = (state: StoreState): GoalListProps => ({
@@ -21,7 +22,8 @@ const mapStateToProps = (state: StoreState): GoalListProps => ({
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: TodaysIncompleteGoalsProps) => ({
   onGoalRightSwipe: (goalId: string) => dispatch(handleGoalSwipe(goalId)),
-  onRightActionPress: ownProps.onRightActionPress,
+  onEditActionPress: ownProps.onEditActionPress,
+  onChangeScrollEnabled: ownProps.onChangeScrollEnabled,
 });
 
 export const TodaysIncompleteGoals = connect(mapStateToProps, mapDispatchToProps)(GoalList);

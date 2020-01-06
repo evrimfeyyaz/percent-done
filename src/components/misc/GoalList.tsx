@@ -6,7 +6,7 @@ import { colors } from '../../theme';
 import { Icons } from '../../../assets';
 import { SwipeableItemAction } from './SwipeableItem';
 
-interface GoalListProps {
+export interface GoalListProps {
   goals: (GoalRowProps)[];
   /**
    * Text to show then this list is empty.
@@ -15,6 +15,7 @@ interface GoalListProps {
   onLeftActionInteraction?: (goalId?: string) => void;
   onEditActionInteraction?: (goalId?: string) => void;
   disableRightSwipe?: boolean;
+  onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
 }
 
 export const GoalList: FunctionComponent<GoalListProps> = ({
@@ -22,6 +23,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
                                                              disableRightSwipe = false,
                                                              onLeftActionInteraction,
                                                              onEditActionInteraction,
+                                                             onChangeScrollEnabled,
                                                            }) => {
   function isGoalTracked(goal: GoalRowProps) {
     return goal.isCompleted == null;
@@ -67,6 +69,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       actionWidth={60}
       renderItem={({ item }: { item: GoalRowProps }) => <GoalRow {...item} />}
       autoSelectLeftOuterAction
+      onChangeScrollEnabled={onChangeScrollEnabled}
     />
   );
 };

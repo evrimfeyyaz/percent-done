@@ -13,6 +13,12 @@ interface SwipeableListProps {
   titleStyle?: TextStyle;
   disableLeftSwipe?: boolean;
   disableRightSwipe?: boolean;
+  /**
+   * Called when the `scrollEnabled` attribute of the list
+   * is changed. This is useful for disabling/enabling the
+   * scrolling on a parent `ScrollView`.
+   */
+  onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
 }
 
 export const SwipeableList = <T, >({
@@ -25,6 +31,7 @@ export const SwipeableList = <T, >({
                                      disableRightSwipe,
                                      autoSelectLeftOuterAction,
                                      autoSelectRightOuterAction,
+                                     onChangeScrollEnabled,
                                      renderItem: propsRenderItem,
                                      keyExtractor: propsKeyExtractor,
                                    }: SwipeableListProps & FlatListProps<T>) => {
@@ -47,11 +54,13 @@ export const SwipeableList = <T, >({
   function enableScroll() {
     // @ts-ignore
     listRef.current?.setNativeProps({ scrollEnabled: true });
+    onChangeScrollEnabled?.(true);
   }
 
   function disableScroll() {
     // @ts-ignore
     listRef.current?.setNativeProps({ scrollEnabled: false });
+    onChangeScrollEnabled?.(false);
   }
 
   function closeAllItems(skipKey?: string) {
