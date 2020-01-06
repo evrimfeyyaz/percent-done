@@ -59,14 +59,18 @@ export function msToHoursMinutesSeconds(ms: number): { hours: number, minutes: n
 
 export function formatDurationInMs(durationInMs: number, roundLastValueUp = false): string {
   let { hours, minutes, seconds } = msToHoursMinutesSeconds(durationInMs);
-  const hoursStr = `${hours.toString().padStart(2, '0')}h`;
 
   if (roundLastValueUp && hours > 0 && !hasWholeMinutes(durationInMs)) {
-    minutes++;
+    const roundedUpMinutes = minutes + 1;
+    hours += Math.floor(roundedUpMinutes / 60);
+    minutes = roundedUpMinutes % 60;
   } else if (roundLastValueUp && hours === 0 && !hasWholeSeconds(durationInMs)) {
-    seconds++;
+    const roundedUpSeconds = seconds + 1;
+    minutes += Math.floor(roundedUpSeconds / 60);
+    seconds = roundedUpSeconds % 60;
   }
 
+  const hoursStr = `${hours.toString().padStart(2, '0')}h`;
   const minutesStr = `${minutes.toString().padStart(2, '0')}m`;
   const secondsStr = `${seconds.toString().padStart(2, '0')}s`;
 

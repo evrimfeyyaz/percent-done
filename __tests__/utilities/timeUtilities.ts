@@ -90,6 +90,16 @@ describe('time utilities', () => {
         expect(formatDurationInMs(time1, true)).toEqual('05h 05m');
         expect(formatDurationInMs(time2, true)).toEqual('05m 05s');
       });
+
+      it('rounds up the hour or the minute when minutes or seconds are equal to sixty respectively', () => {
+        const fiftyNineSecondsInMs = 59 * 1000;
+        const fiftyNineMinutesInMs = 59 * 60 * 1000;
+        const time1 = fiveHoursInMs + fiftyNineMinutesInMs + fiftyNineSecondsInMs;
+        const time2 = fiveMinutesInMs + fiftyNineSecondsInMs + 1;
+
+        expect(formatDurationInMs(time1, true)).toEqual('06h 00m');
+        expect(formatDurationInMs(time2, true)).toEqual('06m 00s');
+      })
     });
   });
 
