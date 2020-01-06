@@ -7,7 +7,7 @@ import {
   TextStyle,
   TouchableWithoutFeedback,
   Image,
-  StyleSheet,
+  StyleSheet, LayoutChangeEvent,
 } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
@@ -65,8 +65,10 @@ interface SwipeableItemProps {
 
 interface SwipeableItemState {
   translateX: Animated.Value;
+  opacity: Animated.Value;
   leftOuterActionWidthPercent: Animated.Value;
   rightOuterActionWidthPercent: Animated.Value;
+  height?: Animated.Value;
 }
 
 export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableItemState> {
@@ -83,6 +85,9 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     disableLeftSwipe: false,
     disableRightSwipe: false,
   };
+
+  private static friction = 100;
+  private static tension = 100;
 
   private xPosition = 0;
 
@@ -210,20 +215,39 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
       const leftOuterAction = this.leftOuterAction();
       if (this.isLeftOuterActionAutoSelected && leftOuterAction != null) {
-        this.handleInteraction(leftOuterAction.onInteraction);
+        this.handleInteraction(leftOuterAction);
       }
 
       const rightOuterAction = this.rightOuterAction();
       if (this.isRightOuterActionAutoSelected && rightOuterAction != null) {
-        this.handleInteraction(rightOuterAction.onInteraction);
+        this.handleInteraction(rightOuterAction);
       }
     },
     onPanResponderTerminate: (evt, gestureState) => this.props.onSwipeEnd?.(this.props.interactionKey),
   });
 
-  private handleInteraction = (callback?: InteractionCallback) => {
+  private handleInteraction = (action: SwipeableItemAction) => {
+    const { onInteraction, hideRowOnInteraction } = action;
+    const { opacity, height } = this.state;
+
     this.close();
-    callback?.(this.props.interactionKey);
+
+    if (hideRowOnInteraction && height != null) {
+      Animated.parallel([
+        Animated.timing(
+          opacity,
+          this.hideRowAnimationConfiguration(),
+        ),
+        Animated.timing(
+          height,
+          this.hideRowAnimationConfiguration(),
+        ),
+      ]).start(() => {
+        onInteraction?.(this.props.interactionKey);
+      });
+    } else {
+      onInteraction?.(this.props.interactionKey);
+    }
   };
 
   private handlePress = () => {
@@ -232,19 +256,32 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     onPress?.(interactionKey);
   };
 
+  private handleContentContainerLayout = (evt: LayoutChangeEvent) => {
+    const { height } = this.state;
+
+    if (height == null) {
+      this.setState({ height: new Animated.Value(evt.nativeEvent.layout.height) });
+    }
+  };
+
   private autoSelectAnimationConfiguration = (toValue: number) => ({
     toValue,
     overshootClamping: true,
-    friction: 100,
-    tension: 100,
+    friction: SwipeableItem.friction,
+    tension: SwipeableItem.tension,
   });
 
   private openCloseAnimationsConfiguration = (toValue: number, velocity: number) => ({
     toValue,
     overshootClamping: true,
     velocity,
-    friction: 100,
-    tension: 100,
+    friction: SwipeableItem.friction,
+    tension: SwipeableItem.tension,
+  });
+
+  private hideRowAnimationConfiguration = () => ({
+    toValue: 0,
+    duration: 200,
   });
 
   private autoSelectOrDeselectOuterAction(swipeValue: number): void {
@@ -333,7 +370,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   private renderAction(action: SwipeableItemAction, location: Location): JSX.Element {
-    const { title, icon, color, titleStyle: actionSpecificTitleStyle, onInteraction } = action;
+    const { title, icon, color, titleStyle: actionSpecificTitleStyle } = action;
     const { titleStyle: commonTitleStyle } = this.props;
 
     let style: any[];
@@ -368,7 +405,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     }];
 
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleInteraction(onInteraction)}>
+      <TouchableWithoutFeedback onPress={() => this.handleInteraction(action)}>
         <Animated.View style={style}>
           <View style={contentStyle}>
             {icon && (<Image source={icon} />)}
@@ -399,8 +436,9 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     </Animated.View>;
   }
 
-  state = {
+  state: SwipeableItemState = {
     translateX: new Animated.Value(0),
+    opacity: new Animated.Value(1),
     leftOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('left')),
     rightOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('right')),
   };
@@ -464,17 +502,22 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   render() {
-    const { translateX } = this.state;
+    const { translateX, opacity, height } = this.state;
     const { children } = this.props;
 
     const transformStyle = {
       transform: [{ translateX }],
     };
 
+    const hideRowAnimationStyle = {
+      opacity,
+      height,
+    };
+
     return (
-      <View {...this.panResponder.panHandlers}>
+      <Animated.View {...this.panResponder.panHandlers} style={hideRowAnimationStyle}>
         <TouchableWithoutFeedback onPress={this.handlePress}>
-          <View style={styles.container}>
+          <View style={styles.contentContainer} onLayout={this.handleContentContainerLayout}>
             {this.numOfLeftActions() > 0 && this.renderActions('left')}
             <Animated.View style={[styles.itemContainer, transformStyle]}>
               {children}
@@ -482,14 +525,15 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
             {this.numOfRightActions() > 0 && this.renderActions('right')}
           </View>
         </TouchableWithoutFeedback>
-      </View>
+      </Animated.View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  contentContainer: {
     flexDirection: 'row',
+    flex: 1,
   },
   itemContainer: {
     width: '100%',

@@ -1,5 +1,12 @@
-import React, { useRef } from 'react';
-import { FlatList, FlatListProps, ListRenderItemInfo, TextStyle } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import {
+  FlatList,
+  FlatListProps,
+  ListRenderItemInfo,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  TextStyle,
+} from 'react-native';
 import { SwipeableItem, SwipeableItemAction } from './SwipeableItem';
 
 type ValueOrFunction<T> = T | ((key: string) => T);
@@ -21,20 +28,22 @@ interface SwipeableListProps {
   onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
 }
 
-export const SwipeableList = <T, >({
-                                     actionsLeft,
-                                     actionsRight,
-                                     data,
-                                     titleStyle,
-                                     actionWidth,
-                                     disableLeftSwipe,
-                                     disableRightSwipe,
-                                     autoSelectLeftOuterAction,
-                                     autoSelectRightOuterAction,
-                                     onChangeScrollEnabled,
-                                     renderItem: propsRenderItem,
-                                     keyExtractor: propsKeyExtractor,
-                                   }: SwipeableListProps & FlatListProps<T>) => {
+export const SwipeableList = <T, >(props: SwipeableListProps & FlatListProps<T>) => {
+  const {
+    actionsLeft,
+    actionsRight,
+    data,
+    titleStyle,
+    actionWidth,
+    disableLeftSwipe,
+    disableRightSwipe,
+    autoSelectLeftOuterAction,
+    autoSelectRightOuterAction,
+    onChangeScrollEnabled,
+    renderItem: propsRenderItem,
+    keyExtractor: propsKeyExtractor,
+  } = props;
+
   const listRef = useRef<FlatList<T>>(null);
   const itemRefs = useRef<{ [key: string]: SwipeableItem | null }>({});
 
@@ -47,7 +56,12 @@ export const SwipeableList = <T, >({
     enableScroll();
   }
 
-  function handleScrollBeginDrag() {
+  function handleScrollBeginDrag(evt: NativeSyntheticEvent<NativeScrollEvent>) {
+    closeAllItems();
+    props.onScrollBeginDrag?.(evt);
+  }
+
+  function handleSwipeItemPress() {
     closeAllItems();
   }
 
@@ -110,7 +124,7 @@ export const SwipeableList = <T, >({
         onSwipeBegin={() => handleSwipeBegin(key)}
         onSwipeEnd={handleSwipeEnd}
         titleStyle={titleStyle}
-        onPress={handleScrollBeginDrag}
+        onPress={handleSwipeItemPress}
         interactionKey={key}
         ref={ref => itemRefs.current[key] = ref}
       >
@@ -121,7 +135,7 @@ export const SwipeableList = <T, >({
 
   return (
     <FlatList
-      data={data}
+      {...props}
       renderItem={renderItem}
       ref={listRef}
       onScrollBeginDrag={handleScrollBeginDrag}

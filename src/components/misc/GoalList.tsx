@@ -1,10 +1,11 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { GoalRow, GoalRowProps } from './GoalRow';
 import { EmptyContainer } from './EmptyContainer';
 import { SwipeableList } from './SwipeableList';
 import { colors } from '../../theme';
 import { Icons } from '../../../assets';
 import { SwipeableItemAction } from './SwipeableItem';
+import { LayoutAnimation } from 'react-native';
 
 export interface GoalListProps {
   goals: (GoalRowProps)[];
@@ -25,6 +26,10 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
                                                              onEditActionInteraction,
                                                              onChangeScrollEnabled,
                                                            }) => {
+  useEffect(() => {
+    LayoutAnimation.easeInEaseOut();
+  }, [goals]);
+
   function isGoalTracked(goal: GoalRowProps) {
     return goal.isCompleted == null;
   }
@@ -43,7 +48,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
     onInteraction: onEditActionInteraction,
   };
 
-  const actionsLeft = (goalId: string) => {
+  const actionsLeft = (goalId: string): SwipeableItemAction[] => {
     const goal = findGoal(goalId);
 
     let icon = Icons.checkmarkLarge;

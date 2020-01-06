@@ -15,7 +15,7 @@ interface EmptyContainerProps {
  */
 export const EmptyContainer: FunctionComponent<EmptyContainerProps> = ({ text, style }) => {
   return (
-    <View style={StyleSheet.flatten([style, styles.container])}>
+    <View style={[style, styles.container]}>
       <Text style={styles.text}>{text}</Text>
     </View>
   );
