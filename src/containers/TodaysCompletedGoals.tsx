@@ -21,7 +21,7 @@ const mapStateToProps = (state: StoreState): GoalListProps => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: TodaysCompletedGoalsProps) => ({
-  onGoalEditSwipe: (goalId: string) => dispatch(handleCompleteOrTrackRequest(goalId)),
+  onCompleteOrTrackActionInteraction: (goalId: string) => dispatch(handleCompleteOrTrackRequest(goalId)),
   onEditActionInteraction: ownProps.onEditActionInteraction,
   onChangeScrollEnabled: ownProps.onChangeScrollEnabled,
 });

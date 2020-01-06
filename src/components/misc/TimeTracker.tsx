@@ -56,12 +56,10 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   const toggleProjectModal = () => setIsProjectModalVisible(!isProjectModalVisible);
 
   const handleStartedAtTimeChange = (time: Date) => {
-
     const newTimestamp = time.getTime();
     if (newTimestamp > Date.now()) return;
 
     onStartTimestampChange?.(newTimestamp);
-
   };
 
   const handleStopPress = () => onStopPress?.(startTimestamp, Date.now());
