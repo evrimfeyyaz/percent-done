@@ -78,7 +78,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
     durationInfo = (
       <View>
         <Text style={styles.timeLeft}>
-          {formatDurationInMs(remainingMs, true)}
+          {formatDurationInMs(remainingMs, remainingMs >= 0)}
         </Text>
         <Text style={styles.leftText}>{leftOrOver(remainingMs)}</Text>
       </View>
