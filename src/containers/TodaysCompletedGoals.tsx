@@ -6,12 +6,12 @@ import { connect } from 'react-redux';
 import { GoalList, GoalListProps } from '../components';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { handleGoalSwipe } from '../store/goals/thunks';
+import { handleCompleteOrTrackRequest } from '../store/goals/thunks';
 
 const today = getBeginningOfDay(new Date());
 
 interface TodaysCompletedGoalsProps {
-  onEditActionPress?: (goalId: string) => void;
+  onEditActionInteraction?: (goalId: string) => void;
   onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
 }
 
@@ -21,8 +21,8 @@ const mapStateToProps = (state: StoreState): GoalListProps => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: TodaysCompletedGoalsProps) => ({
-  onGoalEditSwipe: (goalId: string) => dispatch(handleGoalSwipe(goalId)),
-  onEditActionPress: ownProps.onEditActionPress,
+  onGoalEditSwipe: (goalId: string) => dispatch(handleCompleteOrTrackRequest(goalId)),
+  onEditActionInteraction: ownProps.onEditActionInteraction,
   onChangeScrollEnabled: ownProps.onChangeScrollEnabled,
 });
 

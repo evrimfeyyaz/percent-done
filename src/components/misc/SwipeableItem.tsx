@@ -223,7 +223,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
   private handleInteraction = (callback?: InteractionCallback) => {
     this.close();
-    callback?.();
+    callback?.(this.props.interactionKey);
   };
 
   private handlePress = () => {

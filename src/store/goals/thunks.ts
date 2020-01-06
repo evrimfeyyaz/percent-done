@@ -9,7 +9,7 @@ import { isTimeTracked } from './utilities';
 import { NavigationService, createRandomId } from '../../utilities';
 import { removeTrackedGoal, setTrackedGoal } from './actions';
 
-export const handleGoalSwipe: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
+export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
   return (dispatch, getState) => {
     const state = getState();
     const goal = getGoalById(state, goalId);

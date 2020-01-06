@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { GoalList, GoalListProps } from '../components';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { handleGoalSwipe } from '../store/goals/thunks';
+import { handleCompleteOrTrackRequest } from '../store/goals/thunks';
 
 const today = getBeginningOfDay(new Date());
 
@@ -21,7 +21,7 @@ const mapStateToProps = (state: StoreState): GoalListProps => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: AllGoalsProps) => ({
-  onGoalRightSwipe: (goalId: string) => dispatch(handleGoalSwipe(goalId)),
+  onGoalRightSwipe: (goalId: string) => dispatch(handleCompleteOrTrackRequest(goalId)),
   onRightActionPress: ownProps.onRightActionPress,
 });
 

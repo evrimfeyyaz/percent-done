@@ -12,7 +12,7 @@ export interface GoalListProps {
    * Text to show then this list is empty.
    */
   emptyText?: string;
-  onLeftActionInteraction?: (goalId?: string) => void;
+  onCompleteOrTrackActionInteraction?: (goalId?: string) => void;
   onEditActionInteraction?: (goalId?: string) => void;
   disableRightSwipe?: boolean;
   onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
@@ -21,7 +21,7 @@ export interface GoalListProps {
 export const GoalList: FunctionComponent<GoalListProps> = ({
                                                              goals, emptyText = '',
                                                              disableRightSwipe = false,
-                                                             onLeftActionInteraction,
+                                                             onCompleteOrTrackActionInteraction,
                                                              onEditActionInteraction,
                                                              onChangeScrollEnabled,
                                                            }) => {
@@ -55,7 +55,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
 
     return [{
       color: colors.blue,
-      onInteraction: onLeftActionInteraction,
+      onInteraction: onCompleteOrTrackActionInteraction,
       icon,
     }];
   };
@@ -70,6 +70,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       renderItem={({ item }: { item: GoalRowProps }) => <GoalRow {...item} />}
       autoSelectLeftOuterAction
       onChangeScrollEnabled={onChangeScrollEnabled}
+      keyExtractor={item => item.id}
     />
   );
 };

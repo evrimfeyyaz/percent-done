@@ -7,7 +7,7 @@ import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
   const scrollViewRef = useRef(null);
 
-  function handleEditActionPress(goalId: string) {
+  function handleEditActionInteraction(goalId: string) {
     navigation.navigate('EditGoal', { goalId });
   }
 
@@ -23,12 +23,12 @@ export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = ({ naviga
       </Section>
 
       <Section title='Incomplete Goals'>
-        <TodaysIncompleteGoals onEditActionPress={handleEditActionPress}
+        <TodaysIncompleteGoals onEditActionInteraction={handleEditActionInteraction}
                                onChangeScrollEnabled={handleChangeScrollEnabled} />
       </Section>
 
       <Section title='Completed Goals'>
-        <TodaysCompletedGoals onEditActionPress={handleEditActionPress}
+        <TodaysCompletedGoals onEditActionInteraction={handleEditActionInteraction}
                               onChangeScrollEnabled={handleChangeScrollEnabled} />
       </Section>
     </ScrollView>
