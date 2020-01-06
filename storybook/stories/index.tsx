@@ -8,7 +8,6 @@ import {
   ColorInput,
   DaysOfWeekInput,
   GoalRow,
-  GoalRowProps,
   MenuLink,
   StatChart,
   ProgressChart,
@@ -21,7 +20,6 @@ import {
   Timetable,
   TimetableRow,
   TabInfo,
-  GoalList,
   DaysStats,
   HeaderButton,
   TimePicker,
@@ -32,7 +30,13 @@ import {
   TimeTracker,
   TimetableEntryForm,
   DatePicker,
-  DateInput, ItemPicker, ItemInput, SelectBox, SwipeableList, GoalList2, SwipeableItem, SwipeableList2,
+  DateInput,
+  ItemPicker,
+  ItemInput,
+  SelectBox,
+  GoalList,
+  SwipeableItem,
+  SwipeableList,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -82,42 +86,7 @@ storiesOf('Miscellaneous', module)
     />
   ))
   .add('Goals list', () => {
-    const goals: (GoalRowProps & { key: string })[] = [
-      {
-        id: 'goal1',
-        title: 'Write',
-        color: colors.white,
-        chainLength: 10,
-        completedMs: 30 * 60,
-        totalMs: 60 * 60,
-        key: 'goal1',
-        isActiveToday: true,
-      },
-      {
-        id: 'goal2',
-        title: 'Write',
-        color: colors.orange,
-        chainLength: 20,
-        completedMs: 40 * 60,
-        totalMs: 120 * 60,
-        key: 'goal2',
-        isActiveToday: true,
-      },
-      {
-        id: 'goal3',
-        title: 'Write',
-        color: colors.blue,
-        chainLength: 0,
-        isCompleted: true,
-        key: 'goal3',
-        isActiveToday: true,
-      },
-    ];
-
-    return <GoalList goals={goals} />;
-  })
-  .add('Goals list 2', () => {
-    return <GoalList2 goals={createGoals(100)} />;
+    return <GoalList goals={createGoals(100)} />;
   })
   .add('Time tracker', () => (
     <TimeTracker title='Work on Awesome App' color='#3394FA'
@@ -129,41 +98,6 @@ storiesOf('Miscellaneous', module)
                  onProjectRemove={action('time-tracker-project-removed')}
     />
   ))
-  .add('Swipeable list', () => {
-    const hiddenActionLeft = {
-      title: 'Left',
-      color: 'blue',
-      icon: Icons.addEntry,
-      onInteraction: action('swipeable-list-left-action-interaction'),
-    };
-
-    const hiddenActionRight1 = {
-      title: 'Right 1',
-      color: 'yellow',
-      titleStyle: { color: 'black' },
-      onInteraction: action('swipeable-list-right-inner-action-interaction'),
-    };
-
-    const hiddenActionRight2 = {
-      title: 'Long Titled Action',
-      color: 'red',
-      icon: Icons.checkmarkLarge,
-      onInteraction: action('swipeable-list-right-outer-action-interaction'),
-      hideRowOnInteraction: true,
-    };
-
-    return <SwipeableList
-      data={createSwipeableListData(10)}
-      renderItem={({ item }: { item: { id: string, title: string } }) => (
-        <View style={{ height: 75 }}><Text>{item.title}</Text></View>
-      )}
-      hiddenActionsLeft={[hiddenActionLeft]}
-      hiddenActionsRight={[hiddenActionRight1, hiddenActionRight2]}
-      autoSelectRightOuterAction
-      actionWidth={150}
-      titleStyle={{ color: 'white', marginTop: 5 }}
-    />;
-  })
   .add('Swipeable item', () => {
     const leftAction = {
       title: 'Left',
@@ -208,7 +142,7 @@ storiesOf('Miscellaneous', module)
       </SwipeableItem>
     );
   })
-  .add('Swipeable list 2', () => {
+  .add('Swipeable list', () => {
     const hiddenActionLeft = {
       title: 'Left',
       color: 'blue',
@@ -231,7 +165,7 @@ storiesOf('Miscellaneous', module)
       hideRowOnInteraction: true,
     };
 
-    return <SwipeableList2
+    return <SwipeableList
       data={createSwipeableListData(100)}
       renderItem={({ item }: { item: { id: string, title: string } }) => (
         <View style={{ height: 75 }}><Text>{item.title}</Text></View>

@@ -3,13 +3,11 @@ export * from './misc/Section';
 export * from './misc/BackgroundView';
 export * from './misc/GoalRow';
 export * from './misc/GoalList';
-export * from './misc/GoalList2';
 export * from './misc/BottomSheet';
 export * from './misc/TimeTracker';
 export * from './misc/EmptyContainer';
 export * from './misc/SwipeableList';
 export * from './misc/SwipeableItem';
-export * from './misc/SwipeableList2';
 
 // Charts
 export * from './charts/ProgressChart';

@@ -7,12 +7,12 @@ import {
   TextStyle,
   TouchableWithoutFeedback,
   Image,
-  StyleSheet, GestureResponderEvent,
+  StyleSheet,
 } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 type Location = 'left' | 'right';
-export type InteractionCallback = () => void;
+export type InteractionCallback = (interactionKey?: string) => void;
 
 export interface SwipeableItemAction {
   title?: string;
@@ -24,8 +24,8 @@ export interface SwipeableItemAction {
 }
 
 interface SwipeableItemProps {
-  leftActions: SwipeableItemAction[];
-  rightActions: SwipeableItemAction[];
+  actionsLeft: SwipeableItemAction[];
+  actionsRight: SwipeableItemAction[];
   actionWidth: number;
   /**
    * When the user swipes past this amount multiplied by open value (the total width of actions
@@ -51,15 +51,16 @@ interface SwipeableItemProps {
   disableLeftSwipe: boolean;
   disableRightSwipe: boolean;
   titleStyle?: TextStyle;
-  onSwipeBegin?: () => void;
-  onSwipeEnd?: () => void;
-  onPress?: (e: GestureResponderEvent) => void;
-  onLeftActionsWillOpen?: () => void;
-  onLeftActionsDidOpen?: () => void;
-  onRightActionsWillOpen?: () => void;
-  onRightActionsDidOpen?: () => void;
-  onActionsWillClose?: () => void;
-  onActionsDidClose?: () => void;
+  onSwipeBegin?: (interactionKey?: string) => void;
+  onSwipeEnd?: (interactionKey?: string) => void;
+  onPress?: (interactionKey?: string) => void;
+  onLeftActionsWillOpen?: (interactionKey?: string) => void;
+  onLeftActionsDidOpen?: (interactionKey?: string) => void;
+  onRightActionsWillOpen?: (interactionKey?: string) => void;
+  onRightActionsDidOpen?: (interactionKey?: string) => void;
+  onActionsWillClose?: (interactionKey?: string) => void;
+  onActionsDidClose?: (interactionKey?: string) => void;
+  interactionKey?: string;
 }
 
 interface SwipeableItemState {
@@ -70,8 +71,8 @@ interface SwipeableItemState {
 
 export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableItemState> {
   static defaultProps = {
-    leftActions: [],
-    rightActions: [],
+    actionsLeft: [],
+    actionsRight: [],
     actionWidth: 100,
     openCutoffMultiplier: 0.5,
     autoSelectCutOffMultiplier: 1.5,
@@ -93,11 +94,11 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
   private isClosing = false;
 
-  private numOfLeftActions = () => this.props.leftActions.length;
-  private numOfRightActions = () => this.props.rightActions.length;
+  private numOfLeftActions = () => this.props.actionsLeft.length;
+  private numOfRightActions = () => this.props.actionsRight.length;
 
-  private leftOuterAction = () => this.numOfLeftActions() > 0 ? this.props.leftActions[0] : undefined;
-  private rightOuterAction = () => this.numOfRightActions() > 0 ? this.props.rightActions[this.numOfRightActions() - 1] : undefined;
+  private leftOuterAction = () => this.numOfLeftActions() > 0 ? this.props.actionsLeft[0] : undefined;
+  private rightOuterAction = () => this.numOfRightActions() > 0 ? this.props.actionsRight[this.numOfRightActions() - 1] : undefined;
 
   private leftActionWidthsTotal = () => this.numOfLeftActions() * this.props.actionWidth;
   private rightActionWidthsTotal = () => this.numOfRightActions() * this.props.actionWidth;
@@ -131,11 +132,11 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
     onPanResponderGrant: (evt, gestureState) => {
       const { translateX } = this.state;
-      const { onSwipeBegin } = this.props;
+      const { onSwipeBegin, interactionKey } = this.props;
 
       translateX.setOffset(this.xPosition);
       translateX.setValue(0);
-      onSwipeBegin?.();
+      onSwipeBegin?.(interactionKey);
     },
     onPanResponderMove: (evt, gestureState) => {
       const { translateX } = this.state;
@@ -182,9 +183,9 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     },
     onPanResponderRelease: (evt, gestureState) => {
       const { translateX } = this.state;
-      const { onSwipeEnd, openCutoffMultiplier, minVelocityToOpen } = this.props;
+      const { onSwipeEnd, interactionKey, openCutoffMultiplier, minVelocityToOpen } = this.props;
 
-      onSwipeEnd?.();
+      onSwipeEnd?.(interactionKey);
 
       translateX.flattenOffset();
 
@@ -217,12 +218,18 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
         this.handleInteraction(rightOuterAction.onInteraction);
       }
     },
-    onPanResponderTerminate: (evt, gestureState) => this.props.onSwipeEnd?.(),
+    onPanResponderTerminate: (evt, gestureState) => this.props.onSwipeEnd?.(this.props.interactionKey),
   });
 
   private handleInteraction = (callback?: InteractionCallback) => {
     this.close();
     callback?.();
+  };
+
+  private handlePress = () => {
+    const { onPress, interactionKey } = this.props;
+
+    onPress?.(interactionKey);
   };
 
   private autoSelectAnimationConfiguration = (toValue: number) => ({
@@ -307,15 +314,17 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       this.state.translateX,
       this.openCloseAnimationsConfiguration(x, velocity),
     ).start(() => {
+      const { interactionKey, onLeftActionsDidOpen, onRightActionsDidOpen } = this.props;
+
       if (x >= this.leftOpenValue()) {
         if (!this.areLeftActionsOpen) {
-          this.props.onLeftActionsDidOpen?.();
+          onLeftActionsDidOpen?.(interactionKey);
         }
 
         this.areLeftActionsOpen = true;
       } else if (x <= this.rightOpenValue()) {
         if (!this.areRightActionsOpen) {
-          this.props.onRightActionsDidOpen?.();
+          onRightActionsDidOpen?.(interactionKey);
         }
 
         this.areRightActionsOpen = true;
@@ -371,7 +380,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   };
 
   private renderActions(location: Location): JSX.Element {
-    const actions = location === 'left' ? this.props.leftActions : this.props.rightActions;
+    const actions = location === 'left' ? this.props.actionsLeft : this.props.actionsRight;
 
     return <Animated.View style={[styles.actionsContainer, {
       right: location === 'right' ? 0 : undefined,
@@ -412,8 +421,10 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   close(velocity = 0): void {
     if (this.xPosition === 0) return;
 
+    const { interactionKey, onActionsWillClose, onActionsDidClose } = this.props;
+
     if (this.areRightActionsOpen || this.areLeftActionsOpen) {
-      this.props.onActionsWillClose?.();
+      onActionsWillClose?.(interactionKey);
     }
 
     this.isClosing = true;
@@ -423,7 +434,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       this.openCloseAnimationsConfiguration(0, velocity),
     ).start(() => {
       if (this.areRightActionsOpen || this.areLeftActionsOpen) {
-        this.props.onActionsDidClose?.();
+        onActionsDidClose?.(interactionKey);
       }
 
       this.isClosing = false;
@@ -433,16 +444,20 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   openLeftActions(velocity = 0): void {
+    const { interactionKey, onLeftActionsWillOpen } = this.props;
+
     if (!this.areLeftActionsOpen) {
-      this.props.onLeftActionsWillOpen?.();
+      onLeftActionsWillOpen?.(interactionKey);
     }
 
     this.openTo(this.leftOpenValue(), velocity);
   }
 
   openRightActions(velocity = 0): void {
+    const { interactionKey, onRightActionsWillOpen } = this.props;
+
     if (!this.areRightActionsOpen) {
-      this.props.onRightActionsWillOpen?.();
+      onRightActionsWillOpen?.(interactionKey);
     }
 
     this.openTo(this.rightOpenValue(), velocity);
@@ -450,7 +465,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
   render() {
     const { translateX } = this.state;
-    const { onPress, children } = this.props;
+    const { children } = this.props;
 
     const transformStyle = {
       transform: [{ translateX }],
@@ -458,7 +473,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
     return (
       <View {...this.panResponder.panHandlers}>
-        <TouchableWithoutFeedback onPress={onPress}>
+        <TouchableWithoutFeedback onPress={this.handlePress}>
           <View style={styles.container}>
             {this.numOfLeftActions() > 0 && this.renderActions('left')}
             <Animated.View style={[styles.itemContainer, transformStyle]}>
