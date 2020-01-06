@@ -123,8 +123,8 @@ storiesOf('Miscellaneous', module)
 
     return (
       <SwipeableItem
-        leftActions={[leftAction]}
-        rightActions={[actionRight1, actionRight2]}
+        actionsLeft={[leftAction]}
+        actionsRight={[actionRight1, actionRight2]}
         autoSelectRightOuterAction
         onSwipeBegin={action('swipeable-item-swipe-began')}
         onSwipeEnd={action('swipeable-item-swipe-ended')}
@@ -170,8 +170,8 @@ storiesOf('Miscellaneous', module)
       renderItem={({ item }: { item: { id: string, title: string } }) => (
         <View style={{ height: 75 }}><Text>{item.title}</Text></View>
       )}
-      leftActions={[hiddenActionLeft]}
-      rightActions={[hiddenActionRight1, hiddenActionRight2]}
+      actionsLeft={[hiddenActionLeft]}
+      actionsRight={[hiddenActionRight1, hiddenActionRight2]}
       titleStyle={{ color: 'white' }}
       keyExtractor={item => item.id}
     />;

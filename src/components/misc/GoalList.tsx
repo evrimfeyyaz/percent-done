@@ -43,7 +43,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
     onInteraction: onEditActionInteraction,
   };
 
-  const trackOrCompleteAction = (goalId: string) => {
+  const actionsLeft = (goalId: string) => {
     const goal = findGoal(goalId);
 
     let icon = Icons.checkmarkLarge;
@@ -53,18 +53,18 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       icon = Icons.undo;
     }
 
-    return {
+    return [{
       color: colors.blue,
       onInteraction: onLeftActionInteraction,
       icon,
-    };
+    }];
   };
 
   return (
     <SwipeableList
       data={goals}
       disableRightSwipe={disableRightSwipe}
-      actionsLeft={[trackOrCompleteAction]}
+      actionsLeft={actionsLeft}
       actionsRight={[editAction]}
       actionWidth={60}
       renderItem={({ item }: { item: GoalRowProps }) => <GoalRow {...item} />}

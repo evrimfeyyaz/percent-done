@@ -5,8 +5,8 @@ import { SwipeableItem, SwipeableItemAction } from './SwipeableItem';
 type ValueOrFunction<T> = T | ((key: string) => T);
 
 interface SwipeableListProps {
-  actionsLeft?: ValueOrFunction<SwipeableItemAction>[];
-  actionsRight?: ValueOrFunction<SwipeableItemAction>[];
+  actionsLeft?: ValueOrFunction<SwipeableItemAction[]>;
+  actionsRight?: ValueOrFunction<SwipeableItemAction[]>;
   actionWidth?: number;
   autoSelectLeftOuterAction?: ValueOrFunction<boolean>;
   autoSelectRightOuterAction?: ValueOrFunction<boolean>;
@@ -89,16 +89,12 @@ export const SwipeableList = <T, >({
     return valueOrFunction;
   }
 
-  function getActionsForItem(key: string, actions: ValueOrFunction<SwipeableItemAction>[]): SwipeableItemAction[] {
-    return actions.map(action => getValueFromValueOrFunction(key, action));
-  }
-
   function renderItem(info: ListRenderItemInfo<T>): React.ReactElement | null {
     const { item, index } = info;
     const key = keyExtractor(item, index);
 
-    const itemLeftActions = actionsLeft && getActionsForItem(key, actionsLeft);
-    const itemRightActions = actionsRight && getActionsForItem(key, actionsRight);
+    const itemLeftActions = getValueFromValueOrFunction(key, actionsLeft);
+    const itemRightActions = getValueFromValueOrFunction(key, actionsRight);
     const itemAutoSelectLeftOuterAction = getValueFromValueOrFunction(key, autoSelectLeftOuterAction);
     const itemAutoSelectRightOuterAction = getValueFromValueOrFunction(key, autoSelectRightOuterAction);
 
