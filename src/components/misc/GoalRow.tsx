@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
   },
   details: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingLeft: 20,
+    paddingRight: 40,
   },
   title: {
     fontFamily: fonts.semibold,
