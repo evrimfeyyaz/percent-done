@@ -3,8 +3,8 @@ import {
   Image,
   StyleSheet,
   Text,
-  View, ViewStyle,
-  Animated,
+  View,
+  ViewStyle,
 } from 'react-native';
 import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
@@ -51,15 +51,12 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
                                                            isCompleted = false,
                                                            style,
                                                          }) => {
-  const nameStyle = StyleSheet.flatten([styles.name, { color }]);
-
   let progressPercentage = 0;
   if (isCompleted) {
     progressPercentage = 100;
   } else if (totalMs != null && completedMs != null) {
     progressPercentage = completedMs / totalMs;
   }
-
 
   let chainInfo = null;
   if (chainLength != null) {
@@ -86,7 +83,7 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
   }
 
   return (
-    <Animated.View style={StyleSheet.flatten([styles.container, style])}>
+    <View style={[styles.container, style]}>
       <ProgressCircle
         style={styles.circle}
         progress={progressPercentage}
@@ -96,11 +93,11 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
         endAngle={-Math.PI * 2}
       />
       <View style={styles.details}>
-        <Text style={nameStyle} numberOfLines={1}>{title}</Text>
+        <Text style={[styles.title, { color }]} numberOfLines={1}>{title}</Text>
         {chainInfo}
       </View>
       {isActiveToday && durationInfo}
-    </Animated.View>
+    </View>
   );
 };
 
@@ -116,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
   },
-  name: {
+  title: {
     fontFamily: fonts.semibold,
     fontSize: 14,
   },
@@ -147,15 +144,5 @@ const styles = StyleSheet.create({
   circle: {
     height: 34,
     width: 34,
-  },
-  leftActionContainer: {
-    backgroundColor: colors.blue,
-    justifyContent: 'center',
-    flex: 1,
-  },
-  leftActionText: {
-    fontFamily: fonts.regular,
-    fontSize: 14,
-    color: colors.white,
   },
 });

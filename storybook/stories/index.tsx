@@ -36,7 +36,7 @@ import {
   SelectBox,
   GoalList,
   SwipeableItem,
-  SwipeableList,
+  SwipeableList, ProjectRow,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -88,6 +88,7 @@ storiesOf('Miscellaneous', module)
   .add('Goals list', () => {
     return <GoalList goals={createGoals(100)} />;
   })
+  .add('Project row', () => <ProjectRow id='project-id' title="PercentDone" totalTimeSpentInMs={1 * 60 * 60 * 1000}/>)
   .add('Time tracker', () => (
     <TimeTracker title='Work on Awesome App' color='#3394FA'
                  durationInMs={60 * 60} startTimestamp={Date.now()}

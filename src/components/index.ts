@@ -8,6 +8,7 @@ export * from './misc/TimeTracker';
 export * from './misc/EmptyContainer';
 export * from './misc/SwipeableList';
 export * from './misc/SwipeableItem';
+export * from './misc/ProjectRow';
 
 // Charts
 export * from './charts/ProgressChart';
