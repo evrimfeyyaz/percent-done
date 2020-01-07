@@ -7,3 +7,4 @@ export * from './TodaysTimetable';
 export * from './EditGoalForm';
 export * from './AddTimetableEntryForm';
 export * from './EditTimetableEntryForm';
+export * from './EditProjectForm';

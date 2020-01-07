@@ -2,7 +2,7 @@ import { createProject } from '../../../src/factories/createProject';
 import { createStoreState, createTimetableEntry } from '../../../src/factories';
 import {
   convertProjectsToProjectRowProps,
-  getAllProjects,
+  getAllProjects, getProjectById,
   getProjectByTitle,
   getTotalTimeSpentOnProjectInMs,
 } from '../../../src/store/projects/selectors';
@@ -20,6 +20,28 @@ describe('projects selectors', () => {
       const result = getAllProjects(state);
 
       expect(result).toEqual([project1, project2]);
+    });
+  });
+
+  describe('getProjectById', () => {
+    let project1: Project, project2: Project, state: StoreState;
+
+    beforeEach(() => {
+      project1 = createProject('Project 1');
+      project2 = createProject('Project 2');
+      state = createStoreState({ projects: [project1, project2] });
+    });
+
+    it('returns the object with given ID', () => {
+      const result = getProjectById(state, project1.id);
+
+      expect(result).toEqual(project1);
+    });
+
+    it('returns `undefined` if no project exists with given ID', () => {
+      const result = getProjectById(state, 'non-existing-id');
+
+      expect(result).toBeUndefined();
     });
   });
 
@@ -80,14 +102,14 @@ describe('projects selectors', () => {
         {
           id: project1.id,
           title: project1.title,
-          totalTimeSpentInMs: 0
+          totalTimeSpentInMs: 0,
         },
         {
           id: project2.id,
           title: project2.title,
-          totalTimeSpentInMs: 0
-        }
-      ]
+          totalTimeSpentInMs: 0,
+        },
+      ];
 
       expect(result).toEqual(expected);
     });

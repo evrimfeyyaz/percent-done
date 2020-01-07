@@ -36,7 +36,7 @@ import {
   SelectBox,
   GoalList,
   SwipeableItem,
-  SwipeableList, ProjectRow, ProjectList, ProjectRowProps,
+  SwipeableList, ProjectRow, ProjectList, ProjectRowProps, ProjectForm,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -52,6 +52,7 @@ import moment from 'moment';
 import { createGoal } from '../../src/factories';
 import { Icons } from '../../assets';
 import { createRandomId } from '../../src/utilities';
+import { createProject } from '../../src/factories/createProject';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -88,7 +89,7 @@ storiesOf('Miscellaneous', module)
   .add('Goals list', () => {
     return <GoalList goals={createGoals(100)} />;
   })
-  .add('Project row', () => <ProjectRow id='project-id' title="PercentDone" totalTimeSpentInMs={1 * 60 * 60 * 1000}/>)
+  .add('Project row', () => <ProjectRow id='project-id' title="PercentDone" totalTimeSpentInMs={1 * 60 * 60 * 1000} />)
   .add('Project list', () => {
     return <ProjectList projects={createProjects(100)} />;
   })
@@ -437,6 +438,13 @@ storiesOf('Navigation', module)
 storiesOf('Forms', module)
   .add('Goal form', () => (
     <GoalForm onSubmit={action('goal-form-submission')} />
+  ))
+  .add('Project form', () => (
+    <ProjectForm
+      project={createProject('PercentDone')}
+      onSubmit={action('project-form-submission')}
+      onDelete={action('project-form-deletion')}
+    />
   ))
   .add('Timetable entry form', () => {
     const goal1 = createGoal({ title: 'Work on PercentDone', durationInMin: 1 });

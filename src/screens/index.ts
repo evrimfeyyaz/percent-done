@@ -9,3 +9,4 @@ export * from './TrackGoalScreen';
 export * from './EditGoalScreen';
 export * from './AddTimetableEntryScreen';
 export * from './EditTimetableEntryScreen';
+export * from './EditProjectScreen';

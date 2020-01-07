@@ -13,6 +13,10 @@ export const getProjectByTitle = (state: StoreState, title: string): (Project | 
   return state.projects.byId[id] || null;
 };
 
+export const getProjectById = (state: StoreState, id: string): Project => {
+  return state.projects.byId[id];
+};
+
 export const getTotalTimeSpentOnProjectInMs = (state: StoreState, id: string): number => {
   const timetableEntryIdsForProject = state.timetableEntries.idsByProjectId?.[id] || [];
 

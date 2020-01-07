@@ -52,3 +52,4 @@ export * from './navigation/HeaderCancelButton';
 // Forms
 export * from './forms/GoalForm';
 export * from './forms/TimetableEntryForm';
+export * from './forms/ProjectForm';

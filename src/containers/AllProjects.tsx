@@ -12,7 +12,7 @@ interface AllProjectsProps {
 
 const mapStateToProps = (state: StoreState): ProjectListProps => ({
   projects: convertProjectsToProjectRowProps(state, getAllProjects(state)),
-  emptyText: 'You haven\'t added any goals yet.',
+  emptyText: 'You haven\'t created any projects yet.\nYou can create a project on the goal tracking screen.',
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: AllProjectsProps) => ({

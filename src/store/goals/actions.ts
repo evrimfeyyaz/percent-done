@@ -14,7 +14,6 @@ import {
   UpdateTrackedGoalProjectIdAction,
   UpdateTrackedGoalStartTimestampAction,
 } from './types';
-import { ActionCreator } from 'redux';
 
 export const addGoal = (goal: Goal): AddGoalAction => ({
   type: ADD_GOAL,

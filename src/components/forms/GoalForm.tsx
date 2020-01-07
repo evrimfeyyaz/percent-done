@@ -7,7 +7,6 @@ import {
   Section,
   SwitchInput, TextButton,
   TextInput,
-  TimeInput,
 } from '..';
 import { goalColors } from '../../theme';
 import { Goal } from '../../store/goals/types';

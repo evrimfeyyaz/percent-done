@@ -16,7 +16,7 @@ import {
   getTotalRemainingMsForDate,
   isCompleted,
 } from '../../../src/store/goals/selectors';
-import { GoalListProps, GoalRowProps } from '../../../src/components';
+import { GoalRowProps } from '../../../src/components';
 import moment from 'moment';
 import { Goal } from '../../../src/store/goals/types';
 
@@ -34,13 +34,13 @@ describe('goals selectors', () => {
       expect(returnedGoal).toEqual(goal);
     });
 
-    it('returns null if no goal exists with given ID', () => {
+    it('returns `undefined` if no goal exists with given ID', () => {
       const goalId = 'non-existent-goal-id';
       const state = createStoreState({});
 
       const returnedGoal = getGoalById(state, goalId);
 
-      expect(returnedGoal).toBeNull();
+      expect(returnedGoal).toBeUndefined();
     });
   });
 

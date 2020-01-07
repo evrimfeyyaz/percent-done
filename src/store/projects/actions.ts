@@ -1,4 +1,12 @@
-import { ADD_PROJECT, AddProjectAction } from './types';
+import {
+  ADD_PROJECT,
+  AddProjectAction,
+  DELETE_PROJECT,
+  DeleteProjectAction,
+  EDIT_PROJECT,
+  EditProjectAction,
+  Project,
+} from './types';
 import { createRandomId } from '../../utilities';
 
 export const addProject = (title: string): AddProjectAction => ({
@@ -7,4 +15,15 @@ export const addProject = (title: string): AddProjectAction => ({
     id: createRandomId(),
     title,
   },
+});
+
+export const editProject = (project: Project, projectOld: Project): EditProjectAction => ({
+  type: EDIT_PROJECT,
+  project,
+  projectOld,
+});
+
+export const deleteProject = (project: Project): DeleteProjectAction => ({
+  type: DELETE_PROJECT,
+  project,
 });

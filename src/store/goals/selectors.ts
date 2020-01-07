@@ -7,7 +7,7 @@ import moment from 'moment';
 import { isActiveToday, isDeleted, isTimeTracked } from './utilities';
 
 export const getGoalById = (state: StoreState, id: string): Goal => {
-  return state.goals.byId[id] || null;
+  return state.goals.byId[id];
 };
 
 export const getAllGoals = (state: StoreState): Goal[] => {
