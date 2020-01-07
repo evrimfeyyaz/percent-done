@@ -4,20 +4,21 @@ import { TextButton, TextInput } from '..';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Project } from '../../store/projects/types';
 
-interface ProjectFormState {
-  title: string;
-  titleInputError?: string;
-}
-
 // TODO: Require unique project names (don't include deleted projects in the uniqueness check).
 export interface ProjectFormProps {
   project?: Project;
+  allProjectTitles: string[];
   /**
    * @param project
    * @param projectOld The version of the project before being edited.
    */
   onSubmit?: (project: Project, projectOld: Project) => void;
   onDelete?: (project: Project) => void;
+}
+
+interface ProjectFormState {
+  title: string;
+  titleInputError?: string;
 }
 
 export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
@@ -50,11 +51,20 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
 
   validate(): boolean {
     const { title } = this.state;
+    const { allProjectTitles, project } = this.props;
     let validates = true;
     let titleInputError = this.state.titleInputError;
 
     if (title == null || title.trim().length === 0) {
       titleInputError = 'You need to enter a title.';
+      validates = false;
+    }
+
+    if (
+      project?.title !== title &&
+      allProjectTitles.some(existingTitle => existingTitle.toLowerCase() === title.toLowerCase())
+    ) {
+      titleInputError = 'Another project with this title already exists.';
       validates = false;
     }
 

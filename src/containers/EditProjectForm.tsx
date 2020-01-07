@@ -5,7 +5,7 @@ import { Project, ProjectActionTypes } from '../store/projects/types';
 import { connect } from 'react-redux';
 import { ProjectForm, ProjectFormProps } from '../components';
 import { StoreState } from '../store/types';
-import { getProjectById } from '../store/projects/selectors';
+import { getAllProjects, getProjectById } from '../store/projects/selectors';
 
 interface EditProjectFormProps {
   projectId: string;
@@ -14,6 +14,7 @@ interface EditProjectFormProps {
 
 const mapStateToProps = (state: StoreState, ownProps: EditProjectFormProps): ProjectFormProps => ({
   project: getProjectById(state, ownProps.projectId),
+  allProjectTitles: getAllProjects(state).map(project => project.title),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<ProjectActionTypes>, ownProps: EditProjectFormProps) => ({
