@@ -52,7 +52,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
 
   validate(): boolean {
     const { title, recurringDays, titleInputPosition, recurringDaysInputPosition } = this.state;
-    const { allGoalTitles } = this.props;
+    const { allGoalTitles, goal } = this.props;
     let validates = true;
     let titleInputError = this.state.titleInputError;
     let recurringDaysInputError = this.state.recurringDaysInputError;
@@ -64,7 +64,10 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       validates = false;
     }
 
-    if (allGoalTitles.some(existingTitle => existingTitle.toLowerCase() === title.toLowerCase())) {
+    if (
+      goal?.title !== title &&
+      allGoalTitles.some(existingTitle => existingTitle.toLowerCase() === title.toLowerCase())
+    ) {
       titleInputError = 'Another goal with this title already exists.';
       if (titleInputPosition != null) failedInputPositions.push(titleInputPosition);
       validates = false;

@@ -4,7 +4,6 @@ import { TextButton, TextInput } from '..';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Project } from '../../store/projects/types';
 
-// TODO: Require unique project names (don't include deleted projects in the uniqueness check).
 export interface ProjectFormProps {
   project?: Project;
   allProjectTitles: string[];
