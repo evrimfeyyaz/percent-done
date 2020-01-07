@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     marginBottom: 10,
   },
-  timeSpent: {
+  timeLeft: {
     marginTop: 10,
     fontFamily: fonts.semibold,
     fontSize: 16,
