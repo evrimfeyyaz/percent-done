@@ -10,6 +10,7 @@ export * from './misc/SwipeableList';
 export * from './misc/SwipeableItem';
 export * from './misc/ProjectRow';
 export * from './misc/ProjectList';
+export * from './misc/ProjectModal';
 
 // Charts
 export * from './charts/ProgressChart';

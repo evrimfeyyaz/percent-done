@@ -14,30 +14,24 @@ interface InputContainerProps {
    * Title, shown on the left side.
    */
   title?: string;
-
   /**
    * Current duration of the input, shown on the right side.
    */
   value?: string;
-
   /**
    * A React element to add to the right side of the input container.
    */
   rightItem?: Element;
-
   onPress?: (event: GestureResponderEvent) => void;
   onLayout?: (event: LayoutChangeEvent) => void;
-
   /**
    * Whether this itemKey should flash when tapped.
    */
   opacityOnTouch?: boolean;
-
   /**
    * Error message for the input.
    */
   error?: string;
-
   contentStyle?: ViewStyle;
 }
 

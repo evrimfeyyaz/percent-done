@@ -89,7 +89,7 @@ const idsByProjectId: Reducer<{ [projectId: string]: string[] }, TimetableEntryA
   switch (action.type) {
     case EDIT_TIMETABLE_ENTRY:
       entry = action.timetableEntry;
-      const entryPreviousState = action.timetableEntryPreviousState;
+      const entryPreviousState = action.oldTimetableEntry;
       projectId = entry.projectId;
       const previousProjectId = entryPreviousState.projectId;
 

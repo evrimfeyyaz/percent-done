@@ -2,14 +2,12 @@ import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { StoreState } from '../types';
 import { GoalActionTypes } from '../goals/types';
-import { TimetableEntryActionTypes } from '../timetableEntries/types';
-import { setTrackedGoal, updateTrackedGoalProjectId } from '../goals/actions';
-import { NavigationService } from '../../utilities';
+import { updateTrackedGoalProjectId } from '../goals/actions';
 import { ProjectActionTypes } from './types';
 import { addProject } from './actions';
 import { getProjectByTitle } from './selectors';
 
-export const createProjectAndSetTrackedGoalProject: ActionCreator<ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes>> = (title: string) => {
+export const createProjectAndReturnId: ActionCreator<ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes>> = (title: string) => {
   return (dispatch, getState) => {
     dispatch(addProject(title));
 
@@ -20,6 +18,14 @@ export const createProjectAndSetTrackedGoalProject: ActionCreator<ThunkAction<vo
       throw Error('Project does not exist.');
     }
 
-    dispatch(updateTrackedGoalProjectId(project.id));
+    return project.id;
+  };
+};
+
+export const createProjectAndSetTrackedGoalProject: ActionCreator<ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes>> = (title: string) => {
+  return (dispatch) => {
+    const id = dispatch(createProjectAndReturnId(title)) as unknown as string;
+
+    dispatch(updateTrackedGoalProjectId(id));
   };
 };

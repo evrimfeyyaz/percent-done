@@ -1,43 +1,46 @@
 import React, { Component } from 'react';
-import { DateInput, ItemInput, TextButton, TimeInput } from '..';
+import { DateInput, InputContainer, ItemInput, ProjectModal, TextButton, TimeInput } from '..';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { TimetableEntry } from '../../store/timetableEntries/types';
 import { Goal } from '../../store/goals/types';
 import { isTimeTracked } from '../../store/goals/utilities';
 import { createRandomId, msToHoursMinutesSeconds } from '../../utilities';
 
+export interface TimetableEntryFormProps {
+  allGoals: Goal[];
+  onSubmit?: (timetableEntry: TimetableEntry, oldTimetableEntry?: TimetableEntry) => void;
+  onDelete?: (timetableEntry: TimetableEntry) => void;
+  timetableEntry?: TimetableEntry;
+  projects: { key: string, title: string }[];
+  /**
+   * Returns the ID of the created project.
+   */
+  onProjectCreatePress?: (projectTitle: string) => string;
+}
+
 interface TimetableEntryFormState {
   goalId: string;
+  projectKey?: string;
   startTimestamp: number;
   endTimestamp: number;
   isSelectedGoalTimeTracked: boolean;
   finishedAtError?: string;
+  isProjectModalVisible: boolean;
 }
 
-export interface TimetableEntryFormProps {
-  allGoals: Goal[];
-  onSubmit?: (timetableEntry: TimetableEntry) => void;
-  onDelete?: (timetableEntry: TimetableEntry) => void;
-  timetableEntry?: TimetableEntry;
-}
-
-// TODO: Refactor this form together with the goal form to make it DRY.
 export class TimetableEntryForm extends Component<TimetableEntryFormProps, TimetableEntryFormState> {
-  constructor(props: TimetableEntryFormProps) {
-    super(props);
+  private now = Date.now();
+  private goalId = this.props.timetableEntry?.goalId || this.props.allGoals[0].id;
+  private goal = this.props.allGoals.find(goal => goal.id === this.goalId);
 
-    const { timetableEntry, allGoals } = props;
-    const now = Date.now();
-    const goalId = timetableEntry?.goalId || allGoals[0].id;
-    const goal = allGoals.find(goal => goal.id === goalId);
-
-    this.state = {
-      goalId,
-      startTimestamp: timetableEntry?.startTimestamp || now,
-      endTimestamp: timetableEntry?.endTimestamp || now,
-      isSelectedGoalTimeTracked: goal != null ? isTimeTracked(goal) : true,
-    };
-  }
+  state: TimetableEntryFormState = {
+    goalId: this.goalId,
+    isProjectModalVisible: false,
+    projectKey: this.props.timetableEntry?.projectId,
+    startTimestamp: this.props.timetableEntry?.startTimestamp || this.now,
+    endTimestamp: this.props.timetableEntry?.endTimestamp || this.now,
+    isSelectedGoalTimeTracked: this.goal != null ? isTimeTracked(this.goal) : true,
+  };
 
   validate(): boolean {
     const { startTimestamp, endTimestamp } = this.state;
@@ -66,26 +69,27 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
       return false;
     }
 
-    let { goalId, startTimestamp, endTimestamp } = this.state;
+    const { onSubmit, timetableEntry: oldTimetableEntry } = this.props;
+    let { goalId, startTimestamp, endTimestamp, projectKey } = this.state;
     let id: string;
 
     if (this.isAddNewForm()) {
       id = createRandomId();
     } else {
-      const { timetableEntry } = this.props;
-      if (timetableEntry == null) throw new Error('Timetable entry cannot be null on the edit form.');
+      if (oldTimetableEntry == null) throw new Error('Timetable entry cannot be null on the edit form.');
 
-      id = timetableEntry.id;
+      id = oldTimetableEntry.id;
     }
 
     const timetableEntry: TimetableEntry = {
+      projectId: projectKey,
       startTimestamp,
       endTimestamp,
       goalId,
       id,
     };
 
-    this.props.onSubmit?.(timetableEntry);
+    onSubmit?.(timetableEntry, oldTimetableEntry);
 
     return true;
   }
@@ -124,6 +128,22 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
         isSelectedGoalTimeTracked: isTimeTracked(goal),
       });
     }
+  };
+
+  toggleProjectModal = () => this.setState({ isProjectModalVisible: !this.state.isProjectModalVisible });
+
+  handleProjectCreatePress = (title: string) => {
+    const projectKey = this.props.onProjectCreatePress?.(title);
+
+    this.setState({ isProjectModalVisible: false, projectKey });
+  };
+
+  handleProjectPress = (key: string) => {
+    this.setState({ isProjectModalVisible: false, projectKey: key });
+  };
+
+  handleProjectRemovePress = () => {
+    this.setState({ isProjectModalVisible: false, projectKey: undefined });
   };
 
   handleDateChange = (date: Date) => {
@@ -172,33 +192,50 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
   };
 
   render() {
-    const { startTimestamp, endTimestamp, goalId, isSelectedGoalTimeTracked, finishedAtError } = this.state;
-    const { allGoals } = this.props;
+    const {
+      startTimestamp, endTimestamp, goalId, isSelectedGoalTimeTracked,
+      finishedAtError, isProjectModalVisible, projectKey,
+    } = this.state;
+    const { allGoals, projects } = this.props;
     const goalItems = allGoals.map(goal => ({ key: goal.id, value: goal.title }));
+    const project = projects?.find(project => project.key === projectKey);
 
     return (
-      <ScrollView style={styles.container}>
-        {!this.isGoalDeleted() && (
-          <ItemInput title='Goal' itemKey={goalId} allItems={goalItems} onItemChange={this.handleGoalChange} />
-        )}
-        <DateInput title='Date' date={new Date(startTimestamp)} onDateChange={this.handleDateChange} />
-        {isSelectedGoalTimeTracked && (
-          <>
-            <TimeInput title='Started at' time={new Date(startTimestamp)} onTimeChange={this.handleStartAtChange} />
-            <TimeInput title='Finished at' time={new Date(endTimestamp)}
-                       onTimeChange={this.handleFinishedAtChange} error={finishedAtError} />
-          </>
-        )}
-        {!isSelectedGoalTimeTracked && (
-          <TimeInput title='Completed at' time={new Date(startTimestamp)} onTimeChange={this.handleCompletedAtChange} />
-        )}
+      <>
+        <ScrollView style={styles.container}>
+          {!this.isGoalDeleted() && (
+            <ItemInput title='Goal' itemKey={goalId} allItems={goalItems} onItemChange={this.handleGoalChange} />
+          )}
+          <InputContainer title='Project' value={project?.title ?? '[Tap to select]'}
+                          onPress={this.toggleProjectModal} />
+          <DateInput title='Date' date={new Date(startTimestamp)} onDateChange={this.handleDateChange} />
+          {isSelectedGoalTimeTracked && (
+            <>
+              <TimeInput title='Started at' time={new Date(startTimestamp)} onTimeChange={this.handleStartAtChange} />
+              <TimeInput title='Finished at' time={new Date(endTimestamp)}
+                         onTimeChange={this.handleFinishedAtChange} error={finishedAtError} />
+            </>
+          )}
+          {!isSelectedGoalTimeTracked && (
+            <TimeInput title='Completed at' time={new Date(startTimestamp)}
+                       onTimeChange={this.handleCompletedAtChange} />
+          )}
 
-        {!this.isAddNewForm() && (
-          <View style={styles.deleteButtonContainer}>
-            <TextButton title='Delete Entry' onPress={this.handleDeletePress} />
-          </View>
-        )}
-      </ScrollView>
+          {!this.isAddNewForm() && (
+            <View style={styles.deleteButtonContainer}>
+              <TextButton title='Delete Entry' onPress={this.handleDeletePress} />
+            </View>
+          )}
+        </ScrollView>
+        <ProjectModal
+          projects={projects}
+          isVisible={isProjectModalVisible}
+          onProjectModalHideRequest={this.toggleProjectModal}
+          onProjectRemovePress={this.handleProjectRemovePress}
+          onProjectPress={this.handleProjectPress}
+          onProjectCreatePress={this.handleProjectCreatePress}
+        />
+      </>
     );
   }
 }

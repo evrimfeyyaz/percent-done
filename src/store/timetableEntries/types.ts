@@ -30,7 +30,7 @@ export interface AddTimetableEntryAction extends Action<typeof ADD_TIMETABLE_ENT
 
 export interface EditTimetableEntryAction extends Action<typeof EDIT_TIMETABLE_ENTRY> {
   timetableEntry: TimetableEntry;
-  timetableEntryPreviousState: TimetableEntry;
+  oldTimetableEntry: TimetableEntry;
 }
 
 export interface DeleteTimetableEntryAction extends Action<typeof DELETE_TIMETABLE_ENTRY> {

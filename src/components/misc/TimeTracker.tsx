@@ -2,9 +2,8 @@ import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { formatDurationInMs, leftOrOver, momentWithDeviceLocale } from '../../utilities';
-import { BottomSheetTimePicker, Button, ProgressChart, SelectBox } from '..';
+import { BottomSheetTimePicker, Button, ProgressChart, ProjectModal } from '..';
 import { Icons } from '../../../assets';
-import Modal from 'react-native-modal';
 
 export interface TimeTrackerProps {
   title: string;
@@ -77,7 +76,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     }
   };
 
-  const handleCancelPress = () => {
+  const handleProjectRemovePress = () => {
     setIsProjectModalVisible(false);
     onProjectRemove?.();
   };
@@ -124,13 +123,14 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
       </TouchableOpacity>
       <BottomSheetTimePicker ref={bottomSheetTimePickerRef} initialValue={new Date(startTimestamp)}
                              onValueChange={handleStartedAtTimeChange} />
-      <Modal isVisible={isProjectModalVisible} animationIn='fadeIn' animationOut='fadeOut'
-             avoidKeyboard onBackButtonPress={toggleProjectModal} onBackdropPress={toggleProjectModal}>
-        <View style={styles.projectModal}>
-          <SelectBox data={projects} cancelButtonTitle='Track Without Project' onItemPress={handleProjectPress}
-                     onCreatePress={handleProjectCreatePress} onCancelPress={handleCancelPress} />
-        </View>
-      </Modal>
+      <ProjectModal
+        projects={projects}
+        isVisible={isProjectModalVisible}
+        onProjectCreatePress={handleProjectCreatePress}
+        onProjectPress={handleProjectPress}
+        onProjectRemovePress={handleProjectRemovePress}
+        onProjectModalHideRequest={toggleProjectModal}
+      />
     </ScrollView>
   );
 };
