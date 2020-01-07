@@ -1,12 +1,14 @@
 import { createProject } from '../../../src/factories/createProject';
 import { createStoreState, createTimetableEntry } from '../../../src/factories';
 import {
+  convertProjectsToProjectRowProps,
   getAllProjects,
   getProjectByTitle,
   getTotalTimeSpentOnProjectInMs,
 } from '../../../src/store/projects/selectors';
 import { Project } from '../../../src/store/projects/types';
 import { StoreState } from '../../../src/store/types';
+import { ProjectRowProps } from '../../../src/components';
 
 describe('projects selectors', () => {
   describe('getAllProjects', () => {
@@ -64,6 +66,30 @@ describe('projects selectors', () => {
       const result = getTotalTimeSpentOnProjectInMs(state, project.id);
 
       expect(result).toEqual(120 * 60 * 1000);
+    });
+  });
+
+  describe('convertProjectsToProjectRowProps', () => {
+    it('converts Project array to ProjectRowProps array', () => {
+      const project1 = createProject('Project 1');
+      const project2 = createProject('Project 2');
+      const state = createStoreState({ projects: [project1, project2] });
+
+      const result = convertProjectsToProjectRowProps(state, [project1, project2]);
+      const expected: ProjectRowProps[] = [
+        {
+          id: project1.id,
+          title: project1.title,
+          totalTimeSpentInMs: 0
+        },
+        {
+          id: project2.id,
+          title: project2.title,
+          totalTimeSpentInMs: 0
+        }
+      ]
+
+      expect(result).toEqual(expected);
     });
   });
 });

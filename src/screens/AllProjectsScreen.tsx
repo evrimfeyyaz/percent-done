@@ -1,19 +1,11 @@
 import React from 'react';
-import { BackgroundView } from '../components';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { StyleSheet, Text } from 'react-native';
+import { AllProjects } from '../containers/AllProjects';
 
 export const AllProjectsScreen: NavigationStackScreenComponent = ({ navigation }) => {
-  return (
-    <BackgroundView style={styles.container}>
-      <Text>All Projects</Text>
-    </BackgroundView>
-  );
-};
+  const handleEditActionInteraction = (projectId: string) => {
+    navigation.navigate('EditProject', { projectId });
+  };
 
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 30,
-    paddingHorizontal: 10,
-  },
-});
+  return <AllProjects onEditActionInteraction={handleEditActionInteraction} />;
+};

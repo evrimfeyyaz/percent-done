@@ -1,6 +1,6 @@
 import { StoreState } from '../types';
 import { Goal } from './types';
-import { GoalListProps } from '../../components';
+import { GoalRowProps } from '../../components';
 import { convertDateToIndex } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import moment from 'moment';
@@ -33,10 +33,10 @@ export const getCompleteGoals = (state: StoreState, date: Date): Goal[] =>
   getGoalsForDate(state, date).filter(goal => isCompleted(state, goal, date));
 
 /**
- * Converts an array of goals to GoalListProps to be used in the GoalList component.
+ * Converts an array of goals to a GoalRowProps array to be used in the GoalList component.
  */
-export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], date: Date): GoalListProps => {
-  const convertedGoals = goals.map(goal => {
+export const convertGoalsToGoalRowProps = (state: StoreState, goals: Goal[], date: Date): GoalRowProps[] => {
+  return goals.map(goal => {
     const { title, color, id } = goal;
     const chainLength = getChainLength(state, goal, date);
     const activeToday = isActiveToday(goal);
@@ -60,10 +60,6 @@ export const convertGoalsToGoalListProps = (state: StoreState, goals: Goal[], da
       isCompleted: completed,
     };
   });
-
-  return {
-    goals: convertedGoals,
-  };
 };
 
 /**

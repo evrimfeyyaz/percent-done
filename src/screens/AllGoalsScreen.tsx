@@ -3,9 +3,9 @@ import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { AllGoals } from '../containers/AllGoals';
 
 export const AllGoalsScreen: NavigationStackScreenComponent = ({ navigation }) => {
-  const handleRightActionPress = (goalId: string) => {
+  const handleEditActionInteraction = (goalId: string) => {
     navigation.navigate('EditGoal', { goalId });
   };
 
-  return <AllGoals onRightActionPress={handleRightActionPress} />;
+  return <AllGoals onEditActionInteraction={handleEditActionInteraction} />;
 };

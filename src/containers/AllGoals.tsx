@@ -1,28 +1,26 @@
 import React from 'react';
-import { convertGoalsToGoalListProps, getAllGoals } from '../store/goals/selectors';
+import { convertGoalsToGoalRowProps, getAllGoals } from '../store/goals/selectors';
 import { StoreState } from '../store/types';
 import { getBeginningOfDay } from '../utilities';
 import { connect } from 'react-redux';
 import { GoalList, GoalListProps } from '../components';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { handleCompleteOrTrackRequest } from '../store/goals/thunks';
 
 const today = getBeginningOfDay(new Date());
 
 interface AllGoalsProps {
-  onRightActionPress?: (goalId: string) => void;
+  onEditActionInteraction?: (goalId: string) => void;
 }
 
 const mapStateToProps = (state: StoreState): GoalListProps => ({
-  goals: convertGoalsToGoalListProps(state, getAllGoals(state), today).goals,
+  goals: convertGoalsToGoalRowProps(state, getAllGoals(state), today),
   emptyText: 'You haven\'t added any goals yet.',
   disableRightSwipe: true,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: AllGoalsProps) => ({
-  onGoalRightSwipe: (goalId: string) => dispatch(handleCompleteOrTrackRequest(goalId)),
-  onRightActionPress: ownProps.onRightActionPress,
+  onEditActionInteraction: ownProps.onEditActionInteraction,
 });
 
 export const AllGoals = connect(mapStateToProps, mapDispatchToProps)(GoalList);

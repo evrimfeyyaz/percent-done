@@ -1,6 +1,6 @@
 import { createGoal, createStoreState, createTimetableEntry } from '../../../src/factories';
 import {
-  convertGoalsToGoalListProps,
+  convertGoalsToGoalRowProps,
   getAllGoals,
   getChainLength,
   getCompletedMs,
@@ -16,7 +16,7 @@ import {
   getTotalRemainingMsForDate,
   isCompleted,
 } from '../../../src/store/goals/selectors';
-import { GoalListProps } from '../../../src/components';
+import { GoalListProps, GoalRowProps } from '../../../src/components';
 import moment from 'moment';
 import { Goal } from '../../../src/store/goals/types';
 
@@ -129,8 +129,8 @@ describe('goals selectors', () => {
     });
   });
 
-  describe('convertGoalsToGoalListProps', () => {
-    it('converts Goal array to GoalListProps array', () => {
+  describe('convertGoalsToGoalRowProps', () => {
+    it('converts Goal array to GoalRowProps array', () => {
       const durationInMinutes = 30;
       const goal = createGoal({ durationInMin: durationInMinutes }, [today]);
 
@@ -152,22 +152,20 @@ describe('goals selectors', () => {
         timetableEntries: [todaysEntry, yesterdaysEntry],
       });
 
-      const expected: GoalListProps = {
-        goals: [
-          {
-            id: goal.id,
-            title: goal.title,
-            color: goal.color,
-            totalMs: goal.durationInMs,
-            completedMs: 30 * 60 * 1000,
-            chainLength: 2,
-            isActiveToday: true,
-            isCompleted: undefined,
-          },
-        ],
-      };
+      const expected: GoalRowProps[] = [
+        {
+          id: goal.id,
+          title: goal.title,
+          color: goal.color,
+          totalMs: goal.durationInMs,
+          completedMs: 30 * 60 * 1000,
+          chainLength: 2,
+          isActiveToday: true,
+          isCompleted: undefined,
+        },
+      ];
 
-      const result = convertGoalsToGoalListProps(state, [goal], today);
+      const result = convertGoalsToGoalRowProps(state, [goal], today);
 
       expect(result).toEqual(expected);
     });
@@ -182,21 +180,19 @@ describe('goals selectors', () => {
       });
       const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry] });
 
-      const result = convertGoalsToGoalListProps(state, [goal], today);
-      const expected: GoalListProps = {
-        goals: [
-          {
-            id: goal.id,
-            title: goal.title,
-            color: goal.color,
-            totalMs: undefined,
-            completedMs: undefined,
-            chainLength: 1,
-            isCompleted: true,
-            isActiveToday: true,
-          },
-        ],
-      };
+      const result = convertGoalsToGoalRowProps(state, [goal], today);
+      const expected: GoalRowProps[] = [
+        {
+          id: goal.id,
+          title: goal.title,
+          color: goal.color,
+          totalMs: undefined,
+          completedMs: undefined,
+          chainLength: 1,
+          isCompleted: true,
+          isActiveToday: true,
+        },
+      ];
 
       expect(result).toEqual(expected);
     });
@@ -354,7 +350,7 @@ describe('goals selectors', () => {
       const result = getTotalProgressForDate(state, today);
 
       expect(result).toEqual(100);
-    })
+    });
   });
 
   describe('getCompletedMs', () => {

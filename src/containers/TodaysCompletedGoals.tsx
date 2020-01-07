@@ -1,5 +1,5 @@
 import React from 'react';
-import { convertGoalsToGoalListProps, getCompleteGoals } from '../store/goals/selectors';
+import { convertGoalsToGoalRowProps, getCompleteGoals } from '../store/goals/selectors';
 import { StoreState } from '../store/types';
 import { getBeginningOfDay } from '../utilities';
 import { connect } from 'react-redux';
@@ -16,7 +16,7 @@ interface TodaysCompletedGoalsProps {
 }
 
 const mapStateToProps = (state: StoreState): GoalListProps => ({
-  goals: convertGoalsToGoalListProps(state, getCompleteGoals(state, today), today).goals,
+  goals: convertGoalsToGoalRowProps(state, getCompleteGoals(state, today), today),
   emptyText: 'Nothing completed yet,\nbetter get started.',
 });
 

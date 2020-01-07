@@ -6,7 +6,7 @@ import { colors } from '../../theme';
 import { SwipeableList } from './SwipeableList';
 import { ProjectRow, ProjectRowProps } from './ProjectRow';
 
-interface ProjectListProps {
+export interface ProjectListProps {
   projects: ProjectRowProps[],
   /**
    * Text to show then this list is empty.

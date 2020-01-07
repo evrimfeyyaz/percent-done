@@ -1,5 +1,5 @@
 import React from 'react';
-import { convertGoalsToGoalListProps, getIncompleteGoals } from '../store/goals/selectors';
+import { convertGoalsToGoalRowProps, getIncompleteGoals } from '../store/goals/selectors';
 import { StoreState } from '../store/types';
 import { getBeginningOfDay } from '../utilities';
 import { connect } from 'react-redux';
@@ -16,7 +16,7 @@ interface TodaysIncompleteGoalsProps {
 }
 
 const mapStateToProps = (state: StoreState): GoalListProps => ({
-  goals: convertGoalsToGoalListProps(state, getIncompleteGoals(state, today), today).goals,
+  goals: convertGoalsToGoalRowProps(state, getIncompleteGoals(state, today), today),
   emptyText: 'All done for today!',
 });
 
