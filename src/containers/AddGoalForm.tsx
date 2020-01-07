@@ -4,9 +4,15 @@ import { addGoal } from '../store/goals/actions';
 import { Goal, GoalActionTypes } from '../store/goals/types';
 import { connect } from 'react-redux';
 import { GoalForm, GoalFormProps } from '../components';
+import { StoreState } from '../store/types';
+import { getAllGoals } from '../store/goals/selectors';
 
-const mapDispatchToProps = (dispatch: Dispatch<GoalActionTypes>): GoalFormProps => ({
+const mapStateToProps = (state: StoreState) => ({
+  allGoalTitles: getAllGoals(state).map(goal => goal.title),
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<GoalActionTypes>): Partial<GoalFormProps> => ({
   onSubmit: (goal: Goal) => dispatch(addGoal(goal)),
 });
 
-export const AddGoalForm = connect(null, mapDispatchToProps, null, { forwardRef: true })(GoalForm);
+export const AddGoalForm = connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })(GoalForm);

@@ -13,6 +13,13 @@ import { Goal } from '../../store/goals/types';
 import { createRandomId } from '../../utilities';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+export interface GoalFormProps {
+  onSubmit?: (goal: Goal) => void;
+  onDelete?: (goalId: string) => void;
+  goal?: Goal;
+  allGoalTitles: string[];
+}
+
 interface GoalFormState {
   title: string;
   color: string;
@@ -32,31 +39,20 @@ interface GoalFormState {
   failedInputPositions?: number[];
 }
 
-// TODO: Require unique goal names (don't include deleted goals in the uniqueness check).
-export interface GoalFormProps {
-  onSubmit?: (goal: Goal) => void;
-  onDelete?: (goalId: string) => void;
-  goal?: Goal;
-}
-
 export class GoalForm extends Component<GoalFormProps, GoalFormState> {
-  private readonly scrollViewRef: React.RefObject<KeyboardAwareScrollView>;
+  private readonly scrollViewRef = createRef<KeyboardAwareScrollView>();
 
-  constructor(props: GoalFormProps) {
-    super(props);
-
-    this.state = {
-      title: props.goal?.title || '',
-      isTimeTracked: false,
-      duration: { hours: 1, minutes: 0 },
-      recurringDays: new Array(7).fill(true),
-      color: props.goal?.color || goalColors[0],
-    };
-    this.scrollViewRef = createRef<KeyboardAwareScrollView>();
-  }
+  state: GoalFormState = {
+    title: this.props.goal?.title || '',
+    isTimeTracked: false,
+    duration: { hours: 1, minutes: 0 },
+    recurringDays: new Array(7).fill(true),
+    color: this.props.goal?.color || goalColors[0],
+  };
 
   validate(): boolean {
     const { title, recurringDays, titleInputPosition, recurringDaysInputPosition } = this.state;
+    const { allGoalTitles } = this.props;
     let validates = true;
     let titleInputError = this.state.titleInputError;
     let recurringDaysInputError = this.state.recurringDaysInputError;
@@ -64,6 +60,12 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
 
     if (title == null || title.trim().length === 0) {
       titleInputError = 'You need to enter a title.';
+      if (titleInputPosition != null) failedInputPositions.push(titleInputPosition);
+      validates = false;
+    }
+
+    if (allGoalTitles.some(existingTitle => existingTitle.toLowerCase() === title.toLowerCase())) {
+      titleInputError = 'Another goal with this title already exists.';
       if (titleInputPosition != null) failedInputPositions.push(titleInputPosition);
       validates = false;
     }
@@ -192,7 +194,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
    * Returns `true` when this form is an "add new goal" form, and `false`
    * when it is an "edit goal' form.
    */
-  isAddNewForm = () => {
+  private isAddNewForm = () => {
     return this.props.goal == null;
   };
 
