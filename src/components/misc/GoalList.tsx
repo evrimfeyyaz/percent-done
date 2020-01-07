@@ -8,7 +8,7 @@ import { SwipeableItemAction } from './SwipeableItem';
 import { LayoutAnimation } from 'react-native';
 
 export interface GoalListProps {
-  goals: (GoalRowProps)[];
+  goals: GoalRowProps[];
   /**
    * Text to show then this list is empty.
    */

@@ -36,7 +36,7 @@ import {
   SelectBox,
   GoalList,
   SwipeableItem,
-  SwipeableList, ProjectRow,
+  SwipeableList, ProjectRow, ProjectList, ProjectRowProps,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -89,6 +89,9 @@ storiesOf('Miscellaneous', module)
     return <GoalList goals={createGoals(100)} />;
   })
   .add('Project row', () => <ProjectRow id='project-id' title="PercentDone" totalTimeSpentInMs={1 * 60 * 60 * 1000}/>)
+  .add('Project list', () => {
+    return <ProjectList projects={createProjects(100)} />;
+  })
   .add('Time tracker', () => (
     <TimeTracker title='Work on Awesome App' color='#3394FA'
                  durationInMs={60 * 60} startTimestamp={Date.now()}
@@ -481,6 +484,24 @@ function createGoals(num: number) {
   }
 
   return goals;
+}
+
+function createProjects(num: number) {
+  const projects: ProjectRowProps[] = [];
+  const titles = ['PercentDone', 'IndieSumo', 'A Project with a Very Very Very Very Long Title'];
+
+  for (let i = 0; i < num; i++) {
+    const id = createRandomId();
+    const totalTimeSpentInMs = Math.floor(Math.random() * 120) * 60 * 60 * 1000;
+
+    projects.push({
+      id,
+      title: titles[Math.floor(Math.random() * titles.length)] + ` ${i}`,
+      totalTimeSpentInMs,
+    });
+  }
+
+  return projects;
 }
 
 function createSwipeableListData(num: number) {

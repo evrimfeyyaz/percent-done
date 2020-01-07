@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { formatDurationInMs } from '../../utilities';
 
-interface ProjectRowProps {
+export interface ProjectRowProps {
   id: string;
   title: string;
   totalTimeSpentInMs: number;
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
+    paddingRight: 40,
   },
   title: {
     color: colors.white,
