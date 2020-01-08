@@ -22,7 +22,7 @@ export interface GoalFormProps {
 
 interface GoalFormState {
   title: string;
-  color: string;
+  colorIndex: number;
   isTimeTracked: boolean;
   duration: { hours: number, minutes: number };
   recurringDays: boolean[];
@@ -47,7 +47,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     isTimeTracked: false,
     duration: { hours: 1, minutes: 0 },
     recurringDays: new Array(7).fill(true),
-    color: this.props.goal?.color || goalColors[0],
+    colorIndex: this.props.goal?.colorIndex || 0,
   };
 
   validate(): boolean {
@@ -106,31 +106,31 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       return false;
     }
 
-    let { title, isTimeTracked, duration, recurringDays, color } = this.state;
+    let { title, isTimeTracked, duration, recurringDays, colorIndex } = this.state;
     let durationInMs: number | undefined;
     let id: string;
-    let createdAt: Date;
+    let createdAtTimestamp: number;
 
     if (this.isAddNewForm()) {
       durationInMs = isTimeTracked ? duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000 : undefined;
       id = createRandomId();
-      createdAt = new Date();
+      createdAtTimestamp = Date.now();
     } else {
       const { goal } = this.props;
       if (goal == null) throw new Error('Goal cannot be null on the edit form.');
 
       id = goal.id;
       durationInMs = goal.durationInMs;
-      createdAt = goal.createdAtTimestamp;
+      createdAtTimestamp = goal.createdAtTimestamp;
     }
 
     const goal: Goal = {
       id,
       title,
-      color,
+      colorIndex: colorIndex,
       durationInMs,
       recurringDays,
-      createdAtTimestamp: createdAt,
+      createdAtTimestamp,
     };
 
     this.props.onSubmit?.(goal);
@@ -161,8 +161,8 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     });
   };
 
-  handleColorChange = (color: string) => {
-    this.setState({ color });
+  handleColorIndexChange = (colorIndex: number) => {
+    this.setState({ colorIndex });
   };
 
   handleTitleInputLayout = (event: LayoutChangeEvent) => {
@@ -204,7 +204,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   render() {
     const {
       title, isTimeTracked, duration, recurringDays,
-      color, titleInputError, recurringDaysInputError,
+      colorIndex, titleInputError, recurringDaysInputError,
     } = this.state;
 
     return (
@@ -230,7 +230,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
         )}
 
         <Section title='Color' bottomSeparator={false} contentStyle={styles.sectionContent}>
-          <ColorInput colors={goalColors} selectedColor={color} onColorChange={this.handleColorChange} />
+          <ColorInput colors={goalColors} selectedColorIndex={colorIndex} onColorIndexChange={this.handleColorIndexChange} />
         </Section>
 
         {!this.isAddNewForm() && (

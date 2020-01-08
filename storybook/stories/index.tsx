@@ -361,7 +361,7 @@ storiesOf('Inputs', module)
       <ColorInput
         colors={inputColors}
         selectedColor={select('Color', inputColors, '#CB0E0E')}
-        onColorChange={action('color-changed')}
+        onColorChange={action('colorIndex-changed')}
       />
     );
   })

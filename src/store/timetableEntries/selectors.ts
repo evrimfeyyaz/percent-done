@@ -1,7 +1,7 @@
 import { StoreState } from '../types';
 import { TimetableEntry } from './types';
 import { getGoalById } from '../goals/selectors';
-import { isTimeTracked } from '../goals/utilities';
+import { getGoalColor, isTimeTracked } from '../goals/utilities';
 import { TimetableRow } from '../../components';
 import { convertDateToIndex } from '../../utilities';
 
@@ -28,7 +28,7 @@ export const convertTimetableEntriesToTimetableRows = (state: StoreState, timeta
       timeTracked: isTimeTracked(goal),
       startTimestamp: entry.startTimestamp,
       endTimestamp: entry.endTimestamp,
-      color: goal.color,
+      color: getGoalColor(goal),
       id: entry.id,
     });
   });

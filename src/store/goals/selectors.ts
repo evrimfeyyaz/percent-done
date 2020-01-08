@@ -4,7 +4,8 @@ import { GoalRowProps } from '../../components';
 import { convertDateToIndex } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import moment from 'moment';
-import { isActiveToday, isDeleted, isTimeTracked } from './utilities';
+import { getGoalColor, isActiveToday, isDeleted, isTimeTracked } from './utilities';
+import { goalColors } from '../../theme';
 
 export const getGoalById = (state: StoreState, id: string): Goal => {
   return state.goals.byId[id];
@@ -43,7 +44,7 @@ export const getCompleteGoals = (state: StoreState, date: Date): Goal[] =>
  */
 export const convertGoalsToGoalRowProps = (state: StoreState, goals: Goal[], date: Date): GoalRowProps[] => {
   return goals.map(goal => {
-    const { title, color, id } = goal;
+    const { title, id } = goal;
     const chainLength = getChainLength(state, goal, date);
     const activeToday = isActiveToday(goal);
 
@@ -58,7 +59,7 @@ export const convertGoalsToGoalRowProps = (state: StoreState, goals: Goal[], dat
     return {
       id,
       title,
-      color,
+      color: getGoalColor(goal),
       chainLength,
       completedMs,
       totalMs,

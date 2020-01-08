@@ -19,6 +19,7 @@ import {
 import { GoalRowProps } from '../../../src/components';
 import moment from 'moment';
 import { Goal } from '../../../src/store/goals/types';
+import { goalColors } from '../../../src/theme';
 
 describe('goals selectors', () => {
   const today = new Date();
@@ -166,7 +167,7 @@ describe('goals selectors', () => {
         {
           id: goal.id,
           title: goal.title,
-          color: goal.color,
+          color: goalColors[goal.colorIndex],
           totalMs: goal.durationInMs,
           completedMs: 30 * 60 * 1000,
           chainLength: 2,
@@ -195,7 +196,7 @@ describe('goals selectors', () => {
         {
           id: goal.id,
           title: goal.title,
-          color: goal.color,
+          color: goalColors[goal.colorIndex],
           totalMs: undefined,
           completedMs: undefined,
           chainLength: 1,

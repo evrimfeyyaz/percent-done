@@ -4,16 +4,19 @@ import { Action } from 'redux';
 export interface Goal {
   id: string;
   title: string;
-  color: string;
+  /**
+   * Index of the color within the `goalColors` constant in the
+   * `colors.ts` file.
+   */
+  colorIndex: number;
   durationInMs?: number;
   /**
    * Index `0` is "Sunday," and so on.
    */
   recurringDays: boolean[];
   /**
-   * The ID of the project that was last
-   * associated with this goal while it was
-   * being tracked.
+   * The ID of the project that was last associated with this goal
+   * while it was being tracked.
    */
   lastProjectId?: string;
   createdAtTimestamp: number;

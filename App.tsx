@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import Storybook from './storybook';
-import { Platform, UIManager, View, YellowBox, Text } from 'react-native';
+import { Platform, UIManager, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { momentWithDeviceLocale, NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';

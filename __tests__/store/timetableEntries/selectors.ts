@@ -5,6 +5,7 @@ import {
   getTimetableEntriesByDate, getTimetableEntriesByProjectId, getTimetableEntryById,
 } from '../../../src/store/timetableEntries/selectors';
 import { createProject } from '../../../src/factories/createProject';
+import { getGoalColor } from '../../../src/store/goals/utilities';
 
 describe('timetable entries selectors', () => {
   const today = new Date();
@@ -116,7 +117,7 @@ describe('timetable entries selectors', () => {
         timeTracked: true,
         startTimestamp: timetableEntry.startTimestamp,
         endTimestamp: timetableEntry.endTimestamp,
-        color: goal.color,
+        color: getGoalColor(goal),
         id: timetableEntry.id,
       }];
 

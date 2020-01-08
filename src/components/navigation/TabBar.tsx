@@ -61,7 +61,7 @@ export const TabBar: FunctionComponent<Props> = ({
   };
 
   /**
-   * Returns a config object for the animation used for the color
+   * Returns a config object for the animation used for the colorIndex
    * change between the selected and the next potential tab itemKey.
    */
   const colorChangeAnimationConfig = (toValue: number) => {

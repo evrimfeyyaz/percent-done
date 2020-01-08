@@ -9,27 +9,27 @@ const tomorrow = moment(today).add(1, 'day').toDate();
 const incompleteGoal: Goal = createGoal({
   title: 'Work on PercentDone',
   durationInMin: 60,
-  color: colors.orange,
+  colorIndex: colors.orange,
 }, [today]);
 const incompleteGoal2: Goal = createGoal({
   title: 'Exercise',
   durationInMin: undefined,
-  color: colors.citrus,
+  colorIndex: colors.citrus,
 }, [today]);
 const longGoal: Goal = createGoal({
   title: 'This is a Goal with a Really Really Really Really Really Really Long Title',
   durationInMin: 60,
-  color: colors.violet,
+  colorIndex: colors.violet,
 }, [today]);
 const completedGoal: Goal = createGoal({
   title: 'Read',
   durationInMin: undefined,
-  color: colors.blue,
+  colorIndex: colors.blue,
 }, [today]);
 const tomorrowsGoal: Goal = createGoal({
   title: 'Write an essay',
   durationInMin: 60,
-  color: colors.violet,
+  colorIndex: colors.violet,
 }, [tomorrow]);
 const timetableEntry: TimetableEntry = createTimetableEntry({
   goalId: incompleteGoal.id,

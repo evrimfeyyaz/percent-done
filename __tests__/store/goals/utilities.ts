@@ -1,7 +1,13 @@
-import { createGoal, createStoreState } from '../../../src/factories';
-import { isActiveToday, isDeleted, isTimeTracked } from '../../../src/store/goals/utilities';
+import { createGoal } from '../../../src/factories';
+import {
+  getGoalColor,
+  isActiveToday,
+  isDeleted,
+  isTimeTracked,
+} from '../../../src/store/goals/utilities';
 import moment from 'moment';
 import { Goal } from '../../../src/store/goals/types';
+import { goalColors } from '../../../src/theme';
 
 describe('goal utilities', () => {
   const today = new Date();
@@ -53,7 +59,7 @@ describe('goal utilities', () => {
     });
 
     it('returns `true` when given goal was deleted before given date', () => {
-      goal.deletedAtTimestamp = moment(today).subtract(1, 'day').toDate();
+      goal.deletedAtTimestamp = +moment(today).subtract(1, 'day');
 
       const result = isDeleted(goal, today);
 
@@ -61,7 +67,7 @@ describe('goal utilities', () => {
     });
 
     it('returns `true` when given goal was deleted on the same date, even if it is deleted later than given time', () => {
-      goal.deletedAtTimestamp = moment(today).add(1, 'hour').toDate();
+      goal.deletedAtTimestamp = +moment(today).add(1, 'hour');
 
       const result = isDeleted(goal, today);
 
@@ -69,7 +75,7 @@ describe('goal utilities', () => {
     });
 
     it('returns `false` when given goal was deleted after given date', () => {
-      goal.deletedAtTimestamp = moment(today).add(1, 'day').toDate();
+      goal.deletedAtTimestamp = +moment(today).add(1, 'day');
 
       const result = isDeleted(goal, today);
 
@@ -82,6 +88,18 @@ describe('goal utilities', () => {
       const result = isDeleted(goal, today);
 
       expect(result).toEqual(false);
+    });
+  });
+
+  describe('getGoalColor', () => {
+    it('returns color corresponding to given index', () => {
+      const colorIndex = 0;
+      const goal = createGoal({ colorIndex });
+
+      const expected = goalColors[colorIndex];
+      const result = getGoalColor(goal);
+
+      expect(expected).toEqual(result);
     });
   });
 });

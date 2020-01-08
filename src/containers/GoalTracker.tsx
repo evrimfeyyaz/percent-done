@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { TimeTracker, TimeTrackerProps } from '../components';
 import { getAllProjects } from '../store/projects/selectors';
 import { createProjectAndSetTrackedGoalProject } from '../store/projects/thunks';
+import { getGoalColor } from '../store/goals/utilities';
 
 const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   const { id: trackedGoalId, startTimestamp, projectId } = state.goals.trackedGoal;
@@ -16,7 +17,7 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   if (trackedGoalId == null || startTimestamp == null) return;
 
   const goal = getGoalById(state, trackedGoalId);
-  const { title, color, durationInMs, lastProjectId } = goal;
+  const { title, durationInMs, lastProjectId } = goal;
 
   if (durationInMs == null) throw new Error('Goal is not a time-tracked goal.');
   const initialRemainingMs = getRemainingMs(state, goal, new Date());
@@ -30,7 +31,7 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
 
   return {
     title,
-    color,
+    color: getGoalColor(goal),
     durationInMs,
     initialRemainingMs,
     startTimestamp,

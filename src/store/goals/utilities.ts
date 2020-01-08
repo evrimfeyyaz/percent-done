@@ -1,5 +1,6 @@
 import { Goal } from './types';
 import { momentWithDeviceLocale } from '../../utilities';
+import { goalColors } from '../../theme';
 
 export const isTimeTracked = (goal: Goal): boolean => {
   return typeof goal.durationInMs === 'number' && goal.durationInMs > 0;
@@ -21,4 +22,8 @@ export const isDeleted = (goal: Goal, date: Date): boolean => {
   const dateMoment = momentWithDeviceLocale(date);
   const deletedMoment = momentWithDeviceLocale(goal.deletedAtTimestamp);
   return dateMoment.diff(deletedMoment, 'days') >= 0;
+};
+
+export const getGoalColor = (goal: Goal) => {
+  return goalColors[goal.colorIndex];
 };
