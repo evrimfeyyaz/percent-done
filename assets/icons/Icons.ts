@@ -20,6 +20,8 @@ export const Icons = {
   chevronRight: require('./chevron-right.png'),
 
   link: require('./link.png'),
+  linkYellow: require('./link-yellow.png'),
+  linkOrange: require('./link-orange.png'),
   stop: require('./stop.png'),
   addEntry: require('./add-entry.png'),
 };

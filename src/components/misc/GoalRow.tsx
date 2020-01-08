@@ -60,10 +60,21 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
 
   let chainInfo = null;
   if (chainLength != null) {
+    let chainIcon = Icons.link;
+    let chainColor = colors.gray;
+
+    if (chainLength >= 30) {
+      chainIcon = Icons.linkOrange;
+      chainColor = colors.orange;
+    } else if (chainLength >= 7) {
+      chainIcon = Icons.linkYellow;
+      chainColor = colors.yellow;
+    }
+
     chainInfo = (
       <View style={styles.chainInfo}>
-        <Image source={Icons.link} />
-        <Text style={styles.chainLength}>{chainLength} {pluralize('day', chainLength)}</Text>
+        <Image source={chainIcon} />
+        <Text style={[styles.chainLength, { color: chainColor }]}>{chainLength} {pluralize('day', chainLength)}</Text>
       </View>
     );
   }
@@ -125,7 +136,6 @@ const styles = StyleSheet.create({
   },
   chainLength: {
     marginStart: 3,
-    color: colors.gray,
     fontFamily: fonts.semibold,
     fontSize: 13,
   },
