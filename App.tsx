@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import Storybook from './storybook';
-import { Platform, UIManager, View, YellowBox } from 'react-native';
+import { Platform, UIManager, View, YellowBox, Text } from 'react-native';
 import { Provider } from 'react-redux';
-import { NavigationService } from './src/utilities';
+import { momentWithDeviceLocale, NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
 import configureStore from './src/store/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -22,6 +22,7 @@ const { store, persistor } = configureStore();
 
 const App: FunctionComponent = () => {
   const [loaded, setLoaded] = useState(false);
+  const [currentDateTimestamp, setCurrentDateTimestamp] = useState(Date.now());
 
   useEffect(() => {
     const { id, startTimestamp } = store.getState().goals.trackedGoal;
@@ -32,8 +33,17 @@ const App: FunctionComponent = () => {
   }, [loaded]);
 
   useEffect(() => {
-    store.dispatch(setCurrentDate(new Date()));
-  }, []);
+    store.dispatch(setCurrentDate(new Date(currentDateTimestamp)));
+
+    const msUntilTomorrow = +momentWithDeviceLocale(currentDateTimestamp)
+      .add(1, 'day')
+      .startOf('day')
+      .subtract(currentDateTimestamp);
+
+    setTimeout(() => {
+      setCurrentDateTimestamp(Date.now());
+    }, msUntilTomorrow);
+  }, [currentDateTimestamp]);
 
   const handleFirstLoad = () => {
     setLoaded(true);

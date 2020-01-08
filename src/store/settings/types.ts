@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 
 export interface SettingsState {
-  currentDate?: Date;
+  currentDateTimestamp?: number;
 }
 
 export const SET_CURRENT_DATE = 'SET_CURRENT_DATE';

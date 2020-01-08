@@ -17,7 +17,7 @@ export const getAllGoals = (state: StoreState, options?: { includeDeleted: boole
     return allGoals;
   }
 
-  return allGoals.filter(goal => goal.deletedAt == null);
+  return allGoals.filter(goal => goal.deletedAtTimestamp == null);
 };
 
 /**
@@ -134,7 +134,7 @@ export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean 
  * Returns the current progress of a goal in percentage (0 to 100).
  */
 export const getProgress = (state: StoreState, goal: Goal, date: Date): number => {
-  let progress = 0;
+  let progress;
 
   if (goal.durationInMs != null) {
     const completedMs = getCompletedMs(state, goal, date);

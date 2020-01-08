@@ -1,9 +1,9 @@
 import { StoreState } from '../types';
 
 export const getCurrentDate = (state: StoreState): Date => {
-  const currentDate = state.settings.currentDate;
+  const {currentDateTimestamp} = state.settings;
 
-  if (currentDate == null) throw new Error('Current date is not set.');
+  if (currentDateTimestamp == null) throw new Error('Current date timestamp is not set.');
 
-  return currentDate;
+  return new Date(currentDateTimestamp);
 };

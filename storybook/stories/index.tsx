@@ -437,11 +437,12 @@ storiesOf('Navigation', module)
 
 storiesOf('Forms', module)
   .add('Goal form', () => (
-    <GoalForm onSubmit={action('goal-form-submission')} />
+    <GoalForm onSubmit={action('goal-form-submission')} allGoalTitles={['Goal 1', 'Goal 2']} />
   ))
   .add('Project form', () => (
     <ProjectForm
       project={createProject('PercentDone')}
+      allProjectTitles={['PercentDone', 'Project 2']}
       onSubmit={action('project-form-submission')}
       onDelete={action('project-form-deletion')}
     />
@@ -453,7 +454,8 @@ storiesOf('Forms', module)
     const allGoals = [goal1, goal2, goal3];
 
     return <TimetableEntryForm allGoals={allGoals} onSubmit={action('timetable-entry-form-submission')}
-                               onDelete={(action('timetable-entry-form-deletion'))} />;
+                               onDelete={(action('timetable-entry-form-deletion'))}
+                               projects={[]} />;
   });
 
 // Utilities

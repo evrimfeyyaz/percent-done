@@ -16,9 +16,9 @@ export const isActiveToday = (goal: Goal): boolean => {
  * Returns `true` if the given goal was deleted before or on the given date.
  */
 export const isDeleted = (goal: Goal, date: Date): boolean => {
-  if (goal.deletedAt == null) return false;
+  if (goal.deletedAtTimestamp == null) return false;
 
   const dateMoment = momentWithDeviceLocale(date);
-  const deletedMoment = momentWithDeviceLocale(goal.deletedAt);
+  const deletedMoment = momentWithDeviceLocale(goal.deletedAtTimestamp);
   return dateMoment.diff(deletedMoment, 'days') >= 0;
 };

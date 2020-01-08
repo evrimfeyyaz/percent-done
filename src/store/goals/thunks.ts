@@ -8,6 +8,7 @@ import { addTimetableEntry, deleteTimetableEntry } from '../timetableEntries/act
 import { isTimeTracked } from './utilities';
 import { NavigationService, createRandomId } from '../../utilities';
 import { editGoal, removeTrackedGoal, setTrackedGoal } from './actions';
+import { getCurrentDate } from '../settings/selectors';
 
 export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
   return (dispatch, getState) => {
@@ -19,10 +20,10 @@ export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, Store
     if (isTimeTracked(goal)) {
       dispatch(startGoalTracking(goal.id));
     } else {
-      const today = new Date();
+      const currentDate = getCurrentDate(state);
 
-      if (isCompleted(state, goal, today)) {
-        const todaysTimetableEntries = getTimetableEntriesForGoal(state, goal, today);
+      if (isCompleted(state, goal, currentDate)) {
+        const todaysTimetableEntries = getTimetableEntriesForGoal(state, goal, currentDate);
 
         todaysTimetableEntries.forEach(entry => dispatch(deleteTimetableEntry(entry)));
       } else {
@@ -75,6 +76,6 @@ export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void,
     const goal = getGoalById(getState(), goalId);
     goal.lastProjectId = projectId;
 
-    dispatch(editGoal(goal))
+    dispatch(editGoal(goal));
   };
 };

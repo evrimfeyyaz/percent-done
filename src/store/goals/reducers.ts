@@ -29,7 +29,7 @@ const byId: Reducer<NormalizedEntityById<Goal>, GoalActionTypes> = (state = {}, 
         ...state,
         [goal.id]: {
           ...goal,
-          deletedAt: new Date(),
+          deletedAt: Date.now(),
         },
       };
     }

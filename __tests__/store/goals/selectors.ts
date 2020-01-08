@@ -96,7 +96,7 @@ describe('goals selectors', () => {
     });
 
     it('does not return deleted goals if they were deleted before given date', () => {
-      goal.deletedAt = moment(today).subtract(1, 'day').toDate();
+      goal.deletedAtTimestamp = moment(today).subtract(1, 'day').toDate();
       const state = createStoreState({ goals: [goal] });
 
       const result = getGoalsForDate(state, today);
@@ -105,7 +105,7 @@ describe('goals selectors', () => {
     });
 
     it('returns deleted goals if they were deleted after given date', () => {
-      goal.deletedAt = tomorrow;
+      goal.deletedAtTimestamp = tomorrow;
       const state = createStoreState({ goals: [goal] });
 
       const result = getGoalsForDate(state, today);

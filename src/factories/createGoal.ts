@@ -20,6 +20,8 @@ export const createGoal = ({
   const recurringDays = Array(7).fill(false);
   const durationInMs = durationInMin != null ? durationInMin * 60 * 1000 : undefined;
 
+  console.log('this is called');
+
   dates?.map(date => date.getDay()).forEach(dayOfWeek => recurringDays[dayOfWeek] = true);
 
   return {
@@ -28,7 +30,7 @@ export const createGoal = ({
     color,
     durationInMs,
     recurringDays,
-    createdAt: new Date(),
-    deletedAt,
+    createdAtTimestamp: new Date(),
+    deletedAtTimestamp: deletedAt,
   };
 };

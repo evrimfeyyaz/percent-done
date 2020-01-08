@@ -16,8 +16,8 @@ export interface Goal {
    * being tracked.
    */
   lastProjectId?: string;
-  createdAt: Date;
-  deletedAt?: Date;
+  createdAtTimestamp: number;
+  deletedAtTimestamp?: number;
 }
 
 export interface TrackedGoalState {

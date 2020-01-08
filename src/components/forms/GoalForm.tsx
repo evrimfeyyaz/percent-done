@@ -121,7 +121,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
 
       id = goal.id;
       durationInMs = goal.durationInMs;
-      createdAt = goal.createdAt;
+      createdAt = goal.createdAtTimestamp;
     }
 
     const goal: Goal = {
@@ -130,7 +130,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       color,
       durationInMs,
       recurringDays,
-      createdAt,
+      createdAtTimestamp: createdAt,
     };
 
     this.props.onSubmit?.(goal);

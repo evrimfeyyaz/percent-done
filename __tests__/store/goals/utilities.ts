@@ -53,7 +53,7 @@ describe('goal utilities', () => {
     });
 
     it('returns `true` when given goal was deleted before given date', () => {
-      goal.deletedAt = moment(today).subtract(1, 'day').toDate();
+      goal.deletedAtTimestamp = moment(today).subtract(1, 'day').toDate();
 
       const result = isDeleted(goal, today);
 
@@ -61,7 +61,7 @@ describe('goal utilities', () => {
     });
 
     it('returns `true` when given goal was deleted on the same date, even if it is deleted later than given time', () => {
-      goal.deletedAt = moment(today).add(1, 'hour').toDate();
+      goal.deletedAtTimestamp = moment(today).add(1, 'hour').toDate();
 
       const result = isDeleted(goal, today);
 
@@ -69,7 +69,7 @@ describe('goal utilities', () => {
     });
 
     it('returns `false` when given goal was deleted after given date', () => {
-      goal.deletedAt = moment(today).add(1, 'day').toDate();
+      goal.deletedAtTimestamp = moment(today).add(1, 'day').toDate();
 
       const result = isDeleted(goal, today);
 
@@ -77,7 +77,7 @@ describe('goal utilities', () => {
     });
 
     it('returns `false` when given goal is not deleted', () => {
-      goal.deletedAt = undefined;
+      goal.deletedAtTimestamp = undefined;
 
       const result = isDeleted(goal, today);
 
