@@ -1,11 +1,13 @@
 import React from 'react';
-import { Dispatch } from 'redux';
-import { deleteProject, editProject } from '../store/projects/actions';
-import { Project, ProjectActionTypes } from '../store/projects/types';
+import { AnyAction, Dispatch } from 'redux';
+import { editProject } from '../store/projects/actions';
+import { Project } from '../store/projects/types';
 import { connect } from 'react-redux';
 import { ProjectForm, ProjectFormProps } from '../components';
 import { StoreState } from '../store/types';
 import { getAllProjects, getProjectById } from '../store/projects/selectors';
+import { deleteProject } from '../store/projects/thunks';
+import { ThunkDispatch } from 'redux-thunk';
 
 interface EditProjectFormProps {
   projectId: string;
@@ -17,7 +19,7 @@ const mapStateToProps = (state: StoreState, ownProps: EditProjectFormProps): Pro
   allProjectTitles: getAllProjects(state).map(project => project.title),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<ProjectActionTypes>, ownProps: EditProjectFormProps) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: EditProjectFormProps) => ({
   onSubmit: (project: Project, projectOld: Project) => dispatch(editProject(project, projectOld)),
   onDelete: (project: Project) => {
     ownProps.onDelete?.();

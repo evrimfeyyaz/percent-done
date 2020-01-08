@@ -22,8 +22,3 @@ export const editProject = (project: Project, projectOld: Project): EditProjectA
   project,
   projectOld,
 });
-
-export const deleteProject = (project: Project): DeleteProjectAction => ({
-  type: DELETE_PROJECT,
-  project,
-});

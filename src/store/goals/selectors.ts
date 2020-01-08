@@ -10,8 +10,14 @@ export const getGoalById = (state: StoreState, id: string): Goal => {
   return state.goals.byId[id];
 };
 
-export const getAllGoals = (state: StoreState): Goal[] => {
-  return state.goals.allIds.map(id => getGoalById(state, id)).filter(goal => goal.deletedAt == null);
+export const getAllGoals = (state: StoreState, options?: { includeDeleted: boolean }): Goal[] => {
+  const allGoals = state.goals.allIds.map(id => getGoalById(state, id));
+
+  if (options?.includeDeleted) {
+    return allGoals;
+  }
+
+  return allGoals.filter(goal => goal.deletedAt == null);
 };
 
 /**

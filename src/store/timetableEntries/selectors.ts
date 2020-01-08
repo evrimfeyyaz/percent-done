@@ -9,10 +9,14 @@ export const getTimetableEntryById = (state: StoreState, id: string) => {
   return state.timetableEntries.byId[id] || null;
 };
 
-export const getTimetableEntries = (state: StoreState, date: Date): TimetableEntry[] => {
+export const getTimetableEntriesByDate = (state: StoreState, date: Date): TimetableEntry[] => {
   const dateIdx = convertDateToIndex(date);
 
   return state.timetableEntries.idsByDate[dateIdx]?.map(id => getTimetableEntryById(state, id)) || [];
+};
+
+export const getTimetableEntriesByProjectId = (state: StoreState, projectId: string): TimetableEntry[] => {
+  return state.timetableEntries.idsByProjectId[projectId]?.map(id => getTimetableEntryById(state, id));
 };
 
 export const convertTimetableEntriesToTimetableRows = (state: StoreState, timetableEntries: TimetableEntry[]): TimetableRow[] => {

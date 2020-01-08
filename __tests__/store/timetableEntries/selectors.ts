@@ -2,8 +2,9 @@ import { createGoal, createStoreState, createTimetableEntry } from '../../../src
 import { TimetableRow } from '../../../src/components';
 import {
   convertTimetableEntriesToTimetableRows,
-  getTimetableEntries, getTimetableEntryById,
+  getTimetableEntriesByDate, getTimetableEntriesByProjectId, getTimetableEntryById,
 } from '../../../src/store/timetableEntries/selectors';
+import { createProject } from '../../../src/factories/createProject';
 
 describe('timetable entries selectors', () => {
   const today = new Date();
@@ -52,7 +53,7 @@ describe('timetable entries selectors', () => {
         timetableEntries: [timetableEntry1, timetableEntry2],
       });
 
-      const result = getTimetableEntries(state, today);
+      const result = getTimetableEntriesByDate(state, today);
 
       expect(result).toEqual([timetableEntry1, timetableEntry2]);
     });
@@ -60,9 +61,33 @@ describe('timetable entries selectors', () => {
     it('returns an empty array when there are no entries for the given day', () => {
       const state = createStoreState({});
 
-      const result = getTimetableEntries(state, today);
+      const result = getTimetableEntriesByDate(state, today);
 
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('getTimetableEntriesByProjectId', () => {
+    it('returns all timetable entries with given proejct ID', () => {
+      const project = createProject('Project');
+      const entry1 = createTimetableEntry({
+        projectId: project.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 60,
+      });
+      const entry2 = createTimetableEntry({
+        projectId: 'some-other-project-id',
+        startDate: today,
+        startHour: 12,
+        durationInMin: 60,
+      });
+      const state = createStoreState({ projects: [project], timetableEntries: [entry1, entry2] });
+
+      const expected = [entry1];
+      const result = getTimetableEntriesByProjectId(state, project.id);
+
+      expect(expected).toEqual(result);
     });
   });
 

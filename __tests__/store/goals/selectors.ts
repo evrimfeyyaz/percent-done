@@ -64,6 +64,16 @@ describe('goals selectors', () => {
 
       expect(result).toEqual([goal]);
     });
+
+    it('returns deleted goals when relevant option is provided', () => {
+      const goal = createGoal({});
+      const deletedGoal = createGoal({ deletedAt: new Date() });
+      const state = createStoreState({ goals: [goal, deletedGoal] });
+
+      const result = getAllGoals(state, { includeDeleted: true });
+
+      expect(result).toEqual([goal, deletedGoal]);
+    });
   });
 
   describe('getGoalsForDate', () => {
