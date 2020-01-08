@@ -11,17 +11,22 @@ import { getAllProjects } from '../store/projects/selectors';
 import { createProjectAndSetTrackedGoalProject } from '../store/projects/thunks';
 
 const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
-  const { id: trackedGoalId, startTimestamp, projectId: projectKey } = state.goals.trackedGoal;
+  const { id: trackedGoalId, startTimestamp, projectId } = state.goals.trackedGoal;
 
   if (trackedGoalId == null || startTimestamp == null) return;
 
   const goal = getGoalById(state, trackedGoalId);
-  const { title, color, durationInMs } = goal;
+  const { title, color, durationInMs, lastProjectId } = goal;
 
   if (durationInMs == null) throw new Error('Goal is not a time-tracked goal.');
   const initialRemainingMs = getRemainingMs(state, goal, new Date());
 
   const projects = getAllProjects(state).map(project => ({ key: project.id, title: project.title }));
+
+  let projectKey = projectId;
+  if (projectId == null && lastProjectId != null) {
+    projectKey = lastProjectId;
+  }
 
   return {
     title,

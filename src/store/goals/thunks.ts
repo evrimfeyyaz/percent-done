@@ -7,7 +7,7 @@ import { getGoalById, getTimetableEntriesForGoal, isCompleted } from './selector
 import { addTimetableEntry, deleteTimetableEntry } from '../timetableEntries/actions';
 import { isTimeTracked } from './utilities';
 import { NavigationService, createRandomId } from '../../utilities';
-import { removeTrackedGoal, setTrackedGoal } from './actions';
+import { editGoal, removeTrackedGoal, setTrackedGoal } from './actions';
 
 export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
   return (dispatch, getState) => {
@@ -71,5 +71,10 @@ export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void,
     };
 
     dispatch(addTimetableEntry(timetableEntry));
+
+    const goal = getGoalById(getState(), goalId);
+    goal.lastProjectId = projectId;
+
+    dispatch(editGoal(goal))
   };
 };

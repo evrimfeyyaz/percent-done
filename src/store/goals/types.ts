@@ -10,6 +10,12 @@ export interface Goal {
    * Index `0` is "Sunday," and so on.
    */
   recurringDays: boolean[];
+  /**
+   * The ID of the project that was last
+   * associated with this goal while it was
+   * being tracked.
+   */
+  lastProjectId?: string;
   createdAt: Date;
   deletedAt?: Date;
 }
@@ -23,7 +29,6 @@ export interface TrackedGoalState {
 export interface GoalsState extends NormalizedEntityState<Goal> {
   trackedGoal: TrackedGoalState;
 }
-
 
 export const ADD_GOAL = 'ADD_GOAL';
 export const EDIT_GOAL = 'EDIT_GOAL';
