@@ -6,6 +6,7 @@ import { NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
 import configureStore from './src/store/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
+import { setCurrentDate } from './src/store/settings/actions';
 
 YellowBox.ignoreWarnings(['Warning:']);
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
@@ -29,6 +30,10 @@ const App: FunctionComponent = () => {
       NavigationService.navigate('TrackGoal', {});
     }
   }, [loaded]);
+
+  useEffect(() => {
+    store.dispatch(setCurrentDate(new Date()));
+  }, []);
 
   const handleFirstLoad = () => {
     setLoaded(true);

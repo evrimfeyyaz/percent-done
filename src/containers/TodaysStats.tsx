@@ -5,16 +5,18 @@ import {
   getTotalCompletedMsForDate,
   getTotalProgressForDate,
 } from '../store/goals/selectors';
-import { getBeginningOfDay } from '../utilities';
 import { connect } from 'react-redux';
 import { DaysStats, DaysStatsProps } from '../components';
+import { getCurrentDate } from '../store/settings/selectors';
 
-const today = getBeginningOfDay(new Date());
+const mapStateToProps = (state: StoreState): DaysStatsProps => {
+  const currentDate = getCurrentDate(state);
 
-const mapStateToProps = (state: StoreState): DaysStatsProps => ({
-  percentDone: getTotalProgressForDate(state, today),
-  completedMs: getTotalCompletedMsForDate(state, today),
-  remainingMs: getTotalRemainingMsForDate(state, today),
-});
+  return {
+    percentDone: getTotalProgressForDate(state, currentDate),
+    completedMs: getTotalCompletedMsForDate(state, currentDate),
+    remainingMs: getTotalRemainingMsForDate(state, currentDate),
+  };
+};
 
 export const TodaysStats = connect(mapStateToProps, null)(DaysStats) as any;

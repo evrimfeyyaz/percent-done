@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnyAction, Dispatch } from 'redux';
+import { AnyAction } from 'redux';
 import { editProject } from '../store/projects/actions';
 import { Project } from '../store/projects/types';
 import { connect } from 'react-redux';
