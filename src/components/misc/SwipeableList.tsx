@@ -32,7 +32,6 @@ export const SwipeableList = <T, >(props: SwipeableListProps & FlatListProps<T>)
   const {
     actionsLeft,
     actionsRight,
-    data,
     titleStyle,
     actionWidth,
     disableLeftSwipe,

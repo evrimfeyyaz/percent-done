@@ -52,8 +52,10 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
     const goal = findGoal(goalId);
 
     let icon = Icons.checkmarkLarge;
+    let hideRowOnInteraction = true;
     if (goal && isGoalTracked(goal)) {
       icon = Icons.stopwatch;
+      hideRowOnInteraction = false;
     } else if (goal?.isCompleted) {
       icon = Icons.undo;
     }
@@ -62,6 +64,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       color: colors.blue,
       onInteraction: onCompleteOrTrackActionInteraction,
       icon,
+      hideRowOnInteraction,
     }];
   };
 

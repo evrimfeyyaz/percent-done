@@ -236,11 +236,17 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       Animated.parallel([
         Animated.timing(
           opacity,
-          this.hideRowAnimationConfiguration(),
+          {
+            toValue: 0,
+            duration: 100,
+          },
         ),
         Animated.timing(
           height,
-          this.hideRowAnimationConfiguration(),
+          {
+            toValue: 0,
+            duration: 400,
+          },
         ),
       ]).start(() => {
         onInteraction?.(this.props.interactionKey);
@@ -277,11 +283,6 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     velocity,
     friction: SwipeableItem.friction,
     tension: SwipeableItem.tension,
-  });
-
-  private hideRowAnimationConfiguration = () => ({
-    toValue: 0,
-    duration: 200,
   });
 
   private autoSelectOrDeselectOuterAction(swipeValue: number): void {
