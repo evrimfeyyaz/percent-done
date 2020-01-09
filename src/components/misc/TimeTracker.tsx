@@ -24,18 +24,23 @@ export interface TimeTrackerProps {
   onProjectCreatePress?: (projectTitle: string) => void;
   onProjectChange?: (projectKey: string) => void;
   onProjectRemove?: () => void;
+  onDidUnmount?: () => void;
 }
 
 export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
                                                                    title, color, durationInMs, startTimestamp,
                                                                    initialRemainingMs, projects, projectKey,
                                                                    onStopPress, onStartTimestampChange, onProjectChange,
-                                                                   onProjectRemove, onProjectCreatePress,
+                                                                   onProjectRemove, onProjectCreatePress, onDidUnmount,
                                                                  }) => {
   const bottomSheetTimePickerRef = useRef(null);
 
   const [msPassed, setMsPassed] = useState(0);
   const [isProjectModalVisible, setIsProjectModalVisible] = useState(false);
+
+  useEffect(() => {
+    return onDidUnmount;
+  }, []);
 
   let interval: NodeJS.Timeout;
   useEffect(() => {

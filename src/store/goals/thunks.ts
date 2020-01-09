@@ -51,15 +51,15 @@ export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void
   };
 };
 
-export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (endTimestamp: number) => {
+export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = () => {
   return (dispatch, getState) => {
     const { startTimestamp, id: goalId, projectId } = getState().goals.trackedGoal;
+    const endTimestamp = Date.now();
 
     if (startTimestamp == null || goalId == null) {
       throw new Error('Tracked goal data is corrupt.');
     }
 
-    NavigationService.goBack();
     dispatch(removeTrackedGoal());
 
     // TODO: Handle the case where the start and end timestamps spawn multiple days.

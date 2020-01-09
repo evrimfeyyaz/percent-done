@@ -10,6 +10,7 @@ import { TimeTracker, TimeTrackerProps } from '../components';
 import { getAllProjects } from '../store/projects/selectors';
 import { createProjectAndSetTrackedGoalProject } from '../store/projects/thunks';
 import { getGoalColor } from '../store/goals/utilities';
+import { NavigationService } from '../utilities';
 
 const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   const { id: trackedGoalId, startTimestamp, projectId } = state.goals.trackedGoal;
@@ -42,10 +43,11 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>) => ({
   onStartTimestampChange: (newTimestamp: number) => dispatch(updateTrackedGoalStartTimestamp(newTimestamp)),
-  onStopPress: (startTimestamp: number, endTimestamp: number) => dispatch(stopGoalTracking(endTimestamp)),
+  onStopPress: (startTimestamp: number, endTimestamp: number) => NavigationService.goBack(),
   onProjectCreatePress: (title: string) => dispatch(createProjectAndSetTrackedGoalProject(title)),
   onProjectChange: (id: string) => dispatch(updateTrackedGoalProjectId(id)),
   onProjectRemove: () => dispatch(updateTrackedGoalProjectId(undefined)),
+  onDidUnmount: () => dispatch(stopGoalTracking()),
 });
 
 export const GoalTracker = connect(mapStateToProps, mapDispatchToProps)(TimeTracker);
