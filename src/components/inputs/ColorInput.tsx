@@ -15,7 +15,7 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({
                                                                  onColorIndexChange,
                                                                }) => {
   const shouldHaveFillerColor = colors.length % 2 !== 0;
-  const fillerColorIndex = colors.length - 1;
+  const fillerColorIndex = colors.length;
   const numOfColumns = Math.ceil(colors.length / 2);
   const data = colors.map(color => ({ color, key: color }));
 
@@ -48,7 +48,7 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({
   }
 
   return (
-    <InputContainer opacityOnTouch={false}>
+    <InputContainer opacityOnTouch={false} contentStyle={styles.inputContainerContent}>
       <FlatList
         data={data}
         renderItem={({ index }) => renderColorButton(index)}
@@ -60,6 +60,9 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({
 };
 
 const styles = StyleSheet.create({
+  inputContainerContent: {
+    paddingEnd: 3,
+  },
   colorListRow: {
     justifyContent: 'space-between',
   },

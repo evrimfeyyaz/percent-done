@@ -19,7 +19,7 @@ const incompleteGoal2: Goal = createGoal({
 const longGoal: Goal = createGoal({
   title: 'This is a Goal with a Really Really Really Really Really Really Long Title',
   durationInMin: 60,
-  colorIndex: colors.violet,
+  colorIndex: colors.pastelGreen,
 }, [today]);
 const completedGoal: Goal = createGoal({
   title: 'Read',
@@ -29,7 +29,7 @@ const completedGoal: Goal = createGoal({
 const tomorrowsGoal: Goal = createGoal({
   title: 'Write an essay',
   durationInMin: 60,
-  colorIndex: colors.violet,
+  colorIndex: colors.pastelGreen,
 }, [tomorrow]);
 const timetableEntry: TimetableEntry = createTimetableEntry({
   goalId: incompleteGoal.id,

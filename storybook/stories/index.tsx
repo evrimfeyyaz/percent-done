@@ -470,7 +470,7 @@ function createGoals(num: number) {
   const goals = [];
   const allColors = [
     colors.blue, colors.yellow, colors.red, colors.orange, colors.easternBlue,
-    colors.green, colors.violet, colors.offWhite, colors.easternBlue,
+    colors.green, colors.pastelGreen, colors.offWhite, colors.easternBlue,
   ];
   const titles = ['Write', 'Read', 'Work', 'Rest', 'A Goal with a Very Very Very Very Long Title'];
   const isCompleted = [undefined, true, false];
