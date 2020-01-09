@@ -2,10 +2,10 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { GoalRow, GoalRowProps } from './GoalRow';
 import { EmptyContainer } from './EmptyContainer';
 import { SwipeableList } from './SwipeableList';
-import { colors } from '../../theme';
+import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
 import { SwipeableItemAction } from './SwipeableItem';
-import { LayoutAnimation } from 'react-native';
+import { LayoutAnimation, StyleSheet } from 'react-native';
 
 export interface GoalListProps {
   goals: GoalRowProps[];
@@ -74,11 +74,19 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       disableRightSwipe={disableRightSwipe}
       actionsLeft={actionsLeft}
       actionsRight={[editAction]}
-      actionWidth={60}
+      actionWidth={73}
       renderItem={({ item }: { item: GoalRowProps }) => <GoalRow {...item} />}
       autoSelectLeftOuterAction
       onChangeScrollEnabled={onChangeScrollEnabled}
       keyExtractor={item => item.id}
+      titleStyle={styles.actionTitle}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  actionTitle: {
+    color: colors.white,
+    fontFamily: fonts.regular,
+  },
+});

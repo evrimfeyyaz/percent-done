@@ -348,6 +348,12 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   private openTo(x: number, velocity = 0) {
+    const { disableRightSwipe, disableLeftSwipe } = this.props;
+    const swipedLeft = x < 0;
+    const swipedRight = x > 0;
+
+    if ((swipedLeft && disableLeftSwipe) || (swipedRight && disableRightSwipe)) return;
+
     Animated.spring(
       this.state.translateX,
       this.openCloseAnimationsConfiguration(x, velocity),
