@@ -15,13 +15,13 @@ export interface GoalListProps {
   emptyText?: string;
   onCompleteOrTrackActionInteraction?: (goalId?: string) => void;
   onEditActionInteraction?: (goalId?: string) => void;
-  disableRightSwipe?: boolean;
+  disableLeftActions?: boolean;
   onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
 }
 
 export const GoalList: FunctionComponent<GoalListProps> = ({
                                                              goals, emptyText = '',
-                                                             disableRightSwipe = false,
+                                                             disableLeftActions = false,
                                                              onCompleteOrTrackActionInteraction,
                                                              onEditActionInteraction,
                                                              onChangeScrollEnabled,
@@ -71,7 +71,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
   return (
     <SwipeableList
       data={goals}
-      disableRightSwipe={disableRightSwipe}
+      disableLeftActions={disableLeftActions}
       actionsLeft={actionsLeft}
       actionsRight={[editAction]}
       actionWidth={73}

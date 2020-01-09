@@ -48,8 +48,8 @@ interface SwipeableItemProps {
    * on the relevant side is open/closed regardless of the swipe distance.
    */
   minVelocityToOpen: number;
-  disableLeftSwipe: boolean;
-  disableRightSwipe: boolean;
+  disableLeftActions: boolean;
+  disableRightActions: boolean;
   titleStyle?: TextStyle;
   onSwipeBegin?: (interactionKey?: string) => void;
   onSwipeEnd?: (interactionKey?: string) => void;
@@ -68,6 +68,8 @@ interface SwipeableItemState {
   opacity: Animated.Value;
   leftOuterActionWidthPercent: Animated.Value;
   rightOuterActionWidthPercent: Animated.Value;
+  areRightActionsVisible: boolean;
+  areLeftActionsVisible: boolean;
   height?: Animated.Value;
 }
 
@@ -82,20 +84,23 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     minVelocityToOpen: 0.1,
     autoSelectLeftOuterAction: false,
     autoSelectRightOuterAction: false,
-    disableLeftSwipe: false,
-    disableRightSwipe: false,
+    disableRightActions: false,
+    disableLeftActions: false,
   };
 
   private static friction = 100;
   private static tension = 100;
 
   private xPosition = 0;
+  private currentTranslateXOffset = 0;
 
   private isLeftOuterActionAutoSelected = false;
   private isRightOuterActionAutoSelected = false;
 
   private areLeftActionsOpen = false;
   private areRightActionsOpen = false;
+
+  private currentSwipeStartingDirection: Location | undefined = undefined;
 
   private isClosing = false;
 
@@ -108,19 +113,33 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   private leftActionWidthsTotal = () => this.numOfLeftActions() * this.props.actionWidth;
   private rightActionWidthsTotal = () => this.numOfRightActions() * this.props.actionWidth;
 
-  // When the user swipes past these values, the swipe is
-  // slowed down to show that there are no more actions to show.
-  private slowDownRightSwipeAfter = () => this.props.autoSelectLeftOuterAction ? this.leftOuterActionAutoSelectSwipeValue() : this.leftOpenValue();
-  private slowDownLeftSwipeAfter = () => this.props.autoSelectRightOuterAction ? this.rightOuterActionAutoSelectSwipeValue() : this.rightOpenValue();
+  /**
+   * When the user swipes past these x positions, the swipe is slowed down.
+   */
+  private slowDownRightSwipeAtPosition = () => {
+    if (this.currentSwipeStartingDirection === 'left' || this.areRightActionsOpen) return 0;
 
-  // The "x translation" value of the swipeable item in left or
-  // right open positions.
+    return this.props.autoSelectLeftOuterAction ? this.leftOuterActionAutoSelectSwipeValue() : this.leftOpenValue();
+  };
+
+  private slowDownLeftSwipeAtPosition = () => {
+    if (this.currentSwipeStartingDirection === 'right' || this.areLeftActionsOpen) return 0;
+
+    return this.props.autoSelectRightOuterAction ? this.rightOuterActionAutoSelectSwipeValue() : this.rightOpenValue();
+  };
+
+  /**
+   * The "x translation" value of the swipeable item in left or
+   * right open positions.
+   */
   private leftOpenValue = () => this.leftActionWidthsTotal();
   private rightOpenValue = () => -this.rightActionWidthsTotal();
 
-  // When the user swipes more than or equal to these values,
-  // and the relevant auto select prop is `true`, the auto
-  // select animation is executed.
+  /**
+   * When the user swipes more than or equal to these values,
+   * and the relevant auto select prop is `true`, the auto
+   * select animation is executed.
+   */
   private leftOuterActionAutoSelectSwipeValue = () => this.leftOpenValue() * this.props.autoSelectCutOffMultiplier;
   private rightOuterActionAutoSelectSwipeValue = () => this.rightOpenValue() * this.props.autoSelectCutOffMultiplier;
 
@@ -128,8 +147,18 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     onStartShouldSetPanResponder: (evt, gestureState) => false,
     onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
     onMoveShouldSetPanResponder: (evt, gestureState) => {
-      const absDx = Math.abs(gestureState.dx);
-      const absDy = Math.abs(gestureState.dy);
+      const { dx, dy } = gestureState;
+      const { disableLeftActions, disableRightActions } = this.props;
+
+      if (
+        (dx > 0 && disableLeftActions && !this.areRightActionsOpen) ||
+        (dx < 0 && disableRightActions && !this.areLeftActionsOpen)
+      ) {
+        return false;
+      }
+
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
 
       return absDx > this.props.minRegisteredSwipeDistance || absDx > absDy;
     },
@@ -138,48 +167,55 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     onPanResponderGrant: (evt, gestureState) => {
       const { translateX } = this.state;
       const { onSwipeBegin, interactionKey } = this.props;
+      const { vx } = gestureState;
 
-      translateX.setOffset(this.xPosition);
+      this.currentSwipeStartingDirection = vx > 0 ? 'right' : 'left';
+      this.currentTranslateXOffset = this.xPosition;
+      translateX.setOffset(this.currentTranslateXOffset);
       translateX.setValue(0);
       onSwipeBegin?.(interactionKey);
     },
     onPanResponderMove: (evt, gestureState) => {
       const { translateX } = this.state;
-      const { disableRightSwipe, disableLeftSwipe } = this.props;
       const { dx } = gestureState;
 
-      // Swipe direction is disabled or there is nothing to show:
-      if (dx > 0 && (disableRightSwipe || this.leftActionWidthsTotal() === 0)) return;
-      if (dx < 0 && (disableLeftSwipe || this.rightActionWidthsTotal() === 0)) return;
-
       const slowDownMultiplier = 0.125;
+      const slowDownRightSwipeAt = this.slowDownRightSwipeAtPosition();
+      const slowDownLeftSwipeAt = this.slowDownLeftSwipeAtPosition();
+      let slowDownAfterSwipingRightThisMuch = slowDownRightSwipeAt;
+      let slowDownAfterSwipingLeftThisMuch = slowDownLeftSwipeAt;
 
-      // Swiped past the slow down value from closed position:
-      if (dx > this.slowDownRightSwipeAfter() && !this.areLeftActionsOpen) {
-        translateX.setValue(this.slowDownRightSwipeAfter() + (dx - this.slowDownRightSwipeAfter()) * slowDownMultiplier);
-        return;
+      if (
+        this.areLeftActionsOpen ||
+        (this.currentSwipeStartingDirection === 'right' && dx <= 0)
+      ) {
+        this.setState({ areRightActionsVisible: false });
+      } else if (
+        this.areRightActionsOpen ||
+        (this.currentSwipeStartingDirection === 'left' && dx >= 0)
+      ) {
+        this.setState({ areLeftActionsVisible: false });
+      } else {
+        this.setState({ areLeftActionsVisible: true, areRightActionsVisible: true });
       }
 
-      if (dx < this.slowDownLeftSwipeAfter() && !this.areRightActionsOpen) {
-        translateX.setValue(this.slowDownLeftSwipeAfter() + (dx - this.slowDownLeftSwipeAfter()) * slowDownMultiplier);
-        return;
+      if (this.areLeftActionsOpen && dx > 0) {
+        slowDownAfterSwipingRightThisMuch = slowDownRightSwipeAt - this.leftOpenValue();
+      } else if (this.areLeftActionsOpen && dx < 0) {
+        slowDownAfterSwipingLeftThisMuch = slowDownLeftSwipeAt - this.leftOpenValue();
+      } else if (this.areRightActionsOpen && dx < 0) {
+        slowDownAfterSwipingLeftThisMuch = slowDownLeftSwipeAt - this.rightOpenValue();
+      } else if (this.areRightActionsOpen && dx > 0) {
+        slowDownAfterSwipingRightThisMuch = slowDownRightSwipeAt - this.rightOpenValue();
       }
 
-      // Swiped past the slow down value from open position:
-      let distBetweenOpenValueAndSlowDownValue = this.slowDownRightSwipeAfter() - this.leftOpenValue();
-      if (this.areLeftActionsOpen && dx > distBetweenOpenValueAndSlowDownValue) {
-        translateX.setValue(distBetweenOpenValueAndSlowDownValue + dx * slowDownMultiplier);
-        return;
+      if (dx > 0 && dx > slowDownAfterSwipingRightThisMuch) {
+        translateX.setValue(slowDownAfterSwipingRightThisMuch + (dx - slowDownAfterSwipingRightThisMuch) * slowDownMultiplier);
+      } else if (dx < 0 && dx < slowDownAfterSwipingLeftThisMuch) {
+        translateX.setValue(slowDownAfterSwipingLeftThisMuch + (dx - slowDownAfterSwipingLeftThisMuch) * slowDownMultiplier);
+      } else {
+        translateX.setValue(dx);
       }
-
-      distBetweenOpenValueAndSlowDownValue = this.slowDownLeftSwipeAfter() - this.rightOpenValue();
-      if (this.areRightActionsOpen && dx < distBetweenOpenValueAndSlowDownValue) {
-        translateX.setValue(distBetweenOpenValueAndSlowDownValue + dx * slowDownMultiplier);
-        return;
-      }
-
-      // Swiped less than the slow down value:
-      translateX.setValue(dx);
     },
     onPanResponderTerminationRequest: (evt, gestureState) => {
       this.close(gestureState.vx);
@@ -192,6 +228,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
 
       onSwipeEnd?.(interactionKey);
 
+      this.currentTranslateXOffset = 0;
       translateX.flattenOffset();
 
       const { vx } = gestureState;
@@ -348,11 +385,11 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   private openTo(x: number, velocity = 0) {
-    const { disableRightSwipe, disableLeftSwipe } = this.props;
+    const { disableLeftActions, disableRightActions } = this.props;
     const swipedLeft = x < 0;
     const swipedRight = x > 0;
 
-    if ((swipedLeft && disableLeftSwipe) || (swipedRight && disableRightSwipe)) return;
+    if ((swipedLeft && disableRightActions) || (swipedRight && disableLeftActions)) return;
 
     Animated.spring(
       this.state.translateX,
@@ -448,6 +485,8 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     opacity: new Animated.Value(1),
     leftOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('left')),
     rightOuterActionWidthPercent: new Animated.Value(this.outerActionWidthPercentWhenNotAutoSelected('right')),
+    areLeftActionsVisible: true,
+    areRightActionsVisible: true,
   };
 
   componentDidMount(): void {
@@ -509,7 +548,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   render() {
-    const { translateX, opacity, height } = this.state;
+    const { translateX, opacity, height, areLeftActionsVisible, areRightActionsVisible } = this.state;
     const { children } = this.props;
 
     const transformStyle = {
@@ -525,11 +564,11 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       <Animated.View {...this.panResponder.panHandlers} style={hideRowAnimationStyle}>
         <TouchableWithoutFeedback onPress={this.handlePress}>
           <View style={styles.contentContainer} onLayout={this.handleContentContainerLayout}>
-            {this.numOfLeftActions() > 0 && this.renderActions('left')}
+            {this.numOfLeftActions() > 0 && areLeftActionsVisible && this.renderActions('left')}
             <Animated.View style={[styles.itemContainer, transformStyle]}>
               {children}
             </Animated.View>
-            {this.numOfRightActions() > 0 && this.renderActions('right')}
+            {this.numOfRightActions() > 0 && areRightActionsVisible && this.renderActions('right')}
           </View>
         </TouchableWithoutFeedback>
       </Animated.View>

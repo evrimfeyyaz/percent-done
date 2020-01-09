@@ -17,7 +17,7 @@ const mapStateToProps = (state: StoreState): GoalListProps => {
   return {
     goals: convertGoalsToGoalRowProps(state, getAllGoals(state), currentDate),
     emptyText: 'You haven\'t added any goals yet.',
-    disableRightSwipe: true,
+    disableLeftActions: true,
   };
 };
 

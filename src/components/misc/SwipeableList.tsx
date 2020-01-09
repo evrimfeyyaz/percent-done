@@ -18,8 +18,8 @@ interface SwipeableListProps {
   autoSelectLeftOuterAction?: ValueOrFunction<boolean>;
   autoSelectRightOuterAction?: ValueOrFunction<boolean>;
   titleStyle?: TextStyle;
-  disableLeftSwipe?: boolean;
-  disableRightSwipe?: boolean;
+  disableLeftActions?: boolean;
+  disableRightActions?: boolean;
   /**
    * Called when the `scrollEnabled` attribute of the list
    * is changed. This is useful for disabling/enabling the
@@ -34,8 +34,8 @@ export const SwipeableList = <T, >(props: SwipeableListProps & FlatListProps<T>)
     actionsRight,
     titleStyle,
     actionWidth,
-    disableLeftSwipe,
-    disableRightSwipe,
+    disableRightActions,
+    disableLeftActions,
     autoSelectLeftOuterAction,
     autoSelectRightOuterAction,
     onChangeScrollEnabled,
@@ -114,8 +114,8 @@ export const SwipeableList = <T, >(props: SwipeableListProps & FlatListProps<T>)
     return (
       <SwipeableItem
         actionWidth={actionWidth}
-        disableLeftSwipe={disableLeftSwipe}
-        disableRightSwipe={disableRightSwipe}
+        disableRightActions={disableRightActions}
+        disableLeftActions={disableLeftActions}
         autoSelectLeftOuterAction={itemAutoSelectLeftOuterAction}
         autoSelectRightOuterAction={itemAutoSelectRightOuterAction}
         actionsLeft={itemLeftActions}
