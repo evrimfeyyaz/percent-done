@@ -42,7 +42,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     return onDidUnmount;
   }, []);
 
-  let interval: NodeJS.Timeout;
+  let interval: number;
   useEffect(() => {
     interval = setInterval(() => tick(), 1000);
     return () => {
