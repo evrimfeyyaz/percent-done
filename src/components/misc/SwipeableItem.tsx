@@ -238,11 +238,19 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
       const swipedRightQuickly = vx > minVelocityToOpen;
       const swipedLeftQuickly = vx < -minVelocityToOpen;
 
-      if (bothSidesAreClosed && (itemIsPastLeftOpenCutoff || swipedRightQuickly)) {
+      if (
+        bothSidesAreClosed &&
+        (itemIsPastLeftOpenCutoff || swipedRightQuickly) &&
+        this.currentSwipeStartingDirection !== 'left'
+      ) {
         this.openLeftActions(vx);
       } else if (this.areLeftActionsOpen && itemIsPastLeftOpenCutoff && !swipedLeftQuickly) {
         this.openLeftActions(vx);
-      } else if (bothSidesAreClosed && (itemIsPastRightOpenCutoff || swipedLeftQuickly)) {
+      } else if (
+        bothSidesAreClosed &&
+        (itemIsPastRightOpenCutoff || swipedLeftQuickly) &&
+        this.currentSwipeStartingDirection !== 'right'
+      ) {
         this.openRightActions(vx);
       } else if (this.areRightActionsOpen && itemIsPastRightOpenCutoff && !swipedRightQuickly) {
         this.openRightActions(vx);
