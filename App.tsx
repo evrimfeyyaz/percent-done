@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import Storybook from './storybook';
-import { Platform, UIManager, YellowBox } from 'react-native';
+import { AppState, AppStateStatus, Platform, UIManager, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { momentWithDeviceLocale, NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
@@ -21,8 +21,16 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 const { store, persistor } = configureStore();
 
 const App: FunctionComponent = () => {
+  const appState = useRef(AppState.currentState);
+  const [dayChangeTimeoutId, setDayChangeTimeoutId] = useState();
   const [loaded, setLoaded] = useState(false);
   const [currentDateTimestamp, setCurrentDateTimestamp] = useState(Date.now());
+
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => AppState.removeEventListener('change', handleAppStateChange);
+  }, []);
 
   useEffect(() => {
     const { id, startTimestamp } = store.getState().goals.trackedGoal;
@@ -33,17 +41,36 @@ const App: FunctionComponent = () => {
   }, [loaded]);
 
   useEffect(() => {
+    changeToCurrentDayAndSetTimeoutForTheNextDay();
+  }, [currentDateTimestamp]);
+
+  const changeToCurrentDayAndSetTimeoutForTheNextDay = () => {
     store.dispatch(setCurrentDate(new Date(currentDateTimestamp)));
+
+    clearTimeout(dayChangeTimeoutId);
 
     const msUntilTomorrow = +momentWithDeviceLocale(currentDateTimestamp)
       .add(1, 'day')
       .startOf('day')
       .subtract(currentDateTimestamp);
 
-    setTimeout(() => {
-      setCurrentDateTimestamp(Date.now());
-    }, msUntilTomorrow);
-  }, [currentDateTimestamp]);
+    setDayChangeTimeoutId(
+      setTimeout(() => {
+        setCurrentDateTimestamp(Date.now());
+      }, msUntilTomorrow),
+    );
+  };
+
+  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      changeToCurrentDayAndSetTimeoutForTheNextDay();
+    }
+
+    appState.current = nextAppState;
+  };
 
   const handleFirstLoad = () => {
     setLoaded(true);
