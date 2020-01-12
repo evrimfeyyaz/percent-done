@@ -11,6 +11,7 @@ export * from './misc/SwipeableItem';
 export * from './misc/ProjectRow';
 export * from './misc/ProjectList';
 export * from './misc/ProjectModal';
+export * from './misc/ListHeader';
 
 // Charts
 export * from './charts/ProgressChart';

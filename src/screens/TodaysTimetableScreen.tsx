@@ -3,7 +3,7 @@ import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 import { TodaysTimetable } from '../containers';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Icons } from '../../assets';
-import { Button } from '../components';
+import { Button, ListHeader } from '../components';
 
 export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
   const handleAddButtonPress = () => {
@@ -16,8 +16,11 @@ export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = ({ na
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} alwaysBounceVertical={false}>
-      <Button title='Add Entry' iconSource={Icons.addEntry} style={styles.addEntryButton}
-              onPress={handleAddButtonPress} />
+      <ListHeader
+        buttonTitle='Add Entry'
+        buttonIconSource={Icons.addEntry}
+        onButtonPress={handleAddButtonPress}
+      />
       <TodaysTimetable onEntryPress={handleEntryPress} />
     </ScrollView>
   );
@@ -25,7 +28,7 @@ export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = ({ na
 
 const styles = StyleSheet.create({
   contentContainer: {
-    paddingVertical: 20,
+    paddingBottom: 20,
     alignItems: 'center',
   },
   addEntryButton: {

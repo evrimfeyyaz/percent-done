@@ -36,7 +36,7 @@ import {
   SelectBox,
   GoalList,
   SwipeableItem,
-  SwipeableList, ProjectRow, ProjectList, ProjectRowProps, ProjectForm,
+  SwipeableList, ProjectRow, ProjectList, ProjectRowProps, ProjectForm, ListHeader,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -180,7 +180,14 @@ storiesOf('Miscellaneous', module)
       titleStyle={{ color: 'white' }}
       keyExtractor={item => item.id}
     />;
-  });
+  })
+  .add('List header', () => (
+    <ListHeader
+      buttonTitle='Add Something'
+      description='Here is a description of this list.'
+      onButtonPress={action('list-header-button-press')}
+    />
+  ));
 
 storiesOf('Charts', module)
   .add('Progress chart', () => {
