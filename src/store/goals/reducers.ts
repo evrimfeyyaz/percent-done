@@ -41,7 +41,9 @@ const byId: Reducer<NormalizedEntityById<Goal>, GoalActionTypes> = (state = {}, 
 const allIds: Reducer<string[], GoalActionTypes> = (state = [], action) => {
   switch (action.type) {
     case ADD_GOAL:
-      return _.uniq([...state, action.goal.id]);
+      const goal = action.goal;
+
+      return _.uniq([...state, goal.id]);
     default:
       return state;
   }

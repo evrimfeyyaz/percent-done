@@ -4,6 +4,7 @@ import { createNormalizedEntityState } from './createNormalizedEntityState';
 import { TimetableEntriesState, TimetableEntry } from '../store/timetableEntries/types';
 import { convertDateToIndex } from '../utilities';
 import { Project, ProjectsState } from '../store/projects/types';
+import { SettingsState } from '../store/settings/types';
 
 interface Arguments {
   goals?: Goal[],
@@ -49,9 +50,14 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
     idByTitle: projectIdsByTitle,
   };
 
+  const settingsState: SettingsState = {
+    currentDateTimestamp: Date.now(),
+  };
+
   return {
     goals: goalsState,
     timetableEntries: timetableEntriesState,
     projects: projectsState,
+    settings: settingsState,
   };
 };

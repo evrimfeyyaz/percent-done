@@ -15,7 +15,8 @@ const byId: Reducer<NormalizedEntityById<TimetableEntry>, TimetableEntryActionTy
   switch (action.type) {
     case ADD_TIMETABLE_ENTRY:
     case EDIT_TIMETABLE_ENTRY:
-      return { ...state, [action.timetableEntry.id]: action.timetableEntry };
+      const timetableEntry = action.timetableEntry;
+      return { ...state, [timetableEntry.id]: timetableEntry };
     case DELETE_TIMETABLE_ENTRY:
       return _.omit(state, action.timetableEntry.id);
     default:

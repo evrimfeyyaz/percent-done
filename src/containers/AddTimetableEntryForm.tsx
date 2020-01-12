@@ -9,6 +9,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { ProjectActionTypes } from '../store/projects/types';
 import { getAllProjects } from '../store/projects/selectors';
 import { addTimetableEntry } from '../store/timetableEntries/thunks';
+import { WithOptionalId } from '../utilities/types';
 
 const mapStateToProps = (state: StoreState) => ({
   // TODO: Sort all goals by title in ascending order.
@@ -17,7 +18,7 @@ const mapStateToProps = (state: StoreState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, TimetableEntryActionTypes | ProjectActionTypes>) => ({
-  onSubmit: (timetableEntry: TimetableEntry) => dispatch(addTimetableEntry(timetableEntry)),
+  onSubmit: (timetableEntry: WithOptionalId<TimetableEntry>) => dispatch(addTimetableEntry(timetableEntry)),
   onProjectCreatePress: (title: string) => dispatch(createProjectAndReturnId(title)) as unknown as string,
 });
 

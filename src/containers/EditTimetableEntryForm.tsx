@@ -10,6 +10,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { getAllProjects } from '../store/projects/selectors';
 import { ProjectActionTypes } from '../store/projects/types';
 import { createProjectAndReturnId } from '../store/projects/thunks';
+import { WithOptionalId } from '../utilities/types';
 
 interface EditTimetableEntryFormProps {
   timetableEntryId: string;
@@ -26,11 +27,11 @@ const mapDispatchToProps = (
   dispatch: ThunkDispatch<StoreState, void, TimetableEntryActionTypes | ProjectActionTypes>,
   ownProps: EditTimetableEntryFormProps,
 ) => ({
-  onSubmit: (timetableEntry: TimetableEntry, oldTimetableEntry?: TimetableEntry) =>
-    dispatch(editTimetableEntry(timetableEntry, oldTimetableEntry as TimetableEntry)),
-  onDelete: (timetableEntry: TimetableEntry) => {
+  onSubmit: (timetableEntry: WithOptionalId<TimetableEntry>, oldTimetableEntry?: WithOptionalId<TimetableEntry>) =>
+    dispatch(editTimetableEntry(timetableEntry as TimetableEntry, oldTimetableEntry as TimetableEntry)),
+  onDelete: (timetableEntry: WithOptionalId<TimetableEntry>) => {
     ownProps.onDelete?.();
-    dispatch(deleteTimetableEntry(timetableEntry));
+    dispatch(deleteTimetableEntry(timetableEntry as TimetableEntry));
   },
   onProjectCreatePress: (title: string) => dispatch(createProjectAndReturnId(title)) as unknown as string,
 });

@@ -26,7 +26,7 @@ export const EDIT_TIMETABLE_ENTRY = 'EDIT_TIMETABLE_ENTRY';
 export const DELETE_TIMETABLE_ENTRY = 'DELETE_TIMETABLE_ENTRY';
 
 export interface AddTimetableEntryAction extends Action<typeof ADD_TIMETABLE_ENTRY> {
-  timetableEntry: WithOptionalId<TimetableEntry>;
+  timetableEntry: TimetableEntry;
 }
 
 export interface EditTimetableEntryAction extends Action<typeof EDIT_TIMETABLE_ENTRY> {
