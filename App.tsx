@@ -6,7 +6,7 @@ import { momentWithDeviceLocale, NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
 import configureStore from './src/store/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
-import { setCurrentDate } from './src/store/settings/actions';
+import { setCurrentDateTimestamp } from './src/store/settings/actions';
 
 YellowBox.ignoreWarnings(['Warning:']);
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
@@ -24,7 +24,11 @@ const App: FunctionComponent = () => {
   const appState = useRef(AppState.currentState);
   const [dayChangeTimeoutId, setDayChangeTimeoutId] = useState();
   const [loaded, setLoaded] = useState(false);
-  const [currentDateTimestamp, setCurrentDateTimestamp] = useState(Date.now());
+  const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
+
+  useEffect(() => {
+    setCurrentTimestamp(Date.now());
+  }, []);
 
   useEffect(() => {
     AppState.addEventListener('change', handleAppStateChange);
@@ -41,22 +45,23 @@ const App: FunctionComponent = () => {
   }, [loaded]);
 
   useEffect(() => {
-    changeToCurrentDayAndSetTimeoutForTheNextDay();
-  }, [currentDateTimestamp]);
+    updateCurrentDateAndSetTimeoutForTheNextDay();
+  }, [currentTimestamp]);
 
-  const changeToCurrentDayAndSetTimeoutForTheNextDay = () => {
-    store.dispatch(setCurrentDate(new Date(currentDateTimestamp)));
+  const updateCurrentDateAndSetTimeoutForTheNextDay = () => {
+    console.log('dispatching new date');
+    store.dispatch(setCurrentDateTimestamp(currentTimestamp));
 
     clearTimeout(dayChangeTimeoutId);
 
-    const msUntilTomorrow = +momentWithDeviceLocale(currentDateTimestamp)
+    const msUntilTomorrow = +momentWithDeviceLocale(currentTimestamp)
       .add(1, 'day')
       .startOf('day')
-      .subtract(currentDateTimestamp);
+      .subtract(currentTimestamp);
 
     setDayChangeTimeoutId(
       setTimeout(() => {
-        setCurrentDateTimestamp(Date.now());
+        setCurrentTimestamp(Date.now());
       }, msUntilTomorrow),
     );
   };
@@ -66,7 +71,7 @@ const App: FunctionComponent = () => {
       appState.current.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
-      changeToCurrentDayAndSetTimeoutForTheNextDay();
+      setCurrentTimestamp(Date.now());
     }
 
     appState.current = nextAppState;

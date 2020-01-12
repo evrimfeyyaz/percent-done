@@ -69,7 +69,7 @@ describe('timetable entries selectors', () => {
   });
 
   describe('getTimetableEntriesByProjectId', () => {
-    it('returns all timetable entries with given proejct ID', () => {
+    it('returns all timetable entries with given project ID', () => {
       const project = createProject('Project');
       const entry1 = createTimetableEntry({
         projectId: project.id,

@@ -360,8 +360,8 @@ storiesOf('Inputs', module)
     return (
       <ColorInput
         colors={inputColors}
-        selectedColor={select('Color', inputColors, '#CB0E0E')}
-        onColorChange={action('colorIndex-changed')}
+        selectedColorIndex={select('Color', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 0)}
+        onColorIndexChange={action('color-index-changed')}
       />
     );
   })
@@ -461,9 +461,9 @@ storiesOf('Forms', module)
 // Utilities
 
 function dateKnobReturningDateObj(name: string, defaultValue: Date) {
-  const stringTimestamp = dateKnob(name, defaultValue);
+  const stringDate = dateKnob(name, defaultValue);
 
-  return new Date(stringTimestamp);
+  return new Date(stringDate);
 }
 
 function createGoals(num: number) {

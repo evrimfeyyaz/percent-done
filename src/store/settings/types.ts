@@ -4,10 +4,10 @@ export interface SettingsState {
   currentDateTimestamp?: number;
 }
 
-export const SET_CURRENT_DATE = 'SET_CURRENT_DATE';
+export const SET_CURRENT_DATE_TIMESTAMP = 'SET_CURRENT_DATE_TIMESTAMP';
 
-export interface SetCurrentDateAction extends Action<typeof SET_CURRENT_DATE> {
-  date: Date;
+export interface SetCurrentDateTimestampAction extends Action<typeof SET_CURRENT_DATE_TIMESTAMP> {
+  timestamp: number;
 }
 
-export type SettingsActionTypes = SetCurrentDateAction;
+export type SettingsActionTypes = SetCurrentDateTimestampAction;

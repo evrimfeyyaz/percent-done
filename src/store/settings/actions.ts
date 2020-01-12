@@ -1,8 +1,8 @@
-import { SET_CURRENT_DATE, SetCurrentDateAction } from './types';
+import { SET_CURRENT_DATE_TIMESTAMP, SetCurrentDateTimestampAction } from './types';
 
-export const setCurrentDate = (date: Date): SetCurrentDateAction => {
+export const setCurrentDateTimestamp = (timestamp: number): SetCurrentDateTimestampAction => {
   return {
-    type: SET_CURRENT_DATE,
-    date,
+    type: SET_CURRENT_DATE_TIMESTAMP,
+    timestamp,
   };
 };

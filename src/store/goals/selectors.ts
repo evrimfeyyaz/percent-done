@@ -5,7 +5,6 @@ import { convertDateToIndex } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import moment from 'moment';
 import { getGoalColor, isActiveToday, isDeleted, isTimeTracked } from './utilities';
-import { goalColors } from '../../theme';
 
 export const getGoalById = (state: StoreState, id: string): Goal => {
   return state.goals.byId[id];
