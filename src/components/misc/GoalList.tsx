@@ -70,6 +70,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
 
   return (
     <SwipeableList
+      alwaysBounceVertical={false}
       data={goals}
       disableLeftActions={disableLeftActions}
       actionsLeft={actionsLeft}

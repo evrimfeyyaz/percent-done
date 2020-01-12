@@ -24,4 +24,5 @@ export const Icons = {
   linkOrange: require('./link-orange.png'),
   stop: require('./stop.png'),
   addEntry: require('./add-entry.png'),
+  goal: require('./goal.png'),
 };
