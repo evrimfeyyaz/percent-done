@@ -1,5 +1,6 @@
 import { NormalizedEntityState } from '../types';
 import { Action } from 'redux';
+import { WithOptionalId } from '../../utilities/types';
 
 export interface TimetableEntry {
   id: string;
@@ -25,7 +26,7 @@ export const EDIT_TIMETABLE_ENTRY = 'EDIT_TIMETABLE_ENTRY';
 export const DELETE_TIMETABLE_ENTRY = 'DELETE_TIMETABLE_ENTRY';
 
 export interface AddTimetableEntryAction extends Action<typeof ADD_TIMETABLE_ENTRY> {
-  timetableEntry: TimetableEntry;
+  timetableEntry: WithOptionalId<TimetableEntry>;
 }
 
 export interface EditTimetableEntryAction extends Action<typeof EDIT_TIMETABLE_ENTRY> {

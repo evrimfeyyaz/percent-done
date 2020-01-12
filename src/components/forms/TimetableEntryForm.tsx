@@ -4,12 +4,13 @@ import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { TimetableEntry } from '../../store/timetableEntries/types';
 import { Goal } from '../../store/goals/types';
 import { isTimeTracked } from '../../store/goals/utilities';
-import { createRandomId, msToHoursMinutesSeconds } from '../../utilities';
+import { msToHoursMinutesSeconds } from '../../utilities';
+import { WithOptionalId } from '../../utilities/types';
 
 export interface TimetableEntryFormProps {
   allGoals: Goal[];
-  onSubmit?: (timetableEntry: TimetableEntry, oldTimetableEntry?: TimetableEntry) => void;
-  onDelete?: (timetableEntry: TimetableEntry) => void;
+  onSubmit?: (timetableEntry: WithOptionalId<TimetableEntry>, oldTimetableEntry?: WithOptionalId<TimetableEntry>) => void;
+  onDelete?: (timetableEntry: WithOptionalId<TimetableEntry>) => void;
   timetableEntry?: TimetableEntry;
   projects: { key: string, title: string }[];
   /**
@@ -71,17 +72,15 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
 
     const { onSubmit, timetableEntry: oldTimetableEntry } = this.props;
     let { goalId, startTimestamp, endTimestamp, projectKey } = this.state;
-    let id: string;
 
-    if (this.isAddNewForm()) {
-      id = createRandomId();
-    } else {
+    let id: string | undefined = undefined;
+    if (!this.isAddNewForm()) {
       if (oldTimetableEntry == null) throw new Error('Timetable entry cannot be null on the edit form.');
 
       id = oldTimetableEntry.id;
     }
 
-    const timetableEntry: TimetableEntry = {
+    const timetableEntry: WithOptionalId<TimetableEntry> = {
       projectId: projectKey,
       startTimestamp,
       endTimestamp,

@@ -1,5 +1,6 @@
 import { NormalizedEntityState } from '../types';
 import { Action } from 'redux';
+import { WithOptionalId } from '../../utilities/types';
 
 export interface Goal {
   id: string;
@@ -42,7 +43,7 @@ export const UPDATE_TRACKED_GOAL_START_TIMESTAMP = 'UPDATE_TRACKED_GOAL_START_TI
 export const UPDATE_TRACKED_GOAL_PROJECT_ID = 'UPDATE_TRACKED_GOAL_PROJECT_ID';
 
 export interface AddGoalAction extends Action<typeof ADD_GOAL> {
-  goal: Goal;
+  goal: WithOptionalId<Goal>;
 }
 
 export interface EditGoalAction extends Action<typeof EDIT_GOAL> {

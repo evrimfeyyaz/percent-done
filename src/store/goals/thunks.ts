@@ -4,11 +4,13 @@ import { StoreState } from '../types';
 import { GoalActionTypes } from './types';
 import { TimetableEntry, TimetableEntryActionTypes } from '../timetableEntries/types';
 import { getGoalById, getTimetableEntriesForGoal, isCompleted } from './selectors';
-import { addTimetableEntry, deleteTimetableEntry } from '../timetableEntries/actions';
+import { deleteTimetableEntry } from '../timetableEntries/actions';
 import { isTimeTracked } from './utilities';
-import { NavigationService, createRandomId } from '../../utilities';
+import { NavigationService } from '../../utilities';
 import { editGoal, removeTrackedGoal, setTrackedGoal } from './actions';
 import { getCurrentDate } from '../settings/selectors';
+import { addTimetableEntry } from '../timetableEntries/thunks';
+import { WithOptionalId } from '../../utilities/types';
 
 export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
   return (dispatch, getState) => {
@@ -29,8 +31,7 @@ export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, Store
       } else {
         const timestamp = Date.now();
 
-        const timetableEntry: TimetableEntry = {
-          id: createRandomId(),
+        const timetableEntry: WithOptionalId<TimetableEntry> = {
           goalId,
           startTimestamp: timestamp,
           endTimestamp: timestamp,
@@ -62,9 +63,7 @@ export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void,
 
     dispatch(removeTrackedGoal());
 
-    // TODO: Handle the case where the start and end timestamps spawn multiple days.
-    const timetableEntry: TimetableEntry = {
-      id: createRandomId(),
+    const timetableEntry: WithOptionalId<TimetableEntry> = {
       goalId,
       startTimestamp,
       endTimestamp,

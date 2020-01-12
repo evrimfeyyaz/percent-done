@@ -14,10 +14,12 @@ import {
   UpdateTrackedGoalProjectIdAction,
   UpdateTrackedGoalStartTimestampAction,
 } from './types';
+import { createRandomId } from '../../utilities';
+import { WithOptionalId } from '../../utilities/types';
 
-export const addGoal = (goal: Goal): AddGoalAction => ({
+export const addGoal = (goal: WithOptionalId<Goal>): AddGoalAction => ({
   type: ADD_GOAL,
-  goal,
+  goal: { ...goal, id: createRandomId() },
 });
 
 export const editGoal = (goal: Goal): EditGoalAction => ({

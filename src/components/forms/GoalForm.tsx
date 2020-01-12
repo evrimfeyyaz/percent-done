@@ -10,11 +10,11 @@ import {
 } from '..';
 import { goalColors } from '../../theme';
 import { Goal } from '../../store/goals/types';
-import { createRandomId } from '../../utilities';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { WithOptionalId } from '../../utilities/types';
 
 export interface GoalFormProps {
-  onSubmit?: (goal: Goal) => void;
+  onSubmit?: (goal: WithOptionalId<Goal>) => void;
   onDelete?: (goalId: string) => void;
   goal?: Goal;
   allGoalTitles: string[];
@@ -108,12 +108,12 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
 
     let { title, isTimeTracked, duration, recurringDays, colorIndex } = this.state;
     let durationInMs: number | undefined;
-    let id: string;
     let createdAtTimestamp: number;
 
+    let id: string | undefined;
     if (this.isAddNewForm()) {
       durationInMs = isTimeTracked ? duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000 : undefined;
-      id = createRandomId();
+      id = undefined;
       createdAtTimestamp = Date.now();
     } else {
       const { goal } = this.props;
@@ -124,10 +124,10 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       createdAtTimestamp = goal.createdAtTimestamp;
     }
 
-    const goal: Goal = {
+    const goal: WithOptionalId<Goal> = {
       id,
       title,
-      colorIndex: colorIndex,
+      colorIndex,
       durationInMs,
       recurringDays,
       createdAtTimestamp,
