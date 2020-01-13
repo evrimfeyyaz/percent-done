@@ -113,6 +113,9 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   private leftActionWidthsTotal = () => this.numOfLeftActions() * this.props.actionWidth;
   private rightActionWidthsTotal = () => this.numOfRightActions() * this.props.actionWidth;
 
+  private shouldDisableLeftActions = () => this.props.disableLeftActions || this.leftActionWidthsTotal() === 0;
+  private shouldDisableRightActions = () => this.props.disableRightActions || this.rightActionWidthsTotal() === 0;
+
   /**
    * When the user swipes past these x positions, the swipe is slowed down.
    */
@@ -148,11 +151,10 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
     onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
     onMoveShouldSetPanResponder: (evt, gestureState) => {
       const { dx, dy } = gestureState;
-      const { disableLeftActions, disableRightActions } = this.props;
 
       if (
-        (dx > 0 && disableLeftActions && !this.areRightActionsOpen) ||
-        (dx < 0 && disableRightActions && !this.areLeftActionsOpen)
+        (dx > 0 && this.shouldDisableLeftActions() && !this.areRightActionsOpen) ||
+        (dx < 0 && this.shouldDisableRightActions() && !this.areLeftActionsOpen)
       ) {
         return false;
       }
@@ -393,11 +395,10 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   }
 
   private openTo(x: number, velocity = 0) {
-    const { disableLeftActions, disableRightActions } = this.props;
     const swipedLeft = x < 0;
     const swipedRight = x > 0;
 
-    if ((swipedLeft && disableRightActions) || (swipedRight && disableLeftActions)) return;
+    if ((swipedLeft && this.shouldDisableRightActions()) || (swipedRight && this.shouldDisableRightActions())) return;
 
     Animated.spring(
       this.state.translateX,
