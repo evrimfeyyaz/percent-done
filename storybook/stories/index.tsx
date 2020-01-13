@@ -185,6 +185,7 @@ storiesOf('Miscellaneous', module)
     <ListHeader
       buttonTitle='Add Something'
       description='Here is a description of this list.'
+      descriptionButtonTitle='More...'
       onButtonPress={action('list-header-button-press')}
     />
   ));

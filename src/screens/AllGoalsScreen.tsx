@@ -1,9 +1,7 @@
 import React from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { AllGoals } from '../containers/AllGoals';
-import { StyleSheet, Text, View } from 'react-native';
-import { Button, ListHeader } from '../components';
-import { textStyles } from '../theme';
+import { ListHeader } from '../components';
 import { Icons } from '../../assets';
 
 export const AllGoalsScreen: NavigationStackScreenComponent = ({ navigation }) => {
@@ -25,6 +23,7 @@ export const AllGoalsScreen: NavigationStackScreenComponent = ({ navigation }) =
         buttonIconSource={Icons.goal}
         onButtonPress={handleAddButtonPress}
         description={description}
+        descriptionButtonTitle='What are Goals?'
       />
       <AllGoals onEditActionInteraction={handleEditActionInteraction} />
     </>

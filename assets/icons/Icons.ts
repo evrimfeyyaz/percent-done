@@ -25,4 +25,5 @@ export const Icons = {
   stop: require('./stop.png'),
   addEntry: require('./add-entry.png'),
   goal: require('./goal.png'),
+  project: require('./project.png'),
 };

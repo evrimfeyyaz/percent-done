@@ -1,8 +1,6 @@
 import {
   ADD_PROJECT,
   AddProjectAction,
-  DELETE_PROJECT,
-  DeleteProjectAction,
   EDIT_PROJECT,
   EditProjectAction,
   Project,

@@ -8,9 +8,12 @@ import configureStore from './src/store/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setCurrentDateTimestamp } from './src/store/settings/actions';
 
-YellowBox.ignoreWarnings(['Warning:']);
-YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
-YellowBox.ignoreWarnings(['Story with id']);
+YellowBox.ignoreWarnings([
+  'Warning:',
+  'VirtualizedLists should never be nested',
+  'Story with id',
+  '`-[RCTRootView cancelTouches]`',
+]);
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -49,7 +52,6 @@ const App: FunctionComponent = () => {
   }, [currentTimestamp]);
 
   const updateCurrentDateAndSetTimeoutForTheNextDay = () => {
-    console.log('dispatching new date');
     store.dispatch(setCurrentDateTimestamp(currentTimestamp));
 
     clearTimeout(dayChangeTimeoutId);

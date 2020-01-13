@@ -3,6 +3,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 import { TextButton, TextInput } from '..';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Project } from '../../store/projects/types';
+import { WithOptionalId } from '../../utilities/types';
 
 export interface ProjectFormProps {
   project?: Project;
@@ -11,7 +12,7 @@ export interface ProjectFormProps {
    * @param project
    * @param projectOld The version of the project before being edited.
    */
-  onSubmit?: (project: Project, projectOld: Project) => void;
+  onSubmit?: (project: WithOptionalId<Project>, projectOld?: Project) => void;
   onDelete?: (project: Project) => void;
 }
 
@@ -48,6 +49,15 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
     );
   };
 
+  /**
+   * Returns `true` when this form is an "add new project" form, and `false`
+   * when it is an "edit project" form.
+   */
+  private isAddNewForm = () => {
+    console.log(this.props.project);
+    return this.props.project == null;
+  };
+
   validate(): boolean {
     const { title } = this.state;
     const { allProjectTitles, project } = this.props;
@@ -81,13 +91,19 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
       return false;
     }
 
-    const { project } = this.props;
-    if (project == null) throw new Error('Project cannot be null on the edit form.');
-
+    let id: string | undefined = undefined;
     const { title } = this.state;
-    const { id } = project;
 
-    this.props.onSubmit?.({ id, title }, project);
+    if (this.isAddNewForm()) {
+      this.props.onSubmit?.({ title });
+    } else {
+      const { project } = this.props;
+      if (project == null) throw new Error('Project cannot be null on the edit form.');
+
+      id = this.props.project?.id;
+
+      this.props.onSubmit?.({ id, title }, project);
+    }
 
     return true;
   }
@@ -102,9 +118,11 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
         <TextInput placeholder='What is the title of the project?' onChangeText={this.handleTitleChange}
                    value={title} error={titleInputError} />
 
-        <View style={styles.deleteButtonContainer}>
-          <TextButton title='Delete Project' onPress={this.handleDeletePress} />
-        </View>
+        {!this.isAddNewForm() && (
+          <View style={styles.deleteButtonContainer}>
+            <TextButton title='Delete Project' onPress={this.handleDeletePress} />
+          </View>
+        )}
       </KeyboardAwareScrollView>
     );
   }

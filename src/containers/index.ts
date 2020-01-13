@@ -8,3 +8,4 @@ export * from './EditGoalForm';
 export * from './AddTimetableEntryForm';
 export * from './EditTimetableEntryForm';
 export * from './EditProjectForm';
+export * from './AddProjectForm';

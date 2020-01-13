@@ -3,7 +3,7 @@ import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 import { TodaysTimetable } from '../containers';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Icons } from '../../assets';
-import { Button, ListHeader } from '../components';
+import { ListHeader } from '../components';
 
 export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
   const handleAddButtonPress = () => {
