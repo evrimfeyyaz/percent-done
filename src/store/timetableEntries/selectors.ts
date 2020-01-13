@@ -16,7 +16,7 @@ export const getTimetableEntriesByDate = (state: StoreState, date: Date): Timeta
 };
 
 export const getTimetableEntriesByProjectId = (state: StoreState, projectId: string): TimetableEntry[] => {
-  return state.timetableEntries.idsByProjectId[projectId]?.map(id => getTimetableEntryById(state, id));
+  return state.timetableEntries.idsByProjectId[projectId]?.map(id => getTimetableEntryById(state, id)) ?? [];
 };
 
 export const convertTimetableEntriesToTimetableRows = (state: StoreState, timetableEntries: TimetableEntry[]): TimetableRow[] => {

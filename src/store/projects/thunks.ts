@@ -36,11 +36,6 @@ export const createProjectAndSetTrackedGoalProject: ActionCreator<ThunkAction<vo
 
 export const deleteProject: ActionCreator<ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes | TimetableEntryActionTypes>> = (project: Project) => {
   return (dispatch, getState) => {
-    dispatch({
-      type: DELETE_PROJECT,
-      project,
-    });
-
     const store = getState();
 
     const goalsWithThisProjectId = getAllGoals(store, { includeDeleted: true }).filter(goal => goal.lastProjectId === project.id);
@@ -51,6 +46,11 @@ export const deleteProject: ActionCreator<ThunkAction<void, StoreState, void, Pr
     const timetableEntriesWithThisProjectId = getTimetableEntriesByProjectId(store, project.id);
     timetableEntriesWithThisProjectId.forEach(entry => {
       dispatch(editTimetableEntry({ ...entry, projectId: undefined }, entry));
+    });
+
+    dispatch({
+      type: DELETE_PROJECT,
+      project,
     });
   };
 };

@@ -88,8 +88,17 @@ describe('timetable entries selectors', () => {
       const expected = [entry1];
       const result = getTimetableEntriesByProjectId(state, project.id);
 
-      expect(expected).toEqual(result);
+      expect(result).toEqual(expected);
     });
+
+    it('returns an empty array when there are no timetable entries with given project ID', () => {
+      const project = createProject('Project');
+      const state = createStoreState({ projects: [project] });
+
+      const result = getTimetableEntriesByProjectId(state, project.id);
+
+      expect(result).toEqual([]);
+    })
   });
 
   describe('convertTimetableEntriesToTimetableRows', () => {
