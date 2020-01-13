@@ -6,7 +6,6 @@ export function useDispatchCurrentDateOnRender() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('dispatching new date from effect');
     dispatch(setCurrentDateTimestamp(Date.now()));
   }, []);
 }
