@@ -27,10 +27,9 @@ const App: FunctionComponent = () => {
   const appState = useRef(AppState.currentState);
   const [dayChangeTimeoutId, setDayChangeTimeoutId] = useState();
   const [loaded, setLoaded] = useState(false);
-  const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
 
   useEffect(() => {
-    setCurrentTimestamp(Date.now());
+    updateCurrentDateAndSetTimeoutForTheNextDay();
   }, []);
 
   useEffect(() => {
@@ -47,25 +46,24 @@ const App: FunctionComponent = () => {
     }
   }, [loaded]);
 
-  useEffect(() => {
-    updateCurrentDateAndSetTimeoutForTheNextDay();
-  }, [currentTimestamp]);
-
   const updateCurrentDateAndSetTimeoutForTheNextDay = () => {
+    const currentTimestamp = Date.now();
     store.dispatch(setCurrentDateTimestamp(currentTimestamp));
 
-    clearTimeout(dayChangeTimeoutId);
+    if (Platform.OS === 'ios') {
+      clearTimeout(dayChangeTimeoutId);
 
-    const msUntilTomorrow = +momentWithDeviceLocale(currentTimestamp)
-      .add(1, 'day')
-      .startOf('day')
-      .subtract(currentTimestamp);
+      const msUntilTomorrow = +momentWithDeviceLocale(currentTimestamp)
+        .add(1, 'day')
+        .startOf('day')
+        .subtract(currentTimestamp);
 
-    setDayChangeTimeoutId(
-      setTimeout(() => {
-        setCurrentTimestamp(Date.now());
-      }, msUntilTomorrow),
-    );
+      setDayChangeTimeoutId(
+        setTimeout(() => {
+          updateCurrentDateAndSetTimeoutForTheNextDay();
+        }, msUntilTomorrow),
+      );
+    }
   };
 
   const handleAppStateChange = (nextAppState: AppStateStatus) => {
@@ -73,7 +71,7 @@ const App: FunctionComponent = () => {
       appState.current.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
-      setCurrentTimestamp(Date.now());
+      updateCurrentDateAndSetTimeoutForTheNextDay();
     }
 
     appState.current = nextAppState;

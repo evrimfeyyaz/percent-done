@@ -4,8 +4,11 @@ import { TodaysTimetable } from '../containers';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Icons } from '../../assets';
 import { ListHeader } from '../components';
+import { useDispatchCurrentDateOnRender } from '../utilities';
 
 export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
+  useDispatchCurrentDateOnRender();
+
   const handleAddButtonPress = () => {
     navigation.navigate('AddTimetableEntry');
   };

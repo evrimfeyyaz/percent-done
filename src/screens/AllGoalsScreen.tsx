@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { AllGoals } from '../containers/AllGoals';
 import { ListHeader } from '../components';
 import { Icons } from '../../assets';
+import { useDispatchCurrentDateOnRender } from '../utilities';
 
 export const AllGoalsScreen: NavigationStackScreenComponent = ({ navigation }) => {
+  useDispatchCurrentDateOnRender();
+
   const handleEditActionInteraction = (goalId: string) => {
     navigation.navigate('EditGoal', { goalId });
   };
