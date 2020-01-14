@@ -36,10 +36,10 @@ export function isLocale24Hours() {
  * https://github.com/moment/moment/issues/3624#issuecomment-543064658.
  */
 export function sanitizeLocaleStringForMomentJs(locale: string) {
-  const languageCode = locale.indexOf("-") === -1 ? locale : locale.substr(0, locale.indexOf('-'));
+  const languageCode = locale.replace('_', '-').indexOf('-') === -1 ? locale : locale.substr(0, locale.indexOf('-'));
 
   let sanitizedLocale;
-  switch(languageCode.toLowerCase()) {
+  switch (languageCode.toLowerCase()) {
     case 'zh':
       // No 'zh' locale exists in MomentJS. App will crash in production if used.
       sanitizedLocale = 'zh-cn';
