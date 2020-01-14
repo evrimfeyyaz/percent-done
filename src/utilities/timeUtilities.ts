@@ -1,5 +1,4 @@
 import moment from 'moment';
-import 'moment/min/locales';
 import { NativeModules, Platform } from 'react-native';
 
 /**
@@ -23,26 +22,46 @@ export function compareDateIndices(dateIdx1: string, dateIdx2: string) {
   }
 }
 
-/**
- * This returns the beginning of day, as new Date() also includes the time,
- * which would prevent selectors to be memoized properly as the time changes
- * within a day.
- */
-export function getBeginningOfDay(date: Date) {
-  return moment(date).startOf('day').toDate();
-}
-
 export function isLocale24Hours() {
   const oneOClock = momentWithDeviceLocale(new Date(2019, 0, 1, 13));
 
   return oneOClock.format('LT') === '13:00';
 }
 
+/**
+ * There is a long-standing issue with the way Metro bundler handles
+ * dynamic requires (or more so, the way it doesn't handle them), and
+ * the fact that MomentJS uses dynamic requires. This is a sub-optimal
+ * solution adopted from:
+ * https://github.com/moment/moment/issues/3624#issuecomment-543064658.
+ */
+export function sanitizeLocaleStringForMomentJs(locale: string) {
+  const languageCode = locale.indexOf("-") === -1 ? locale : locale.substr(0, locale.indexOf('-'));
+
+  let sanitizedLocale;
+  switch(languageCode.toLowerCase()) {
+    case 'zh':
+      // No 'zh' locale exists in MomentJS. App will crash in production if used.
+      sanitizedLocale = 'zh-cn';
+      break;
+    case 'pa':
+      sanitizedLocale = 'pa-in';
+      break;
+    case 'hy':
+      sanitizedLocale = 'hy-am';
+      break;
+    default:
+      sanitizedLocale = languageCode.toLowerCase();
+  }
+
+  return sanitizedLocale;
+}
+
 export function momentWithDeviceLocale(inp?: moment.MomentInput, format?: moment.MomentFormatSpecification, strict?: boolean) {
   let deviceLocale = Platform.OS === 'ios'
     ? (NativeModules.SettingsManager?.settings.AppleLocale)
     : NativeModules.I18nManager.localeIdentifier;
-  deviceLocale = deviceLocale || 'en-US';
+  deviceLocale = sanitizeLocaleStringForMomentJs(deviceLocale || 'en-US');
 
   return moment(inp, format, strict).locale(deviceLocale);
 }

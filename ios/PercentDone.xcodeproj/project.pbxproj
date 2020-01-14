@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* PercentDoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PercentDoneTests.m */; };
 		02F315FF550E6E103C4FE299 /* libPods-PercentDone-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18BA3E127CDF1439FC3005D8 /* libPods-PercentDone-tvOS.a */; };
@@ -17,11 +18,11 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* PercentDoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PercentDoneTests.m */; };
-		A1E9B1ADBDFEE40091406D08 /* libPods-PercentDone-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6837F64D417F9F96252CCF55 /* libPods-PercentDone-tvOSTests.a */; };
-		FFA26FDC91FF713F2CD63C70 /* libPods-PercentDoneTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F63184F49517CB4A39A336 /* libPods-PercentDoneTests.a */; };
 		4B721F6D80C14B3B92B3C2EC /* NunitoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31DCEFFD1D484A4580520D39 /* NunitoSans-Bold.ttf */; };
-		ADAF884E7FB2466F939F6B84 /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */; };
 		7F9AC3C966864A418604D7E8 /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E95E1AFE973049A39BC083D4 /* NunitoSans-SemiBold.ttf */; };
+		A1E9B1ADBDFEE40091406D08 /* libPods-PercentDone-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6837F64D417F9F96252CCF55 /* libPods-PercentDone-tvOSTests.a */; };
+		ADAF884E7FB2466F939F6B84 /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */; };
+		FFA26FDC91FF713F2CD63C70 /* libPods-PercentDoneTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F63184F49517CB4A39A336 /* libPods-PercentDoneTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,21 +58,21 @@
 		2C7913DB470C1F18373F27CC /* Pods-PercentDone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone.debug.xcconfig"; path = "Target Support Files/Pods-PercentDone/Pods-PercentDone.debug.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* PercentDone-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PercentDone-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* PercentDone-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PercentDone-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		31DCEFFD1D484A4580520D39 /* NunitoSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NunitoSans-Bold.ttf"; path = "../assets/fonts/NunitoSans-Bold.ttf"; sourceTree = "<group>"; };
 		50F63184F49517CB4A39A336 /* libPods-PercentDoneTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PercentDoneTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65814632EC3E060A095E56F0 /* Pods-PercentDone-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOS.release.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOS/Pods-PercentDone-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		6837F64D417F9F96252CCF55 /* libPods-PercentDone-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PercentDone-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NunitoSans-Regular.ttf"; path = "../assets/fonts/NunitoSans-Regular.ttf"; sourceTree = "<group>"; };
 		768D9EB694C7665D2EB4C08D /* Pods-PercentDone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone.release.xcconfig"; path = "Target Support Files/Pods-PercentDone/Pods-PercentDone.release.xcconfig"; sourceTree = "<group>"; };
 		88FA044E2CAD0ECFA3E085C4 /* Pods-PercentDone-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOSTests/Pods-PercentDone-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		92B4DC5ABF731EFC3E300443 /* Pods-PercentDone-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOSTests/Pods-PercentDone-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		B89037247320C95A30B037A0 /* Pods-PercentDone-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOS/Pods-PercentDone-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		BA26E16997287C4F4935D0A8 /* Pods-PercentDoneTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDoneTests.release.xcconfig"; path = "Target Support Files/Pods-PercentDoneTests/Pods-PercentDoneTests.release.xcconfig"; sourceTree = "<group>"; };
 		C83CE05B35E82B825CF23FE3 /* Pods-PercentDoneTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDoneTests.debug.xcconfig"; path = "Target Support Files/Pods-PercentDoneTests/Pods-PercentDoneTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E95E1AFE973049A39BC083D4 /* NunitoSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NunitoSans-SemiBold.ttf"; path = "../assets/fonts/NunitoSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		EC7B1DED3273CF0271B9374C /* libPods-PercentDone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PercentDone.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		31DCEFFD1D484A4580520D39 /* NunitoSans-Bold.ttf */ = {isa = PBXFileReference; name = "NunitoSans-Bold.ttf"; path = "../assets/fonts/NunitoSans-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */ = {isa = PBXFileReference; name = "NunitoSans-Regular.ttf"; path = "../assets/fonts/NunitoSans-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		E95E1AFE973049A39BC083D4 /* NunitoSans-SemiBold.ttf */ = {isa = PBXFileReference; name = "NunitoSans-SemiBold.ttf"; path = "../assets/fonts/NunitoSans-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -305,18 +306,21 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 6TRY7QWR8U;
+						ProvisioningStyle = Manual;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6TRY7QWR8U;
+						ProvisioningStyle = Manual;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 6TRY7QWR8U;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 6TRY7QWR8U;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
@@ -606,7 +610,10 @@
 			baseConfigurationReference = C83CE05B35E82B825CF23FE3 /* Pods-PercentDoneTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 6TRY7QWR8U;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -621,6 +628,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PercentDone.app/PercentDone";
 			};
 			name = Debug;
@@ -630,8 +639,11 @@
 			baseConfigurationReference = BA26E16997287C4F4935D0A8 /* Pods-PercentDoneTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 6TRY7QWR8U;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = PercentDoneTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -642,6 +654,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9a816a8c-ab98-43f0-9281-d205c9c3dc7b";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PercentDone.app/PercentDone";
 			};
 			name = Release;
@@ -651,18 +666,23 @@
 			baseConfigurationReference = 2C7913DB470C1F18373F27CC /* Pods-PercentDone.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6TRY7QWR8U;
 				INFOPLIST_FILE = PercentDone/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.evrim.PercentDone;
 				PRODUCT_NAME = PercentDone;
+				PROVISIONING_PROFILE_SPECIFIER = "io.evrim.PercentDone AppStore";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -672,17 +692,23 @@
 			baseConfigurationReference = 768D9EB694C7665D2EB4C08D /* Pods-PercentDone.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 6TRY7QWR8U;
 				INFOPLIST_FILE = PercentDone/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.evrim.PercentDone;
 				PRODUCT_NAME = PercentDone;
+				PROVISIONING_PROFILE = "9a816a8c-ab98-43f0-9281-d205c9c3dc7b";
+				PROVISIONING_PROFILE_SPECIFIER = "io.evrim.PercentDone AppStore";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -698,6 +724,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 6TRY7QWR8U;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "PercentDone-tvOS/Info.plist";
@@ -727,6 +754,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 6TRY7QWR8U;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "PercentDone-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -737,6 +765,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.PercentDone-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9a816a8c-ab98-43f0-9281-d205c9c3dc7b";
+				PROVISIONING_PROFILE_SPECIFIER = "io.evrim.PercentDone AppStore";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.2;
@@ -753,6 +783,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 6TRY7QWR8U;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "PercentDone-tvOSTests/Info.plist";
@@ -781,6 +812,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 6TRY7QWR8U;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "PercentDone-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -791,6 +823,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.PercentDone-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9a816a8c-ab98-43f0-9281-d205c9c3dc7b";
+				PROVISIONING_PROFILE_SPECIFIER = "io.evrim.PercentDone AppStore";
 				SDKROOT = appletvos;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PercentDone-tvOS.app/PercentDone-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
