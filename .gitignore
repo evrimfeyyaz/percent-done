@@ -57,8 +57,9 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 */fastlane/test_output
-/ios/builds/*
+*/builds/*
 *.xcarchive
+/android/key.json
 
 # Bundle artifact
 *.jsbundle

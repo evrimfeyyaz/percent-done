@@ -102,7 +102,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} alwaysBounceVertical={false}>
-      <Text style={StyleSheet.flatten([styles.title, titleColorStyle])}>{title}</Text>
+      <Text style={[styles.title, titleColorStyle]}>{title}</Text>
       <TouchableOpacity style={styles.projectContainer} onPress={toggleProjectModal}>
         <View style={styles.textButtonContainer}>
           <Text style={styles.textButtonLabel}>What are you working on?</Text>

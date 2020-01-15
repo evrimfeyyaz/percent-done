@@ -74,7 +74,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
   }
 
   const item = (itemData: { key: string, value: string }) => (
-    <View style={StyleSheet.flatten([styles.itemContainer, itemAlignmentStyle])} key={itemData.key}>
+    <View style={[styles.itemContainer, itemAlignmentStyle]} key={itemData.key}>
       <Text style={styles.item} numberOfLines={1}>{itemData.value}</Text>
     </View>
   );
@@ -82,7 +82,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
   const items = data.map(itemData => item(itemData));
 
   return (
-    <View style={StyleSheet.flatten([styles.container, style])}>
+    <View style={[styles.container, style]}>
       <MaskedView
         style={styles.mask}
         maskElement={

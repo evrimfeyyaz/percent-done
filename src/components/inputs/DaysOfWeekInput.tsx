@@ -32,7 +32,7 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
     const selectedStyle = { opacity: 1 };
     const isSelected = selectedDays[day];
     const dayButtonStyle = isSelected
-      ? StyleSheet.flatten([styles.dayButton, selectedStyle])
+      ? [styles.dayButton, selectedStyle]
       : styles.dayButton;
 
     return (

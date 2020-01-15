@@ -20,7 +20,7 @@ export const TextButton: FunctionComponent<TextButtonProps> = ({
                                                                }) => {
   return (
     <TouchableOpacity onPress={onPress} hitSlop={{ bottom: 20, top: 20, right: 20, left: 20 }}>
-      <Text style={StyleSheet.flatten([styles.title, style])}>{title}</Text>
+      <Text style={[styles.title, style]}>{title}</Text>
     </TouchableOpacity>
   );
 };

@@ -13,9 +13,9 @@ interface HeaderButtonProps {
 }
 
 export const HeaderButton: FunctionComponent<HeaderButtonProps> = ({ title, primary, onPress }) => {
-  let style: TextStyle = styles.text;
+  let style: Object = styles.text;
   if (primary) {
-    style = StyleSheet.flatten([styles.text, styles.textPrimary]);
+    style = [styles.text, styles.textPrimary];
   }
 
   return <TextButton title={title} style={style} onPress={onPress} />;

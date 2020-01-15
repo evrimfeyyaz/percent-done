@@ -233,7 +233,7 @@ export const TabBar: FunctionComponent<Props> = ({
   return (
     <View style={styles.container}>
       <Animated.View
-        style={StyleSheet.flatten([styles.scrollableContainer, tabBarMoveAmountStyle])} {...panResponder.panHandlers}
+        style={[styles.scrollableContainer, tabBarMoveAmountStyle]} {...panResponder.panHandlers}
         hitSlop={{ left: windowWidth, right: windowWidth }}
       >
         {tabItems}

@@ -75,7 +75,7 @@ export const InputContainer: FunctionComponent<InputContainerProps> = ({
       onLayout={onLayout}
       activeOpacity={activeOpacity}
     >
-      <View style={StyleSheet.flatten([styles.content, contentStyle])}>
+      <View style={[styles.content, contentStyle]}>
         {titleText}
         {children}
         {valueText}

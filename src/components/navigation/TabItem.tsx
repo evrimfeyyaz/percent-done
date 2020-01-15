@@ -40,7 +40,7 @@ export const TabItem: FunctionComponent<Props> = ({
     >
       {/*
       // @ts-ignore */}
-      <Animated.Text style={StyleSheet.flatten([styles.title, titleStyle])}>{title}</Animated.Text>
+      <Animated.Text style={[styles.title, titleStyle]}>{title}</Animated.Text>
     </TouchableOpacity>
   );
 };

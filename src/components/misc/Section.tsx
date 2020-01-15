@@ -48,22 +48,22 @@ export const Section: FunctionComponent<Props> = ({
 
   return (
     <View
-      style={StyleSheet.flatten([
+      style={[
         styles.container,
         { minHeight: containerMinHeight },
-      ])}
+      ]}
     >
       <Text
-        style={StyleSheet.flatten([
+        style={[
           styles.title,
           { marginStart: titleMarginStart, top: titleTopPosition },
-        ])}
+        ]}
         onLayout={handleTitleLayout}
       >
         {title}
       </Text>
 
-      <View style={StyleSheet.flatten([styles.content, contentStyle])}>{children}</View>
+      <View style={[styles.content, contentStyle]}>{children}</View>
 
       {bottomSeparatorComponent}
     </View>

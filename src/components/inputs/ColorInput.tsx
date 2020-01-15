@@ -39,7 +39,7 @@ export const ColorInput: FunctionComponent<ColorInputProps> = ({
 
     return (
       <TouchableOpacity
-        style={StyleSheet.flatten([styles.colorButton, { backgroundColor: color }])}
+        style={[styles.colorButton, { backgroundColor: color }]}
         onPress={() => onColorIndexChange?.(index)}
       >
         <Image style={selectedIndicatorStyle} source={Icons.checkmark} />

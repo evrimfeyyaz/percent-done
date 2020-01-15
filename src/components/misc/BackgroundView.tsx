@@ -11,7 +11,7 @@ export const BackgroundView: FunctionComponent<BackgroundViewProps> = ({ style, 
   return (
     <LinearGradient
       colors={['#23212C', '#3E4353']}
-      style={StyleSheet.flatten([styles.gradientContainer, style])}
+      style={[styles.gradientContainer, style]}
     >
       <ImageBackground
         style={styles.imageContainer}
