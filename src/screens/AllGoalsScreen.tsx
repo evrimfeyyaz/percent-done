@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { AllGoals } from '../containers/AllGoals';
 import { ListHeader } from '../components';

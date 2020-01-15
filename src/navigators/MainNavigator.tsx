@@ -5,8 +5,8 @@ import { Icons } from '../../assets';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { TodayTab } from './TodayTab';
 import { GoalsAndProjectsTab } from './GoalsAndProjectsTab';
-import { StatsTab } from './StatsTab';
 import { SettingsTab } from './SettingsTab';
+import { StatsTab } from './StatsTab';
 
 export const MainNavigator = createBottomTabNavigator(
   {

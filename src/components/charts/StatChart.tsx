@@ -2,23 +2,26 @@ import React, { FunctionComponent } from 'react';
 import { LineChart, Grid, XAxis, YAxis } from 'react-native-svg-charts';
 import { Image, StyleSheet, View } from 'react-native';
 import { colors, fonts } from '../../theme';
-import { Defs, Line, LinearGradient, Stop } from 'react-native-svg';
+import { Circle, Defs, Line, LinearGradient, Stop } from 'react-native-svg';
 import { Images } from '../../../assets';
-import { getMedian } from '../../utilities';
+
+export type StatChartData = {
+  label: string;
+  value: number;
+}[];
 
 interface StatChartProps {
-  data: {
-    label: string;
-    value: number;
-  }[];
+  data: StatChartData;
   min: number;
   max: number;
+  median: number;
 }
 
 export const StatChart: FunctionComponent<StatChartProps> = ({
                                                                data,
                                                                min,
                                                                max,
+                                                               median,
                                                              }) => {
   const contentInset = { top: 20, bottom: 20, left: 30, right: 30 };
 
@@ -37,8 +40,19 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
     </Defs>
   );
 
+  const Points: any = ({ x, y, data }: { x: Function, y: Function, data: StatChartData }) => {
+    return data.map(({ value }, index) => (
+      <Circle
+        key={index}
+        cx={x(index)}
+        cy={y(value)}
+        r={4}
+        fill={colors.orange}
+      />
+    ));
+  };
+
   const MedianLine: any = ({ x, y }: { x: Function; y: Function }) => {
-    const median = getMedian(data.map(el => el.value));
     const lastElementIndex = data.length - 1;
 
     return (
@@ -47,7 +61,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
         x1={x(0)}
         x2={x(lastElementIndex)}
         y={y(median)}
-        stroke={colors.orange}
+        stroke={colors.white}
         strokeDasharray={[4, 8]}
         strokeWidth={2}
         strokeOpacity={0.4}
@@ -68,6 +82,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
           fontFamily: fonts.regular,
           textAnchor: 'end',
         }}
+        numberOfTicks={5}
         min={min}
         max={max}
       />
@@ -88,7 +103,12 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
           <Grid
             svg={{ stroke: colors.white, strokeOpacity: 0.04, strokeWidth: 1 }}
           />
-          <StrokeGradient />
+          {data.length > 7 && (
+            <StrokeGradient />
+          )}
+          {data.length <= 7 && (
+          <Points />
+          )}
           <MedianLine />
         </LineChart>
         <XAxis

@@ -9,7 +9,6 @@ import {
   DaysOfWeekInput,
   GoalRow,
   MenuLink,
-  StatChart,
   ProgressChart,
   Section,
   SwitchInput,
@@ -36,7 +35,7 @@ import {
   SelectBox,
   GoalList,
   SwipeableItem,
-  SwipeableList, ProjectRow, ProjectList, ProjectRowProps, ProjectForm, ListHeader,
+  SwipeableList, ProjectRow, ProjectList, ProjectRowProps, ProjectForm, ListHeader, PercentDoneStats, HoursDoneStats,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -257,7 +256,7 @@ storiesOf('Charts', module)
       />
     );
   })
-  .add('Weekly percent done chart', () => {
+  .add('Weekly percent done stats', () => {
     const data = [
       { label: 'THU', value: 42 },
       { label: 'FRI', value: 62 },
@@ -268,9 +267,9 @@ storiesOf('Charts', module)
       { label: 'WED', value: 38 },
     ];
 
-    return <StatChart data={data} min={0} max={100} />;
+    return <PercentDoneStats data={data} />;
   })
-  .add('Monthly percent done chart', () => {
+  .add('Monthly percent done stats', () => {
     const data = [...Array(31).keys()]
       .map(dayNo => {
         const percentDone = Math.floor(Math.random() * 101);
@@ -282,38 +281,33 @@ storiesOf('Charts', module)
       })
       .reverse();
 
-    return <StatChart data={data} min={0} max={100} />;
+    return <PercentDoneStats data={data} />;
   })
-  .add('Weekly hours done chart', () => {
+  .add('Weekly hours done stats', () => {
     const data = [
-      { label: 'THU', value: 1.4 },
-      { label: 'FRI', value: 3.5 },
-      { label: 'SAT', value: 2.7 },
-      { label: 'SUN', value: 2.8 },
-      { label: 'MON', value: 8.2 },
-      { label: 'TUE', value: 1.2 },
-      { label: 'WED', value: 6.1 },
+      { label: 'THU', value: getRandomHourDone() },
+      { label: 'FRI', value: getRandomHourDone() },
+      { label: 'SAT', value: getRandomHourDone() },
+      { label: 'SUN', value: getRandomHourDone() },
+      { label: 'MON', value: getRandomHourDone() },
+      { label: 'TUE', value: getRandomHourDone() },
+      { label: 'WED', value: getRandomHourDone() },
     ];
 
-    return <StatChart data={data} min={1} max={9} />;
+    return <HoursDoneStats data={data} />;
   })
   .add('Monthly hours done chart', () => {
     const data = [...Array(31).keys()]
       .map(dayNo => {
-        const hoursDone = Math.random() * 9;
         const date = moment()
           .subtract(dayNo, 'day')
           .format('MMM D');
 
-        return { label: date, value: hoursDone };
+        return { label: date, value: getRandomHourDone() };
       })
       .reverse();
 
-    const values = data.map(el => el.value);
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-
-    return <StatChart data={data} min={Math.floor(min)} max={Math.ceil(max)} />;
+    return <HoursDoneStats data={data} />;
   })
   .add('Day\'s Stats', () => {
     const progress = 42;
@@ -536,4 +530,8 @@ function createSwipeableListData(num: number) {
   }
 
   return data;
+}
+
+function getRandomHourDone() {
+  return Math.random() * 10 * 60 * 60 * 1000;
 }

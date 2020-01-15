@@ -19,6 +19,8 @@ export * from './charts/Timetable';
 export * from './charts/StatChart';
 export * from './charts/DaysStats';
 export * from './charts/AnimatedProgressCircle';
+export * from './charts/PercentDoneStats';
+export * from './charts/HoursDoneStats';
 
 // Inputs
 export * from './inputs/Button';
