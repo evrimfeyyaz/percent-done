@@ -1,9 +1,8 @@
 import { StoreState } from '../types';
 import { Goal } from './types';
-import { GoalRowProps } from '../../components';
-import { convertDateToIndex } from '../../utilities';
+import { GoalRowProps, StatChartData } from '../../components';
+import { convertDateToIndex, getAbbreviatedDayOfWeek, momentWithDeviceLocale } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
-import moment from 'moment';
 import { getGoalColor, isActiveToday, isDeleted, isTimeTracked } from './utilities';
 
 export const getGoalById = (state: StoreState, id: string): Goal => {
@@ -185,7 +184,7 @@ export const getTimetableEntriesForGoal = (state: StoreState, goal: Goal, date: 
 export const getChainLength = (state: StoreState, goal: Goal, date: Date): number => {
   let chainLength = isCompleted(state, goal, new Date()) ? 1 : 0;
   for (let daysBefore = 1; true; daysBefore++) {
-    const dateBefore = moment(date).subtract(daysBefore, 'day').toDate();
+    const dateBefore = momentWithDeviceLocale(date).subtract(daysBefore, 'day').toDate();
 
     if (isCompleted(state, goal, dateBefore)) {
       chainLength++;
@@ -196,3 +195,33 @@ export const getChainLength = (state: StoreState, goal: Goal, date: Date): numbe
 
   return chainLength;
 };
+
+export function getTotalProgressForLast7Days(state: StoreState): StatChartData {
+  return getStatsForLastNDays(state, 7, getAbbreviatedDayOfWeek, getTotalProgressForDate);
+}
+
+export function getTotalCompletedMsForLast7Days(state: StoreState): StatChartData {
+  return getStatsForLastNDays(state, 7, getAbbreviatedDayOfWeek, getTotalCompletedMsForDate);
+}
+
+export function getStatsForLastNDays(
+  state: StoreState,
+  numOfDays: number,
+  labelSelector: ((date: Date) => string),
+  valueSelector: ((state: StoreState, date: Date) => number),
+): StatChartData {
+  const moment = momentWithDeviceLocale();
+
+  const result: StatChartData = [];
+  for (let i = 1; i <= numOfDays; i++) {
+    moment.subtract(1, 'day');
+    const date = moment.toDate();
+
+    result.unshift({
+      label: labelSelector(date),
+      value: valueSelector(state, date),
+    });
+  }
+
+  return result;
+}

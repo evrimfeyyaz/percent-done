@@ -4,7 +4,7 @@ import { StatChart, StatChartData } from '..';
 import { getMedian } from '../../utilities';
 import { textStyles } from '../../theme';
 
-interface PercentDoneStatsProps {
+export interface PercentDoneStatsProps {
   data: StatChartData;
 }
 

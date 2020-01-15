@@ -141,3 +141,7 @@ export function formatTimeInTimestamp(timestamp: number, short: boolean = true):
 
   return moment.format('LTS');
 }
+
+export function getAbbreviatedDayOfWeek(date: Date) {
+  return momentWithDeviceLocale(date).format('ddd');
+}

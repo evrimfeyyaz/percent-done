@@ -9,3 +9,5 @@ export * from './AddTimetableEntryForm';
 export * from './EditTimetableEntryForm';
 export * from './EditProjectForm';
 export * from './AddProjectForm';
+export * from './WeeklyHoursDoneStats';
+export * from './WeeklyPercentDoneStats';

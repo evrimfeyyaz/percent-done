@@ -113,7 +113,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
         </LineChart>
         <XAxis
           data={data}
-          formatLabel={value => data[value].label}
+          formatLabel={value => data[value].label.toLocaleUpperCase()}
           contentInset={contentInset}
           numberOfTicks={4}
           svg={{

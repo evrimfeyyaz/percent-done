@@ -11,8 +11,8 @@ import {
   getProgress,
   getRemainingMs,
   getTimetableEntriesForGoal,
-  getTotalCompletedMsForDate,
-  getTotalProgressForDate,
+  getTotalCompletedMsForDate, getTotalCompletedMsForLast7Days,
+  getTotalProgressForDate, getTotalProgressForLast7Days,
   getTotalRemainingMsForDate,
   isCompleted,
 } from '../../../src/store/goals/selectors';
@@ -20,6 +20,9 @@ import { GoalRowProps } from '../../../src/components';
 import moment from 'moment';
 import { Goal } from '../../../src/store/goals/types';
 import { goalColors } from '../../../src/theme';
+import { momentWithDeviceLocale } from '../../../src/utilities';
+import { StoreState } from '../../../src/store/types';
+import { TimetableEntry } from '../../../src/store/timetableEntries/types';
 
 describe('goals selectors', () => {
   const today = new Date();
@@ -605,6 +608,57 @@ describe('goals selectors', () => {
       const chainLength = getChainLength(state, goal, today);
 
       expect(chainLength).toEqual(0);
+    });
+  });
+
+  describe('Weekly Statistics', () => {
+    const lastWeeksEntryDurationInMin = 30;
+    const yesterdaysEntryDurationInMin = 60;
+    let lastWeeksEntry: TimetableEntry, yesterdaysEntry: TimetableEntry;
+    let store: StoreState;
+
+    beforeAll(() => {
+      const oneWeekAgo = momentWithDeviceLocale(today).subtract(7, 'days').toDate();
+      const yesterday = momentWithDeviceLocale(today).subtract(1, 'day').toDate();
+
+      const goal = createGoal({ durationInMin: 60 }, undefined, true);
+      lastWeeksEntry = createTimetableEntry({
+        goalId: goal.id,
+        startDate: oneWeekAgo,
+        startHour: 10,
+        startMinute: 0,
+        durationInMin: lastWeeksEntryDurationInMin,
+      });
+      yesterdaysEntry = createTimetableEntry({
+        goalId: goal.id,
+        startDate: yesterday,
+        startHour: 10,
+        startMinute: 0,
+        durationInMin: yesterdaysEntryDurationInMin,
+      });
+      store = createStoreState({ goals: [goal], timetableEntries: [lastWeeksEntry, yesterdaysEntry] });
+    });
+
+    describe('getTotalProgressForLast7Days', () => {
+      it('returns the progress for the last seven days starting from yesterday in `{ "THU", 50 }` format', () => {
+        const result = getTotalProgressForLast7Days(store);
+
+        expect(result.map(datum => datum.label).sort()).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].sort());
+        expect(result[0].value).toEqual(50);
+        expect(result[1].value).toEqual(0);
+        expect(result[6].value).toEqual(100);
+      });
+    });
+
+    describe('getTotalCompletedMsForLast7Days', () => {
+      it('returns the total completed time in ms for the last seven days starting from yesterday in `{ "THU", 1000 }` format', () => {
+        const result = getTotalCompletedMsForLast7Days(store);
+
+        expect(result.map(datum => datum.label).sort()).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].sort());
+        expect(result[0].value).toEqual(lastWeeksEntryDurationInMin * 60 * 1000);
+        expect(result[1].value).toEqual(0);
+        expect(result[6].value).toEqual(yesterdaysEntryDurationInMin * 60 * 1000);
+      });
     });
   });
 });

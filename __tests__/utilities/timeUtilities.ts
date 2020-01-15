@@ -1,7 +1,7 @@
 import {
   compareDateIndices,
   convertDateToIndex,
-  deconstructFormattedDuration, formatDurationInMs, msToHoursMinutesSeconds,
+  deconstructFormattedDuration, formatDurationInMs, getAbbreviatedDayOfWeek, msToHoursMinutesSeconds,
 } from '../../src/utilities';
 
 describe('time utilities', () => {
@@ -120,4 +120,12 @@ describe('time utilities', () => {
       });
     });
   });
+
+  describe('getAbbreviatedDayOfWeek', () => {
+    it('returns the three later week day abbreviation of given date', () => {
+      const date = new Date(2020, 4, 31);
+
+      expect(getAbbreviatedDayOfWeek(date)).toEqual('Sun')
+    })
+  })
 });
