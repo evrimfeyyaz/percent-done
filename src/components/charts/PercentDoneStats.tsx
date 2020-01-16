@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { StatChart, StatChartData } from '..';
-import { getMedian } from '../../utilities';
+import { getAverage } from '../../utilities';
 import { textStyles } from '../../theme';
 
 export interface PercentDoneStatsProps {
@@ -9,10 +9,10 @@ export interface PercentDoneStatsProps {
 }
 
 export const PercentDoneStats: FunctionComponent<PercentDoneStatsProps> = ({ data }) => {
-  const values = data.map(datum => datum.value);
+  const values = data.map(datum => datum.value ?? 0);
   const min = Math.round(Math.min(...values));
   const max = Math.round(Math.max(...values));
-  const median = Math.round(getMedian(values));
+  const average = Math.round(getAverage(...values));
 
   function renderDataInText(value: number, text: string) {
     return (
@@ -26,10 +26,10 @@ export const PercentDoneStats: FunctionComponent<PercentDoneStatsProps> = ({ dat
 
   return (
     <View style={styles.container}>
-      <StatChart data={data} min={0} max={100} median={median} />
+      <StatChart data={data} yAxisMin={0} yAxisMax={100} average={average} />
 
       <View style={styles.dataInText}>
-        {renderDataInText(median, 'median')}
+        {renderDataInText(average, 'average')}
         {renderDataInText(max, 'maximum')}
         {renderDataInText(min, 'minimum')}
       </View>

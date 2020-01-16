@@ -54,7 +54,7 @@ export const StatsScreen: NavigationStackScreenComponent = () => {
           {statsPeriodKey === '30' && (<MonthlyPercentDoneStats />)}
         </Section>
 
-        <Section title='Hours Done'>
+        <Section title='Hours Tracked'>
           {statsPeriodKey === '7' && (<WeeklyHoursDoneStats />)}
           {statsPeriodKey === '30' && (<MonthlyHoursDoneStats />)}
         </Section>

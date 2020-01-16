@@ -12,16 +12,16 @@ export type StatChartData = {
 
 interface StatChartProps {
   data: StatChartData;
-  min: number;
-  max: number;
-  median: number;
+  yAxisMin: number;
+  yAxisMax: number;
+  average: number;
 }
 
 export const StatChart: FunctionComponent<StatChartProps> = ({
                                                                data,
-                                                               min,
-                                                               max,
-                                                               median,
+                                                               yAxisMin,
+                                                               yAxisMax,
+                                                               average,
                                                              }) => {
   const contentInset = { top: 20, bottom: 20, left: 30, right: 30 };
 
@@ -56,15 +56,15 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
     });
   };
 
-  const MedianLine: any = ({ x, y }: { x: Function; y: Function }) => {
+  const AverageLine: any = ({ x, y }: { x: Function; y: Function }) => {
     const lastElementIndex = data.length - 1;
 
     return (
       <Line
-        key={'medianLine'}
+        key={'averageLine'}
         x1={x(0)}
         x2={x(lastElementIndex)}
-        y={y(median)}
+        y={y(average)}
         stroke={colors.white}
         strokeDasharray={[4, 8]}
         strokeWidth={2}
@@ -87,16 +87,16 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
           textAnchor: 'end',
         }}
         numberOfTicks={5}
-        min={min}
-        max={max}
+        min={yAxisMin}
+        max={yAxisMax}
       />
       <View style={styles.content}>
         <LineChart
           style={styles.chart}
           data={data}
           yAccessor={({ item }) => item.value ?? 0}
-          yMin={min}
-          yMax={max}
+          yMin={yAxisMin}
+          yMax={yAxisMax}
           contentInset={contentInset}
           svg={{
             strokeWidth: 2,
@@ -113,7 +113,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
           {data.length <= 7 && (
             <Points />
           )}
-          <MedianLine />
+          <AverageLine />
         </LineChart>
         <XAxis
           data={data}

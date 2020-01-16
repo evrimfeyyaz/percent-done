@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { StatChart, StatChartData } from '..';
-import { deconstructFormattedDuration, formatDurationInMs, getMedian } from '../../utilities';
+import { deconstructFormattedDuration, formatDurationInMs, getAverage } from '../../utilities';
 import { textStyles } from '../../theme';
 
 interface HoursDoneStatsProps {
@@ -12,7 +12,7 @@ export const HoursDoneStats: FunctionComponent<HoursDoneStatsProps> = ({ data })
   const values = data.map(datum => datum.value ?? 0);
   const min = Math.min(...values);
   const max = Math.max(...values);
-  const median = getMedian(values);
+  const average = getAverage(...values);
 
   const msToHours = (ms: number) => ms / (1000 * 60 * 60);
   const dataInHours = data.map(datum => (
@@ -22,7 +22,7 @@ export const HoursDoneStats: FunctionComponent<HoursDoneStatsProps> = ({ data })
     }));
   const minInHours = msToHours(min);
   const maxInHours = msToHours(max);
-  const medianInHours = msToHours(median);
+  const averageInHours = msToHours(average);
 
   function renderDataInText(value: number, text: string) {
     const {
@@ -45,10 +45,10 @@ export const HoursDoneStats: FunctionComponent<HoursDoneStatsProps> = ({ data })
 
   return (
     <View style={styles.container}>
-      <StatChart data={dataInHours} min={minInHours} max={maxInHours + 1} median={medianInHours} />
+      <StatChart data={dataInHours} yAxisMin={minInHours} yAxisMax={maxInHours + 1} average={averageInHours} />
 
       <View style={styles.dataInText}>
-        {renderDataInText(median, 'median')}
+        {renderDataInText(average, 'average')}
         {renderDataInText(max, 'maximum')}
         {renderDataInText(min, 'minimum')}
       </View>
