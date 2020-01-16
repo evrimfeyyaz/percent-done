@@ -24,6 +24,17 @@ export const isDeleted = (goal: Goal, date: Date): boolean => {
   return dateMoment.diff(deletedMoment, 'days') >= 0;
 };
 
+/**
+ * Returns `true` if the given goal has been created before or on the given date.
+ */
+export const isCreated = (goal: Goal, date: Date): boolean => {
+  if (goal.createdAtTimestamp == null) throw new Error('Created at timestamp should be a number.');
+
+  const dateMoment = momentWithDeviceLocale(date);
+  const createdMoment = momentWithDeviceLocale(goal.createdAtTimestamp);
+  return dateMoment.diff(createdMoment, 'days') >= 0;
+};
+
 export const getGoalColor = (goal: Goal) => {
   return goalColors[goal.colorIndex];
 };

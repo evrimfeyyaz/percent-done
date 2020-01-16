@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { BottomSheetItemPicker, Button, Section } from '../components';
+import { BottomSheetItemPicker, Button, EmptyContainer, Section } from '../components';
 import {
   MonthlyHoursDoneStats,
   MonthlyPercentDoneStats,
@@ -9,8 +9,14 @@ import {
 } from '../containers';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Icons } from '../../assets';
+import { useStore } from 'react-redux';
+import { isThereEnoughDataToShowStatisticsOfLastNDays } from '../store/goals/selectors';
 
 export const StatsScreen: NavigationStackScreenComponent = () => {
+  const state = useStore().getState();
+  const hasEnoughDataToShow7DaysStats = isThereEnoughDataToShowStatisticsOfLastNDays(state, 7, 2);
+  const hasEnoughDataToShow30DaysStats = isThereEnoughDataToShowStatisticsOfLastNDays(state, 30, 9);
+
   const bottomSheetItemPickerRef = useRef<any>();
   const [statsPeriodKey, setStatsPeriodKey] = useState('7');
 
@@ -31,20 +37,37 @@ export const StatsScreen: NavigationStackScreenComponent = () => {
     setStatsPeriodKey(value.key);
   };
 
+  function renderStats() {
+    if (
+      (statsPeriodKey === '7' && !hasEnoughDataToShow7DaysStats) ||
+      (statsPeriodKey === '30' && !hasEnoughDataToShow30DaysStats)
+    ) {
+      const text = 'There isn\'t enough data to show these statistics yet. ' +
+        'Keep using the app for a little while longer to see them.';
+      return <EmptyContainer text={text} style={styles.notEnoughData} />;
+    }
+
+    return (
+      <>
+        <Section title='% Done'>
+          {statsPeriodKey === '7' && (<WeeklyPercentDoneStats />)}
+          {statsPeriodKey === '30' && (<MonthlyPercentDoneStats />)}
+        </Section>
+
+        <Section title='Hours Done'>
+          {statsPeriodKey === '7' && (<WeeklyHoursDoneStats />)}
+          {statsPeriodKey === '30' && (<MonthlyHoursDoneStats />)}
+        </Section>
+      </>
+    );
+  }
+
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer}>
+    <ScrollView contentContainerStyle={styles.contentContainer} alwaysBounceVertical={false}>
       <Button title={selectedStatsPeriod().value} iconSource={Icons.dateSpan} style={styles.button}
               onPress={handleButtonPress} />
 
-      <Section title='% Done'>
-        {statsPeriodKey === '7' && (<WeeklyPercentDoneStats />)}
-        {statsPeriodKey === '30' && (<MonthlyPercentDoneStats />)}
-      </Section>
-
-      <Section title='Hours Done'>
-        {statsPeriodKey === '7' && (<WeeklyHoursDoneStats />)}
-        {statsPeriodKey === '30' && (<MonthlyHoursDoneStats />)}
-      </Section>
+      {renderStats()}
 
       <BottomSheetItemPicker ref={bottomSheetItemPickerRef} allValues={statsPeriodChoices}
                              initialValue={selectedStatsPeriod()} onValueChange={handleStatsPeriodValueChange} />
@@ -59,9 +82,14 @@ StatsScreen.navigationOptions = {
 const styles = StyleSheet.create({
   contentContainer: {
     alignItems: 'stretch',
+    flexGrow: 1,
   },
   button: {
     marginHorizontal: 20,
+    marginTop: 10,
     marginBottom: 30,
   },
+  notEnoughData: {
+    marginHorizontal: 20,
+  }
 });

@@ -7,7 +7,7 @@ import { Images } from '../../../assets';
 
 export type StatChartData = {
   label: string;
-  value: number;
+  value: number | null;
 }[];
 
 interface StatChartProps {
@@ -41,15 +41,19 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
   );
 
   const Points: any = ({ x, y, data }: { x: Function, y: Function, data: StatChartData }) => {
-    return data.map(({ value }, index) => (
-      <Circle
-        key={index}
-        cx={x(index)}
-        cy={y(value)}
-        r={4}
-        fill={colors.orange}
-      />
-    ));
+    return data.map(({ value }, index) => {
+      if (value == null) return null;
+
+      return (
+        <Circle
+          key={index}
+          cx={x(index)}
+          cy={y(value)}
+          r={4}
+          fill={colors.orange}
+        />
+      );
+    });
   };
 
   const MedianLine: any = ({ x, y }: { x: Function; y: Function }) => {
@@ -90,7 +94,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
         <LineChart
           style={styles.chart}
           data={data}
-          yAccessor={({ item }) => item.value}
+          yAccessor={({ item }) => item.value ?? 0}
           yMin={min}
           yMax={max}
           contentInset={contentInset}

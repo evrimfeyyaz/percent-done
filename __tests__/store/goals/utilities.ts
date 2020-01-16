@@ -1,7 +1,7 @@
 import { createGoal } from '../../../src/factories';
 import {
   getGoalColor,
-  isActiveToday,
+  isActiveToday, isCreated,
   isDeleted,
   isTimeTracked,
 } from '../../../src/store/goals/utilities';
@@ -86,6 +86,38 @@ describe('goal utilities', () => {
       goal.deletedAtTimestamp = undefined;
 
       const result = isDeleted(goal, today);
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('isCreated', () => {
+    let goal: Goal;
+
+    beforeEach(() => {
+      goal = createGoal({});
+    });
+
+    it('returns `true` when given goal has been created on the given date', () => {
+      goal.createdAtTimestamp = today.getTime();
+
+      const result = isCreated(goal, today);
+
+      expect(result).toEqual(true);
+    });
+
+    it('returns `true` when given goal was created before the given date', () => {
+      goal.createdAtTimestamp = +moment(today).subtract(1, 'day');
+
+      const result = isCreated(goal, today);
+
+      expect(result).toEqual(true);
+    });
+
+    it('returns `false` when given goal was created after the given date', () => {
+      goal.createdAtTimestamp = +moment(today).add(1, 'day');
+
+      const result = isCreated(goal, today);
 
       expect(result).toEqual(false);
     });

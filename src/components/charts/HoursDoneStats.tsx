@@ -9,13 +9,17 @@ interface HoursDoneStatsProps {
 }
 
 export const HoursDoneStats: FunctionComponent<HoursDoneStatsProps> = ({ data }) => {
-  const values = data.map(datum => datum.value);
+  const values = data.map(datum => datum.value ?? 0);
   const min = Math.min(...values);
   const max = Math.max(...values);
   const median = getMedian(values);
 
   const msToHours = (ms: number) => ms / (1000 * 60 * 60);
-  const dataInHours = data.map(datum => ({ value: msToHours(datum.value), label: datum.label }));
+  const dataInHours = data.map(datum => (
+    {
+      value: datum.value ? msToHours(datum.value) : null,
+      label: datum.label,
+    }));
   const minInHours = msToHours(min);
   const maxInHours = msToHours(max);
   const medianInHours = msToHours(median);
@@ -41,7 +45,7 @@ export const HoursDoneStats: FunctionComponent<HoursDoneStatsProps> = ({ data })
 
   return (
     <View style={styles.container}>
-      <StatChart data={dataInHours} min={minInHours} max={maxInHours} median={medianInHours} />
+      <StatChart data={dataInHours} min={minInHours} max={maxInHours + 1} median={medianInHours} />
 
       <View style={styles.dataInText}>
         {renderDataInText(median, 'median')}

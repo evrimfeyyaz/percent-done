@@ -8,12 +8,16 @@ import {
   momentWithDeviceLocale,
 } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
-import { getGoalColor, isActiveToday, isDeleted, isTimeTracked } from './utilities';
+import { getGoalColor, isActiveToday, isCreated, isDeleted, isTimeTracked } from './utilities';
+import { getTimetableEntriesByDate } from '../timetableEntries/selectors';
 
 export const getGoalById = (state: StoreState, id: string): Goal => {
   return state.goals.byId[id];
 };
 
+/**
+ * Returns all goals. By default, it doesn't return deleted goals.
+ */
 export const getAllGoals = (state: StoreState, options?: { includeDeleted: boolean }): Goal[] => {
   const allGoals = state.goals.allIds.map(id => getGoalById(state, id));
 
@@ -33,7 +37,7 @@ export const getGoalsForDate = (state: StoreState, date: Date): Goal[] => {
 
   const goalsArr = goals.allIds.map(id => goals.byId[id]);
 
-  return goalsArr.filter(goal => !isDeleted(goal, date) && goal.recurringDays[dayOfWeek]);
+  return goalsArr.filter(goal => !isDeleted(goal, date) && isCreated(goal, date) && goal.recurringDays[dayOfWeek]);
 };
 
 export const getIncompleteGoals = (state: StoreState, date: Date): Goal[] =>
@@ -84,8 +88,10 @@ export const getCompletedMs = (state: StoreState, goal: Goal, date: Date): numbe
 /**
  * Returns the total number of milliseconds spent on all goals on given day.
  */
-export const getTotalCompletedMsForDate = (state: StoreState, date: Date): number => {
+export const getTotalCompletedMsForDate = (state: StoreState, date: Date): number | null => {
   const goals = getGoalsForDate(state, date);
+
+  if (goals.length === 0) return null;
 
   return goals.reduce((total, goal) => total + getCompletedMs(state, goal, date), 0);
 };
@@ -114,7 +120,7 @@ export const getTotalRemainingMsForDate = (state: StoreState, date: Date): numbe
 
     return total + goal.durationInMs;
   }, 0);
-  const completedMs = getTotalCompletedMsForDate(state, date);
+  const completedMs = getTotalCompletedMsForDate(state, date) ?? 0;
 
   return Math.max(totalMs - completedMs, 0);
 };
@@ -154,11 +160,11 @@ export const getProgress = (state: StoreState, goal: Goal, date: Date): number =
 /**
  * Returns the current overall progress for a day in percentage (0 to 100).
  */
-export const getTotalProgressForDate = (state: StoreState, date: Date): number => {
+export const getTotalProgressForDate = (state: StoreState, date: Date): number | null => {
   const goals = getGoalsForDate(state, date);
   const numOfGoals = goals.length;
 
-  if (numOfGoals === 0) return 100;
+  if (numOfGoals === 0) return null;
 
   return goals.reduce((progress, goal) => {
     return progress + getProgress(state, goal, date) / numOfGoals;
@@ -217,11 +223,11 @@ export function getTotalCompletedMsForLast30Days(state: StoreState): StatChartDa
   return getStatsForLastNDays(state, 30, getAbbreviatedDate, getTotalCompletedMsForDate);
 }
 
-export function getStatsForLastNDays(
+function getStatsForLastNDays(
   state: StoreState,
   numOfDays: number,
   labelSelector: ((date: Date) => string),
-  valueSelector: ((state: StoreState, date: Date) => number),
+  valueSelector: ((state: StoreState, date: Date) => number | null),
 ): StatChartData {
   const moment = momentWithDeviceLocale();
 
@@ -237,4 +243,33 @@ export function getStatsForLastNDays(
   }
 
   return result;
+}
+
+export function isThereEnoughDataToShowStatisticsOfLastNDays(
+  state: StoreState,
+  numOfDays: number,
+  minNumOfDaysToShowStats: number,
+): boolean {
+  const moment = momentWithDeviceLocale(new Date());
+  let numOfDaysWithGoals = 0;
+  let numOfDaysWithTimetableEntries = 0;
+
+  for (let i = 1; i <= numOfDays; i++) {
+    const date = moment.subtract(1, 'day').toDate();
+    const goals = getGoalsForDate(state, date);
+    const timetableEntries = getTimetableEntriesByDate(state, date);
+
+    if (goals.length > 0) numOfDaysWithGoals++;
+    if (timetableEntries.length > 0) numOfDaysWithTimetableEntries++;
+  }
+
+  if (numOfDaysWithGoals <= minNumOfDaysToShowStats) {
+    return false;
+  }
+
+  if (numOfDaysWithTimetableEntries <= minNumOfDaysToShowStats) {
+    return false;
+  }
+
+  return true;
 }

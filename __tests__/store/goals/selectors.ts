@@ -14,10 +14,9 @@ import {
   getTotalCompletedMsForDate, getTotalCompletedMsForLast30Days, getTotalCompletedMsForLast7Days,
   getTotalProgressForDate, getTotalProgressForLast30Days, getTotalProgressForLast7Days,
   getTotalRemainingMsForDate,
-  isCompleted,
+  isCompleted, isThereEnoughDataToShowStatisticsOfLastNDays,
 } from '../../../src/store/goals/selectors';
 import { GoalRowProps } from '../../../src/components';
-import moment from 'moment';
 import { Goal } from '../../../src/store/goals/types';
 import { goalColors } from '../../../src/theme';
 import { getAbbreviatedDate, momentWithDeviceLocale } from '../../../src/utilities';
@@ -26,6 +25,12 @@ import { TimetableEntry } from '../../../src/store/timetableEntries/types';
 
 describe('goals selectors', () => {
   const today = new Date();
+  const tomorrow = momentWithDeviceLocale(today).add(1, 'day').toDate();
+  const yesterday = momentWithDeviceLocale(today).subtract(1, 'day').toDate();
+  const twoDaysAgo = momentWithDeviceLocale(today).subtract(2, 'day').toDate();
+  const threeDaysAgo = momentWithDeviceLocale(today).subtract(3, 'days').toDate();
+  const fourDaysAgo = momentWithDeviceLocale(today).subtract(4, 'days').toDate();
+  const fiveDaysAgo = momentWithDeviceLocale(today).subtract(5, 'days').toDate();
 
   describe('getGoalById', () => {
     it('returns the goal with given ID', () => {
@@ -81,11 +86,10 @@ describe('goals selectors', () => {
   });
 
   describe('getGoalsForDate', () => {
-    const tomorrow = moment(today).add(1, 'day').toDate();
     let goal: Goal;
 
     beforeEach(() => {
-      goal = createGoal({}, [today]);
+      goal = createGoal({}, undefined, true);
     });
 
     it('returns all goals that should be completed for given date', () => {
@@ -100,7 +104,7 @@ describe('goals selectors', () => {
     });
 
     it('does not return deleted goals if they were deleted before given date', () => {
-      goal.deletedAtTimestamp = +moment(today).subtract(1, 'day');
+      goal.deletedAtTimestamp = yesterday.getTime();
       const state = createStoreState({ goals: [goal] });
 
       const result = getGoalsForDate(state, today);
@@ -115,6 +119,33 @@ describe('goals selectors', () => {
       const result = getGoalsForDate(state, today);
 
       expect(result).toEqual([goal]);
+    });
+
+    it('does not return a deleted goal if it was deleted on the given date', () => {
+      goal.deletedAtTimestamp = +today;
+      const state = createStoreState({ goals: [goal] });
+
+      const result = getGoalsForDate(state, today);
+
+      expect(result).toEqual([]);
+    });
+
+    it('does not return a goal if it was not yet created on the given day', () => {
+      goal.createdAtTimestamp = +tomorrow;
+      const state = createStoreState({ goals: [goal] });
+
+      const result = getGoalsForDate(state, today);
+
+      expect(result).toEqual([]);
+    });
+
+    it('does return a goal if it has already been created on the given day', () => {
+      goal.createdAtTimestamp = +tomorrow;
+      const state = createStoreState({ goals: [goal] });
+
+      const result = getGoalsForDate(state, today);
+
+      expect(result).toEqual([]);
     });
   });
 
@@ -156,7 +187,7 @@ describe('goals selectors', () => {
       });
       const yesterdaysEntry = createTimetableEntry({
         goalId: goal.id,
-        startDate: moment(today).subtract(1, 'day').toDate(),
+        startDate: yesterday,
         startHour: 10,
         durationInMin: 30,
       });
@@ -358,12 +389,12 @@ describe('goals selectors', () => {
       expect(progress).toEqual(50);
     });
 
-    it('returns 100 when there are no goals for a given day', () => {
+    it('returns `null`` when there are no goals for a given day', () => {
       const state = createStoreState({});
 
       const result = getTotalProgressForDate(state, today);
 
-      expect(result).toEqual(100);
+      expect(result).toBeNull();
     });
   });
 
@@ -423,6 +454,14 @@ describe('goals selectors', () => {
       const ms = getTotalCompletedMsForDate(state, today);
 
       expect(ms).toEqual((30 + 15) * 60 * 1000);
+    });
+
+    it('returns `null` when there are no goals on the given date', () => {
+      const state = createStoreState({});
+
+      const result = getTotalCompletedMsForDate(state, today);
+
+      expect(result).toBeNull();
     });
   });
 
@@ -544,8 +583,6 @@ describe('goals selectors', () => {
 
   describe('getChainLength', () => {
     let goal: Goal;
-    const yesterday = moment(today).subtract(1, 'day').toDate();
-    const dayBeforeYesterday = moment(today).subtract(2, 'day').toDate();
 
     beforeEach(() => {
       goal = createGoal({}, [today]);
@@ -561,7 +598,7 @@ describe('goals selectors', () => {
 
       const entryDayBefore = createTimetableEntry({
         goalId: goal.id,
-        startDate: dayBeforeYesterday,
+        startDate: twoDaysAgo,
         startHour: 10,
         durationInMin: 0,
       });
@@ -598,7 +635,7 @@ describe('goals selectors', () => {
 
       const entryDayBefore = createTimetableEntry({
         goalId: goal.id,
-        startDate: dayBeforeYesterday,
+        startDate: twoDaysAgo,
         startHour: 10,
         durationInMin: 0,
       });
@@ -612,7 +649,6 @@ describe('goals selectors', () => {
   });
 
   describe('Statistics', () => {
-    const yesterday = momentWithDeviceLocale(today).subtract(1, 'day').toDate();
     const lastWeeksEntryDurationInMin = 30;
     const yesterdaysEntryDurationInMin = 60;
     let lastWeeksEntry: TimetableEntry, yesterdaysEntry: TimetableEntry;
@@ -685,6 +721,82 @@ describe('goals selectors', () => {
         expect(result[24].value).toEqual(0);
         expect(result[29].value).toEqual(yesterdaysEntryDurationInMin * 60 * 1000);
       });
+    });
+  });
+
+  describe('isThereEnoughDataToShowStatisticsOfLastNDays', () => {
+    let goal: Goal;
+
+    beforeEach(() => {
+      goal = createGoal({}, undefined, true);
+      goal.createdAtTimestamp = fiveDaysAgo.getTime();
+      goal.deletedAtTimestamp = threeDaysAgo.getTime();
+    });
+
+    describe('returns `false` when', () => {
+      it('there are no goals for five or more days in the last seven days', () => {
+        const state = createStoreState({ goals: [goal] });
+
+        const result = isThereEnoughDataToShowStatisticsOfLastNDays(state, 7, 2);
+
+        expect(result).toEqual(false);
+      });
+
+      it('there are goals but no timetable entries for five or more days in the last seven days', () => {
+        const goal2 = createGoal({}, undefined, true);
+        const tenDaysAgo = momentWithDeviceLocale(today).subtract(10, 'days').toDate();
+        goal2.createdAtTimestamp = tenDaysAgo.getTime();
+
+        const entry1 = createTimetableEntry({
+          goalId: goal.id,
+          startDate: fiveDaysAgo,
+          startHour: 10,
+          durationInMin: 10,
+        });
+        const entry2 = createTimetableEntry({
+          goalId: goal.id,
+          startDate: fourDaysAgo,
+          startHour: 10,
+          durationInMin: 10,
+        });
+
+        const state = createStoreState({ goals: [goal, goal2], timetableEntries: [entry1, entry2] });
+
+        const result = isThereEnoughDataToShowStatisticsOfLastNDays(state, 7, 2);
+
+        expect(result).toEqual(false);
+      });
+    });
+
+    it('returns `true` when there are goals and timetable entries for at least three days in the last seven days', () => {
+      const goal = createGoal({}, undefined, true);
+      goal.createdAtTimestamp = fiveDaysAgo.getTime();
+      goal.deletedAtTimestamp = twoDaysAgo.getTime();
+
+      const entry1 = createTimetableEntry({
+        goalId: goal.id,
+        startDate: fiveDaysAgo,
+        startHour: 10,
+        durationInMin: 10,
+      });
+      const entry2 = createTimetableEntry({
+        goalId: goal.id,
+        startDate: fourDaysAgo,
+        startHour: 10,
+        durationInMin: 10,
+      });
+      const entry3 = createTimetableEntry({
+        goalId: goal.id,
+        startDate: threeDaysAgo,
+        startHour: 10,
+        durationInMin: 10,
+      });
+
+      const state = createStoreState({ goals: [goal], timetableEntries: [entry1, entry2, entry3] });
+
+      const result = isThereEnoughDataToShowStatisticsOfLastNDays(state, 7, 2);
+
+      expect(result).toEqual(true);
     });
   });
 });
