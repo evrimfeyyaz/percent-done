@@ -16,6 +16,7 @@ export const Icons = {
   stopwatch: require('./stopwatch.png'),
   undo: require('./undo.png'),
   edit: require('./edit.png'),
+  dateSpan: require('./date-span.png'),
 
   chevronRight: require('./chevron-right.png'),
 

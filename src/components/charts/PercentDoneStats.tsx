@@ -10,9 +10,9 @@ export interface PercentDoneStatsProps {
 
 export const PercentDoneStats: FunctionComponent<PercentDoneStatsProps> = ({ data }) => {
   const values = data.map(datum => datum.value);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const median = getMedian(values);
+  const min = Math.round(Math.min(...values));
+  const max = Math.round(Math.max(...values));
+  const median = Math.round(getMedian(values));
 
   function renderDataInText(value: number, text: string) {
     return (

@@ -1,7 +1,11 @@
 import {
   compareDateIndices,
   convertDateToIndex,
-  deconstructFormattedDuration, formatDurationInMs, getAbbreviatedDayOfWeek, msToHoursMinutesSeconds,
+  deconstructFormattedDuration,
+  formatDurationInMs,
+  getAbbreviatedDate,
+  getAbbreviatedDayOfWeek,
+  msToHoursMinutesSeconds,
 } from '../../src/utilities';
 
 describe('time utilities', () => {
@@ -126,6 +130,14 @@ describe('time utilities', () => {
       const date = new Date(2020, 4, 31);
 
       expect(getAbbreviatedDayOfWeek(date)).toEqual('Sun')
+    })
+  })
+
+  describe('getAbbreviatedDate', () => {
+    it('returns the three later month abbreviation with the day number', () => {
+      const date = new Date(2020, 4, 31);
+
+      expect(getAbbreviatedDate(date)).toEqual('May 31')
     })
   })
 });

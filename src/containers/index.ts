@@ -11,3 +11,5 @@ export * from './EditProjectForm';
 export * from './AddProjectForm';
 export * from './WeeklyHoursDoneStats';
 export * from './WeeklyPercentDoneStats';
+export * from './MonthlyPercentDoneStats';
+export * from './MonthlyHoursDoneStats';

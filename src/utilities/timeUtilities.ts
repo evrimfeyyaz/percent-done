@@ -145,3 +145,7 @@ export function formatTimeInTimestamp(timestamp: number, short: boolean = true):
 export function getAbbreviatedDayOfWeek(date: Date) {
   return momentWithDeviceLocale(date).format('ddd');
 }
+
+export function getAbbreviatedDate(date: Date) {
+  return momentWithDeviceLocale(date).format('MMM D');
+}

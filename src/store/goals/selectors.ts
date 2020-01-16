@@ -1,7 +1,12 @@
 import { StoreState } from '../types';
 import { Goal } from './types';
 import { GoalRowProps, StatChartData } from '../../components';
-import { convertDateToIndex, getAbbreviatedDayOfWeek, momentWithDeviceLocale } from '../../utilities';
+import {
+  convertDateToIndex,
+  getAbbreviatedDate,
+  getAbbreviatedDayOfWeek,
+  momentWithDeviceLocale,
+} from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import { getGoalColor, isActiveToday, isDeleted, isTimeTracked } from './utilities';
 
@@ -200,8 +205,16 @@ export function getTotalProgressForLast7Days(state: StoreState): StatChartData {
   return getStatsForLastNDays(state, 7, getAbbreviatedDayOfWeek, getTotalProgressForDate);
 }
 
+export function getTotalProgressForLast30Days(state: StoreState): StatChartData {
+  return getStatsForLastNDays(state, 30, getAbbreviatedDate, getTotalProgressForDate);
+}
+
 export function getTotalCompletedMsForLast7Days(state: StoreState): StatChartData {
   return getStatsForLastNDays(state, 7, getAbbreviatedDayOfWeek, getTotalCompletedMsForDate);
+}
+
+export function getTotalCompletedMsForLast30Days(state: StoreState): StatChartData {
+  return getStatsForLastNDays(state, 30, getAbbreviatedDate, getTotalCompletedMsForDate);
 }
 
 export function getStatsForLastNDays(
