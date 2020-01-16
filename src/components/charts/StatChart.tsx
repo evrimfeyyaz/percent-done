@@ -96,7 +96,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
           contentInset={contentInset}
           svg={{
             strokeWidth: 2,
-            stroke: 'url(#strokeGradient)',
+            stroke: data.length > 7 ? 'url(#strokeGradient)' : undefined,
           }}
         >
           <Image source={Images.chartBg} style={styles.chartBg} />
@@ -107,7 +107,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
             <StrokeGradient />
           )}
           {data.length <= 7 && (
-          <Points />
+            <Points />
           )}
           <MedianLine />
         </LineChart>
