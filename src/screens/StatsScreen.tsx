@@ -11,8 +11,11 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Icons } from '../../assets';
 import { useStore } from 'react-redux';
 import { isThereEnoughDataToShowStatisticsOfLastNDays } from '../store/goals/selectors';
+import { useDispatchCurrentDateOnRender } from '../utilities';
 
 export const StatsScreen: NavigationStackScreenComponent = () => {
+  useDispatchCurrentDateOnRender();
+
   const state = useStore().getState();
   const hasEnoughDataToShow7DaysStats = isThereEnoughDataToShowStatisticsOfLastNDays(state, 7, 2);
   const hasEnoughDataToShow30DaysStats = isThereEnoughDataToShowStatisticsOfLastNDays(state, 30, 9);
