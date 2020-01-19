@@ -12,6 +12,7 @@ export * from './misc/ProjectRow';
 export * from './misc/ProjectList';
 export * from './misc/ProjectModal';
 export * from './misc/ListHeader';
+export * from './misc/DayDetails';
 
 // Charts
 export * from './charts/ProgressChart';

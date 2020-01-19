@@ -35,7 +35,15 @@ import {
   SelectBox,
   GoalList,
   SwipeableItem,
-  SwipeableList, ProjectRow, ProjectList, ProjectRowProps, ProjectForm, ListHeader, PercentDoneStats, HoursDoneStats,
+  SwipeableList,
+  ProjectRow,
+  ProjectList,
+  ProjectRowProps,
+  ProjectForm,
+  ListHeader,
+  PercentDoneStats,
+  HoursDoneStats,
+  DayDetails,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -187,6 +195,20 @@ storiesOf('Miscellaneous', module)
       descriptionButtonTitle='More...'
       onButtonPress={action('list-header-button-press')}
     />
+  ))
+  .add('DayDetails', () => (
+    <DayDetails
+      date={new Date()}
+      percentDone={50}
+      completedMs={30 * 60 * 1000}
+      remainingMs={30 * 60 * 1000}
+      incompleteGoals={createGoals(5)}
+      completedGoals={[]}
+      entries={getTimetableEntries()}
+      onEntryPress={action('day-details-entry-pressed')}
+      onEditActionInteraction={action('day-details-edit-action-interaction')}
+      onDateChange={action('day-details-date-changed')}
+    />
   ));
 
 storiesOf('Charts', module)
@@ -205,49 +227,7 @@ storiesOf('Charts', module)
     return <ProgressChart percentDone={percentDone} />;
   })
   .add('Timetable', () => {
-    const firstStart = new Date(2019, 0, 1, 10, 30).getTime();
-    const firstEnd = new Date(2019, 0, 1, 12, 0).getTime();
-    const secondStart = new Date(2019, 0, 1, 12, 30).getTime();
-    const secondEnd = new Date(2019, 0, 1, 12, 30).getTime();
-    const thirdStart = new Date(2019, 0, 1, 15, 12).getTime();
-    const thirdEnd = new Date(2019, 0, 1, 15, 37).getTime();
-    const fourthStart = new Date(2019, 0, 1, 19, 22).getTime();
-    const fourthEnd = new Date(2019, 0, 1, 20, 13).getTime();
-
-    const entries: TimetableRow[] = [
-      {
-        title: 'Research vacation spots',
-        timeTracked: true,
-        startTimestamp: firstStart,
-        endTimestamp: firstEnd,
-        color: '#19C403',
-        id: '1',
-      },
-      {
-        title: 'Clean up the kitchen',
-        timeTracked: false,
-        startTimestamp: secondStart,
-        endTimestamp: secondEnd,
-        color: '#3394FA',
-        id: '2',
-      },
-      {
-        title: 'Write',
-        timeTracked: true,
-        startTimestamp: thirdStart,
-        endTimestamp: thirdEnd,
-        color: '#DDD046',
-        id: '3',
-      },
-      {
-        title: 'Write',
-        timeTracked: true,
-        startTimestamp: fourthStart,
-        endTimestamp: fourthEnd,
-        color: '#DDD046',
-        id: '4',
-      },
-    ];
+    const entries = getTimetableEntries();
 
     return (
       <Timetable
@@ -534,4 +514,50 @@ function createSwipeableListData(num: number) {
 
 function getRandomHourDone() {
   return Math.random() * 10 * 60 * 60 * 1000;
+}
+
+function getTimetableEntries(): TimetableRow[] {
+  const firstStart = new Date(2019, 0, 1, 10, 30).getTime();
+  const firstEnd = new Date(2019, 0, 1, 12, 0).getTime();
+  const secondStart = new Date(2019, 0, 1, 12, 30).getTime();
+  const secondEnd = new Date(2019, 0, 1, 12, 30).getTime();
+  const thirdStart = new Date(2019, 0, 1, 15, 12).getTime();
+  const thirdEnd = new Date(2019, 0, 1, 15, 37).getTime();
+  const fourthStart = new Date(2019, 0, 1, 19, 22).getTime();
+  const fourthEnd = new Date(2019, 0, 1, 20, 13).getTime();
+
+  return [
+    {
+      title: 'Research vacation spots',
+      timeTracked: true,
+      startTimestamp: firstStart,
+      endTimestamp: firstEnd,
+      color: '#19C403',
+      id: '1',
+    },
+    {
+      title: 'Clean up the kitchen',
+      timeTracked: false,
+      startTimestamp: secondStart,
+      endTimestamp: secondEnd,
+      color: '#3394FA',
+      id: '2',
+    },
+    {
+      title: 'Write',
+      timeTracked: true,
+      startTimestamp: thirdStart,
+      endTimestamp: thirdEnd,
+      color: '#DDD046',
+      id: '3',
+    },
+    {
+      title: 'Write',
+      timeTracked: true,
+      startTimestamp: fourthStart,
+      endTimestamp: fourthEnd,
+      color: '#DDD046',
+      id: '4',
+    },
+  ];
 }

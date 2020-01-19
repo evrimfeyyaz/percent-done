@@ -17,6 +17,7 @@ export const Icons = {
   undo: require('./undo.png'),
   edit: require('./edit.png'),
   dateSpan: require('./date-span.png'),
+  calendar: require('./calendar.png'),
 
   chevronRight: require('./chevron-right.png'),
 
