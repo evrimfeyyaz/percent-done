@@ -43,7 +43,7 @@ import {
   ListHeader,
   PercentDoneStats,
   HoursDoneStats,
-  DayDetails,
+  DayDetails, Stats,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -236,66 +236,30 @@ storiesOf('Charts', module)
       />
     );
   })
-  .add('Weekly percent done stats', () => {
-    const data = [
-      { label: 'THU', value: 42 },
-      { label: 'FRI', value: 62 },
-      { label: 'SAT', value: 63 },
-      { label: 'SUN', value: 83 },
-      { label: 'MON', value: 61 },
-      { label: 'TUE', value: 87 },
-      { label: 'WED', value: 38 },
-    ];
-
-    return <PercentDoneStats data={data} />;
-  })
-  .add('Monthly percent done stats', () => {
-    const data = [...Array(31).keys()]
-      .map(dayNo => {
-        const percentDone = Math.floor(Math.random() * 101);
-        const date = moment()
-          .subtract(dayNo, 'day')
-          .format('MMM D');
-
-        return { label: date, value: percentDone };
-      })
-      .reverse();
-
-    return <PercentDoneStats data={data} />;
-  })
-  .add('Weekly hours done stats', () => {
-    const data = [
-      { label: 'THU', value: getRandomHourDone() },
-      { label: 'FRI', value: getRandomHourDone() },
-      { label: 'SAT', value: getRandomHourDone() },
-      { label: 'SUN', value: getRandomHourDone() },
-      { label: 'MON', value: getRandomHourDone() },
-      { label: 'TUE', value: getRandomHourDone() },
-      { label: 'WED', value: getRandomHourDone() },
-    ];
-
-    return <HoursDoneStats data={data} />;
-  })
-  .add('Monthly hours done chart', () => {
-    const data = [...Array(31).keys()]
-      .map(dayNo => {
-        const date = moment()
-          .subtract(dayNo, 'day')
-          .format('MMM D');
-
-        return { label: date, value: getRandomHourDone() };
-      })
-      .reverse();
-
-    return <HoursDoneStats data={data} />;
-  })
+  .add('Weekly percent done stats', () => <PercentDoneStats data={getWeeklyPercentDoneData()} />)
+  .add('Monthly percent done stats', () => <PercentDoneStats data={getMonthlyPercentDoneData()} />)
+  .add('Weekly hours done stats', () => <HoursDoneStats data={getWeeklyHoursDoneData()} />)
+  .add('Monthly hours done chart', () => <HoursDoneStats data={getMonthlyHoursDoneData()} />)
   .add('Day\'s Stats', () => {
     const progress = 42;
     const completedMs = 1 * 60 * 60 * 1000;
     const remainingMs = 30 * 60 * 10000;
 
     return <DaysStats percentDone={progress} completedMs={completedMs} remainingMs={remainingMs} />;
-  });
+  })
+  .add('Stats', () => (
+      <Stats
+        hasEnoughDataToShow7DaysStats
+        hasEnoughDataToShow30DaysStats
+        statsPeriodKey='7'
+        onStatsPeriodKeyChange={action('stats-period-key-changed')}
+        totalCompletedMsForLast7Days={getWeeklyHoursDoneData()}
+        totalCompletedMsForLast30Days={getMonthlyHoursDoneData()}
+        totalPercentDoneForLast7Days={getWeeklyPercentDoneData()}
+        totalPercentDoneForLast30Days={getMonthlyPercentDoneData()}
+      />
+    ),
+  );
 
 storiesOf('Inputs', module)
   .add('Button', () => (
@@ -560,4 +524,53 @@ function getTimetableEntries(): TimetableRow[] {
       id: '4',
     },
   ];
+}
+
+function getWeeklyHoursDoneData() {
+  return [
+    { label: 'THU', value: getRandomHourDone() },
+    { label: 'FRI', value: getRandomHourDone() },
+    { label: 'SAT', value: getRandomHourDone() },
+    { label: 'SUN', value: getRandomHourDone() },
+    { label: 'MON', value: getRandomHourDone() },
+    { label: 'TUE', value: getRandomHourDone() },
+    { label: 'WED', value: getRandomHourDone() },
+  ];
+}
+
+function getMonthlyHoursDoneData() {
+  return [...Array(31).keys()]
+    .map(dayNo => {
+      const date = moment()
+        .subtract(dayNo, 'day')
+        .format('MMM D');
+
+      return { label: date, value: getRandomHourDone() };
+    })
+    .reverse();
+}
+
+function getWeeklyPercentDoneData() {
+  return [
+    { label: 'THU', value: 42 },
+    { label: 'FRI', value: 62 },
+    { label: 'SAT', value: 63 },
+    { label: 'SUN', value: 83 },
+    { label: 'MON', value: 61 },
+    { label: 'TUE', value: 87 },
+    { label: 'WED', value: 38 },
+  ];
+}
+
+function getMonthlyPercentDoneData() {
+  return [...Array(31).keys()]
+    .map(dayNo => {
+      const percentDone = Math.floor(Math.random() * 101);
+      const date = moment()
+        .subtract(dayNo, 'day')
+        .format('MMM D');
+
+      return { label: date, value: percentDone };
+    })
+    .reverse();
 }

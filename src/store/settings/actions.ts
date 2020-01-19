@@ -1,8 +1,11 @@
 import {
   SET_CURRENT_DATE_TIMESTAMP,
+  SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
   SetCurrentDateTimestampAction,
+  SetStatsPeriodKeyAction,
   SetTimeMachineDateTimestampAction,
+  StatsPeriodKeyType,
 } from './types';
 
 export const setCurrentDateTimestamp = (timestamp: number): SetCurrentDateTimestampAction => {
@@ -18,3 +21,11 @@ export const setTimeMachineDateTimestamp = (timestamp: number): SetTimeMachineDa
     timestamp,
   };
 };
+
+export const setStatsPeriodKey = (key: StatsPeriodKeyType): SetStatsPeriodKeyAction => {
+  return {
+    type: SET_STATS_PERIOD_KEY,
+    key,
+  };
+};
+

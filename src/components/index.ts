@@ -22,6 +22,7 @@ export * from './charts/DaysStats';
 export * from './charts/AnimatedProgressCircle';
 export * from './charts/PercentDoneStats';
 export * from './charts/HoursDoneStats';
+export * from './charts/Stats';
 
 // Inputs
 export * from './inputs/Button';

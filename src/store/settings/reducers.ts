@@ -1,17 +1,25 @@
 import {
   SET_CURRENT_DATE_TIMESTAMP,
+  SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
   SettingsActionTypes,
   SettingsState,
 } from './types';
 import { Reducer } from 'redux';
 
-export const settingsReducer: Reducer<SettingsState, SettingsActionTypes> = (state = {}, action) => {
+const initialState: SettingsState = {
+  timeMachineDateTimestamp: Date.now(),
+  statsPeriodKey: '7',
+};
+
+export const settingsReducer: Reducer<SettingsState, SettingsActionTypes> = (state = initialState, action) => {
   switch (action.type) {
     case SET_CURRENT_DATE_TIMESTAMP:
       return { ...state, currentDateTimestamp: action.timestamp };
     case SET_TIME_MACHINE_DATE_TIMESTAMP:
       return { ...state, timeMachineDateTimestamp: action.timestamp };
+    case SET_STATS_PERIOD_KEY:
+      return { ...state, statsPeriodKey: action.key };
     default:
       return state;
   }
