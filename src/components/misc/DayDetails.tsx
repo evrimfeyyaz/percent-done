@@ -6,16 +6,16 @@ import { BottomSheetDatePicker, Button, DaysStats, GoalList, Timetable, Timetabl
 import { momentWithDeviceLocale } from '../../utilities';
 import { Icons } from '../../../assets';
 
-interface DayDetailsProps {
+export interface DayDetailsProps {
   date: Date;
-  percentDone: number;
-  completedMs: number;
+  percentDone: number | null;
+  completedMs: number | null;
   remainingMs: number;
   incompleteGoals: GoalRowProps[];
   completedGoals: GoalRowProps[];
   entries: TimetableRow[];
   onEditActionInteraction?: (goalId?: string) => void;
-  onEntryPress?: (id: string) => void;
+  onEntryPress?: (entryId: string) => void;
   onDateChange?: (date: Date) => void;
 }
 
@@ -46,7 +46,7 @@ export const DayDetails: FunctionComponent<DayDetailsProps> = ({
               onPress={handleDateButtonPress} />
 
       <Section title="Day's Stats">
-        <DaysStats percentDone={percentDone} completedMs={completedMs} remainingMs={remainingMs} />
+        <DaysStats percentDone={percentDone ?? 0} completedMs={completedMs ?? 0} remainingMs={remainingMs} />
       </Section>
 
       <Section title="Incomplete Goals">

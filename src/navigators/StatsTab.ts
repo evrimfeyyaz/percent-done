@@ -1,4 +1,4 @@
-import { StatsScreen } from '../screens';
+import { StatsScreen, TimeMachineScreen } from '../screens';
 import { createStackNavigator } from 'react-navigation-stack';
 import { headerConfig } from './headerConfig';
 import { createNavigator, TabRouter } from 'react-navigation';
@@ -7,7 +7,7 @@ import { TabNavigationView } from '../components';
 const router = TabRouter(
   {
     Stats: StatsScreen,
-    // TimeMachine: TimeMachineScreen,
+    TimeMachine: TimeMachineScreen,
   },
   {
     initialRouteName: 'Stats',
