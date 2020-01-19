@@ -31,7 +31,7 @@ const mapStateToProps = (state: StoreState): DayDetailsProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<SettingsActionTypes>): Partial<DayDetailsProps> => ({
   onEditActionInteraction: (goalId?: string) => NavigationService.navigate('EditGoal', { goalId }),
-  onEntryPress: (entryId: string) => NavigationService.navigate('EditTimetableEntry', { entryId }),
+  onEntryPress: (timetableEntryId: string) => NavigationService.navigate('EditTimetableEntry', { timetableEntryId }),
   onDateChange: (date: Date) => dispatch(setTimeMachineDateTimestamp(date.getTime())),
 });
 
