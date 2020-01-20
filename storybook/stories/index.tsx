@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Animated, ScrollView, Text, View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 import CenterView from './CenterView';
@@ -196,7 +196,7 @@ storiesOf('Miscellaneous', module)
       onButtonPress={action('list-header-button-press')}
     />
   ))
-  .add('DayDetails', () => (
+  .add('Day details', () => (
     <DayDetails
       date={new Date()}
       percentDone={50}
@@ -248,16 +248,18 @@ storiesOf('Charts', module)
     return <DaysStats percentDone={progress} completedMs={completedMs} remainingMs={remainingMs} />;
   })
   .add('Stats', () => (
-      <Stats
-        hasEnoughDataToShow7DaysStats
-        hasEnoughDataToShow30DaysStats
-        statsPeriodKey='7'
-        onStatsPeriodKeyChange={action('stats-period-key-changed')}
-        totalCompletedMsForLast7Days={getWeeklyHoursDoneData()}
-        totalCompletedMsForLast30Days={getMonthlyHoursDoneData()}
-        totalPercentDoneForLast7Days={getWeeklyPercentDoneData()}
-        totalPercentDoneForLast30Days={getMonthlyPercentDoneData()}
-      />
+      <ScrollView style={{ width: '100%' }}>
+        <Stats
+          hasEnoughDataToShow7DaysStats
+          hasEnoughDataToShow30DaysStats
+          statsPeriodKey='7'
+          onStatsPeriodKeyChange={action('stats-period-key-changed')}
+          totalCompletedMsForLast7Days={getWeeklyHoursDoneData()}
+          totalCompletedMsForLast30Days={getMonthlyHoursDoneData()}
+          totalPercentDoneForLast7Days={getWeeklyPercentDoneData()}
+          totalPercentDoneForLast30Days={getMonthlyPercentDoneData()}
+        />
+      </ScrollView>
     ),
   );
 

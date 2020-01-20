@@ -14,7 +14,7 @@ const mapStateToProps = (state: StoreState): DaysStatsProps => {
 
   return {
     percentDone: getTotalProgressForDate(state, currentDate) ?? 100,
-    completedMs: getTotalCompletedMsForDate(state, currentDate),
+    completedMs: getTotalCompletedMsForDate(state, currentDate) ?? 0,
     remainingMs: getTotalRemainingMsForDate(state, currentDate),
   };
 };

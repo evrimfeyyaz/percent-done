@@ -103,7 +103,7 @@ export const StatChart: FunctionComponent<StatChartProps> = ({
             stroke: data.length > 7 ? 'url(#strokeGradient)' : undefined,
           }}
         >
-          <Image source={Images.chartBg} style={styles.chartBg} />
+          <Image source={Images.chartBg} style={styles.chartBg} resizeMode='stretch' />
           <Grid
             svg={{ stroke: colors.white, strokeOpacity: 0.04, strokeWidth: 1 }}
           />

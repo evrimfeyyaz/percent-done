@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import { StyleSheet, View, Text, Animated } from 'react-native';
+import { StyleSheet, View, Text, Animated, ViewStyle } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { usePrevious } from '../../utilities';
 import { AnimatedProgressCircle } from './AnimatedProgressCircle';
@@ -9,12 +9,13 @@ interface Props {
    * Percentage of the work completed.
    */
   percentDone: number;
+  style?: ViewStyle;
 }
 
 /**
  * Shows a circular chart.
  */
-export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => {
+export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0, style }) => {
   const prevPercentDone = usePrevious(percentDone);
 
   const animatedProgress = new Animated.Value(prevPercentDone || 0);
@@ -24,7 +25,7 @@ export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => 
   }, [percentDone]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <AnimatedProgressCircle
         style={styles.circle}
         progress={animatedProgress.interpolate({ inputRange: [0, 100], outputRange: [0, 1] })}
