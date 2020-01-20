@@ -1,21 +1,21 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import { StyleSheet, View, Text, Animated, ViewStyle } from 'react-native';
+import { StyleSheet, View, Text, Animated } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { usePrevious } from '../../utilities';
 import { AnimatedProgressCircle } from './AnimatedProgressCircle';
+import { isScreenSmall } from '../../utilities/isScreenSmall';
 
 interface Props {
   /**
    * Percentage of the work completed.
    */
   percentDone: number;
-  style?: ViewStyle;
 }
 
 /**
  * Shows a circular chart.
  */
-export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0, style }) => {
+export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => {
   const prevPercentDone = usePrevious(percentDone);
 
   const animatedProgress = new Animated.Value(prevPercentDone || 0);
@@ -24,36 +24,45 @@ export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0, style
     Animated.timing(animatedProgress, { toValue: percentDone, duration: 500 }).start();
   }, [percentDone]);
 
+  const circleChartStyle = {
+    width: isScreenSmall() ? 75 : 125,
+    height: isScreenSmall() ? 75 : 125,
+  };
+
+  const containerStyle = {
+    width: circleChartStyle.width * 1.1,
+  };
+
   return (
-    <View style={[styles.container, style]}>
+    <View style={containerStyle}>
       <AnimatedProgressCircle
-        style={styles.circle}
+        style={circleChartStyle}
         progress={animatedProgress.interpolate({ inputRange: [0, 100], outputRange: [0, 1] })}
         backgroundColor={colors.darkGray}
         progressColor={colors.yellow}
-        strokeWidth={15}
+        strokeWidth={isScreenSmall() ? 10 : 15}
         endAngle={-Math.PI * 2}
       />
-      <View style={styles.infoContainer}>
-        <Text style={styles.percentDone}>
-          {Math.floor(percentDone)}
-          <Text style={styles.percentSign}>%</Text>
-        </Text>
-        <Text style={styles.doneText}>Done</Text>
-      </View>
+      {!isScreenSmall() && (
+        <View style={styles.infoContainer}>
+          <Text style={styles.percentDone}>
+            {Math.floor(percentDone)}
+            <Text style={styles.percentSign}>%</Text>
+          </Text>
+          <Text style={styles.doneText}>Done</Text>
+        </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: 126,
-  },
   infoContainer: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: -5,
+    marginLeft: -10,
   },
   percentDone: {
     fontFamily: fonts.semibold,
@@ -69,9 +78,5 @@ const styles = StyleSheet.create({
     color: colors.gray,
     textTransform: 'uppercase',
     marginTop: -5,
-  },
-  circle: {
-    height: 125,
-    width: 125,
   },
 });

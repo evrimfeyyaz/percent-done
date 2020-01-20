@@ -13,6 +13,8 @@ YellowBox.ignoreWarnings([
   'VirtualizedLists should never be nested',
   'Story with id',
   '`-[RCTRootView cancelTouches]`',
+  'Require cycle:',
+  'Starting Storybook v5.3.0',
 ]);
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {

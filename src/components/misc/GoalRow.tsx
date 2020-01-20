@@ -10,6 +10,7 @@ import { ProgressCircle } from 'react-native-svg-charts';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
 import { formatDurationInMs, leftOrOver, pluralize } from '../../utilities';
+import { isScreenSmall } from '../../utilities/isScreenSmall';
 
 export interface GoalRowProps {
   /**
@@ -74,7 +75,12 @@ export const GoalRow: FunctionComponent<GoalRowProps> = ({
     chainInfo = (
       <View style={styles.chainInfo}>
         <Image source={chainIcon} />
-        <Text style={[styles.chainLength, { color: chainColor }]}>{chainLength} {pluralize('day', chainLength)}</Text>
+        <Text
+          style={[styles.chainLength, { color: chainColor }]}
+          numberOfLines={1}
+        >
+          {chainLength} {pluralize('day', chainLength)}
+        </Text>
       </View>
     );
   }
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
     height: 60,
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: isScreenSmall() ? 0 : 20,
   },
   details: {
     flex: 1,
