@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.percentdone",
+    package = "io.evrim.PercentDone",
 )
 
 android_resource(
     name = "res",
-    package = "com.percentdone",
+    package = "io.evrim.PercentDone",
     res = "src/main/res",
 )
 

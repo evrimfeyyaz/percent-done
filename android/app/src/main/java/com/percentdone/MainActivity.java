@@ -1,4 +1,4 @@
-package com.percentdone;
+package io.evrim.PercentDone;
 
 import com.facebook.react.ReactActivity;
 

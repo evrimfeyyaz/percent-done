@@ -70,7 +70,7 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({ initialValue, o
    * of the month or the current day. Returns a new Date object with the adjustments.
    *
    * For example, when "December 31" is selected, and the month is changed to "November",
-   * we need to make sure that the last selectable day is "30," and that is the day that
+   * we need to make sure that the last selectable day is "30," and it is the day that
    * is selected.
    *
    * @param date
@@ -121,7 +121,7 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({ initialValue, o
   const monthsData = months.map(month => ({ key: `month-${month}`, value: month }));
 
   const days: number[] = [];
-  let lastSelectableDay = getLastSelectableDay(selectedDate.getFullYear(), selectedDate.getMonth());
+  const lastSelectableDay = getLastSelectableDay(selectedDate.getFullYear(), selectedDate.getMonth());
   for (let i = 1; i <= lastSelectableDay; i++) days.push(i);
   const daysData = days.map(day => ({ key: `day-${day}`, value: day.toString() }));
   const dayIndex = selectedDate.getDate() - 1;

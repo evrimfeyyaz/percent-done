@@ -1,4 +1,4 @@
-package com.percentdone;
+package io.evrim.PercentDone;
 
 import android.app.Application;
 import android.content.Context;

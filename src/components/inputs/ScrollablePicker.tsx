@@ -46,7 +46,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
 
   const handleLayout = () => {
     const location = getScrollLocationByIndex(index);
-    scrollViewRef?.current?.scrollTo({ y: location, animated: true });
+    scrollViewRef?.current?.scrollTo({ y: location, animated: false });
   };
 
   const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -105,7 +105,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
           ref={scrollViewRef}
-          onLayout={handleLayout}
+          onContentSizeChange={handleLayout}
           onMomentumScrollEnd={handleMomentumScrollEnd}
           onScroll={handleScroll}
           scrollEventThrottle={16}
