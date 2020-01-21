@@ -7,7 +7,12 @@ import { TabNavigationView } from '../components';
 const router = TabRouter(
   {
     Stats: StatsScreen,
-    TimeMachine: TimeMachineScreen,
+    TimeMachine: {
+      screen: TimeMachineScreen,
+      navigationOptions: {
+        tabBarLabel: 'Time Machine',
+      },
+    },
   },
   {
     initialRouteName: 'Stats',

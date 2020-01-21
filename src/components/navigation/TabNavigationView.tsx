@@ -16,10 +16,12 @@ export const TabNavigationView: NavigationView<NavigationTabRouterConfig, Naviga
   const activeKey = navigation.state.routes[navigation.state.index].key;
   const descriptor = descriptors[activeKey];
 
-  const tabs: TabInfo[] = navigation.state.routes.map(route => ({
-    key: route.key,
-    title: route.routeName,
-  }));
+  const tabs: TabInfo[] = navigation.state.routes.map(route => {
+    return ({
+      key: route.key,
+      title: (descriptors[route.key].options as any)['tabBarLabel'] ?? route.routeName,
+    });
+  });
 
   return (
     <BackgroundView>
