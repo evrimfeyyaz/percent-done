@@ -44,7 +44,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
     ReactNativeHapticFeedback.trigger('impactLight');
   }, [tempIndex]);
 
-  const handleLayout = () => {
+  const handleContentSizeChange = () => {
     const location = getScrollLocationByIndex(index);
     scrollViewRef?.current?.scrollTo({ y: location, animated: false });
   };
@@ -105,7 +105,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
           ref={scrollViewRef}
-          onContentSizeChange={handleLayout}
+          onContentSizeChange={handleContentSizeChange}
           onMomentumScrollEnd={handleMomentumScrollEnd}
           onScroll={handleScroll}
           scrollEventThrottle={16}
