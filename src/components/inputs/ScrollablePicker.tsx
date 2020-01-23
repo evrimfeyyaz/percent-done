@@ -41,7 +41,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
   const getScrollLocationByIndex = (index: number) => index * ITEM_SIZE;
 
   useEffect(() => {
-    ReactNativeHapticFeedback.trigger('impactLight');
+    ReactNativeHapticFeedback.trigger('selection');
   }, [tempIndex]);
 
   const handleContentSizeChange = () => {

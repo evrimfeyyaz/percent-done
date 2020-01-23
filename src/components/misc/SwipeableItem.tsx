@@ -391,7 +391,7 @@ export class SwipeableItem extends PureComponent<SwipeableItemProps, SwipeableIt
   private giveHapticFeedback(): void {
     if (this.isClosing) return;
 
-    ReactNativeHapticFeedback.trigger('impactLight');
+    ReactNativeHapticFeedback.trigger('selection');
   }
 
   private openTo(x: number, velocity = 0) {
