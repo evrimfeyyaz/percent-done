@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 import { TodaysTimetable } from '../containers';
-import { ScrollView, StyleSheet } from 'react-native';
+import { LayoutAnimation, ScrollView, StyleSheet } from 'react-native';
 import { Icons } from '../../assets';
 import { ListHeader } from '../components';
 import { useDispatchCurrentDateOnRender } from '../utilities';
 
 export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
   useDispatchCurrentDateOnRender();
+
+  useEffect(() => {
+    LayoutAnimation.easeInEaseOut();
+  }, []);
 
   const handleAddButtonPress = () => {
     navigation.navigate('AddTimetableEntry');

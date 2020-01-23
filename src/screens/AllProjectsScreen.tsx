@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { AllProjects } from '../containers/AllProjects';
-import { View } from 'react-native';
+import { LayoutAnimation, View } from 'react-native';
 import { ListHeader } from '../components';
 import { Icons } from '../../assets';
 
 export const AllProjectsScreen: NavigationStackScreenComponent = ({ navigation }) => {
+  useEffect(() => {
+    LayoutAnimation.easeInEaseOut();
+  }, []);
+
   const handleEditActionInteraction = (projectId: string) => {
     navigation.navigate('EditProject', { projectId });
   };
