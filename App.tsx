@@ -7,6 +7,7 @@ import { AppContainer } from './src/navigators/AppContainer';
 import configureStore from './src/store/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setCurrentDateTimestamp } from './src/store/settings/actions';
+import { configureNotifications } from './src/utilities/configureNotifications';
 
 YellowBox.ignoreWarnings([
   'Warning:',
@@ -24,6 +25,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 // export default Storybook;
 
 const { store, persistor } = configureStore();
+configureNotifications();
 
 const App: FunctionComponent = () => {
   const appState = useRef(AppState.currentState);

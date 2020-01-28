@@ -14,7 +14,7 @@ import {
   getTotalCompletedMsForDate, getTotalCompletedMsForLast30Days, getTotalCompletedMsForLast7Days,
   getTotalProgressForDate, getTotalProgressForLast30Days, getTotalProgressForLast7Days,
   getTotalRemainingMsForDate,
-  isCompleted, isThereEnoughDataToShowStatisticsOfLastNDays,
+  isCompleted, isScheduled, isThereEnoughDataToShowStatisticsOfLastNDays,
 } from '../../../src/store/goals/selectors';
 import { GoalRowProps } from '../../../src/components';
 import { Goal } from '../../../src/store/goals/types';
@@ -502,13 +502,43 @@ describe('goals selectors', () => {
       expect(ms).toEqual((60 - 60 - 15) * 60 * 1000);
     });
 
-    it('returns `0` when given goal is not time-tracked', () => {
+    it('returns `null` when given goal is not time-tracked', () => {
       const goal = createGoal({ durationInMin: undefined }, [today]);
       const state = createStoreState({ goals: [goal] });
 
       const ms = getRemainingMs(state, goal, today);
 
-      expect(ms).toEqual(0);
+      expect(ms).toBeNull();
+    });
+
+    it('returns `null` when given goal is not scheduled for the given day', () => {
+      const goal = createGoal({ durationInMin: 60 }, [yesterday]);
+      const state = createStoreState({ goals: [goal] });
+
+      const ms = getRemainingMs(state, goal, today);
+
+      expect(ms).toBeNull();
+    });
+  });
+
+  describe('isScheduled', () => {
+    let state: StoreState, goal: Goal;
+
+    beforeAll(() => {
+      goal = createGoal({}, [today]);
+      state = createStoreState({ goals: [goal] });
+    });
+
+    it('returns `true` if given goal is scheduled for given date', () => {
+      const result = isScheduled(state, goal.id, today);
+
+      expect(result).toEqual(true);
+    });
+
+    it('returns `false` if given goal is not scheduled for given date', () => {
+      const result = isScheduled(state, goal.id, yesterday);
+
+      expect(result).toEqual(false);
     });
   });
 
@@ -649,15 +679,16 @@ describe('goals selectors', () => {
   });
 
   describe('Statistics', () => {
-    const lastWeeksEntryDurationInMin = 30;
-    const yesterdaysEntryDurationInMin = 60;
+    const goalDurationInMin = 60;
+    const lastWeeksEntryDurationInMin = goalDurationInMin * .5;
+    const yesterdaysEntryDurationInMin = goalDurationInMin * .25;
     let lastWeeksEntry: TimetableEntry, yesterdaysEntry: TimetableEntry;
     let store: StoreState;
 
     beforeAll(() => {
       const oneWeekAgo = momentWithDeviceLocale(today).subtract(7, 'days').toDate();
 
-      const goal = createGoal({ durationInMin: 60 }, undefined, true);
+      const goal = createGoal({ durationInMin: goalDurationInMin }, undefined, true);
       lastWeeksEntry = createTimetableEntry({
         goalId: goal.id,
         startDate: oneWeekAgo,
@@ -673,21 +704,23 @@ describe('goals selectors', () => {
         durationInMin: yesterdaysEntryDurationInMin,
       });
       store = createStoreState({ goals: [goal], timetableEntries: [lastWeeksEntry, yesterdaysEntry] });
+
+      store.goals.byId[goal.id].createdAtTimestamp = oneWeekAgo.getTime();
     });
 
     describe('getTotalProgressForLast7Days', () => {
-      it('returns the progress for the last seven days starting from yesterday in `{ "THU", 50 }` format', () => {
+      it('returns the progress for the last seven days starting from yesterday in `{ "Thu", 50 }` format', () => {
         const result = getTotalProgressForLast7Days(store);
 
         expect(result.map(datum => datum.label).sort()).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].sort());
-        expect(result[0].value).toEqual(50);
+        expect(result[0].value).toEqual(lastWeeksEntryDurationInMin / goalDurationInMin * 100);
         expect(result[1].value).toEqual(0);
-        expect(result[6].value).toEqual(100);
+        expect(result[6].value).toEqual(yesterdaysEntryDurationInMin / goalDurationInMin * 100);
       });
     });
 
     describe('getTotalCompletedMsForLast7Days', () => {
-      it('returns the total completed time in ms for the last seven days starting from yesterday in `{ "THU", 1000 }` format', () => {
+      it('returns the total completed time in ms for the last seven days starting from yesterday in `{ "Thu", 1000 }` format', () => {
         const result = getTotalCompletedMsForLast7Days(store);
 
         expect(result.map(datum => datum.label).sort()).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].sort());
@@ -704,9 +737,9 @@ describe('goals selectors', () => {
         const yesterdaysLabel = getAbbreviatedDate(yesterday);
 
         expect(result[29].label).toEqual(yesterdaysLabel);
-        expect(result[23].value).toEqual(50);
+        expect(result[23].value).toEqual(lastWeeksEntryDurationInMin / goalDurationInMin * 100);
         expect(result[24].value).toEqual(0);
-        expect(result[29].value).toEqual(100);
+        expect(result[29].value).toEqual(yesterdaysEntryDurationInMin / goalDurationInMin * 100);
       });
     });
 

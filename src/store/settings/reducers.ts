@@ -1,5 +1,6 @@
 import {
   SET_CURRENT_DATE_TIMESTAMP,
+  SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
   SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
   SettingsActionTypes,
@@ -20,6 +21,8 @@ export const settingsReducer: Reducer<SettingsState, SettingsActionTypes> = (sta
       return { ...state, timeMachineDateTimestamp: action.timestamp };
     case SET_STATS_PERIOD_KEY:
       return { ...state, statsPeriodKey: action.key };
+    case SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID:
+      return { ...state, scheduledGoalCompletedNotificationId: action.id };
     default:
       return state;
   }

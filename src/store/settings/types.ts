@@ -10,11 +10,13 @@ export interface SettingsState {
    * on the stats screen.
    */
   statsPeriodKey: StatsPeriodKeyType;
+  scheduledGoalCompletedNotificationId?: string;
 }
 
 export const SET_CURRENT_DATE_TIMESTAMP = 'SET_CURRENT_DATE_TIMESTAMP';
 export const SET_TIME_MACHINE_DATE_TIMESTAMP = 'SET_TIME_MACHINE_DATE_TIMESTAMP';
 export const SET_STATS_PERIOD_KEY = 'SET_STATS_PERIOD_KEY';
+export const SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID = 'SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID';
 
 export interface SetCurrentDateTimestampAction extends Action<typeof SET_CURRENT_DATE_TIMESTAMP> {
   timestamp: number;
@@ -28,7 +30,12 @@ export interface SetStatsPeriodKeyAction extends Action<typeof SET_STATS_PERIOD_
   key: StatsPeriodKeyType;
 }
 
+export interface SetScheduledGoalCompletedNotificationIdAction extends Action<typeof SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID> {
+  id: string | undefined;
+}
+
 export type SettingsActionTypes =
   SetCurrentDateTimestampAction |
   SetTimeMachineDateTimestampAction |
-  SetStatsPeriodKeyAction;
+  SetStatsPeriodKeyAction |
+  SetScheduledGoalCompletedNotificationIdAction;

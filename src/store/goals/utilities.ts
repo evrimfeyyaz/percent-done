@@ -19,9 +19,9 @@ export const isActiveToday = (goal: Goal): boolean => {
 export const isDeleted = (goal: Goal, date: Date): boolean => {
   if (goal.deletedAtTimestamp == null) return false;
 
-  const dateMoment = momentWithDeviceLocale(date);
   const deletedMoment = momentWithDeviceLocale(goal.deletedAtTimestamp);
-  return dateMoment.diff(deletedMoment, 'days') >= 0;
+
+  return deletedMoment.isSame(date, 'day') || +deletedMoment <= date.getTime();
 };
 
 /**
@@ -30,9 +30,9 @@ export const isDeleted = (goal: Goal, date: Date): boolean => {
 export const isCreated = (goal: Goal, date: Date): boolean => {
   if (goal.createdAtTimestamp == null) throw new Error('Created at timestamp should be a number.');
 
-  const dateMoment = momentWithDeviceLocale(date);
   const createdMoment = momentWithDeviceLocale(goal.createdAtTimestamp);
-  return dateMoment.diff(createdMoment, 'days') >= 0;
+
+  return createdMoment.isSame(date, 'day') || +createdMoment <= date.getTime();
 };
 
 export const getGoalColor = (goal: Goal) => {

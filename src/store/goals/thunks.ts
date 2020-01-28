@@ -1,16 +1,19 @@
 import { ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StoreState } from '../types';
 import { GoalActionTypes } from './types';
 import { TimetableEntry, TimetableEntryActionTypes } from '../timetableEntries/types';
-import { getGoalById, getTimetableEntriesForGoal, isCompleted } from './selectors';
+import { getGoalById, getRemainingMs, getTimetableEntriesForGoal, isCompleted } from './selectors';
 import { deleteTimetableEntry } from '../timetableEntries/actions';
 import { isTimeTracked } from './utilities';
-import { NavigationService } from '../../utilities';
+import { momentWithDeviceLocale, NavigationService } from '../../utilities';
 import { editGoal, removeTrackedGoal, setTrackedGoal } from './actions';
 import { getCurrentDate } from '../settings/selectors';
 import { addTimetableEntry } from '../timetableEntries/thunks';
 import { WithOptionalId } from '../../utilities/types';
+import { cancelLocalNotification, scheduleLocalNotification } from '../../utilities/localNotifications';
+import { setScheduledGoalCompletedNotificationId } from '../settings/actions';
+import { SettingsActionTypes } from '../settings/types';
 
 export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
   return (dispatch, getState) => {
@@ -43,18 +46,22 @@ export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, Store
   };
 };
 
-export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
-  return (dispatch) => {
+export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes>> = (goalId: string) => {
+  return (dispatch, getState) => {
     const startTimestamp = Date.now();
+
+    const state = getState();
+    scheduleGoalCompletedNotification(state, goalId, startTimestamp, dispatch);
 
     dispatch(setTrackedGoal(goalId, startTimestamp));
     NavigationService.navigate('TrackGoal', {});
   };
 };
 
-export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = () => {
+export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes>> = () => {
   return (dispatch, getState) => {
-    const { startTimestamp, id: goalId, projectId } = getState().goals.trackedGoal;
+    const state = getState();
+    const { startTimestamp, id: goalId, projectId } = state.goals.trackedGoal;
     const endTimestamp = Date.now();
 
     if (startTimestamp == null || goalId == null) {
@@ -76,5 +83,36 @@ export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void,
     goal.lastProjectId = projectId;
 
     dispatch(editGoal(goal));
+    cancelGoalCompletedNotification(state, dispatch);
   };
 };
+
+function scheduleGoalCompletedNotification(state: StoreState, goalId: string, startTimestamp: number, dispatch: ThunkDispatch<any, any, any>) {
+  const today = new Date();
+  const goal = getGoalById(state, goalId);
+
+  let remainingMs = getRemainingMs(state, goal, today);
+  if (remainingMs == null) return;
+
+  let willBeCompletedAt = momentWithDeviceLocale(startTimestamp + remainingMs);
+
+  if (willBeCompletedAt.isAfter(today, 'day')) {
+    remainingMs = getRemainingMs(state, goal, willBeCompletedAt.toDate());
+    if (remainingMs == null) return;
+
+    willBeCompletedAt = willBeCompletedAt.startOf('day').add(remainingMs, 'ms');
+  }
+
+  const notificationId = scheduleLocalNotification(`${goal.title} is completed. Great job!`, willBeCompletedAt.toDate());
+
+  dispatch(setScheduledGoalCompletedNotificationId(notificationId));
+}
+
+function cancelGoalCompletedNotification(state: StoreState, dispatch: ThunkDispatch<any, any, any>) {
+  const notificationId = state.settings.scheduledGoalCompletedNotificationId;
+
+  if (notificationId != null) {
+    cancelLocalNotification(notificationId);
+    dispatch(setScheduledGoalCompletedNotificationId(undefined));
+  }
+}

@@ -11,14 +11,14 @@ import { TimetableEntry } from '../timetableEntries/types';
 import { getGoalColor, isActiveToday, isCreated, isDeleted, isTimeTracked } from './utilities';
 import { getTimetableEntriesByDate } from '../timetableEntries/selectors';
 
-export const getGoalById = (state: StoreState, id: string): Goal => {
+export function getGoalById(state: StoreState, id: string): Goal {
   return state.goals.byId[id];
-};
+}
 
 /**
  * Returns all goals. By default, it doesn't return deleted goals.
  */
-export const getAllGoals = (state: StoreState, options?: { includeDeleted: boolean }): Goal[] => {
+export function getAllGoals(state: StoreState, options?: { includeDeleted: boolean }): Goal[] {
   const allGoals = state.goals.allIds.map(id => getGoalById(state, id));
 
   if (options?.includeDeleted) {
@@ -26,19 +26,19 @@ export const getAllGoals = (state: StoreState, options?: { includeDeleted: boole
   }
 
   return allGoals.filter(goal => goal.deletedAtTimestamp == null);
-};
+}
 
 /**
  * Returns the goals that the user has for a given date.
  */
-export const getGoalsForDate = (state: StoreState, date: Date): Goal[] => {
+export function getGoalsForDate(state: StoreState, date: Date): Goal[] {
   const { goals } = state;
   const dayOfWeek = date.getDay();
 
   const goalsArr = goals.allIds.map(id => goals.byId[id]);
 
   return goalsArr.filter(goal => !isDeleted(goal, date) && isCreated(goal, date) && goal.recurringDays[dayOfWeek]);
-};
+}
 
 export const getIncompleteGoals = (state: StoreState, date: Date): Goal[] =>
   getGoalsForDate(state, date).filter(goal => !isCompleted(state, goal, date));
@@ -49,7 +49,7 @@ export const getCompleteGoals = (state: StoreState, date: Date): Goal[] =>
 /**
  * Converts an array of goals to a GoalRowProps array to be used in the GoalList component.
  */
-export const convertGoalsToGoalRowProps = (state: StoreState, goals: Goal[], date: Date): GoalRowProps[] => {
+export function convertGoalsToGoalRowProps(state: StoreState, goals: Goal[], date: Date): GoalRowProps[] {
   return goals.map(goal => {
     const { title, id } = goal;
     const chainLength = getChainLength(state, goal, date);
@@ -74,33 +74,33 @@ export const convertGoalsToGoalRowProps = (state: StoreState, goals: Goal[], dat
       isCompleted: completed,
     };
   });
-};
+}
 
 /**
  * Returns the total time spent on a goal for given date in milliseconds.
  */
-export const getCompletedMs = (state: StoreState, goal: Goal, date: Date): number => {
+export function getCompletedMs(state: StoreState, goal: Goal, date: Date): number {
   const timetableEntries = getTimetableEntriesForGoal(state, goal, date);
 
   return timetableEntries.reduce((total, entry) => total + entry.endTimestamp - entry.startTimestamp, 0);
-};
+}
 
 /**
  * Returns the total number of milliseconds spent on all goals on given day.
  */
-export const getTotalCompletedMsForDate = (state: StoreState, date: Date): number | null => {
+export function getTotalCompletedMsForDate(state: StoreState, date: Date): number | null {
   const goals = getGoalsForDate(state, date);
 
   if (goals.length === 0) return null;
 
   return goals.reduce((total, goal) => total + getCompletedMs(state, goal, date), 0);
-};
+}
 
 /**
  * Returns the remaining time for a goal on a given date in milliseconds.
  */
-export const getRemainingMs = (state: StoreState, goal: Goal, date: Date): number => {
-  if (!isTimeTracked(goal)) return 0;
+export function getRemainingMs(state: StoreState, goal: Goal, date: Date): number | null {
+  if (!isTimeTracked(goal) || !isScheduled(state, goal.id, date)) return null;
 
   const duration = goal.durationInMs;
   if (duration == null) throw Error('A time-tracked goal cannot have `null` or `undefined` duration.');
@@ -108,12 +108,12 @@ export const getRemainingMs = (state: StoreState, goal: Goal, date: Date): numbe
   const completedMs = getCompletedMs(state, goal, date);
 
   return duration - completedMs;
-};
+}
 
 /**
  * Returns the total number of milliseconds remaining for all goals on given day.
  */
-export const getTotalRemainingMsForDate = (state: StoreState, date: Date): number => {
+export function getTotalRemainingMsForDate(state: StoreState, date: Date): number {
   const goals = getGoalsForDate(state, date);
   const totalMs = goals.reduce((total, goal) => {
     if (goal.durationInMs == null) return total;
@@ -123,12 +123,12 @@ export const getTotalRemainingMsForDate = (state: StoreState, date: Date): numbe
   const completedMs = getTotalCompletedMsForDate(state, date) ?? 0;
 
   return Math.max(totalMs - completedMs, 0);
-};
+}
 
 /**
  * Returns whether a goal has been completed on the given day.
  */
-export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean => {
+export function isCompleted(state: StoreState, goal: Goal, date: Date): boolean {
   if (!isTimeTracked(goal)) {
     const entries = getTimetableEntriesForGoal(state, goal, date);
     return entries != null && entries.length > 0;
@@ -138,12 +138,18 @@ export const isCompleted = (state: StoreState, goal: Goal, date: Date): boolean 
 
   const completedMs = getCompletedMs(state, goal, date);
   return completedMs >= goal.durationInMs;
-};
+}
+
+export function isScheduled(state: StoreState, goalId: string, date: Date): boolean {
+  const scheduledGoals = getGoalsForDate(state, date);
+
+  return scheduledGoals.map(goal => goal.id).includes(goalId);
+}
 
 /**
  * Returns the current progress of a goal in percentage (0 to 100).
  */
-export const getProgress = (state: StoreState, goal: Goal, date: Date): number => {
+export function getProgress(state: StoreState, goal: Goal, date: Date): number {
   let progress;
 
   if (goal.durationInMs != null) {
@@ -155,12 +161,12 @@ export const getProgress = (state: StoreState, goal: Goal, date: Date): number =
   }
 
   return Math.min(progress * 100, 100);
-};
+}
 
 /**
  * Returns the current overall progress for a day in percentage (0 to 100).
  */
-export const getTotalProgressForDate = (state: StoreState, date: Date): number | null => {
+export function getTotalProgressForDate(state: StoreState, date: Date): number | null {
   const goals = getGoalsForDate(state, date);
   const numOfGoals = goals.length;
 
@@ -169,9 +175,9 @@ export const getTotalProgressForDate = (state: StoreState, date: Date): number |
   return goals.reduce((progress, goal) => {
     return progress + getProgress(state, goal, date) / numOfGoals;
   }, 0);
-};
+}
 
-export const getTimetableEntriesForGoal = (state: StoreState, goal: Goal, date: Date): TimetableEntry[] => {
+export function getTimetableEntriesForGoal(state: StoreState, goal: Goal, date: Date): TimetableEntry[] {
   const dateIdx = convertDateToIndex(date);
   const entryIds = state.timetableEntries.idsByDate[dateIdx];
 
@@ -186,13 +192,13 @@ export const getTimetableEntriesForGoal = (state: StoreState, goal: Goal, date: 
 
     return result;
   }, []);
-};
+}
 
 /**
  * Returns the number of days that given goal has been completed
  * in a row up to today.
  */
-export const getChainLength = (state: StoreState, goal: Goal, date: Date): number => {
+export function getChainLength(state: StoreState, goal: Goal, date: Date): number {
   let chainLength = isCompleted(state, goal, new Date()) ? 1 : 0;
   for (let daysBefore = 1; true; daysBefore++) {
     const dateBefore = momentWithDeviceLocale(date).subtract(daysBefore, 'day').toDate();
@@ -205,23 +211,19 @@ export const getChainLength = (state: StoreState, goal: Goal, date: Date): numbe
   }
 
   return chainLength;
-};
-
-export function getTotalProgressForLast7Days(state: StoreState): StatChartData {
-  return getStatsForLastNDays(state, 7, getAbbreviatedDayOfWeek, getTotalProgressForDate);
 }
 
-export function getTotalProgressForLast30Days(state: StoreState): StatChartData {
-  return getStatsForLastNDays(state, 30, getAbbreviatedDate, getTotalProgressForDate);
-}
+export const getTotalProgressForLast7Days = (state: StoreState): StatChartData =>
+  getStatsForLastNDays(state, 7, getAbbreviatedDayOfWeek, getTotalProgressForDate);
 
-export function getTotalCompletedMsForLast7Days(state: StoreState): StatChartData {
-  return getStatsForLastNDays(state, 7, getAbbreviatedDayOfWeek, getTotalCompletedMsForDate);
-}
+export const getTotalProgressForLast30Days = (state: StoreState): StatChartData =>
+  getStatsForLastNDays(state, 30, getAbbreviatedDate, getTotalProgressForDate);
 
-export function getTotalCompletedMsForLast30Days(state: StoreState): StatChartData {
-  return getStatsForLastNDays(state, 30, getAbbreviatedDate, getTotalCompletedMsForDate);
-}
+export const getTotalCompletedMsForLast7Days = (state: StoreState): StatChartData =>
+  getStatsForLastNDays(state, 7, getAbbreviatedDayOfWeek, getTotalCompletedMsForDate);
+
+export const getTotalCompletedMsForLast30Days = (state: StoreState): StatChartData =>
+  getStatsForLastNDays(state, 30, getAbbreviatedDate, getTotalCompletedMsForDate);
 
 function getStatsForLastNDays(
   state: StoreState,

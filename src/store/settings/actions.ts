@@ -1,8 +1,10 @@
 import {
   SET_CURRENT_DATE_TIMESTAMP,
+  SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
   SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
   SetCurrentDateTimestampAction,
+  SetScheduledGoalCompletedNotificationIdAction,
   SetStatsPeriodKeyAction,
   SetTimeMachineDateTimestampAction,
   StatsPeriodKeyType,
@@ -26,6 +28,13 @@ export const setStatsPeriodKey = (key: StatsPeriodKeyType): SetStatsPeriodKeyAct
   return {
     type: SET_STATS_PERIOD_KEY,
     key,
+  };
+};
+
+export const setScheduledGoalCompletedNotificationId = (id: string | undefined): SetScheduledGoalCompletedNotificationIdAction => {
+  return {
+    type: SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
+    id,
   };
 };
 

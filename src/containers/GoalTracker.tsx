@@ -20,8 +20,11 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   const goal = getGoalById(state, trackedGoalId);
   const { title, durationInMs, lastProjectId } = goal;
 
-  if (durationInMs == null) throw new Error('Goal is not a time-tracked goal.');
   const initialRemainingMs = getRemainingMs(state, goal, new Date());
+
+  if (durationInMs == null || initialRemainingMs == null) {
+    throw new Error('Goal is not a time-tracked goal.');
+  }
 
   const projects = getAllProjects(state).map(project => ({ key: project.id, title: project.title }));
 
