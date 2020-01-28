@@ -8,6 +8,7 @@ import configureStore from './src/store/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
 import { setCurrentDateTimestamp } from './src/store/settings/actions';
 import { configureNotifications } from './src/utilities/configureNotifications';
+import SplashScreen from 'react-native-splash-screen';
 
 YellowBox.ignoreWarnings([
   'Warning:',
@@ -83,6 +84,7 @@ const App: FunctionComponent = () => {
 
   const handleFirstLoad = () => {
     setLoaded(true);
+    SplashScreen.hide();
   };
 
   return (
