@@ -23,6 +23,8 @@ export function scheduleLocalNotification(message: string, date: Date, title?: s
       title,
       message,
       date,
+      // @ts-ignore
+      ignoreInForeground: true,
     });
 
     return true;
