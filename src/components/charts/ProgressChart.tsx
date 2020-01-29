@@ -24,19 +24,15 @@ export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => 
     Animated.timing(animatedProgress, { toValue: percentDone, duration: 500 }).start();
   }, [percentDone]);
 
-  const circleChartStyle = {
-    width: isScreenSmall() ? 75 : 125,
-    height: isScreenSmall() ? 75 : 125,
-  };
-
-  const containerStyle = {
-    width: circleChartStyle.width * 1.1,
+  const circleStyle = {
+    width: isScreenSmall() ? 75 : 120,
+    height: isScreenSmall() ? 75 : 120,
   };
 
   return (
-    <View style={containerStyle}>
+    <View>
       <AnimatedProgressCircle
-        style={circleChartStyle}
+        style={circleStyle}
         progress={animatedProgress.interpolate({ inputRange: [0, 100], outputRange: [0, 1] })}
         backgroundColor={colors.darkGray}
         progressColor={colors.yellow}
@@ -61,8 +57,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: -5,
-    marginLeft: -10,
   },
   percentDone: {
     fontFamily: fonts.semibold,
