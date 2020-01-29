@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    flex: 1,
+    flexGrow: 1,
+    paddingVertical: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
