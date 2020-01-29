@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import Storybook from './storybook';
-import { AppState, AppStateStatus, Platform, UIManager, YellowBox } from 'react-native';
+import { AppState, AppStateStatus, Platform, StatusBar, UIManager, YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { momentWithDeviceLocale, NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
@@ -84,6 +84,7 @@ const App: FunctionComponent = () => {
 
   const handleFirstLoad = () => {
     setLoaded(true);
+    StatusBar.setHidden(false);
     SplashScreen.hide();
   };
 
