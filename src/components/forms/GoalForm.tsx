@@ -208,7 +208,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     } = this.state;
 
     return (
-      <KeyboardAwareScrollView style={styles.container} ref={this.scrollViewRef} keyboardDismissMode='on-drag'
+      <KeyboardAwareScrollView style={styles.container} ref={this.scrollViewRef} keyboardDismissMode='on-drag' alwaysBounceVertical={false}
         // @ts-ignore
                                keyboardOpeningTime={100} scrollToOverflowEnabled={true}>
         <View style={styles.topInputGroup}>

@@ -201,7 +201,7 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
 
     return (
       <>
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} alwaysBounceVertical={false}>
           {!this.isGoalDeleted() && (
             <ItemInput title='Goal' itemKey={goalId} allItems={goalItems} onItemChange={this.handleGoalChange} />
           )}

@@ -112,7 +112,7 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
     const { title, titleInputError } = this.state;
 
     return (
-      <KeyboardAwareScrollView style={styles.container} keyboardDismissMode='on-drag'
+      <KeyboardAwareScrollView style={styles.container} keyboardDismissMode='on-drag' alwaysBounceVertical={false}
         // @ts-ignore
                                keyboardOpeningTime={100} scrollToOverflowEnabled={true}>
         <TextInput placeholder='What is the title of the project?' onChangeText={this.handleTitleChange}
