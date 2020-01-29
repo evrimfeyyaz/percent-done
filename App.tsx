@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { setCurrentDateTimestamp } from './src/store/settings/actions';
 import { configureNotifications } from './src/utilities/configureNotifications';
 import SplashScreen from 'react-native-splash-screen';
+import { setStatusBarStyle } from './src/utilities/statusBar';
 
 YellowBox.ignoreWarnings([
   'Warning:',
@@ -44,6 +45,9 @@ const App: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
+    setStatusBarStyle('dark');
+    SplashScreen.hide();
+
     const { id, startTimestamp } = store.getState().goals.trackedGoal;
 
     if (id != null && startTimestamp != null) {
@@ -84,8 +88,6 @@ const App: FunctionComponent = () => {
 
   const handleFirstLoad = () => {
     setLoaded(true);
-    StatusBar.setHidden(false);
-    SplashScreen.hide();
   };
 
   return (

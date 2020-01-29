@@ -4,10 +4,9 @@
   <item
           android:drawable="@color/dark_blue"/>
 
-  <item
-          android:width="256dp"
-          android:height="256dp"
-          android:drawable="@mipmap/splash"
-          android:gravity="center"/>
-
+  <item>
+    <bitmap
+            android:gravity="center"
+            android:src="@mipmap/splash"/>
+  </item>
 </layer-list>
