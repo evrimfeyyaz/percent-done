@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     height: 60,
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: isScreenSmall() ? 0 : 20,
+    paddingHorizontal: isScreenSmall() ? 10 : 20,
   },
   details: {
     flex: 1,

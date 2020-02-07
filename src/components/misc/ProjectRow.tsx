@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { formatDurationInMs } from '../../utilities';
+import { isScreenSmall } from '../../utilities/isScreenSmall';
 
 export interface ProjectRowProps {
   id: string;
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     height: 60,
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: isScreenSmall() ? 10 : 20,
   },
   titleContainer: {
     flex: 1,
