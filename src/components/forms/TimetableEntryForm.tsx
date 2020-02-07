@@ -229,6 +229,7 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
         <ProjectModal
           projects={projects}
           isVisible={isProjectModalVisible}
+          allProjectTitles={projects.map(project => project.title)}
           onProjectModalHideRequest={this.toggleProjectModal}
           onProjectRemovePress={this.handleProjectRemovePress}
           onProjectPress={this.handleProjectPress}

@@ -132,6 +132,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
       <ProjectModal
         projects={projects}
         isVisible={isProjectModalVisible}
+        allProjectTitles={projects.map(project => project.title)}
         onProjectCreatePress={handleProjectCreatePress}
         onProjectPress={handleProjectPress}
         onProjectRemovePress={handleProjectRemovePress}
