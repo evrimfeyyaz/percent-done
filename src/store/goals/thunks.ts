@@ -1,7 +1,7 @@
 import { ActionCreator } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StoreState } from '../types';
-import { GoalActionTypes } from './types';
+import { GoalActionTypes, UPDATE_TRACKED_GOAL_START_TIMESTAMP, UpdateTrackedGoalStartTimestampAction } from './types';
 import { TimetableEntry, TimetableEntryActionTypes } from '../timetableEntries/types';
 import { getGoalById, getRemainingMs, getTimetableEntriesForGoal, isCompleted } from './selectors';
 import { deleteTimetableEntry } from '../timetableEntries/actions';
@@ -55,6 +55,26 @@ export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void
 
     dispatch(setTrackedGoal(goalId, startTimestamp));
     NavigationService.navigate('TrackGoal', {});
+  };
+};
+
+export const updateTrackedGoalStartTimestamp: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes>> = (startTimestamp: number) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const goalId = state.goals.trackedGoal.id;
+
+    if (goalId == null) {
+      throw new Error('Goal ID cannot be null when updating the tracked goal start timestamp.');
+    }
+
+    cancelGoalCompletedNotification(state, dispatch);
+
+    dispatch({
+      type: UPDATE_TRACKED_GOAL_START_TIMESTAMP,
+      startTimestamp,
+    });
+
+    scheduleGoalCompletedNotification(state, goalId, startTimestamp, dispatch);
   };
 };
 
