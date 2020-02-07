@@ -1,5 +1,14 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  EmitterSubscription,
+  Animated,
+  Easing,
+} from 'react-native';
 import { colors, fonts } from '../../theme';
 import { Button, TextInput } from '../';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
@@ -17,9 +26,30 @@ interface SelectBoxProps {
 }
 
 export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, cancelButtonTitle, onItemPress, onCreatePress, onCancelPress }) => {
+  const keyboardDidShowListenerRef = useRef<EmitterSubscription>();
+  const keyboardDidHideListenerRef = useRef<EmitterSubscription>();
+
   const [value, setValue] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [createButtonItemKey] = useState(createRandomId());
+
+  const [cancelButtonOpacity] = useState(new Animated.Value(1));
+
+  useEffect(() => {
+    keyboardDidShowListenerRef.current = Keyboard.addListener(
+      'keyboardDidShow',
+      handleKeyboardDidShow,
+    );
+    keyboardDidHideListenerRef.current = Keyboard.addListener(
+      'keyboardDidHide',
+      handleKeyboardDidHide,
+    );
+
+    return () => {
+      keyboardDidShowListenerRef.current?.remove();
+      keyboardDidHideListenerRef.current?.remove();
+    };
+  }, []);
 
   useEffect(() => {
     const newFilteredData = data
@@ -51,6 +81,22 @@ export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, cancelButto
     }
   };
 
+  const handleKeyboardDidShow = () => {
+    Animated.timing(cancelButtonOpacity, {
+      duration: 300,
+      toValue: 0,
+      easing: Easing.in(Easing.ease),
+    }).start();
+  };
+
+  const handleKeyboardDidHide = () => {
+    Animated.timing(cancelButtonOpacity, {
+      duration: 300,
+      toValue: 1,
+      easing: Easing.out(Easing.ease),
+    }).start();
+  };
+
   return (
     <View style={styles.container}>
       <TextInput placeholder='Enter project name' placeholderColor={colors.darkGray} value={value}
@@ -69,7 +115,9 @@ export const SelectBox: FunctionComponent<SelectBoxProps> = ({ data, cancelButto
                                </TouchableOpacity>
                              )}
       />
-      <Button title={cancelButtonTitle} style={styles.cancelButton} onPress={onCancelPress} />
+      <Animated.View style={{ opacity: cancelButtonOpacity }}>
+        <Button title={cancelButtonTitle} style={styles.cancelButton} onPress={onCancelPress} />
+      </Animated.View>
     </View>
   );
 };
