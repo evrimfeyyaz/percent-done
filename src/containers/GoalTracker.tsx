@@ -10,7 +10,11 @@ import { TimeTracker, TimeTrackerProps } from '../components';
 import { getAllProjects } from '../store/projects/selectors';
 import { createProjectAndSetTrackedGoalProject } from '../store/projects/thunks';
 import { getGoalColor } from '../store/goals/utilities';
-import { NavigationService } from '../utilities';
+import { momentWithDeviceLocale, NavigationService } from '../utilities';
+
+interface GoalTrackerProps {
+  onDateChange?: () => void;
+}
 
 const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   const { id: trackedGoalId, startTimestamp, projectId } = state.goals.trackedGoal;
@@ -20,11 +24,8 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   const goal = getGoalById(state, trackedGoalId);
   const { title, durationInMs, lastProjectId } = goal;
 
-  const initialRemainingMs = getRemainingMs(state, goal, new Date());
-
-  if (durationInMs == null || initialRemainingMs == null) {
-    throw new Error('Goal is not a time-tracked goal.');
-  }
+  const now = new Date();
+  const initialRemainingMs = getRemainingMs(state, goal, now);
 
   const projects = getAllProjects(state).map(project => ({ key: project.id, title: project.title }));
 
@@ -33,18 +34,27 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
     projectKey = lastProjectId;
   }
 
+  // Here we set the starting time stamp to the beginning of the day
+  // if the date of the start timestamp is not the same as the current
+  // date. This situation can occur if a time tracking is started, the
+  // app is closed, and then re-opened on another date.
+  let trackerStartTimestamp = startTimestamp;
+  if (!momentWithDeviceLocale(startTimestamp).isSame(now, 'day')) {
+    trackerStartTimestamp = +momentWithDeviceLocale(now).startOf('day');
+  }
+
   return {
     title,
     color: getGoalColor(goal),
-    durationInMs,
-    initialRemainingMs,
-    startTimestamp,
+    durationInMs: durationInMs ?? 0,
+    initialRemainingMs: initialRemainingMs ?? 0,
+    startTimestamp: trackerStartTimestamp,
     projects,
     projectKey,
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: GoalTrackerProps) => ({
   onStartTimestampChange: (newTimestamp: number) => dispatch(updateTrackedGoalStartTimestamp(newTimestamp)),
   onStopPress: (startTimestamp: number, endTimestamp: number) => NavigationService.goBack(),
   onProjectCreatePress: (title: string) => dispatch(createProjectAndSetTrackedGoalProject(title)),

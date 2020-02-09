@@ -25,6 +25,10 @@ export interface TimeTrackerProps {
   onProjectChange?: (projectKey: string) => void;
   onProjectRemove?: () => void;
   onDidUnmount?: () => void;
+  /**
+   * Called when the current date moves to the next day of `startTimestamp`.
+   */
+  onDateChange?: () => void;
 }
 
 export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
@@ -32,11 +36,14 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
                                                                    initialRemainingMs, projects, projectKey,
                                                                    onStopPress, onStartTimestampChange, onProjectChange,
                                                                    onProjectRemove, onProjectCreatePress, onDidUnmount,
+                                                                   onDateChange,
                                                                  }) => {
   const bottomSheetTimePickerRef = useRef(null);
 
   const [msPassed, setMsPassed] = useState(0);
   const [isProjectModalVisible, setIsProjectModalVisible] = useState(false);
+
+  const beginningOfNextDay = +momentWithDeviceLocale(startTimestamp).add(1, 'day').startOf('day');
 
   useEffect(() => {
     return onDidUnmount;
@@ -51,7 +58,12 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   });
 
   function tick() {
-    setMsPassed(Date.now() - startTimestamp);
+    const now = Date.now();
+    setMsPassed(now - startTimestamp);
+
+    if (now >= beginningOfNextDay) {
+      onDateChange?.();
+    }
   }
 
   // @ts-ignore
@@ -89,7 +101,11 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   const titleColorStyle = { color };
 
   const completedMs = (durationInMs - initialRemainingMs) + msPassed;
-  const percentDone = completedMs / durationInMs * 100;
+
+  let percentDone = 100;
+  if (durationInMs !== 0) {
+    percentDone = completedMs / durationInMs * 100;
+  }
 
   const remainingMs = initialRemainingMs - msPassed;
 
@@ -115,7 +131,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
       <Text style={styles.timePassed}>{formatDurationInMs(msPassed)}</Text>
       <ProgressChart percentDone={percentDone} />
       <Text style={styles.timeLeft}>
-        {formatDurationInMs(remainingMs, true)}&nbsp;
+        {formatDurationInMs(remainingMs, remainingMs > 0)}&nbsp;
         <Text style={styles.timeLeftLabel}>{leftOrOver(remainingMs)}</Text>
       </Text>
       <Button iconSource={Icons.stop} title='Stop' style={styles.stopButton} onPress={handleStopPress} />
@@ -156,6 +172,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
     fontSize: 28,
     marginBottom: 10,
+    marginHorizontal: 30,
+    textAlign: 'center',
+    lineHeight: 32,
   },
   projectContainer: {
     marginBottom: 50,

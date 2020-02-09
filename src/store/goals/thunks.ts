@@ -1,7 +1,7 @@
 import { ActionCreator } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StoreState } from '../types';
-import { GoalActionTypes, UPDATE_TRACKED_GOAL_START_TIMESTAMP, UpdateTrackedGoalStartTimestampAction } from './types';
+import { GoalActionTypes, UPDATE_TRACKED_GOAL_START_TIMESTAMP } from './types';
 import { TimetableEntry, TimetableEntryActionTypes } from '../timetableEntries/types';
 import { getGoalById, getRemainingMs, getTimetableEntriesForGoal, isCompleted } from './selectors';
 import { deleteTimetableEntry } from '../timetableEntries/actions';
