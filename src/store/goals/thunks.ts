@@ -112,7 +112,7 @@ function scheduleGoalCompletedNotification(state: StoreState, goalId: string, st
   const goal = getGoalById(state, goalId);
 
   let remainingMs = getRemainingMs(state, goal, today);
-  if (remainingMs == null) return;
+  if (remainingMs == null || remainingMs <= 0) return;
 
   let willBeCompletedAt = momentWithDeviceLocale(startTimestamp + remainingMs);
 
