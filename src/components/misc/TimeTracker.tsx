@@ -44,7 +44,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
   let interval: number;
   useEffect(() => {
-    interval = setInterval(() => tick(), 1000);
+    interval = setInterval(() => tick(), 100);
     return () => {
       clearInterval(interval);
     };
