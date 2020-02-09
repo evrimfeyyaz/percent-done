@@ -40,6 +40,7 @@ export const ListHeader: FunctionComponent<ListHeaderProps> = ({
              onBackButtonPress={toggleDescriptionModal}
              animationIn='fadeIn'
              animationOut='fadeOut'
+             backdropTransitionOutTiming={0}
       >
         <View style={styles.modalContainer}>
           <Text style={[textStyles.body, styles.description]}>
