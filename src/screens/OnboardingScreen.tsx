@@ -4,6 +4,7 @@ import { Onboarding } from '../components';
 import { useDispatch } from 'react-redux';
 import { setOnboarded } from '../store/settings/actions';
 import { requestLocalNotificationPermissions } from '../utilities/localNotifications';
+import { setStatusBarStyle } from '../utilities/statusBar';
 
 export const OnboardingScreen: NavigationStackScreenComponent = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ export const OnboardingScreen: NavigationStackScreenComponent = ({ navigation })
   const handleDoneOrSkip = () => {
     dispatch(setOnboarded(true));
     navigation.navigate('MainTabs');
+    setStatusBarStyle('dark');
   };
 
   const handleAddGoalPress = () => {
