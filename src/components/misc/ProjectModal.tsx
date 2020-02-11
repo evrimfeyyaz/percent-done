@@ -29,7 +29,7 @@ export const ProjectModal: FunctionComponent<ProjectModalProps> = ({
   };
 
   return (
-    <Modal isVisible={isVisible} animationIn='fadeIn' animationOut='fadeOut'
+    <Modal isVisible={isVisible} animationIn='fadeIn' animationOut='fadeOut' backdropTransitionOutTiming={0}
            avoidKeyboard onBackButtonPress={onProjectModalHideRequest} onBackdropPress={onProjectModalHideRequest}>
       <View style={styles.container}>
         <SelectBox data={projects} cancelButtonTitle='Track Without Project' onItemPress={onProjectPress}
