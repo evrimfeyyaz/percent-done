@@ -43,7 +43,7 @@ import {
   ListHeader,
   PercentDoneStats,
   HoursDoneStats,
-  DayDetails, Stats,
+  DayDetails, Stats, Onboarding,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -209,6 +209,9 @@ storiesOf('Miscellaneous', module)
       onEditActionInteraction={action('day-details-edit-action-interaction')}
       onDateChange={action('day-details-date-changed')}
     />
+  ))
+  .add('Onboarding', () => (
+    <Onboarding />
   ));
 
 storiesOf('Charts', module)

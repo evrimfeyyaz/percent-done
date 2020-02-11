@@ -13,6 +13,7 @@ export * from './misc/ProjectList';
 export * from './misc/ProjectModal';
 export * from './misc/ListHeader';
 export * from './misc/DayDetails';
+export * from './misc/Onboarding';
 
 // Charts
 export * from './charts/ProgressChart';

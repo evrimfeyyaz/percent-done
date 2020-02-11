@@ -48,3 +48,7 @@ export function scheduleLocalNotification(message: string, date: Date, title?: s
 export function cancelLocalNotification(id: string) {
   PushNotification.cancelLocalNotifications({ id });
 }
+
+export function requestLocalNotificationPermissions() {
+  PushNotification.requestPermissions();
+}

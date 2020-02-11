@@ -31,7 +31,7 @@ export class BottomSheet extends Component<BottomSheetProps> {
 
     return (
       <RBSheet ref={this.rbSheetRef} height={250} duration={200} animationType='fade'
-               customStyles={{ container: styles.container }} onClose={onClose}>
+               customStyles={{ container: styles.container }} onClose={onClose} closeOnDragDown={false}>
         <View>
           <View style={styles.buttonsContainer}>
             <TextButton title='Cancel' onPress={onCancelPress} style={styles.cancelButton} />

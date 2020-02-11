@@ -10752,6 +10752,13 @@ react-native-modal@^11.5.3:
     prop-types "^15.6.2"
     react-native-animatable "1.3.3"
 
+react-native-onboarding-swiper@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-onboarding-swiper/-/react-native-onboarding-swiper-1.1.0.tgz#fb4c5a10fc91e3d2fe7fa2e9860b3e4e997e672a"
+  integrity sha512-hU3DkRlo5pR4A8mAdvwWULZrnZx6rfNiQsdwP7cLHZNGRIYBBX09CxVgI9NYDf0iiEWDGfZQzqNeUk1uSbpSEg==
+  dependencies:
+    tinycolor2 "^1.4.1"
+
 react-native-push-notification@^3.1.9:
   version "3.1.9"
   resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-3.1.9.tgz#760ee06e743fef74fc9fcb672dac40794fdc4c47"
@@ -10759,12 +10766,10 @@ react-native-push-notification@^3.1.9:
   dependencies:
     "@react-native-community/push-notification-ios" "^1.0.1"
 
-react-native-raw-bottom-sheet@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.0.2.tgz#a617d88f40204350f6ad8cd061dfa2b6edfea57c"
-  integrity sha512-efSnzRm+xBP8b3KngI4CP7nlPBvB6kBX4LKHf2+jDB8E0MnJIcT5bu+iF3SkGzrKjxNC5g8mMF2YmoqMN9sTTA==
-  dependencies:
-    prop-types "^15.6.2"
+react-native-raw-bottom-sheet@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.0.6.tgz#485dedc3e1828f2d55179bb598ef58987c41ebf1"
+  integrity sha512-DLH97BjJEl4BfNgxPVhqwwNxv1i6Cna1Ns0DWtfqLlMEJeR9K7rrwnDndB2vN5Sk0FeV8Cjt/lk20oCSI+v21g==
 
 react-native-reanimated@^1.3.0:
   version "1.3.0"

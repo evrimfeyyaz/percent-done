@@ -7,6 +7,7 @@ import { AddTimetableEntryModal } from './AddTimetableEntryModal';
 import { EditTimetableEntryModal } from './EditTimetableEntryModal';
 import { EditProjectModal } from './EditProjectModal';
 import { AddProjectModal } from './AddProjectModal';
+import { OnboardingScreen } from '../screens/OnboardingScreen';
 
 export const AppNavigator = createStackNavigator({
   MainTabs: MainNavigator,
@@ -17,6 +18,7 @@ export const AppNavigator = createStackNavigator({
   AddTimetableEntry: AddTimetableEntryModal,
   EditTimetableEntry: EditTimetableEntryModal,
   TrackGoal: TrackGoalScreen,
+  Onboarding: OnboardingScreen,
 }, {
   mode: 'modal',
   headerMode: 'none',

@@ -1,9 +1,11 @@
 import {
   SET_CURRENT_DATE_TIMESTAMP,
+  SET_ONBOARDED,
   SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
   SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
   SetCurrentDateTimestampAction,
+  SetOnboardedAction,
   SetScheduledGoalCompletedNotificationIdAction,
   SetStatsPeriodKeyAction,
   SetTimeMachineDateTimestampAction,
@@ -35,6 +37,13 @@ export const setScheduledGoalCompletedNotificationId = (id: string | undefined):
   return {
     type: SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
     id,
+  };
+};
+
+export const setOnboarded = (hasOnboarded: boolean): SetOnboardedAction => {
+  return {
+    type: SET_ONBOARDED,
+    hasOnboarded,
   };
 };
 

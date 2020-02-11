@@ -123,7 +123,7 @@ function scheduleGoalCompletedNotification(state: StoreState, goalId: string, st
     willBeCompletedAt = willBeCompletedAt.startOf('day').add(remainingMs, 'ms');
   }
 
-  const notificationId = scheduleLocalNotification(`${goal.title} is completed. Great job!`, willBeCompletedAt.toDate());
+  const notificationId = scheduleLocalNotification(`Your goal is completed. Great job!`, willBeCompletedAt.toDate(), goal.title);
 
   dispatch(setScheduledGoalCompletedNotificationId(notificationId));
 }

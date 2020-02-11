@@ -16,7 +16,7 @@ export const AllGoalsScreen: NavigationStackScreenComponent = ({ navigation }) =
     navigation.navigate('AddGoal');
   };
 
-  const description = 'Goals are tasks you would like to track day by day, ' +
+  const description = 'Goals are tasks that you would like to track day by day, ' +
     'such as "writing for an hour every day" or "exercising Monday to Friday."';
 
   return (

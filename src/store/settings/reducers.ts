@@ -1,5 +1,6 @@
 import {
   SET_CURRENT_DATE_TIMESTAMP,
+  SET_ONBOARDED,
   SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
   SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
@@ -11,6 +12,7 @@ import { Reducer } from 'redux';
 const initialState: SettingsState = {
   timeMachineDateTimestamp: Date.now(),
   statsPeriodKey: '7',
+  hasOnboarded: false,
 };
 
 export const settingsReducer: Reducer<SettingsState, SettingsActionTypes> = (state = initialState, action) => {
@@ -23,6 +25,8 @@ export const settingsReducer: Reducer<SettingsState, SettingsActionTypes> = (sta
       return { ...state, statsPeriodKey: action.key };
     case SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID:
       return { ...state, scheduledGoalCompletedNotificationId: action.id };
+    case SET_ONBOARDED:
+      return { ...state, hasOnboarded: action.hasOnboarded };
     default:
       return state;
   }
