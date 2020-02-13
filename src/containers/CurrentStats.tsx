@@ -1,6 +1,6 @@
 import React from 'react';
 import { StoreState } from '../store/types';
-import { Stats, StatsProps } from '../components';
+import { StatChartData, Stats, StatsProps } from '../components';
 import {
   getTotalCompletedMsForLast30Days,
   getTotalCompletedMsForLast7Days, getTotalProgressForLast30Days,
@@ -12,12 +12,12 @@ import { setStatsPeriodKey } from '../store/settings/actions';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state: StoreState): StatsProps => ({
-  totalCompletedMsForLast7Days: getTotalCompletedMsForLast7Days(state),
-  totalCompletedMsForLast30Days: getTotalCompletedMsForLast30Days(state),
-  totalPercentDoneForLast7Days: getTotalProgressForLast7Days(state),
-  totalPercentDoneForLast30Days: getTotalProgressForLast30Days(state),
-  hasEnoughDataToShow7DaysStats: isThereEnoughDataToShowStatisticsOfLastNDays(state, 7, 2),
-  hasEnoughDataToShow30DaysStats: isThereEnoughDataToShowStatisticsOfLastNDays(state, 30, 9),
+  getTotalCompletedMsForLast7Days: () => getTotalCompletedMsForLast7Days(state),
+  getTotalCompletedMsForLast30Days: () => getTotalCompletedMsForLast30Days(state),
+  getTotalPercentDoneForLast7Days: () => getTotalProgressForLast7Days(state),
+  getTotalPercentDoneForLast30Days: () => getTotalProgressForLast30Days(state),
+  hasEnoughDataToShow7DaysStats: () => isThereEnoughDataToShowStatisticsOfLastNDays(state, 7, 2),
+  hasEnoughDataToShow30DaysStats: () => isThereEnoughDataToShowStatisticsOfLastNDays(state, 30, 9),
   statsPeriodKey: state.settings.statsPeriodKey,
 });
 

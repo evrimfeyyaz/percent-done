@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef } from 'react';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import {
   BottomSheetItemPicker,
   Button,
@@ -8,22 +8,29 @@ import {
   Section,
   StatChartData,
 } from '..';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Icons } from '../../../assets';
 import { StatsPeriodKeyType } from '../../store/settings/types';
 
 export interface StatsProps {
-  hasEnoughDataToShow7DaysStats: boolean;
-  hasEnoughDataToShow30DaysStats: boolean;
+  hasEnoughDataToShow7DaysStats: () => boolean;
+  hasEnoughDataToShow30DaysStats: () => boolean;
   /**
    * Either '7' or '30'.
    */
   statsPeriodKey: string;
-  totalCompletedMsForLast7Days: StatChartData,
-  totalCompletedMsForLast30Days: StatChartData,
-  totalPercentDoneForLast7Days: StatChartData,
-  totalPercentDoneForLast30Days: StatChartData,
+  getTotalCompletedMsForLast7Days: () => StatChartData,
+  getTotalCompletedMsForLast30Days: () => StatChartData,
+  getTotalPercentDoneForLast7Days: () => StatChartData,
+  getTotalPercentDoneForLast30Days: () => StatChartData,
   onStatsPeriodKeyChange?: (key: StatsPeriodKeyType) => void;
+}
+
+interface InternalData {
+  loading: boolean;
+  hasEnoughData: boolean;
+  percentDoneStats: StatChartData | null;
+  hoursDoneStats: StatChartData | null;
 }
 
 export const Stats: FunctionComponent<StatsProps> = ({
@@ -31,12 +38,55 @@ export const Stats: FunctionComponent<StatsProps> = ({
                                                        hasEnoughDataToShow30DaysStats,
                                                        statsPeriodKey,
                                                        onStatsPeriodKeyChange,
-                                                       totalCompletedMsForLast7Days,
-                                                       totalCompletedMsForLast30Days,
-                                                       totalPercentDoneForLast7Days,
-                                                       totalPercentDoneForLast30Days,
+                                                       getTotalCompletedMsForLast7Days,
+                                                       getTotalCompletedMsForLast30Days,
+                                                       getTotalPercentDoneForLast7Days,
+                                                       getTotalPercentDoneForLast30Days,
                                                      }) => {
   const bottomSheetItemPickerRef = useRef<any>();
+
+
+  const [data, setData] = useState<InternalData>({
+    loading: true,
+    hasEnoughData: false,
+    percentDoneStats: null,
+    hoursDoneStats: null,
+  });
+
+  useEffect(() => {
+    let enoughData: boolean;
+    let percentDoneStats: StatChartData, hoursDoneStats: StatChartData;
+
+    if (statsPeriodKey === '7') {
+      enoughData = hasEnoughDataToShow7DaysStats();
+    } else {
+      enoughData = hasEnoughDataToShow30DaysStats();
+    }
+
+    if (!enoughData) {
+      setData({
+        loading: false,
+        hasEnoughData: false,
+        percentDoneStats: null,
+        hoursDoneStats: null,
+      });
+    }
+
+    if (statsPeriodKey === '7') {
+      percentDoneStats = getTotalPercentDoneForLast7Days();
+      hoursDoneStats = getTotalCompletedMsForLast7Days();
+    } else {
+      percentDoneStats = getTotalPercentDoneForLast30Days();
+      hoursDoneStats = getTotalCompletedMsForLast30Days();
+    }
+
+    setData({
+      loading: false,
+      hasEnoughData: true,
+      percentDoneStats,
+      hoursDoneStats,
+    });
+  }, [statsPeriodKey]);
 
   const statsPeriodChoices = [
     { key: '7', value: 'Last 7 Days' },
@@ -56,10 +106,7 @@ export const Stats: FunctionComponent<StatsProps> = ({
   };
 
   function renderStats() {
-    if (
-      (statsPeriodKey === '7' && !hasEnoughDataToShow7DaysStats) ||
-      (statsPeriodKey === '30' && !hasEnoughDataToShow30DaysStats)
-    ) {
+    if (!data.hasEnoughData) {
       const text = 'There isn\'t enough data to show these statistics yet. ' +
         'Keep using the app for a little while longer to see them.';
       return <EmptyContainer text={text} style={styles.notEnoughData} />;
@@ -68,13 +115,13 @@ export const Stats: FunctionComponent<StatsProps> = ({
     return (
       <>
         <Section title='% Done'>
-          {statsPeriodKey === '7' && (<PercentDoneStats data={totalPercentDoneForLast7Days} />)}
-          {statsPeriodKey === '30' && (<PercentDoneStats data={totalPercentDoneForLast30Days} />)}
+          {statsPeriodKey === '7' && <PercentDoneStats data={data.percentDoneStats as StatChartData} />}
+          {statsPeriodKey === '30' && <PercentDoneStats data={data.percentDoneStats as StatChartData} />}
         </Section>
 
         <Section title='Hours Tracked'>
-          {statsPeriodKey === '7' && (<HoursDoneStats data={totalCompletedMsForLast7Days} />)}
-          {statsPeriodKey === '30' && (<HoursDoneStats data={totalCompletedMsForLast30Days} />)}
+          {statsPeriodKey === '7' && <HoursDoneStats data={data.hoursDoneStats as StatChartData} />}
+          {statsPeriodKey === '30' && <HoursDoneStats data={data.hoursDoneStats as StatChartData} />}
         </Section>
       </>
     );
@@ -85,7 +132,8 @@ export const Stats: FunctionComponent<StatsProps> = ({
       <Button title={selectedStatsPeriod().value} iconSource={Icons.dateSpan} style={styles.button}
               onPress={handleButtonPress} />
 
-      {renderStats()}
+      {data.loading && <ActivityIndicator />}
+      {!data.loading && renderStats()}
 
       <BottomSheetItemPicker ref={bottomSheetItemPickerRef} allValues={statsPeriodChoices}
                              initialValue={selectedStatsPeriod()} onValueChange={handleStatsPeriodValueChange} />

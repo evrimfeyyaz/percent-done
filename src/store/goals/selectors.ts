@@ -196,7 +196,7 @@ export function getTimetableEntriesForGoal(state: StoreState, goal: Goal, date: 
 
 /**
  * Returns the number of days that given goal has been completed
- * in a row up to today.
+ * in a row up to today, i.e. the current streak.
  */
 export function getChainLength(state: StoreState, goal: Goal, date: Date): number {
   let chainLength = isCompleted(state, goal, new Date()) ? 1 : 0;
