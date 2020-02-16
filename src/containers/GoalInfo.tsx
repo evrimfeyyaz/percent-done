@@ -3,17 +3,15 @@ import { StoreState } from '../store/types';
 import { GoalDetails, GoalDetailsProps } from '../components';
 import {
   getChainLength,
-  getCompletedMs,
   getGoalById,
   getTotalCompletedMsForGoal,
   isCompleted,
 } from '../store/goals/selectors';
 import { isTimeTracked } from '../store/goals/utilities';
-import { Dispatch } from 'redux';
-import { GoalActionTypes } from '../store/goals/types';
+import { AnyAction } from 'redux';
 import { handleCompleteOrTrackRequest } from '../store/goals/thunks';
-import { NavigationService } from '../utilities';
 import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 interface GoalInfoProps {
   goalId: string;
@@ -33,9 +31,8 @@ const mapStateToProps = (state: StoreState, ownProps: GoalInfoProps): GoalDetail
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<GoalActionTypes>, ownProps: GoalInfoProps): Partial<GoalDetailsProps> => ({
-  onTrackOrCompleteButtonPress: () => handleCompleteOrTrackRequest(ownProps.goalId),
-  onEditButtonPress: () => NavigationService.navigate('EditGoal', { goalId: ownProps.goalId }),
+const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: GoalInfoProps): Partial<GoalDetailsProps> => ({
+  onTrackOrCompleteButtonPress: () => dispatch(handleCompleteOrTrackRequest(ownProps.goalId)),
 });
 
 export const GoalInfo = connect(mapStateToProps, mapDispatchToProps)(GoalDetails);

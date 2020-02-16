@@ -12,7 +12,6 @@ export interface GoalDetailsProps {
   totalCompletedMs?: number;
   isCompleted?: boolean;
   onTrackOrCompleteButtonPress?: () => void;
-  onEditButtonPress?: () => void;
 }
 
 export const GoalDetails: FunctionComponent<GoalDetailsProps> = ({
