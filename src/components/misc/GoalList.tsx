@@ -15,6 +15,7 @@ export interface GoalListProps {
   emptyText?: string;
   onCompleteOrTrackActionInteraction?: (goalId?: string) => void;
   onEditActionInteraction?: (goalId?: string) => void;
+  onInfoActionInteraction?: (goalId?: string) => void;
   disableLeftActions?: boolean;
   disableRightActions?: boolean;
   onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
@@ -26,6 +27,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
                                                              disableRightActions = false,
                                                              onCompleteOrTrackActionInteraction,
                                                              onEditActionInteraction,
+                                                             onInfoActionInteraction,
                                                              onChangeScrollEnabled,
                                                            }) => {
   useEffect(() => {
@@ -48,6 +50,12 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
     icon: Icons.edit,
     color: colors.yellow,
     onInteraction: onEditActionInteraction,
+  };
+
+  const infoAction: SwipeableItemAction = {
+    icon: Icons.info,
+    color: colors.gray,
+    onInteraction: onInfoActionInteraction,
   };
 
   const actionsLeft = (goalId: string): SwipeableItemAction[] => {
@@ -77,7 +85,7 @@ export const GoalList: FunctionComponent<GoalListProps> = ({
       disableLeftActions={disableLeftActions}
       disableRightActions={disableRightActions}
       actionsLeft={actionsLeft}
-      actionsRight={[editAction]}
+      actionsRight={[editAction, infoAction]}
       actionWidth={73}
       renderItem={({ item }: { item: GoalRowProps }) => <GoalRow {...item} />}
       autoSelectLeftOuterAction

@@ -13,6 +13,10 @@ export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = ({ naviga
     navigation.navigate('EditGoal', { goalId });
   }
 
+  function handleInfoActionInteraction(goalId: string) {
+    navigation.navigate('GoalInfo', { goalId, date: new Date() });
+  }
+
   function handleChangeScrollEnabled(scrollEnabled: boolean) {
     // @ts-ignore
     scrollViewRef.current?.setNativeProps({ scrollEnabled });
@@ -26,11 +30,13 @@ export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = ({ naviga
 
       <Section title='Incomplete Goals'>
         <TodaysIncompleteGoals onEditActionInteraction={handleEditActionInteraction}
+                               onInfoActionInteraction={handleInfoActionInteraction}
                                onChangeScrollEnabled={handleChangeScrollEnabled} />
       </Section>
 
       <Section title='Completed Goals'>
         <TodaysCompletedGoals onEditActionInteraction={handleEditActionInteraction}
+                              onInfoActionInteraction={handleInfoActionInteraction}
                               onChangeScrollEnabled={handleChangeScrollEnabled} />
       </Section>
     </ScrollView>

@@ -15,6 +15,7 @@ export const Icons = {
   checkmarkLarge: require('./checkmark-large.png'),
   stopwatch: require('./stopwatch.png'),
   undo: require('./undo.png'),
+  info: require('./info.png'),
   edit: require('./edit.png'),
   dateSpan: require('./date-span.png'),
   calendar: require('./calendar.png'),

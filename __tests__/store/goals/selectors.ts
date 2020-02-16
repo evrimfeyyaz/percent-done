@@ -465,6 +465,29 @@ describe('goals selectors', () => {
     });
   });
 
+  describe('getTotalCompletedMsForGoal', () => {
+    it('returns the sum of all tracked time for given goal', () => {
+      const goal = createGoal({ durationInMin: 30 });
+      const timetableEntry1 = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 15,
+      });
+      const timetableEntry2 = createTimetableEntry({
+        goalId: goal.id,
+        startDate: yesterday,
+        startHour: 11,
+        durationInMin: 30,
+      });
+      const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry1, timetableEntry2] });
+
+      const result = getTotalCompletedMsForGoal(state, today);
+
+      expect(result).toEqual((30 + 15) * 60 * 1000);
+    });
+  });
+
   describe('getRemainingMs', () => {
     const goal = createGoal({ durationInMin: 60 }, [today]);
     const timetableEntry1 = createTimetableEntry({

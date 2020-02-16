@@ -11,3 +11,4 @@ export * from './EditProjectForm';
 export * from './AddProjectForm';
 export * from './TimeMachine';
 export * from './CurrentStats';
+export * from './GoalInfo';

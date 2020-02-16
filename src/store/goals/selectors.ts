@@ -97,6 +97,14 @@ export function getTotalCompletedMsForDate(state: StoreState, date: Date): numbe
 }
 
 /**
+ * Returns the sum of all tracked time for given goal.
+ */
+// export function getTotalCompletedMsForGoal(state: StoreState, goal: Goal): number {
+//   const timetableEntries = state.timetableEntries.
+//   return goals.reduce((total, goal) => total + getCompletedMs(state, goal, date), 0);
+// }
+
+/**
  * Returns the remaining time for a goal on a given date in milliseconds.
  */
 export function getRemainingMs(state: StoreState, goal: Goal, date: Date): number | null {

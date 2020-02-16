@@ -8,9 +8,11 @@ import { EditTimetableEntryModal } from './EditTimetableEntryModal';
 import { EditProjectModal } from './EditProjectModal';
 import { AddProjectModal } from './AddProjectModal';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
+import { GoalInfoModal } from './GoalInfoModal';
 
 export const AppNavigator = createStackNavigator({
   MainTabs: MainNavigator,
+  GoalInfo: GoalInfoModal,
   AddGoal: AddGoalModal,
   EditGoal: EditGoalModal,
   AddProjectModal: AddProjectModal,

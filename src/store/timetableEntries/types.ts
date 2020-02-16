@@ -1,6 +1,5 @@
 import { NormalizedEntityState } from '../types';
 import { Action } from 'redux';
-import { WithOptionalId } from '../../utilities/types';
 
 export interface TimetableEntry {
   id: string;

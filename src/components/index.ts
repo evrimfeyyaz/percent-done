@@ -3,6 +3,7 @@ export * from './misc/Section';
 export * from './misc/BackgroundView';
 export * from './misc/GoalRow';
 export * from './misc/GoalList';
+export * from './misc/GoalDetails';
 export * from './misc/BottomSheet';
 export * from './misc/TimeTracker';
 export * from './misc/EmptyContainer';
@@ -14,6 +15,7 @@ export * from './misc/ProjectModal';
 export * from './misc/ListHeader';
 export * from './misc/DayDetails';
 export * from './misc/Onboarding';
+export * from './misc/DurationInfo';
 
 // Charts
 export * from './charts/ProgressChart';

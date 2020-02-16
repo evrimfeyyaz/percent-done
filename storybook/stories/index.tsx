@@ -43,7 +43,7 @@ import {
   ListHeader,
   PercentDoneStats,
   HoursDoneStats,
-  DayDetails, Stats, Onboarding,
+  DayDetails, Stats, Onboarding, GoalDetails, DurationInfo,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -95,6 +95,24 @@ storiesOf('Miscellaneous', module)
   ))
   .add('Goals list', () => {
     return <GoalList goals={createGoals(100)} />;
+  })
+  .add('Goal details (tracked goal)', () => {
+    return (
+      <GoalDetails
+        chainLength={10}
+        totalCompletedMs={60 * 60 * 1000}
+        isTracked
+      />
+    );
+  })
+  .add('Goal details (non-tracked goal)', () => {
+    return (
+      <GoalDetails
+        chainLength={1}
+        isTracked={false}
+        isCompleted={true}
+      />
+    );
   })
   .add('Project row', () => <ProjectRow id='project-id' title="PercentDone" totalTimeSpentInMs={1 * 60 * 60 * 1000} />)
   .add('Project list', () => {
@@ -212,6 +230,9 @@ storiesOf('Miscellaneous', module)
   ))
   .add('Onboarding', () => (
     <Onboarding />
+  ))
+  .add('Duration info', () => (
+    <DurationInfo durationInMs={60 * 60 * 1000} tailText='left' />
   ));
 
 storiesOf('Charts', module)
@@ -253,14 +274,14 @@ storiesOf('Charts', module)
   .add('Stats', () => (
       <ScrollView style={{ width: '100%' }}>
         <Stats
-          hasEnoughDataToShow7DaysStats
-          hasEnoughDataToShow30DaysStats
+          hasEnoughDataToShow7DaysStats={() => true}
+          hasEnoughDataToShow30DaysStats={() => true}
           statsPeriodKey='7'
           onStatsPeriodKeyChange={action('stats-period-key-changed')}
-          totalCompletedMsForLast7Days={getWeeklyHoursDoneData()}
-          totalCompletedMsForLast30Days={getMonthlyHoursDoneData()}
-          totalPercentDoneForLast7Days={getWeeklyPercentDoneData()}
-          totalPercentDoneForLast30Days={getMonthlyPercentDoneData()}
+          getTotalCompletedMsForLast7Days={() => getWeeklyHoursDoneData()}
+          getTotalCompletedMsForLast30Days={() => getMonthlyHoursDoneData()}
+          getTotalPercentDoneForLast7Days={() => getWeeklyPercentDoneData()}
+          getTotalPercentDoneForLast30Days={() => getMonthlyPercentDoneData()}
         />
       </ScrollView>
     ),

@@ -11,6 +11,7 @@ import { getCurrentDate } from '../store/settings/selectors';
 interface TodaysCompletedGoalsProps {
   onEditActionInteraction?: (goalId: string) => void;
   onChangeScrollEnabled?: (scrollEnabled: boolean) => void;
+  onInfoActionInteraction?: (goalId: string) => void;
 }
 
 const mapStateToProps = (state: StoreState): GoalListProps => {
@@ -25,6 +26,7 @@ const mapStateToProps = (state: StoreState): GoalListProps => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: TodaysCompletedGoalsProps) => ({
   onCompleteOrTrackActionInteraction: (goalId: string) => dispatch(handleCompleteOrTrackRequest(goalId)),
   onEditActionInteraction: ownProps.onEditActionInteraction,
+  onInfoActionInteraction: ownProps.onInfoActionInteraction,
   onChangeScrollEnabled: ownProps.onChangeScrollEnabled,
 });
 

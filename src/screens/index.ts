@@ -12,3 +12,4 @@ export * from './EditTimetableEntryScreen';
 export * from './EditProjectScreen';
 export * from './AddProjectScreen';
 export * from './TimeMachineScreen';
+export * from './GoalInfoScreen';

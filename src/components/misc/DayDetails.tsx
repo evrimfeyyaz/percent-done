@@ -15,6 +15,7 @@ export interface DayDetailsProps {
   completedGoals: GoalRowProps[];
   entries: TimetableRow[];
   onEditActionInteraction?: (goalId?: string) => void;
+  onInfoActionInteraction?: (goalId?: string) => void;
   onEntryPress?: (entryId: string) => void;
   onDateChange?: (date: Date) => void;
 }
@@ -28,6 +29,7 @@ export const DayDetails: FunctionComponent<DayDetailsProps> = ({
                                                                  completedGoals,
                                                                  entries,
                                                                  onEditActionInteraction,
+                                                                 onInfoActionInteraction,
                                                                  onEntryPress,
                                                                  onDateChange,
                                                                }) => {
@@ -51,12 +53,12 @@ export const DayDetails: FunctionComponent<DayDetailsProps> = ({
 
       <Section title="Incomplete Goals">
         <GoalList goals={incompleteGoals} onEditActionInteraction={onEditActionInteraction}
-                  emptyText={emptyText} disableLeftActions />
+                  onInfoActionInteraction={onInfoActionInteraction} emptyText={emptyText} disableLeftActions />
       </Section>
 
       <Section title="Completed Goals">
         <GoalList goals={completedGoals} onEditActionInteraction={onEditActionInteraction}
-                  emptyText={emptyText} disableLeftActions />
+                  onInfoActionInteraction={onInfoActionInteraction} emptyText={emptyText} disableLeftActions />
       </Section>
 
       <Section title="Timetable">
