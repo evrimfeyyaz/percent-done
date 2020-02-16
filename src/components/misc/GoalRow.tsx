@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   circle: {
-    height: 36,
-    width: 36,
+    height: 34,
+    width: 34,
   },
 });
