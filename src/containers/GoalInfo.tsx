@@ -1,7 +1,13 @@
 import React from 'react';
 import { StoreState } from '../store/types';
 import { GoalDetails, GoalDetailsProps } from '../components';
-import { getChainLength, getCompletedMs, getGoalById, isCompleted } from '../store/goals/selectors';
+import {
+  getChainLength,
+  getCompletedMs,
+  getGoalById,
+  getTotalCompletedMsForGoal,
+  isCompleted,
+} from '../store/goals/selectors';
 import { isTimeTracked } from '../store/goals/utilities';
 import { Dispatch } from 'redux';
 import { GoalActionTypes } from '../store/goals/types';
@@ -23,7 +29,7 @@ const mapStateToProps = (state: StoreState, ownProps: GoalInfoProps): GoalDetail
     isTracked: isTimeTracked(goal),
     chainLength: getChainLength(state, goal, date),
     isCompleted: isCompleted(state, goal, date),
-    totalCompletedMs: getCompletedMs(state, goal, date),
+    totalCompletedMs: getTotalCompletedMsForGoal(state, goal),
   };
 };
 

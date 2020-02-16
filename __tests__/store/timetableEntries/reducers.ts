@@ -7,6 +7,7 @@ describe('timetable entries reducer', () => {
       allIds: [],
       idsByDate: {},
       idsByProjectId: {},
+      idsByGoalId: {},
     });
   });
 });

@@ -9,7 +9,7 @@ import {
 } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import { getGoalColor, isActiveToday, isCreated, isDeleted, isTimeTracked } from './utilities';
-import { getTimetableEntriesByDate } from '../timetableEntries/selectors';
+import { getTimetableEntriesByDate, getTimetableEntryById } from '../timetableEntries/selectors';
 
 export function getGoalById(state: StoreState, id: string): Goal {
   return state.goals.byId[id];
@@ -99,10 +99,11 @@ export function getTotalCompletedMsForDate(state: StoreState, date: Date): numbe
 /**
  * Returns the sum of all tracked time for given goal.
  */
-// export function getTotalCompletedMsForGoal(state: StoreState, goal: Goal): number {
-//   const timetableEntries = state.timetableEntries.
-//   return goals.reduce((total, goal) => total + getCompletedMs(state, goal, date), 0);
-// }
+export function getTotalCompletedMsForGoal(state: StoreState, goal: Goal): number {
+  const timetableEntries = state.timetableEntries.idsByGoalId[goal.id].map(id => getTimetableEntryById(state, id));
+
+  return timetableEntries.reduce((total, entry) => total + ((entry?.endTimestamp ?? 0) - (entry?.startTimestamp ?? 0)), 0);
+}
 
 /**
  * Returns the remaining time for a goal on a given date in milliseconds.

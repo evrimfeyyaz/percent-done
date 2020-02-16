@@ -36,6 +36,15 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
     entryIdsByProjectId[projectId] = [...entryIds, entry.id];
   });
 
+  const entryIdsByGoalId: { [goalId: string]: string[] } = {};
+  timetableEntries.forEach(entry => {
+    const goalId = entry.goalId;
+
+    const entryIds = entryIdsByGoalId[goalId] || [];
+
+    entryIdsByGoalId[goalId] = [...entryIds, entry.id];
+  });
+
   const goalsState: GoalsState = {
     ...createNormalizedEntityState(goals),
     trackedGoal: {},
@@ -44,6 +53,7 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
     ...createNormalizedEntityState(timetableEntries),
     idsByDate: timetableEntryIdsByDate,
     idsByProjectId: entryIdsByProjectId,
+    idsByGoalId: entryIdsByGoalId,
   };
   const projectsState: ProjectsState = {
     ...createNormalizedEntityState(projects),
@@ -52,6 +62,9 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
 
   const settingsState: SettingsState = {
     currentDateTimestamp: Date.now(),
+    hasOnboarded: true,
+    timeMachineDateTimestamp: Date.now(),
+    statsPeriodKey: '7',
   };
 
   return {

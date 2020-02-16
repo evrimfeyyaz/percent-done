@@ -11,10 +11,17 @@ import {
   getProgress,
   getRemainingMs,
   getTimetableEntriesForGoal,
-  getTotalCompletedMsForDate, getTotalCompletedMsForLast30Days, getTotalCompletedMsForLast7Days,
-  getTotalProgressForDate, getTotalProgressForLast30Days, getTotalProgressForLast7Days,
+  getTotalCompletedMsForDate,
+  getTotalCompletedMsForGoal,
+  getTotalCompletedMsForLast30Days,
+  getTotalCompletedMsForLast7Days,
+  getTotalProgressForDate,
+  getTotalProgressForLast30Days,
+  getTotalProgressForLast7Days,
   getTotalRemainingMsForDate,
-  isCompleted, isScheduled, isThereEnoughDataToShowStatisticsOfLastNDays,
+  isCompleted,
+  isScheduled,
+  isThereEnoughDataToShowStatisticsOfLastNDays,
 } from '../../../src/store/goals/selectors';
 import { GoalRowProps } from '../../../src/components';
 import { Goal } from '../../../src/store/goals/types';
@@ -482,7 +489,7 @@ describe('goals selectors', () => {
       });
       const state = createStoreState({ goals: [goal], timetableEntries: [timetableEntry1, timetableEntry2] });
 
-      const result = getTotalCompletedMsForGoal(state, today);
+      const result = getTotalCompletedMsForGoal(state, goal);
 
       expect(result).toEqual((30 + 15) * 60 * 1000);
     });

@@ -18,6 +18,7 @@ export interface TimetableEntry {
 export interface TimetableEntriesState extends NormalizedEntityState<TimetableEntry> {
   idsByDate: { [date: string]: string[] }
   idsByProjectId: { [projectId: string]: string[] }
+  idsByGoalId: { [goalId: string]: string[] }
 }
 
 export const ADD_TIMETABLE_ENTRY = 'ADD_TIMETABLE_ENTRY';

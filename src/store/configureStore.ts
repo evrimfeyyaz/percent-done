@@ -3,13 +3,14 @@ import { goalsReducer } from './goals/reducers';
 import { timetableEntriesReducer } from './timetableEntries/reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistStore, persistReducer, createMigrate } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import { PersistConfig } from 'redux-persist/es/types';
 import { StoreState } from './types';
 import { projectsReducer } from './projects/reducers';
 import { settingsReducer } from './settings/reducers';
+import { storeMigrations } from './storeMigrations';
 
 export default function configureStore() {
   const rootReducer = combineReducers({
@@ -21,8 +22,11 @@ export default function configureStore() {
 
   const persistConfig: PersistConfig<StoreState> = {
     key: 'root',
+    version: 0,
     storage: AsyncStorage,
     stateReconciler: autoMergeLevel2,
+    // @ts-ignore
+    migrate: createMigrate(storeMigrations),
   };
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);

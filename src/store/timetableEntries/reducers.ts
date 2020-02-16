@@ -1,8 +1,8 @@
 import { combineReducers, Reducer } from 'redux';
 import {
   ADD_TIMETABLE_ENTRY,
-  EDIT_TIMETABLE_ENTRY,
   DELETE_TIMETABLE_ENTRY,
+  EDIT_TIMETABLE_ENTRY,
   TimetableEntriesState,
   TimetableEntry,
   TimetableEntryActionTypes,
@@ -111,7 +111,7 @@ const idsByProjectId: Reducer<{ [projectId: string]: string[] }, TimetableEntryA
         return {
           ...state,
           [previousProjectId]: _.without(entryIdsForPreviousProject, entry.id),
-          [projectId]: [...entryIdsForNewProject, entry.id],
+          [projectId]: _.uniq([...entryIdsForNewProject, entry.id]),
         };
       }
 
@@ -139,9 +139,44 @@ const idsByProjectId: Reducer<{ [projectId: string]: string[] }, TimetableEntryA
   }
 };
 
+const idsByGoalId: Reducer<{ [goalId: string]: string[] }, TimetableEntryActionTypes> = (state = {}, action) => {
+  let goalId: string, id: string, entryIdsForGoal: string[];
+
+  switch (action.type) {
+    case ADD_TIMETABLE_ENTRY:
+      goalId = action.timetableEntry.goalId;
+      id = action.timetableEntry.id;
+      entryIdsForGoal = state[goalId];
+
+      return { ...state, [goalId]: [...entryIdsForGoal, id] };
+    case EDIT_TIMETABLE_ENTRY:
+      goalId = action.timetableEntry.goalId;
+      id = action.timetableEntry.id;
+      entryIdsForGoal = state[goalId];
+
+      const oldGoalId = action.oldTimetableEntry.goalId;
+      const entryIdsForOldGoal = state[oldGoalId];
+
+      return {
+        ...state,
+        [oldGoalId]: _.without(entryIdsForOldGoal, id),
+        [goalId]: _.uniq([...entryIdsForGoal, id]),
+      };
+    case DELETE_TIMETABLE_ENTRY:
+      goalId = action.timetableEntry.goalId;
+      id = action.timetableEntry.id;
+      entryIdsForGoal = state[goalId];
+
+      return { ...state, [goalId]: _.without(entryIdsForGoal, id) };
+    default:
+      return state;
+  }
+};
+
 export const timetableEntriesReducer: Reducer<TimetableEntriesState> = combineReducers({
   byId,
   allIds,
   idsByDate,
   idsByProjectId,
+  idsByGoalId,
 });
