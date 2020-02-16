@@ -9,6 +9,7 @@ import { getCurrentDate } from '../store/settings/selectors';
 
 interface AllGoalsProps {
   onEditActionInteraction?: (goalId: string) => void;
+  onInfoActionInteraction?: (goalId: string) => void;
 }
 
 const mapStateToProps = (state: StoreState): GoalListProps => {
@@ -22,6 +23,7 @@ const mapStateToProps = (state: StoreState): GoalListProps => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: AllGoalsProps) => ({
   onEditActionInteraction: ownProps.onEditActionInteraction,
+  onInfoActionInteraction: ownProps.onInfoActionInteraction,
 });
 
 export const AllGoals = connect(mapStateToProps, mapDispatchToProps)(GoalList);

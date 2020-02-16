@@ -16,6 +16,10 @@ export const AllGoalsScreen: NavigationStackScreenComponent = ({ navigation }) =
     navigation.navigate('AddGoal');
   };
 
+  const handleInfoActionInteraction = (goalId: string) => {
+    navigation.navigate('GoalInfo', { goalId, date: new Date() });
+  };
+
   const description = 'Goals are tasks that you would like to track day by day, ' +
     'such as "writing for an hour every day" or "exercising Monday to Friday."';
 
@@ -28,7 +32,10 @@ export const AllGoalsScreen: NavigationStackScreenComponent = ({ navigation }) =
         description={description}
         descriptionButtonTitle='What are Goals?'
       />
-      <AllGoals onEditActionInteraction={handleEditActionInteraction} />
+      <AllGoals
+        onEditActionInteraction={handleEditActionInteraction}
+        onInfoActionInteraction={handleInfoActionInteraction}
+      />
     </>
   );
 };
