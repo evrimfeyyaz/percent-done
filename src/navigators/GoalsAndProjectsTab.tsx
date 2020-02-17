@@ -1,4 +1,4 @@
-import { AllGoalsScreen, AllProjectsScreen } from '../screens';
+import { AllGoalsScreen, AllProjectsScreen, GoalInfoScreen } from '../screens';
 import { createStackNavigator } from 'react-navigation-stack';
 import { headerConfig } from './headerConfig';
 import { createNavigator, TabRouter } from 'react-navigation';
@@ -25,7 +25,13 @@ const TabsNavigator = createNavigator(
 );
 
 export const GoalsAndProjectsTab = createStackNavigator({
-    GoalsAndProjects: TabsNavigator,
+    GoalsAndProjects: {
+      screen: TabsNavigator,
+      navigationOptions: {
+        title: 'Goals & Projects',
+      },
+    },
+    GoalInfo: GoalInfoScreen,
   },
   {
     navigationOptions: {
@@ -33,7 +39,6 @@ export const GoalsAndProjectsTab = createStackNavigator({
     },
     defaultNavigationOptions: {
       ...headerConfig,
-      title: 'Goals & Projects',
     },
   },
 );

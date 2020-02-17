@@ -13,4 +13,12 @@ export const headerConfig: NavigationScreenConfig<NavigationStackOptions, Naviga
     fontSize: 14,
     textTransform: 'uppercase',
   },
+  headerBackTitleStyle: {
+    fontFamily: fonts.semibold,
+    fontWeight: '600',
+    color: colors.offBlack,
+    fontSize: 14,
+    textTransform: 'uppercase',
+  },
+  headerTintColor: colors.offBlack,
 };

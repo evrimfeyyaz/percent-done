@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { BackgroundView, HeaderButton } from '../components';
+import { BackgroundView } from '../components';
 import { GoalInfo } from '../containers';
 
 export const GoalInfoScreen: NavigationStackScreenComponent = ({ navigation }) => {
@@ -11,9 +11,6 @@ export const GoalInfoScreen: NavigationStackScreenComponent = ({ navigation }) =
   );
 };
 
-GoalInfoScreen.navigationOptions = ({ navigation }) => ({
+GoalInfoScreen.navigationOptions = {
   title: 'Goal Information',
-  headerLeft: (
-    <HeaderButton title='Close' onPress={() => navigation.dismiss()} />
-  ),
-});
+};

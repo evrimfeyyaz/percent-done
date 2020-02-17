@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNavigator, TabRouter } from 'react-navigation';
 import { HeaderButton, TabNavigationView } from '../components';
-import { TodaysGoalsScreen, TodaysTimetableScreen } from '../screens';
+import { GoalInfoScreen, TodaysGoalsScreen, TodaysTimetableScreen } from '../screens';
 import { headerConfig } from './headerConfig';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -25,13 +25,18 @@ const TabsNavigator = createNavigator(
 );
 
 export const TodayTab = createStackNavigator({
-    Today: TabsNavigator,
+    Today: {
+      screen: TabsNavigator,
+      navigationOptions: ({ navigation }) => ({
+        title: 'Today',
+        headerRight: (<HeaderButton title='Add Goal' primary onPress={() => navigation.navigate('AddGoal')} />),
+      }),
+    },
+    GoalInfo: GoalInfoScreen,
   },
   {
-    defaultNavigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: {
       ...headerConfig,
-      headerRight: (<HeaderButton title='Add Goal' primary onPress={() => navigation.navigate('AddGoal')} />),
-      title: 'Today',
-    }),
+    },
   },
 );
