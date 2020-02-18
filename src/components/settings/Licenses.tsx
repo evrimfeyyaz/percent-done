@@ -11,8 +11,16 @@ interface LicensesJsonFormat {
   };
 }
 
+export interface LicenseData {
+  key: string;
+  library: string;
+  licenses: string;
+  repository: string;
+  licenseUrl: string;
+}
+
 interface LicensesProps {
-  onLibraryPress?: (library: string) => void;
+  onLibraryPress?: (license: LicenseData) => void;
 }
 
 export const Licenses: FunctionComponent<LicensesProps> = ({ onLibraryPress }) => {
@@ -28,7 +36,7 @@ export const Licenses: FunctionComponent<LicensesProps> = ({ onLibraryPress }) =
       style={styles.container}
       data={licenses}
       renderItem={({ item }) => (
-        <MenuLink title={item.library} onPress={() => onLibraryPress?.(item.library)} />
+        <MenuLink title={item.library} onPress={() => onLibraryPress?.(item)} />
       )}
     />
   );

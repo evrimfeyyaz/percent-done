@@ -1,4 +1,4 @@
-export * from './SettingsScreen';
+export * from './settings/SettingsScreen';
 export * from './AllGoalsScreen';
 export * from './AllProjectsScreen';
 export * from './StatsScreen';

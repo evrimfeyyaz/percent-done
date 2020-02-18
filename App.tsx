@@ -24,7 +24,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-export default Storybook;
+// export default Storybook;
 
 const { store, persistor } = configureStore();
 configureNotifications();
@@ -107,4 +107,4 @@ const App: FunctionComponent = () => {
     </Provider>
   );
 };
-// export default App;
+export default App;
