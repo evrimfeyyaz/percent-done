@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
   ViewStyle,
 } from 'react-native';
 import { colors, fonts } from '../../theme';
@@ -16,6 +15,8 @@ interface ButtonProps {
    * Title of the button.
    */
   title: string;
+  color?: string;
+  titleColor?: string;
   /**
    * Icon for the button. Should be white and 24x24.
    */
@@ -30,6 +31,8 @@ interface ButtonProps {
 export const Button: FunctionComponent<ButtonProps> = ({
                                                          title,
                                                          iconSource = null,
+                                                         color = colors.orange,
+                                                         titleColor = colors.white,
                                                          onPress,
                                                          style,
                                                        }) => {
@@ -38,10 +41,18 @@ export const Button: FunctionComponent<ButtonProps> = ({
     icon = <Image source={iconSource} style={styles.icon} />;
   }
 
+  const colorStyle = {
+    backgroundColor: color,
+  };
+
+  const titleColorStyle = {
+    color: titleColor,
+  };
+
   return (
-    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
+    <TouchableOpacity style={[styles.container, colorStyle, style]} onPress={onPress}>
       {icon}
-      <Text style={styles.title}>{title}</Text>
+      <Text style={[styles.title, titleColorStyle]}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -52,7 +63,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.orange,
     paddingHorizontal: 40,
     height: 45,
     borderRadius: 4,
@@ -60,7 +70,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: fonts.semibold,
     fontSize: 13,
-    color: colors.white,
   },
   icon: {
     height: 24,

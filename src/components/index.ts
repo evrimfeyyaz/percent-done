@@ -17,6 +17,12 @@ export * from './misc/DayDetails';
 export * from './misc/Onboarding';
 export * from './misc/DurationInfo';
 
+// Settings
+export * from './settings/Settings';
+export * from './settings/License';
+export * from './settings/Licenses';
+export * from './settings/About';
+
 // Charts
 export * from './charts/ProgressChart';
 export * from './charts/Timetable';

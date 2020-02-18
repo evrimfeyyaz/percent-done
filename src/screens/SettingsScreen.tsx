@@ -1,13 +1,17 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { BackgroundView } from '../components';
-import { textStyles } from '../theme';
+import { BackgroundView, Settings } from '../components';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
-export const SettingsScreen: NavigationStackScreenComponent = () => {
+export const SettingsScreen: NavigationStackScreenComponent = ({ navigation }) => {
+  const handleTutorialPress = () => {
+    navigation.navigate('Onboarding');
+  };
+
   return (
     <BackgroundView>
-      <Text style={textStyles.body}>Settings Screen</Text>
+      <Settings
+        onTutorialPress={handleTutorialPress}
+      />
     </BackgroundView>
   );
 };

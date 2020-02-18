@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { InputContainer } from './InputContainer';
-import { GestureResponderEvent, Image } from 'react-native';
+import { GestureResponderEvent, Image, Platform } from 'react-native';
 import { Icons } from '../../../assets';
 
 interface MenuLinkProps {
@@ -14,7 +14,8 @@ export const MenuLink: FunctionComponent<MenuLinkProps> = ({
                                                              onPress,
                                                              value,
                                                            }) => {
-  const rightItem = <Image source={Icons.chevronRight} />;
+  const icon = Platform.OS === 'ios' ? Icons.chevronRight : Icons.rightArrow;
+  const rightItem = <Image source={icon} />;
 
   return (
     <InputContainer title={title} rightItem={rightItem} onPress={onPress} value={value} />

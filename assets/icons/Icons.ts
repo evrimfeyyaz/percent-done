@@ -21,6 +21,7 @@ export const Icons = {
   calendar: require('./calendar.png'),
 
   chevronRight: require('./chevron-right.png'),
+  rightArrow: require('./right-arrow.png'),
 
   link: require('./link.png'),
   linkYellow: require('./link-yellow.png'),
@@ -29,4 +30,8 @@ export const Icons = {
   addEntry: require('./add-entry.png'),
   goal: require('./goal.png'),
   project: require('./project.png'),
+  icons8: require('./icons8.png'),
+  twitter: require('./twitter.png'),
+  github: require('./github.png'),
+  evrim: require('./evrim.png'),
 };

@@ -43,7 +43,7 @@ import {
   ListHeader,
   PercentDoneStats,
   HoursDoneStats,
-  DayDetails, Stats, Onboarding, GoalDetails, DurationInfo,
+  DayDetails, Stats, Onboarding, GoalDetails, DurationInfo, Settings, License, Licenses, About,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -99,6 +99,7 @@ storiesOf('Miscellaneous', module)
   .add('Goal details (tracked goal)', () => {
     return (
       <GoalDetails
+        title='Write'
         chainLength={10}
         totalCompletedMs={60 * 60 * 1000}
         isTracked
@@ -108,6 +109,7 @@ storiesOf('Miscellaneous', module)
   .add('Goal details (non-tracked goal)', () => {
     return (
       <GoalDetails
+        title='Exercise'
         chainLength={1}
         isTracked={false}
         isCompleted={true}
@@ -233,6 +235,26 @@ storiesOf('Miscellaneous', module)
   ))
   .add('Duration info', () => (
     <DurationInfo durationInMs={60 * 60 * 1000} tailText='left' />
+  ));
+
+storiesOf('Settings', module)
+  .add('Settings', () => (
+    <Settings />
+  ))
+  .add('License', () => {
+    const license = {
+      'licenses': 'MIT',
+      'repository': 'https://github.com/react-native-community/react-native-async-storage',
+      'licenseUrl': 'https://github.com/react-native-community/react-native-async-storage/raw/master/LICENSE',
+    };
+
+    return <License licenses={license.licenses} repository={license.repository} licenseUrl={license.licenseUrl} />;
+  })
+  .add('Licenses', () => (
+    <Licenses />
+  ))
+  .add('About', () => (
+    <About />
   ));
 
 storiesOf('Charts', module)
