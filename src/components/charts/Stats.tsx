@@ -70,6 +70,8 @@ export const Stats: FunctionComponent<StatsProps> = ({
         percentDoneStats: null,
         hoursDoneStats: null,
       });
+
+      return;
     }
 
     if (statsPeriodKey === '7') {
