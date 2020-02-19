@@ -173,7 +173,7 @@ const idsByGoalId: Reducer<{ [goalId: string]: string[] }, TimetableEntryActionT
   }
 };
 
-export const timetableEntriesReducer: Reducer<TimetableEntriesState> = combineReducers({
+export const timetableEntriesReducer: Reducer<TimetableEntriesState, TimetableEntryActionTypes> = combineReducers({
   byId,
   allIds,
   idsByDate,

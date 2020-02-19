@@ -41,16 +41,10 @@
         "licenseUrl": "https://github.com/ds300/postinstall-postinstall/raw/master/LICENSE",
         "parents": "PercentDone"
     },
-    "react-native-actions-sheet": {
-        "licenses": "MIT",
-        "repository": "https://github.com/ammarahm-ed/react-native-actions-sheet",
-        "licenseUrl": "https://github.com/ammarahm-ed/react-native-actions-sheet/raw/master/LICENSE",
-        "parents": "PercentDone"
-    },
     "react-native-gesture-handler": {
         "licenses": "MIT",
-        "repository": "https://github.com/kmagiera/react-native-gesture-handler",
-        "licenseUrl": "https://github.com/kmagiera/react-native-gesture-handler/raw/master/LICENSE",
+        "repository": "https://github.com/software-mansion/react-native-gesture-handler",
+        "licenseUrl": "https://github.com/software-mansion/react-native-gesture-handler/raw/master/LICENSE",
         "parents": "PercentDone"
     },
     "react-native-haptic-feedback": {
@@ -97,8 +91,20 @@
     },
     "react-native-reanimated": {
         "licenses": "MIT",
-        "repository": "https://github.com/kmagiera/react-native-reanimated",
-        "licenseUrl": "https://github.com/kmagiera/react-native-reanimated/raw/master/LICENSE",
+        "repository": "https://github.com/software-mansion/react-native-reanimated",
+        "licenseUrl": "https://github.com/software-mansion/react-native-reanimated/raw/master/LICENSE",
+        "parents": "PercentDone"
+    },
+    "react-native-safe-area-context": {
+        "licenses": "MIT",
+        "repository": "https://github.com/th3rdwave/react-native-safe-area-context",
+        "licenseUrl": "https://github.com/th3rdwave/react-native-safe-area-context/raw/master/LICENSE",
+        "parents": "PercentDone"
+    },
+    "react-native-screens": {
+        "licenses": "MIT",
+        "repository": "https://github.com/kmagiera/react-native-screens",
+        "licenseUrl": "https://github.com/kmagiera/react-native-screens/raw/master/LICENSE",
         "parents": "PercentDone"
     },
     "react-native-splash-screen": {
@@ -117,12 +123,6 @@
         "licenses": "MIT",
         "repository": "https://github.com/react-native-community/react-native-svg",
         "licenseUrl": "https://github.com/react-native-community/react-native-svg/raw/master/LICENSE",
-        "parents": "PercentDone"
-    },
-    "react-native-swipe-list-view": {
-        "licenses": "MIT",
-        "repository": "https://github.com/jemise111/react-native-swipe-list-view",
-        "licenseUrl": "https://github.com/jemise111/react-native-swipe-list-view/raw/master/LICENSE",
         "parents": "PercentDone"
     },
     "react-native": {
@@ -175,8 +175,8 @@
     },
     "uuid": {
         "licenses": "MIT",
-        "repository": "https://github.com/kelektiv/node-uuid",
-        "licenseUrl": "https://github.com/kelektiv/node-uuid/raw/master/LICENSE.md",
+        "repository": "https://github.com/uuidjs/uuid",
+        "licenseUrl": "https://github.com/uuidjs/uuid/raw/master/LICENSE.md",
         "parents": "PercentDone"
     }
 }

@@ -26,7 +26,10 @@ export const AddGoalScreen: NavigationStackScreenComponent = ({ navigation }) =>
 
   return (
     <BackgroundView style={styles.container}>
-      <AddGoalForm ref={formRef} />
+      <AddGoalForm
+        // @ts-ignore
+        ref={formRef}
+      />
     </BackgroundView>
   );
 };
@@ -39,8 +42,6 @@ const styles = StyleSheet.create({
 
 AddGoalScreen.navigationOptions = ({ navigation }) => ({
   title: 'Add Goal',
-  headerLeft: (
-    <HeaderCancelButton onPress={() => navigation.dismiss()} />
-  ),
-  headerRight: <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
+  headerLeft: () => <HeaderCancelButton onPress={() => navigation.dismiss()} />,
+  headerRight: () => <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
 });

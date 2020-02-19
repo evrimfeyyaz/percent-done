@@ -41,8 +41,6 @@ const styles = StyleSheet.create({
 
 EditGoalScreen.navigationOptions = ({ navigation }) => ({
   title: 'Edit Goal',
-  headerLeft: (
-    <HeaderCancelButton onPress={() => navigation.dismiss()} />
-  ),
-  headerRight: <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
+  headerLeft: () => <HeaderCancelButton onPress={() => navigation.dismiss()} />,
+  headerRight: () => <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
 });

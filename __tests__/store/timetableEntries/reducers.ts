@@ -2,7 +2,8 @@ import { timetableEntriesReducer } from '../../../src/store/timetableEntries/red
 
 describe('timetable entries reducer', () => {
   it('returns the initial state', () => {
-    expect(timetableEntriesReducer(undefined, { type: '' })).toEqual({
+    // @ts-ignore
+    expect(timetableEntriesReducer(undefined, { type: undefined })).toEqual({
       byId: {},
       allIds: [],
       idsByDate: {},

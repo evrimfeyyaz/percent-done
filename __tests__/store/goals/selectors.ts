@@ -493,6 +493,15 @@ describe('goals selectors', () => {
 
       expect(result).toEqual((30 + 15) * 60 * 1000);
     });
+
+    it('returns `0` when no timetable entry has been added for given goal`', () => {
+      const goal = createGoal({ durationInMin: 30 });
+      const state = createStoreState({ goals: [goal] });
+
+      const result = getTotalCompletedMsForGoal(state, goal);
+
+      expect(result).toEqual(0);
+    });
   });
 
   describe('getRemainingMs', () => {

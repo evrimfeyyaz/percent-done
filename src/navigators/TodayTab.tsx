@@ -29,7 +29,7 @@ export const TodayTab = createStackNavigator({
       screen: TabsNavigator,
       navigationOptions: ({ navigation }) => ({
         title: 'Today',
-        headerRight: (<HeaderButton title='Add Goal' primary onPress={() => navigation.navigate('AddGoal')} />),
+        headerRight: () => <HeaderButton title='Add Goal' primary onPress={() => navigation.navigate('AddGoal')} />,
       }),
     },
     GoalInfo: GoalInfoScreen,

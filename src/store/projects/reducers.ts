@@ -54,7 +54,7 @@ const allIds: Reducer<string[], ProjectActionTypes> = (state = [], action) => {
   }
 };
 
-export const projectsReducer: Reducer<ProjectsState> = combineReducers({
+export const projectsReducer: Reducer<ProjectsState, ProjectActionTypes> = combineReducers({
   byId,
   idByTitle,
   allIds,

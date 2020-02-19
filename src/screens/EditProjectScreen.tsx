@@ -41,8 +41,6 @@ const styles = StyleSheet.create({
 
 EditProjectScreen.navigationOptions = ({ navigation }) => ({
   title: 'Edit Project',
-  headerLeft: (
-    <HeaderCancelButton onPress={() => navigation.dismiss()} />
-  ),
-  headerRight: <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
+  headerLeft: () => <HeaderCancelButton onPress={() => navigation.dismiss()} />,
+  headerRight: () => <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
 });

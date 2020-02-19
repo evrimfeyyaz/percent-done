@@ -26,7 +26,10 @@ export const AddTimetableEntryScreen: NavigationStackScreenComponent = ({ naviga
 
   return (
     <BackgroundView style={styles.container}>
-      <AddTimetableEntryForm ref={formRef} />
+      <AddTimetableEntryForm
+        // @ts-ignore
+        ref={formRef}
+      />
     </BackgroundView>
   );
 };
@@ -39,8 +42,6 @@ const styles = StyleSheet.create({
 
 AddTimetableEntryScreen.navigationOptions = ({ navigation }) => ({
   title: 'Add Entry',
-  headerLeft: (
-    <HeaderCancelButton onPress={() => navigation.dismiss()} />
-  ),
-  headerRight: <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
+  headerLeft: () => <HeaderCancelButton onPress={() => navigation.dismiss()} />,
+  headerRight: () => <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
 });

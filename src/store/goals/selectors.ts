@@ -100,7 +100,7 @@ export function getTotalCompletedMsForDate(state: StoreState, date: Date): numbe
  * Returns the sum of all tracked time for given goal.
  */
 export function getTotalCompletedMsForGoal(state: StoreState, goal: Goal): number {
-  const timetableEntries = state.timetableEntries.idsByGoalId[goal.id].map(id => getTimetableEntryById(state, id));
+  const timetableEntries = state.timetableEntries.idsByGoalId[goal.id]?.map(id => getTimetableEntryById(state, id)) ?? [];
 
   return timetableEntries.reduce((total, entry) => total + ((entry?.endTimestamp ?? 0) - (entry?.startTimestamp ?? 0)), 0);
 }

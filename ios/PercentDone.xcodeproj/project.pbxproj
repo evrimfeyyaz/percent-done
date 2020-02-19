@@ -47,7 +47,7 @@
 		00E356EE1AD99517003FC87E /* PercentDoneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PercentDoneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* PercentDoneTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PercentDoneTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* PercentDone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PercentDone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Percent Done.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Percent Done.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = PercentDone/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = PercentDone/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* PercentDone.app */,
+				13B07F961A680F5B00A75B9A /* Percent Done.app */,
 				00E356EE1AD99517003FC87E /* PercentDoneTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* PercentDone-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* PercentDone-tvOSTests.xctest */,
@@ -253,7 +253,7 @@
 			);
 			name = PercentDone;
 			productName = PercentDone;
-			productReference = 13B07F961A680F5B00A75B9A /* PercentDone.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Percent Done.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* PercentDone-tvOS */ = {
@@ -631,7 +631,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PercentDone.app/PercentDone";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Percent Done.app/Percent Done";
 			};
 			name = Debug;
 		};
@@ -658,7 +658,7 @@
 				PROVISIONING_PROFILE = "9a816a8c-ab98-43f0-9281-d205c9c3dc7b";
 				PROVISIONING_PROFILE_SPECIFIER = "io.evrim.PercentDone AppStore";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PercentDone.app/PercentDone";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Percent Done.app/Percent Done";
 			};
 			name = Release;
 		};
@@ -682,7 +682,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.evrim.PercentDone;
-				PRODUCT_NAME = PercentDone;
+				PRODUCT_NAME = "Percent Done";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -707,7 +707,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.evrim.PercentDone;
-				PRODUCT_NAME = PercentDone;
+				PRODUCT_NAME = "Percent Done";
 				PROVISIONING_PROFILE = "9a816a8c-ab98-43f0-9281-d205c9c3dc7b";
 				PROVISIONING_PROFILE_SPECIFIER = "io.evrim.PercentDone AppStore";
 				VERSIONING_SYSTEM = "apple-generic";
