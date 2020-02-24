@@ -146,16 +146,16 @@ const idsByGoalId: Reducer<{ [goalId: string]: string[] }, TimetableEntryActionT
     case ADD_TIMETABLE_ENTRY:
       goalId = action.timetableEntry.goalId;
       id = action.timetableEntry.id;
-      entryIdsForGoal = state[goalId];
+      entryIdsForGoal = state[goalId] ?? [];
 
       return { ...state, [goalId]: [...entryIdsForGoal, id] };
     case EDIT_TIMETABLE_ENTRY:
       goalId = action.timetableEntry.goalId;
       id = action.timetableEntry.id;
-      entryIdsForGoal = state[goalId];
+      entryIdsForGoal = state[goalId] ?? [];
 
       const oldGoalId = action.oldTimetableEntry.goalId;
-      const entryIdsForOldGoal = state[oldGoalId];
+      const entryIdsForOldGoal = state[oldGoalId] ?? [];
 
       return {
         ...state,
