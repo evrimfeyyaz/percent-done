@@ -37,7 +37,7 @@ const idByTitle: Reducer<{ [title: string]: string, }, ProjectActionTypes> = (st
     case DELETE_PROJECT:
       project = action.project;
 
-      return _.omit(state, project.title);
+      return _.omit(state, project.title.toLowerCase());
     default:
       return state;
   }
