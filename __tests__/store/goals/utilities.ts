@@ -34,7 +34,7 @@ describe('goal utilities', () => {
 
   describe('isActiveToday', () => {
     it('returns `true` when the recurring days of the goal include today', () => {
-      const goal = createGoal({}, [today]);
+      const goal = createGoal({ recurringDates: [today] });
 
       const result = isActiveToday(goal);
 
@@ -43,7 +43,7 @@ describe('goal utilities', () => {
 
     it('returns `false` when the recurring days of the goal does not include today', () => {
       const tomorrow = momentWithDeviceLocale(today).add(1, 'day').toDate();
-      const goal = createGoal({}, [tomorrow]);
+      const goal = createGoal({ recurringDates: [tomorrow] });
 
       const result = isActiveToday(goal);
 

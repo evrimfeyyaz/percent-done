@@ -8,7 +8,7 @@ describe('GoalValidator', () => {
   let goal: Partial<Goal>;
 
   beforeEach(() => {
-    goal = createGoal({});
+    goal = createGoal({ recurringEveryDay: true });
   });
 
   it('can be instantiated', () => {
@@ -22,6 +22,8 @@ describe('GoalValidator', () => {
       const validator = new GoalValidator(goal, allGoalTitles);
 
       const result = validator.validate();
+
+      console.log(validator.errors);
 
       expect(result).toEqual(true);
     });

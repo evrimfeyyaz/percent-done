@@ -96,11 +96,11 @@ describe('goals selectors', () => {
     let goal: Goal;
 
     beforeEach(() => {
-      goal = createGoal({}, undefined, true);
+      goal = createGoal({ recurringEveryDay: true });
     });
 
     it('returns all goals that should be completed for given date', () => {
-      const goalForTomorrow = createGoal({}, [tomorrow]);
+      const goalForTomorrow = createGoal({ recurringDates: [tomorrow] });
 
       const state = createStoreState({ goals: [goal, goalForTomorrow] });
 
@@ -158,8 +158,8 @@ describe('goals selectors', () => {
 
   describe('getIncompleteGoals and getCompleteGoals', () => {
     it('returns only incomplete or complete goals', () => {
-      const completedGoal = createGoal({ durationInMin: undefined }, [today]);
-      const incompleteGoal = createGoal({ durationInMin: undefined }, [today]);
+      const completedGoal = createGoal({ durationInMin: undefined, recurringDates: [today] });
+      const incompleteGoal = createGoal({ durationInMin: undefined, recurringDates: [today] });
 
       const timetableEntry = createTimetableEntry({
         goalId: completedGoal.id,
@@ -184,7 +184,7 @@ describe('goals selectors', () => {
   describe('convertGoalsToGoalRowProps', () => {
     it('converts Goal array to GoalRowProps array', () => {
       const durationInMinutes = 30;
-      const goal = createGoal({ durationInMin: durationInMinutes }, [today]);
+      const goal = createGoal({ durationInMin: durationInMinutes, recurringDates: [today] });
 
       const todaysEntry = createTimetableEntry({
         goalId: goal.id,
@@ -223,7 +223,7 @@ describe('goals selectors', () => {
     });
 
     it('properly converts non-time-tracked goals', () => {
-      const goal = createGoal({ durationInMin: undefined }, [today]);
+      const goal = createGoal({ durationInMin: undefined, recurringDates: [today] });
       const timetableEntry = createTimetableEntry({
         goalId: goal.id,
         startDate: today,
@@ -255,7 +255,7 @@ describe('goals selectors', () => {
       let goal: Goal;
 
       beforeEach(() => {
-        goal = createGoal({ durationInMin: undefined }, [today]);
+        goal = createGoal({ durationInMin: undefined, recurringDates: [today] });
       });
 
       it('returns true when goal is completed', () => {
@@ -369,9 +369,9 @@ describe('goals selectors', () => {
 
   describe('getTotalProgressForDate', () => {
     it('returns the current progress off all goals in percentage for given date', () => {
-      const goal1 = createGoal({ durationInMin: 60 }, [today]);
-      const goal2 = createGoal({ durationInMin: undefined }, [today]);
-      const goal3 = createGoal({ durationInMin: undefined }, [today]);
+      const goal1 = createGoal({ durationInMin: 60, recurringDates: [today] });
+      const goal2 = createGoal({ durationInMin: undefined, recurringDates: [today] });
+      const goal3 = createGoal({ durationInMin: undefined, recurringDates: [today] });
 
       const timetableEntry1 = createTimetableEntry({
         goalId: goal1.id,
@@ -407,7 +407,7 @@ describe('goals selectors', () => {
 
   describe('getCompletedMs', () => {
     it('returns the number of milliseconds that have been spent given goal and date', () => {
-      const goal = createGoal({ durationInMin: 60 }, [today]);
+      const goal = createGoal({ durationInMin: 60, recurringDates: [today] });
       const timetableEntry = createTimetableEntry({
         goalId: goal.id,
         startDate: today,
@@ -422,7 +422,7 @@ describe('goals selectors', () => {
     });
 
     it('returns `0` when there are no timetable entries for a goal', () => {
-      const goal = createGoal({}, [today]);
+      const goal = createGoal({ recurringDates: [today] });
       const state = createStoreState({ goals: [goal] });
 
       const ms = getCompletedMs(state, goal, today);
@@ -431,7 +431,7 @@ describe('goals selectors', () => {
     });
 
     it('returns `0` when given goal is not time-tracked', () => {
-      const goal = createGoal({ durationInMin: undefined }, [today]);
+      const goal = createGoal({ durationInMin: undefined, recurringDates: [today] });
       const state = createStoreState({ goals: [goal] });
 
       const ms = getCompletedMs(state, goal, today);
@@ -442,8 +442,8 @@ describe('goals selectors', () => {
 
   describe('getTotalCompletedMsForDate', () => {
     it('returns number of milliseconds spent on all goals on given date', () => {
-      const goal1 = createGoal({ durationInMin: 30 }, [today]);
-      const goal2 = createGoal({ durationInMin: 60 }, [today]);
+      const goal1 = createGoal({ durationInMin: 30, recurringDates: [today] });
+      const goal2 = createGoal({ durationInMin: 60, recurringDates: [today] });
       const timetableEntry1 = createTimetableEntry({
         goalId: goal1.id,
         startDate: today,
@@ -505,7 +505,7 @@ describe('goals selectors', () => {
   });
 
   describe('getRemainingMs', () => {
-    const goal = createGoal({ durationInMin: 60 }, [today]);
+    const goal = createGoal({ durationInMin: 60, recurringDates: [today] });
     const timetableEntry1 = createTimetableEntry({
       goalId: goal.id,
       startDate: today,
@@ -542,7 +542,7 @@ describe('goals selectors', () => {
     });
 
     it('returns `null` when given goal is not time-tracked', () => {
-      const goal = createGoal({ durationInMin: undefined }, [today]);
+      const goal = createGoal({ durationInMin: undefined, recurringDates: [today] });
       const state = createStoreState({ goals: [goal] });
 
       const ms = getRemainingMs(state, goal, today);
@@ -551,7 +551,7 @@ describe('goals selectors', () => {
     });
 
     it('returns `null` when given goal is not scheduled for the given day', () => {
-      const goal = createGoal({ durationInMin: 60 }, [yesterday]);
+      const goal = createGoal({ durationInMin: 60, recurringDates: [yesterday] });
       const state = createStoreState({ goals: [goal] });
 
       const ms = getRemainingMs(state, goal, today);
@@ -564,7 +564,7 @@ describe('goals selectors', () => {
     let state: StoreState, goal: Goal;
 
     beforeAll(() => {
-      goal = createGoal({}, [today]);
+      goal = createGoal({ recurringDates: [today] });
       state = createStoreState({ goals: [goal] });
     });
 
@@ -583,8 +583,8 @@ describe('goals selectors', () => {
 
   describe('getTotalRemainingMsForDate', () => {
     it('returns the total number of milliseconds remaining for all goals on given day', () => {
-      const goal1 = createGoal({ durationInMin: 30 }, [today]);
-      const goal2 = createGoal({ durationInMin: 60 }, [today]);
+      const goal1 = createGoal({ durationInMin: 30, recurringDates: [today] });
+      const goal2 = createGoal({ durationInMin: 60, recurringDates: [today] });
       const timetableEntry = createTimetableEntry({
         goalId: goal1.id,
         startDate: today,
@@ -599,7 +599,7 @@ describe('goals selectors', () => {
     });
 
     it('returns `0` when completed milliseconds surpasses total milliseconds', () => {
-      const goal = createGoal({ durationInMin: 30 }, [today]);
+      const goal = createGoal({ durationInMin: 30, recurringDates: [today] });
       const timetableEntry = createTimetableEntry({
         goalId: goal.id,
         startDate: today,
@@ -618,7 +618,7 @@ describe('goals selectors', () => {
     let goal: Goal;
 
     beforeEach(() => {
-      goal = createGoal({}, [today]);
+      goal = createGoal({ recurringDates: [today] });
     });
 
     it('returns an empty array when there are no entries for given date', () => {
@@ -654,7 +654,7 @@ describe('goals selectors', () => {
     let goal: Goal;
 
     beforeEach(() => {
-      goal = createGoal({}, [today]);
+      goal = createGoal({ recurringDates: [today] });
     });
 
     it('returns the length given an unbroken chain', () => {
@@ -727,7 +727,7 @@ describe('goals selectors', () => {
     beforeAll(() => {
       const oneWeekAgo = momentWithDeviceLocale(today).subtract(7, 'days').toDate();
 
-      const goal = createGoal({ durationInMin: goalDurationInMin }, undefined, true);
+      const goal = createGoal({ durationInMin: goalDurationInMin, recurringEveryDay: true });
       lastWeeksEntry = createTimetableEntry({
         goalId: goal.id,
         startDate: oneWeekAgo,
@@ -800,7 +800,7 @@ describe('goals selectors', () => {
     let goal: Goal;
 
     beforeEach(() => {
-      goal = createGoal({}, undefined, true);
+      goal = createGoal({ recurringEveryDay: true });
       goal.createdAtTimestamp = fiveDaysAgo.getTime();
       goal.deletedAtTimestamp = threeDaysAgo.getTime();
     });
@@ -815,7 +815,7 @@ describe('goals selectors', () => {
       });
 
       it('there are goals but no timetable entries for five or more days in the last seven days', () => {
-        const goal2 = createGoal({}, undefined, true);
+        const goal2 = createGoal({recurringEveryDay: true});
         const tenDaysAgo = momentWithDeviceLocale(today).subtract(10, 'days').toDate();
         goal2.createdAtTimestamp = tenDaysAgo.getTime();
 
@@ -841,7 +841,7 @@ describe('goals selectors', () => {
     });
 
     it('returns `true` when there are goals and timetable entries for at least three days in the last seven days', () => {
-      const goal = createGoal({}, undefined, true);
+      const goal = createGoal({recurringEveryDay: true});
       goal.createdAtTimestamp = fiveDaysAgo.getTime();
       goal.deletedAtTimestamp = twoDaysAgo.getTime();
 

@@ -27,7 +27,7 @@ describe('goal thunks', () => {
   describe('handleCompleteOrTrackRequest', () => {
     describe('given a time-tracked-goal', () => {
       it('sets it as the current tracked goal', () => {
-        const goal = createGoal({ durationInMin: 30 }, [], true);
+        const goal = createGoal({ durationInMin: 30, recurringEveryDay: true });
         const state = createStoreState({ goals: [goal] });
         const store = mockStore(state);
 
@@ -41,7 +41,7 @@ describe('goal thunks', () => {
 
     describe('given a non-time-tracked goal', () => {
       it('adds a timetable entry when the goal is not completed', () => {
-        const goal = createGoal({}, [], true);
+        const goal = createGoal({recurringEveryDay: true});
         const state = createStoreState({ goals: [goal] });
         const store = mockStore(state);
 
@@ -53,7 +53,7 @@ describe('goal thunks', () => {
       });
 
       it('removes the old timetable entry when the goal is completed', () => {
-        const goal = createGoal({}, [], true);
+        const goal = createGoal({recurringEveryDay: true});
         const timetableEntry = createTimetableEntry({
           goalId: goal.id,
           startDate: new Date(),
@@ -81,7 +81,7 @@ describe('goal thunks', () => {
     let store: MockStoreEnhanced<StoreState, ThunkDispatch<StoreState, undefined, AnyAction>>;
 
     beforeEach(() => {
-      goal = createGoal({ durationInMin: 30 }, [], true);
+      goal = createGoal({ durationInMin: 30, recurringEveryDay: true });
       state = createStoreState({ goals: [goal] });
       store = mockStore(state);
     });
@@ -104,7 +104,7 @@ describe('goal thunks', () => {
     let newTimestamp: number;
 
     beforeAll(() => {
-      const goal = createGoal({ durationInMin: 30 }, [], true);
+      const goal = createGoal({ durationInMin: 30, recurringEveryDay: true });
       const trackedGoal: TrackedGoalState = {
         id: goal.id,
         startTimestamp: Date.now(),
@@ -140,7 +140,7 @@ describe('goal thunks', () => {
     const projectId = 'SOME_PROJECT_ID';
 
     beforeAll(() => {
-      goal = createGoal({ durationInMin: 30 }, [], true);
+      goal = createGoal({ durationInMin: 30, recurringEveryDay: true });
       const trackedGoal: TrackedGoalState = {
         id: goal.id,
         startTimestamp: Date.now(),

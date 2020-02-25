@@ -8,6 +8,8 @@ interface CreateGoalParams {
   durationInMin?: number;
   deletedAt?: Date;
   lastProjectId?: string;
+  recurringDates?: Date[];
+  recurringEveryDay?: boolean;
 }
 
 export const createGoal = ({
@@ -17,18 +19,20 @@ export const createGoal = ({
                              durationInMin = undefined,
                              deletedAt = undefined,
                              lastProjectId,
-                           }: CreateGoalParams, dates?: Date[], everyDay?: boolean): Goal => {
+                             recurringDates,
+                             recurringEveryDay = false,
+                           }: CreateGoalParams): Goal => {
   const recurringDays = Array(7).fill(false);
   const durationInMs = durationInMin != null ? durationInMin * 60 * 1000 : undefined;
 
-  dates?.map(date => date.getDay()).forEach(dayOfWeek => recurringDays[dayOfWeek] = true);
+  recurringDates?.map(date => date.getDay()).forEach(dayOfWeek => recurringDays[dayOfWeek] = true);
 
   return {
     id,
     title,
     colorIndex,
     durationInMs,
-    recurringDays: everyDay ? Array(7).fill(true) : recurringDays,
+    recurringDays: recurringEveryDay ? Array(7).fill(true) : recurringDays,
     createdAtTimestamp: Date.now(),
     deletedAtTimestamp: deletedAt?.getTime(),
     lastProjectId,
