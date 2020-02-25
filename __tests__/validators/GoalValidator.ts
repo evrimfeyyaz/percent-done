@@ -12,8 +12,6 @@ describe('GoalValidator', () => {
   });
 
   it('can be instantiated', () => {
-    const goal = createGoal({});
-
     const validator = new GoalValidator(goal, allGoalTitles);
 
     expect(validator).toBeInstanceOf(Object);

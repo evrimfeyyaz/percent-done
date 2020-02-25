@@ -1,15 +1,10 @@
 import { Goal } from '../store/goals/types';
+import { AbstractValidator } from './AbstractValidator';
 
-interface Error {
-  property: string;
-  message: string;
-}
-
-export class GoalValidator {
+export class GoalValidator extends AbstractValidator {
   goal: Partial<Goal>;
   allGoalTitles: string[];
   previousVersion?: Goal;
-  readonly errors: Error[] = [];
 
   /**
    *
@@ -19,6 +14,8 @@ export class GoalValidator {
    * the previous (unedited) version of the goal.
    */
   constructor(goal: Partial<Goal>, allGoalTitles: string[], previousVersion?: Goal) {
+    super();
+
     this.goal = goal;
     this.allGoalTitles = allGoalTitles;
     this.previousVersion = previousVersion;

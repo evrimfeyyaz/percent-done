@@ -4,6 +4,7 @@ import { TextButton, TextInput } from '..';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Project } from '../../store/projects/types';
 import { WithOptionalId } from '../../utilities/types';
+import { ProjectValidator } from '../../validators';
 
 export interface ProjectFormProps {
   project?: Project;
@@ -58,24 +59,30 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
     return this.props.project == null;
   };
 
-  validate(): boolean {
+  private createProjectFromInputs = (): WithOptionalId<Project> => {
+    const { project } = this.props;
     const { title } = this.state;
-    const { allProjectTitles, project } = this.props;
-    let validates = true;
+
+    return { title, id: project?.id };
+  };
+
+  validate(): boolean {
+    const { allProjectTitles, project: previousVersion } = this.props;
     let titleInputError = this.state.titleInputError;
 
-    if (title == null || title.trim().length === 0) {
-      titleInputError = 'You need to enter a title.';
-      validates = false;
+    const project = this.createProjectFromInputs();
+
+    const validator = new ProjectValidator(project, allProjectTitles, previousVersion);
+    const validates = validator.validate();
+
+    if (validates) {
+      return true;
     }
 
-    if (
-      project?.title !== title &&
-      allProjectTitles.some(existingTitle => existingTitle.toLowerCase() === title.toLowerCase())
-    ) {
-      titleInputError = 'Another project with this title already exists.';
-      validates = false;
-    }
+    const errors = validator.errors;
+    const titleError = errors.find(error => error.property === 'title');
+
+    titleInputError = titleError?.message;
 
     this.setState({ titleInputError });
 
@@ -91,18 +98,13 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
       return false;
     }
 
-    let id: string | undefined = undefined;
-    const { title } = this.state;
+    const { onSubmit, project: previousVersion } = this.props;
+    const project = this.createProjectFromInputs();
 
     if (this.isAddNewForm()) {
-      this.props.onSubmit?.({ title });
+      onSubmit?.(project);
     } else {
-      const { project } = this.props;
-      if (project == null) throw new Error('Project cannot be null on the edit form.');
-
-      id = this.props.project?.id;
-
-      this.props.onSubmit?.({ id, title }, project);
+      onSubmit?.(project, previousVersion);
     }
 
     return true;

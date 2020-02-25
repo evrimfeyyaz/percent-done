@@ -115,35 +115,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     return true;
   }
 
-  createGoalFromInputs = (): WithOptionalId<Goal> => {
-    let { title, isTimeTracked, duration, recurringDays, colorIndex } = this.state;
-    let durationInMs: number | undefined;
-    let createdAtTimestamp: number;
-
-    let id: string | undefined;
-    if (this.isAddNewForm()) {
-      durationInMs = isTimeTracked ? duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000 : undefined;
-      id = undefined;
-      createdAtTimestamp = Date.now();
-    } else {
-      const { goal } = this.props;
-      if (goal == null) throw new Error('Goal cannot be null on the edit form.');
-
-      id = goal.id;
-      durationInMs = goal.durationInMs;
-      createdAtTimestamp = goal.createdAtTimestamp;
-    }
-
-    return {
-      id,
-      title,
-      colorIndex,
-      durationInMs,
-      recurringDays,
-      createdAtTimestamp,
-    };
-  };
-
   handleTitleChange = (title: string) => {
     this.setState({
       title,
@@ -205,6 +176,35 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
    */
   private isAddNewForm = () => {
     return this.props.goal == null;
+  };
+
+  private createGoalFromInputs = (): WithOptionalId<Goal> => {
+    let { title, isTimeTracked, duration, recurringDays, colorIndex } = this.state;
+    let durationInMs: number | undefined;
+    let createdAtTimestamp: number;
+
+    let id: string | undefined;
+    if (this.isAddNewForm()) {
+      durationInMs = isTimeTracked ? duration.hours * 60 * 60 * 1000 + duration.minutes * 60 * 1000 : undefined;
+      id = undefined;
+      createdAtTimestamp = Date.now();
+    } else {
+      const { goal } = this.props;
+      if (goal == null) throw new Error('Goal cannot be null on the edit form.');
+
+      id = goal.id;
+      durationInMs = goal.durationInMs;
+      createdAtTimestamp = goal.createdAtTimestamp;
+    }
+
+    return {
+      id,
+      title,
+      colorIndex,
+      durationInMs,
+      recurringDays,
+      createdAtTimestamp,
+    };
   };
 
   render() {
