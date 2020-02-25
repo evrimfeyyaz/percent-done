@@ -1,4 +1,3 @@
-import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { StoreState } from '../types';
 import { GoalActionTypes } from '../goals/types';
@@ -11,7 +10,7 @@ import { getAllGoals } from '../goals/selectors';
 import { getTimetableEntriesByProjectId } from '../timetableEntries/selectors';
 import { editTimetableEntry } from '../timetableEntries/actions';
 
-export const createProjectAndReturnId: ActionCreator<ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes>> = (title: string) => {
+export const createProjectAndReturnId = (title: string): ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes> => {
   return (dispatch, getState) => {
     dispatch(addProject(title));
 
@@ -26,7 +25,7 @@ export const createProjectAndReturnId: ActionCreator<ThunkAction<void, StoreStat
   };
 };
 
-export const createProjectAndSetTrackedGoalProject: ActionCreator<ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes>> = (title: string) => {
+export const createProjectAndSetTrackedGoalProject = (title: string): ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes> => {
   return (dispatch) => {
     const id = dispatch(createProjectAndReturnId(title)) as unknown as string;
 
@@ -34,7 +33,7 @@ export const createProjectAndSetTrackedGoalProject: ActionCreator<ThunkAction<vo
   };
 };
 
-export const deleteProject: ActionCreator<ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes | TimetableEntryActionTypes>> = (project: Project) => {
+export const deleteProject = (project: Project): ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes | TimetableEntryActionTypes> => {
   return (dispatch, getState) => {
     const store = getState();
 
