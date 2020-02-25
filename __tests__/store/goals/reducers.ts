@@ -8,7 +8,6 @@ import {
   updateTrackedGoalProjectId,
 } from '../../../src/store/goals/actions';
 import { createGoal } from '../../../src/factories';
-import { updateTrackedGoalStartTimestamp } from '../../../src/store/goals/thunks';
 import {
   UPDATE_TRACKED_GOAL_START_TIMESTAMP,
   UpdateTrackedGoalStartTimestampAction,

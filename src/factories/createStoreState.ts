@@ -1,5 +1,5 @@
 import { StoreState } from '../store/types';
-import { Goal, GoalsState } from '../store/goals/types';
+import { Goal, GoalsState, TrackedGoalState } from '../store/goals/types';
 import { createNormalizedEntityState } from './createNormalizedEntityState';
 import { TimetableEntriesState, TimetableEntry } from '../store/timetableEntries/types';
 import { convertDateToIndex } from '../utilities';
@@ -7,12 +7,14 @@ import { Project, ProjectsState } from '../store/projects/types';
 import { SettingsState } from '../store/settings/types';
 
 interface Arguments {
-  goals?: Goal[],
-  timetableEntries?: TimetableEntry[],
-  projects?: Project[],
+  goals?: Goal[];
+  timetableEntries?: TimetableEntry[];
+  projects?: Project[];
+  trackedGoal?: TrackedGoalState;
+  settings?: Partial<SettingsState>;
 }
 
-export const createStoreState = ({ goals = [], timetableEntries = [], projects = [] }: Arguments): StoreState => {
+export const createStoreState = ({ goals = [], timetableEntries = [], projects = [], trackedGoal, settings }: Arguments): StoreState => {
   const timetableEntryIdsByDate: { [date: string]: string[] } = {};
   timetableEntries.forEach((entry) => {
     const dateIdx = convertDateToIndex(new Date(entry.startTimestamp));
@@ -47,7 +49,7 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
 
   const goalsState: GoalsState = {
     ...createNormalizedEntityState(goals),
-    trackedGoal: {},
+    trackedGoal: trackedGoal ?? {},
   };
   const timetableEntriesState: TimetableEntriesState = {
     ...createNormalizedEntityState(timetableEntries),
@@ -65,6 +67,7 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
     hasOnboarded: true,
     timeMachineDateTimestamp: Date.now(),
     statsPeriodKey: '7',
+    ...settings,
   };
 
   return {

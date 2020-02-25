@@ -1,4 +1,3 @@
-import { ActionCreator } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { StoreState } from '../types';
 import { GoalActionTypes, UPDATE_TRACKED_GOAL_START_TIMESTAMP } from './types';
@@ -15,7 +14,7 @@ import { cancelLocalNotification, scheduleLocalNotification } from '../../utilit
 import { setScheduledGoalCompletedNotificationId } from '../settings/actions';
 import { SettingsActionTypes } from '../settings/types';
 
-export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes>> = (goalId: string) => {
+export const handleCompleteOrTrackRequest = (goalId: string): ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes> => {
   return (dispatch, getState) => {
     const state = getState();
     const goal = getGoalById(state, goalId);
@@ -46,7 +45,7 @@ export const handleCompleteOrTrackRequest: ActionCreator<ThunkAction<void, Store
   };
 };
 
-export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes>> = (goalId: string) => {
+export const startGoalTracking = (goalId: string): ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes> => {
   return (dispatch, getState) => {
     const startTimestamp = Date.now();
 
@@ -58,7 +57,7 @@ export const startGoalTracking: ActionCreator<ThunkAction<void, StoreState, void
   };
 };
 
-export const updateTrackedGoalStartTimestamp: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes>> = (startTimestamp: number) => {
+export const updateTrackedGoalStartTimestamp = (startTimestamp: number): ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes> => {
   return (dispatch, getState) => {
     const state = getState();
     const goalId = state.goals.trackedGoal.id;
@@ -78,7 +77,7 @@ export const updateTrackedGoalStartTimestamp: ActionCreator<ThunkAction<void, St
   };
 };
 
-export const stopGoalTracking: ActionCreator<ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes>> = () => {
+export const stopGoalTracking = (): ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes | SettingsActionTypes> => {
   return (dispatch, getState) => {
     const state = getState();
     const { startTimestamp, id: goalId, projectId } = state.goals.trackedGoal;
