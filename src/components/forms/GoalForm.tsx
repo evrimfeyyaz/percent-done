@@ -12,6 +12,7 @@ import { goalColors } from '../../theme';
 import { Goal } from '../../store/goals/types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { WithOptionalId } from '../../utilities/types';
+import { GoalValidator } from '../../validators';
 
 export interface GoalFormProps {
   onSubmit?: (goal: WithOptionalId<Goal>) => void;
@@ -51,37 +52,39 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   };
 
   validate(): boolean {
-    const { title, recurringDays, titleInputPosition, recurringDaysInputPosition } = this.state;
-    const { allGoalTitles, goal } = this.props;
-    let validates = true;
+    const { titleInputPosition, recurringDaysInputPosition } = this.state;
+    const { allGoalTitles, goal: previousGoal } = this.props;
+
+    const goal = this.createGoalFromInputs();
+
     let titleInputError = this.state.titleInputError;
     let recurringDaysInputError = this.state.recurringDaysInputError;
     let failedInputPositions = [];
 
-    if (title == null || title.trim().length === 0) {
-      titleInputError = 'You need to enter a title.';
-      if (titleInputPosition != null) failedInputPositions.push(titleInputPosition);
-      validates = false;
+    const validator = new GoalValidator(goal, allGoalTitles, previousGoal);
+    const validates = validator.validate();
+
+    if (validates) {
+      return true;
     }
 
-    if (
-      goal?.title !== title &&
-      allGoalTitles.some(existingTitle => existingTitle.toLowerCase() === title.toLowerCase())
-    ) {
-      titleInputError = 'Another goal with this title already exists.';
+    const errors = validator.errors;
+    const titleError = errors.find(error => error.property === 'title');
+    const recurringDaysError = errors.find(error => error.property === 'recurringDays');
+
+    if (titleError != null) {
+      titleInputError = titleError.message;
       if (titleInputPosition != null) failedInputPositions.push(titleInputPosition);
-      validates = false;
     }
 
-    if (recurringDays.indexOf(true) === -1) {
-      recurringDaysInputError = 'You should select at least one day.';
+    if (recurringDaysError != null) {
+      recurringDaysInputError = recurringDaysError.message;
       if (recurringDaysInputPosition != null) failedInputPositions.push(recurringDaysInputPosition);
-      validates = false;
     }
 
     this.setState({ titleInputError, recurringDaysInputError, failedInputPositions });
 
-    return validates;
+    return false;
   }
 
   componentDidUpdate(prevProps: Readonly<GoalFormProps>, prevState: Readonly<GoalFormState>, snapshot?: any): void {
@@ -106,6 +109,13 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       return false;
     }
 
+    const goal = this.createGoalFromInputs();
+    this.props.onSubmit?.(goal);
+
+    return true;
+  }
+
+  createGoalFromInputs = (): WithOptionalId<Goal> => {
     let { title, isTimeTracked, duration, recurringDays, colorIndex } = this.state;
     let durationInMs: number | undefined;
     let createdAtTimestamp: number;
@@ -124,7 +134,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       createdAtTimestamp = goal.createdAtTimestamp;
     }
 
-    const goal: WithOptionalId<Goal> = {
+    return {
       id,
       title,
       colorIndex,
@@ -132,11 +142,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
       recurringDays,
       createdAtTimestamp,
     };
-
-    this.props.onSubmit?.(goal);
-
-    return true;
-  }
+  };
 
   handleTitleChange = (title: string) => {
     this.setState({
@@ -208,7 +214,8 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
     } = this.state;
 
     return (
-      <KeyboardAwareScrollView style={styles.container} ref={this.scrollViewRef} keyboardDismissMode='on-drag' alwaysBounceVertical={false}
+      <KeyboardAwareScrollView style={styles.container} ref={this.scrollViewRef} keyboardDismissMode='on-drag'
+                               alwaysBounceVertical={false}
         // @ts-ignore
                                keyboardOpeningTime={100} scrollToOverflowEnabled={true}>
         <View style={styles.topInputGroup}>
@@ -230,7 +237,8 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
         )}
 
         <Section title='Color' bottomSeparator={false} contentStyle={styles.sectionContent}>
-          <ColorInput colors={goalColors} selectedColorIndex={colorIndex} onColorIndexChange={this.handleColorIndexChange} />
+          <ColorInput colors={goalColors} selectedColorIndex={colorIndex}
+                      onColorIndexChange={this.handleColorIndexChange} />
         </Section>
 
         {!this.isAddNewForm() && (
