@@ -6,7 +6,7 @@ import { createRandomId, momentWithDeviceLocale } from '../../utilities';
 import _ from 'lodash';
 import { WithOptionalId } from '../../utilities/types';
 
-export const addTimetableEntry: ActionCreator<ThunkAction<void, StoreState, void, TimetableEntryActionTypes>> = (timetableEntry: WithOptionalId<TimetableEntry>) => {
+export const addTimetableEntry = (timetableEntry: WithOptionalId<TimetableEntry>): ThunkAction<void, StoreState, void, TimetableEntryActionTypes> => {
   return (dispatch) => {
     let entry = _.clone(timetableEntry);
     const timetableEntries = [];
