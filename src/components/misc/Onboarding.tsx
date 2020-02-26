@@ -23,7 +23,7 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({ onSkip, onDone,
       </View>
     ),
     title: 'Welcome!',
-    subtitle: 'PercentDone helps you to set goals and track them every day. Let\'s take a quick tour to see how it can help you.',
+    subtitle: 'Percent Done helps you to set goals and track them every day. Let\'s take a quick tour to see how it can help you.',
   };
 
   const goals: Page = {
