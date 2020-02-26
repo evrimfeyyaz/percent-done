@@ -220,7 +220,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
                                keyboardOpeningTime={100} scrollToOverflowEnabled={true}>
         <View style={styles.topInputGroup}>
           <TextInput placeholder='What is your goal?' onChangeText={this.handleTitleChange} value={title}
-                     onLayout={this.handleTitleInputLayout} error={titleInputError} />
+                     onLayout={this.handleTitleInputLayout} error={titleInputError} autoFocus />
           {this.isAddNewForm() && (
             <DaysOfWeekInput title='Repeat on following days' selectedDays={recurringDays}
                              onLayout={this.handleRecurringDaysInputLayout}

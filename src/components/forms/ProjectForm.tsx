@@ -118,7 +118,7 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
         // @ts-ignore
                                keyboardOpeningTime={100} scrollToOverflowEnabled={true}>
         <TextInput placeholder='What is the title of the project?' onChangeText={this.handleTitleChange}
-                   value={title} error={titleInputError} />
+                   value={title} error={titleInputError} autoFocus />
 
         {!this.isAddNewForm() && (
           <View style={styles.deleteButtonContainer}>
