@@ -4,17 +4,17 @@ import { Button, EmptyContainer, Section } from '../../components';
 import { TodaysCompletedGoals, TodaysIncompleteGoals, TodaysStats } from '../../containers';
 import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 import { useDispatchCurrentDateOnRender } from '../../utilities';
-import { useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getGoalsForDate } from '../../store/goals/selectors';
 import { Icons } from '../../../assets';
+import { StoreState } from '../../store/types';
 
 export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
   useDispatchCurrentDateOnRender();
 
   const scrollViewRef = useRef(null);
 
-  const storeState = useStore().getState();
-  const todaysGoals = getGoalsForDate(storeState, new Date());
+  const todaysGoals = useSelector((state: StoreState) => getGoalsForDate(state, new Date()));
 
   function handleAddButtonPress() {
     navigation.navigate('AddGoal');
