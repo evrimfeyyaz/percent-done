@@ -2,10 +2,11 @@ import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { formatDurationInMs, leftOrOver, momentWithDeviceLocale } from '../../utilities';
-import { BottomSheetTimePicker, Button, ProgressChart, ProjectModal } from '../index';
+import { BottomSheetTimePicker, Button, ProgressChart, ProjectModal } from '..';
 import { Icons } from '../../../assets';
 
 export interface TimeTrackerProps {
+  goalId: string;
   title: string;
   color: string;
   durationInMs: number;
@@ -21,9 +22,9 @@ export interface TimeTrackerProps {
   projectKey?: string;
   onStopPress?: (startTimestamp: number, endTimestamp: number) => void;
   onStartTimestampChange?: (newTimestamp: number) => void;
-  onProjectCreatePress?: (projectTitle: string) => void;
-  onProjectChange?: (projectKey: string) => void;
-  onProjectRemove?: () => void;
+  onProjectCreatePress?: (projectTitle: string, goalId: string) => void;
+  onProjectChange?: (projectKey: string, goalId: string) => void;
+  onProjectRemove?: (goalId: string) => void;
   onDidUnmount?: () => void;
   /**
    * Called when the current date moves to the next day of `startTimestamp`.
@@ -32,7 +33,7 @@ export interface TimeTrackerProps {
 }
 
 export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
-                                                                   title, color, durationInMs, startTimestamp,
+                                                                   goalId, title, color, durationInMs, startTimestamp,
                                                                    initialRemainingMs, projects, projectKey,
                                                                    onStopPress, onStartTimestampChange, onProjectChange,
                                                                    onProjectRemove, onProjectCreatePress, onDidUnmount,
@@ -82,20 +83,20 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
   const handleProjectCreatePress = (title: string) => {
     setIsProjectModalVisible(false);
-    onProjectCreatePress?.(title);
+    onProjectCreatePress?.(title, goalId);
   };
 
   const handleProjectPress = (key: string) => {
     setIsProjectModalVisible(false);
 
     if (projectKey !== key) {
-      onProjectChange?.(key);
+      onProjectChange?.(key, goalId);
     }
   };
 
   const handleProjectRemovePress = () => {
     setIsProjectModalVisible(false);
-    onProjectRemove?.();
+    onProjectRemove?.(goalId);
   };
 
   const titleColorStyle = { color };

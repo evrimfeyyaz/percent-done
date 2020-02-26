@@ -9,7 +9,7 @@ import {
   createProjectAndSetTrackedGoalProject,
   deleteProject,
 } from '../../../src/store/projects/thunks';
-import { createProject } from '../../../src/factories/createProject';
+import { createProject } from '../../../src/factories';
 import { EDIT_GOAL, UPDATE_TRACKED_GOAL_PROJECT_ID } from '../../../src/store/goals/types';
 import { EDIT_TIMETABLE_ENTRY } from '../../../src/store/timetableEntries/types';
 
@@ -45,7 +45,7 @@ describe('projects thunks', () => {
 
   describe('createProjectAndSetTrackedGoalProject', () => {
     it('creates a project and sets it as the tracked goal project', () => {
-      store.dispatch(createProjectAndSetTrackedGoalProject(title));
+      store.dispatch(createProjectAndSetTrackedGoalProject(title, 'NOT_RELEVANT'));
       const actionTypes = store.getActions().map(action => action.type);
 
       expect(actionTypes).toEqual([ADD_PROJECT, UPDATE_TRACKED_GOAL_PROJECT_ID]);

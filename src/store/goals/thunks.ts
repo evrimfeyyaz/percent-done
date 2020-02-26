@@ -98,10 +98,6 @@ export const stopGoalTracking = (): ThunkAction<void, StoreState, void, GoalActi
 
     dispatch(addTimetableEntry(timetableEntry));
 
-    const goal = getGoalById(getState(), goalId);
-    goal.lastProjectId = projectId;
-
-    dispatch(editGoal(goal));
     cancelGoalCompletedNotification(state, dispatch);
   };
 };

@@ -33,6 +33,19 @@ const byId: Reducer<NormalizedEntityById<Goal>, GoalActionTypes> = (state = {}, 
         },
       };
     }
+    case UPDATE_TRACKED_GOAL_PROJECT_ID: {
+      const goalId = action.goalId;
+      const projectId = action.projectId;
+      const goal = state[goalId];
+
+      return {
+        ...state,
+        [goalId]: {
+          ...goal,
+          lastProjectId: projectId,
+        },
+      };
+    }
     default:
       return state;
   }

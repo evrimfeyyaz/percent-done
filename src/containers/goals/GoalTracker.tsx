@@ -22,7 +22,7 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   if (trackedGoalId == null || startTimestamp == null) return;
 
   const goal = getGoalById(state, trackedGoalId);
-  const { title, durationInMs, lastProjectId } = goal;
+  const { id: goalId, title, durationInMs, lastProjectId } = goal;
 
   const now = new Date();
   const initialRemainingMs = getRemainingMs(state, goal, now);
@@ -44,6 +44,7 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   }
 
   return {
+    goalId,
     title,
     color: getGoalColor(goal),
     durationInMs: durationInMs ?? 0,
@@ -57,9 +58,9 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<StoreState, void, AnyAction>, ownProps: GoalTrackerProps) => ({
   onStartTimestampChange: (newTimestamp: number) => dispatch(updateTrackedGoalStartTimestamp(newTimestamp)),
   onStopPress: (startTimestamp: number, endTimestamp: number) => NavigationService.goBack(),
-  onProjectCreatePress: (title: string) => dispatch(createProjectAndSetTrackedGoalProject(title)),
-  onProjectChange: (id: string) => dispatch(updateTrackedGoalProjectId(id)),
-  onProjectRemove: () => dispatch(updateTrackedGoalProjectId(undefined)),
+  onProjectCreatePress: (title: string, goalId: string) => dispatch(createProjectAndSetTrackedGoalProject(title, goalId)),
+  onProjectChange: (projectId: string, goalId: string) => dispatch(updateTrackedGoalProjectId(projectId, goalId)),
+  onProjectRemove: (goalId: string) => dispatch(updateTrackedGoalProjectId(undefined, goalId)),
   onDidUnmount: () => dispatch(stopGoalTracking()),
 });
 

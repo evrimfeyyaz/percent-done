@@ -25,11 +25,11 @@ export const createProjectAndReturnId = (title: string): ThunkAction<void, Store
   };
 };
 
-export const createProjectAndSetTrackedGoalProject = (title: string): ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes> => {
+export const createProjectAndSetTrackedGoalProject = (title: string, goalId: string): ThunkAction<void, StoreState, void, ProjectActionTypes | GoalActionTypes> => {
   return (dispatch) => {
     const id = dispatch(createProjectAndReturnId(title)) as unknown as string;
 
-    dispatch(updateTrackedGoalProjectId(id));
+    dispatch(updateTrackedGoalProjectId(id, goalId));
   };
 };
 

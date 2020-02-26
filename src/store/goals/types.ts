@@ -67,6 +67,7 @@ export interface UpdateTrackedGoalStartTimestampAction extends Action<typeof UPD
 
 export interface UpdateTrackedGoalProjectIdAction extends Action<typeof UPDATE_TRACKED_GOAL_PROJECT_ID> {
   projectId: string | undefined;
+  goalId: string;
 }
 
 export type GoalActionTypes =

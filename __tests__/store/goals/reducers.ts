@@ -7,7 +7,7 @@ import {
   setTrackedGoal,
   updateTrackedGoalProjectId,
 } from '../../../src/store/goals/actions';
-import { createGoal } from '../../../src/factories';
+import { createGoal, createProject, createStoreState } from '../../../src/factories';
 import {
   UPDATE_TRACKED_GOAL_START_TIMESTAMP,
   UpdateTrackedGoalStartTimestampAction,
@@ -127,12 +127,20 @@ describe('goals reducer', () => {
     });
   });
 
-  it('handles updating the project ID of the tracked goal ', () => {
-    const projectId = 'SOME_PROJECT_ID';
-    const action = updateTrackedGoalProjectId(projectId);
+  it('handles updating the project ID of the tracked goal and storing this as the last project of the goal', () => {
+    const goal = createGoal({});
+    const project = createProject('Test Project');
+    const storeState = createStoreState({
+      goals: [goal], trackedGoal: {
+        id: goal.id,
+        startTimestamp: Date.now(),
+      },
+    });
+    const action = updateTrackedGoalProjectId(project.id, goal.id);
 
-    const result = goalsReducer(initialState, action);
+    const result = goalsReducer(storeState.goals, action);
 
-    expect(result.trackedGoal.projectId).toEqual(projectId);
+    expect(result.trackedGoal.projectId).toEqual(project.id);
+    expect(result.byId[goal.id].lastProjectId).toEqual(project.id);
   });
 });

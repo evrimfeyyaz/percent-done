@@ -121,13 +121,15 @@ storiesOf('Miscellaneous', module)
     return <ProjectList projects={createProjects(100)} />;
   })
   .add('Time tracker', () => (
-    <TimeTracker title='Work on Awesome App' color='#3394FA'
-                 durationInMs={60 * 60} startTimestamp={Date.now()}
-                 projects={[]} initialRemainingMs={30 * 60}
-                 onStopPress={action('time-tracker-stop-pressed')}
-                 onProjectChange={action('time-tracker-project-changed')}
-                 onProjectCreatePress={action('time-tracker-project-create-pressed')}
-                 onProjectRemove={action('time-tracker-project-removed')}
+    <TimeTracker
+      goalId='GOAL_ID'
+      title='Work on Awesome App' color='#3394FA'
+      durationInMs={60 * 60} startTimestamp={Date.now()}
+      projects={[]} initialRemainingMs={30 * 60}
+      onStopPress={action('time-tracker-stop-pressed')}
+      onProjectChange={action('time-tracker-project-changed')}
+      onProjectCreatePress={action('time-tracker-project-create-pressed')}
+      onProjectRemove={action('time-tracker-project-removed')}
     />
   ))
   .add('Swipeable item', () => {

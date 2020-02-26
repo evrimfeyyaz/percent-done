@@ -40,7 +40,8 @@ export const removeTrackedGoal = (): RemoveTrackedGoalAction => ({
   type: REMOVE_TRACKED_GOAL,
 });
 
-export const updateTrackedGoalProjectId = (projectId: string | undefined): UpdateTrackedGoalProjectIdAction => ({
+export const updateTrackedGoalProjectId = (projectId: string | undefined, goalId: string): UpdateTrackedGoalProjectIdAction => ({
   type: UPDATE_TRACKED_GOAL_PROJECT_ID,
   projectId,
+  goalId,
 });
