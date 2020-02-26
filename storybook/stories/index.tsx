@@ -233,7 +233,13 @@ storiesOf('Miscellaneous', module)
     />
   ))
   .add('Onboarding', () => (
-    <Onboarding />
+    <Onboarding
+      notificationPermissions={{
+        sound: true,
+        badge: true,
+        alert: true,
+      }}
+    />
   ))
   .add('Duration info', () => (
     <DurationInfo durationInMs={60 * 60 * 1000} tailText='left' />

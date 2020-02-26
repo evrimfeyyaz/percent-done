@@ -29,6 +29,10 @@ export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => 
     height: isScreenSmall() ? 75 : 120,
   };
 
+  const percentDoneTextSizeStyle = {
+    fontSize: percentDone >= 1000 ? 24 : 36,
+  };
+
   return (
     <View>
       <AnimatedProgressCircle
@@ -41,7 +45,7 @@ export const ProgressChart: FunctionComponent<Props> = ({ percentDone = 0 }) => 
       />
       {!isScreenSmall() && (
         <View style={styles.infoContainer}>
-          <Text style={styles.percentDone}>
+          <Text style={[styles.percentDone, percentDoneTextSizeStyle]}>
             {Math.floor(percentDone)}
             <Text style={styles.percentSign}>%</Text>
           </Text>
@@ -60,7 +64,6 @@ const styles = StyleSheet.create({
   },
   percentDone: {
     fontFamily: fonts.semibold,
-    fontSize: 36,
     color: colors.white,
   },
   percentSign: {
