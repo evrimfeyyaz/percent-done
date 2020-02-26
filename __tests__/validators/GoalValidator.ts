@@ -62,8 +62,8 @@ describe('GoalValidator', () => {
         });
       });
 
-      it('validates title is unique', () => {
-        allGoalTitles = [goal.title as string];
+      it('validates title is case-insensitively unique', () => {
+        allGoalTitles = [goal.title?.toUpperCase() as string];
 
         const validator = new GoalValidator(goal, allGoalTitles);
         validator.validate();
@@ -119,9 +119,9 @@ describe('GoalValidator', () => {
         });
       });
 
-      it('validates title is unique when the title is different than the unedited title', () => {
+      it('validates title is case-insensitively unique when the title is different than the unedited title', () => {
         goal.title = 'Some New Title';
-        allGoalTitles = [goal.title as string];
+        allGoalTitles = ['SOME new Title'];
 
         const validator = new GoalValidator(goal, allGoalTitles, previousVersion);
         validator.validate();

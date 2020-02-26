@@ -30,9 +30,9 @@ export class GoalValidator extends AbstractValidator {
     }
 
     if (
-      this.previousVersion?.title !== this.goal.title &&
+      this.previousVersion?.title.toLowerCase() !== this.goal.title?.toLowerCase() &&
       this.goal.title != null &&
-      this.allGoalTitles.indexOf(this.goal.title) !== -1
+      this.allGoalTitles.some(title => title.toLowerCase() === this.goal.title?.toLowerCase())
     ) {
       this.errors.push({
         property: 'title',
