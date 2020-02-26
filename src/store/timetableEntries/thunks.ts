@@ -1,4 +1,3 @@
-import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { StoreState } from '../types';
 import { ADD_TIMETABLE_ENTRY, TimetableEntry, TimetableEntryActionTypes } from './types';

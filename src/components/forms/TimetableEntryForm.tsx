@@ -6,6 +6,7 @@ import { Goal } from '../../store/goals/types';
 import { isTimeTracked } from '../../store/goals/utilities';
 import { msToHoursMinutesSeconds } from '../../utilities';
 import { WithOptionalId } from '../../utilities/types';
+import { TimetableEntryValidator } from '../../validators';
 
 export interface TimetableEntryFormProps {
   allGoals: Goal[];
@@ -44,17 +45,17 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
   };
 
   validate(): boolean {
-    const { startTimestamp, endTimestamp } = this.state;
-    let validates = true;
     let finishedAtError = this.state.finishedAtError;
+    const timetableEntry = this.createTimetableEntryFromInputs();
+    const validator = new TimetableEntryValidator(timetableEntry);
+    const validates = validator.validate();
 
-    const { hours: startHour, minutes: startMinute } = msToHoursMinutesSeconds(startTimestamp);
-    const { hours: endHour, minutes: endMinute } = msToHoursMinutesSeconds(endTimestamp);
-
-    if (startHour > endHour || (startHour === endHour && startMinute > endMinute)) {
-      finishedAtError = 'Time travel is cheating.';
-      validates = false;
+    if (validates) {
+      return true;
     }
+
+    const errors = validator.errors;
+    finishedAtError = errors.find(error => error.property === 'endTimestamp')?.message;
 
     this.setState({ finishedAtError });
 
@@ -71,6 +72,15 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
     }
 
     const { onSubmit, timetableEntry: oldTimetableEntry } = this.props;
+    const timetableEntry = this.createTimetableEntryFromInputs();
+
+    onSubmit?.(timetableEntry, oldTimetableEntry);
+
+    return true;
+  }
+
+  private createTimetableEntryFromInputs = (): WithOptionalId<TimetableEntry> => {
+    const { timetableEntry: oldTimetableEntry } = this.props;
     let { goalId, startTimestamp, endTimestamp, projectKey } = this.state;
 
     let id: string | undefined = undefined;
@@ -80,18 +90,14 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
       id = oldTimetableEntry.id;
     }
 
-    const timetableEntry: WithOptionalId<TimetableEntry> = {
+    return {
       projectId: projectKey,
       startTimestamp,
       endTimestamp,
       goalId,
       id,
     };
-
-    onSubmit?.(timetableEntry, oldTimetableEntry);
-
-    return true;
-  }
+  };
 
   componentDidMount(): void {
     const { goalId } = this.state;
