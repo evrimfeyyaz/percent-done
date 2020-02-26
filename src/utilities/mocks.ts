@@ -6,7 +6,7 @@ jest.mock('react-native-push-notification', () => ({
   cancelLocalNotifications: jest.fn(),
 }));
 
-jest.mock('../src/utilities/NavigationService', () => ({
+jest.mock('./NavigationService', () => ({
   NavigationService: {
     navigate: jest.fn(),
   },

@@ -4,5 +4,5 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!react-navigation)/',
   ],
-  setupFiles: ['./__tests__/mocks.ts'],
+  setupFiles: ['./src/utilities/mocks.ts'],
 };
