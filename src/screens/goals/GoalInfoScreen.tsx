@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { BackgroundView } from '../components';
-import { GoalInfo } from '../containers';
+import { BackgroundView } from '../../components';
+import { GoalInfo } from '../../containers';
 
 export const GoalInfoScreen: NavigationStackScreenComponent = ({ navigation }) => {
   return (

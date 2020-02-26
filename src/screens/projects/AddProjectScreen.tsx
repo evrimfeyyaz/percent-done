@@ -5,11 +5,11 @@ import {
   ProjectForm,
   HeaderButton,
   HeaderCancelButton,
-} from '../components';
-import { EditProjectForm } from '../containers';
+} from '../../components';
+import { AddProjectForm } from '../../containers';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
-export const EditProjectScreen: NavigationStackScreenComponent = ({ navigation }) => {
+export const AddProjectScreen: NavigationStackScreenComponent = ({ navigation }) => {
   const formRef = useRef<ProjectForm>(null);
 
   const submitFormAndClose = () => {
@@ -28,7 +28,7 @@ export const EditProjectScreen: NavigationStackScreenComponent = ({ navigation }
     <BackgroundView style={styles.container}>
       {/*
       // @ts-ignore */}
-      <EditProjectForm ref={formRef} projectId={navigation.getParam('projectId')} onDelete={() => navigation.goBack(null)} />
+      <AddProjectForm ref={formRef} />
     </BackgroundView>
   );
 };
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
   },
 });
 
-EditProjectScreen.navigationOptions = ({ navigation }) => ({
-  title: 'Edit Project',
+AddProjectScreen.navigationOptions = ({ navigation }) => ({
+  title: 'Add Project',
   headerLeft: () => <HeaderCancelButton onPress={() => navigation.dismiss()} />,
   headerRight: () => <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
 });

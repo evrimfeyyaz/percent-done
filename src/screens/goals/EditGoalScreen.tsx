@@ -2,15 +2,15 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import {
   BackgroundView,
-  ProjectForm,
+  GoalForm,
   HeaderButton,
   HeaderCancelButton,
-} from '../components';
-import { AddProjectForm } from '../containers';
+} from '../../components';
+import { EditGoalForm } from '../../containers';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
-export const AddProjectScreen: NavigationStackScreenComponent = ({ navigation }) => {
-  const formRef = useRef<ProjectForm>(null);
+export const EditGoalScreen: NavigationStackScreenComponent = ({ navigation }) => {
+  const formRef = useRef<GoalForm>(null);
 
   const submitFormAndClose = () => {
     if (formRef?.current?.submit()) {
@@ -28,7 +28,7 @@ export const AddProjectScreen: NavigationStackScreenComponent = ({ navigation })
     <BackgroundView style={styles.container}>
       {/*
       // @ts-ignore */}
-      <AddProjectForm ref={formRef} />
+      <EditGoalForm ref={formRef} goalId={navigation.getParam('goalId')} onDelete={() => navigation.goBack(null)} />
     </BackgroundView>
   );
 };
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
   },
 });
 
-AddProjectScreen.navigationOptions = ({ navigation }) => ({
-  title: 'Add Project',
+EditGoalScreen.navigationOptions = ({ navigation }) => ({
+  title: 'Edit Goal',
   headerLeft: () => <HeaderCancelButton onPress={() => navigation.dismiss()} />,
   headerRight: () => <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
 });

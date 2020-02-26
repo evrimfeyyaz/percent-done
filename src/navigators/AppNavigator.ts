@@ -7,7 +7,7 @@ import { AddTimetableEntryModal } from './AddTimetableEntryModal';
 import { EditTimetableEntryModal } from './EditTimetableEntryModal';
 import { EditProjectModal } from './EditProjectModal';
 import { AddProjectModal } from './AddProjectModal';
-import { OnboardingScreen } from '../screens/OnboardingScreen';
+import { OnboardingScreen } from '../screens/misc/OnboardingScreen';
 
 export const AppNavigator = createStackNavigator({
   MainTabs: MainNavigator,

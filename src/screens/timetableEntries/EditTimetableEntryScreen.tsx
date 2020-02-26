@@ -5,8 +5,8 @@ import {
   TimetableEntryForm,
   HeaderButton,
   HeaderCancelButton,
-} from '../components';
-import { EditTimetableEntryForm } from '../containers';
+} from '../../components';
+import { EditTimetableEntryForm } from '../../containers';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 // TODO: Refactor edit and add form screens into a HOC.

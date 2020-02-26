@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { BackgroundView } from '../components';
-import { GoalTracker } from '../containers';
+import { BackgroundView } from '../../components';
+import { GoalTracker } from '../../containers';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { setStatusBarStyle } from '../utilities/statusBar';
+import { setStatusBarStyle } from '../../utilities/statusBar';
 
 export const TrackGoalScreen: NavigationStackScreenComponent = ({ navigation }) => {
   const [counter, forceUpdate] = useState(0);

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { AllProjects } from '../containers/projects/AllProjects';
+import { AllProjects } from '../../containers/projects/AllProjects';
 import { LayoutAnimation, View } from 'react-native';
-import { ListHeader } from '../components';
-import { Icons } from '../../assets';
+import { ListHeader } from '../../components';
+import { Icons } from '../../../assets';
 
 export const AllProjectsScreen: NavigationStackScreenComponent = ({ navigation }) => {
   useEffect(() => {

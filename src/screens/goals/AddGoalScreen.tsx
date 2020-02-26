@@ -2,15 +2,15 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import {
   BackgroundView,
-  TimetableEntryForm,
+  GoalForm,
   HeaderButton,
   HeaderCancelButton,
-} from '../components';
+} from '../../components';
+import { AddGoalForm } from '../../containers';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { AddTimetableEntryForm } from '../containers';
 
-export const AddTimetableEntryScreen: NavigationStackScreenComponent = ({ navigation }) => {
-  const formRef = useRef<TimetableEntryForm>(null);
+export const AddGoalScreen: NavigationStackScreenComponent = ({ navigation }) => {
+  const formRef = useRef<GoalForm>(null);
 
   const submitFormAndClose = () => {
     if (formRef?.current?.submit()) {
@@ -26,7 +26,7 @@ export const AddTimetableEntryScreen: NavigationStackScreenComponent = ({ naviga
 
   return (
     <BackgroundView style={styles.container}>
-      <AddTimetableEntryForm
+      <AddGoalForm
         // @ts-ignore
         ref={formRef}
       />
@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
   },
 });
 
-AddTimetableEntryScreen.navigationOptions = ({ navigation }) => ({
-  title: 'Add Entry',
+AddGoalScreen.navigationOptions = ({ navigation }) => ({
+  title: 'Add Goal',
   headerLeft: () => <HeaderCancelButton onPress={() => navigation.dismiss()} />,
   headerRight: () => <HeaderButton title='Save' onPress={navigation.getParam('headerRightOnPress')} primary />,
 });

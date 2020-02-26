@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
-import { TodaysTimetable } from '../containers';
+import { TodaysTimetable } from '../../containers';
 import { LayoutAnimation, ScrollView, StyleSheet } from 'react-native';
-import { Icons } from '../../assets';
-import { ListHeader } from '../components';
-import { useDispatchCurrentDateOnRender } from '../utilities';
+import { Icons } from '../../../assets';
+import { ListHeader } from '../../components';
+import { useDispatchCurrentDateOnRender } from '../../utilities';
 
 export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
   useDispatchCurrentDateOnRender();

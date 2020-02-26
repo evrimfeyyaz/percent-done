@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { ScrollView } from 'react-native';
-import { Section } from '../components';
-import { TodaysCompletedGoals, TodaysIncompleteGoals, TodaysStats } from '../containers';
+import { Section } from '../../components';
+import { TodaysCompletedGoals, TodaysIncompleteGoals, TodaysStats } from '../../containers';
 import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
-import { useDispatchCurrentDateOnRender } from '../utilities';
+import { useDispatchCurrentDateOnRender } from '../../utilities';
 
 export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
   useDispatchCurrentDateOnRender();
