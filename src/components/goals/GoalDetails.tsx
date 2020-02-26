@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button, DurationInfo } from '..';
+import { Button, DurationInfo } from '../index';
 import { Icons } from '../../../assets';
 import { pluralize } from '../../utilities';
 import { colors, fonts, textStyles } from '../../theme';

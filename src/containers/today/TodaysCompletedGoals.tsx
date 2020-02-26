@@ -1,12 +1,12 @@
 import React from 'react';
-import { convertGoalsToGoalRowProps, getCompleteGoals } from '../store/goals/selectors';
-import { StoreState } from '../store/types';
+import { convertGoalsToGoalRowProps, getCompleteGoals } from '../../store/goals/selectors';
+import { StoreState } from '../../store/types';
 import { connect } from 'react-redux';
-import { GoalList, GoalListProps } from '../components';
+import { GoalList, GoalListProps } from '../../components';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { handleCompleteOrTrackRequest } from '../store/goals/thunks';
-import { getCurrentDate } from '../store/settings/selectors';
+import { handleCompleteOrTrackRequest } from '../../store/goals/thunks';
+import { getCurrentDate } from '../../store/settings/selectors';
 
 interface TodaysCompletedGoalsProps {
   onEditActionInteraction?: (goalId: string) => void;

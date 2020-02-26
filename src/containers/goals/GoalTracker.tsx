@@ -1,16 +1,16 @@
 import React from 'react';
-import { StoreState } from '../store/types';
+import { StoreState } from '../../store/types';
 import { AnyAction } from 'redux';
-import { getGoalById, getRemainingMs } from '../store/goals/selectors';
-import { updateTrackedGoalProjectId } from '../store/goals/actions';
-import { stopGoalTracking, updateTrackedGoalStartTimestamp } from '../store/goals/thunks';
+import { getGoalById, getRemainingMs } from '../../store/goals/selectors';
+import { updateTrackedGoalProjectId } from '../../store/goals/actions';
+import { stopGoalTracking, updateTrackedGoalStartTimestamp } from '../../store/goals/thunks';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
-import { TimeTracker, TimeTrackerProps } from '../components';
-import { getAllProjects } from '../store/projects/selectors';
-import { createProjectAndSetTrackedGoalProject } from '../store/projects/thunks';
-import { getGoalColor } from '../store/goals/utilities';
-import { momentWithDeviceLocale, NavigationService } from '../utilities';
+import { TimeTracker, TimeTrackerProps } from '../../components';
+import { getAllProjects } from '../../store/projects/selectors';
+import { createProjectAndSetTrackedGoalProject } from '../../store/projects/thunks';
+import { getGoalColor } from '../../store/goals/utilities';
+import { momentWithDeviceLocale, NavigationService } from '../../utilities';
 
 interface GoalTrackerProps {
   onDateChange?: () => void;

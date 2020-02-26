@@ -1,13 +1,13 @@
 import React from 'react';
-import { StoreState } from '../store/types';
+import { StoreState } from '../../store/types';
 import {
   getTotalRemainingMsForDate,
   getTotalCompletedMsForDate,
   getTotalProgressForDate,
-} from '../store/goals/selectors';
+} from '../../store/goals/selectors';
 import { connect } from 'react-redux';
-import { DaysStats, DaysStatsProps } from '../components';
-import { getCurrentDate } from '../store/settings/selectors';
+import { DaysStats, DaysStatsProps } from '../../components';
+import { getCurrentDate } from '../../store/settings/selectors';
 
 const mapStateToProps = (state: StoreState): DaysStatsProps => {
   const currentDate = getCurrentDate(state);

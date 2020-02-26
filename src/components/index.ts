@@ -1,19 +1,19 @@
 // Miscellaneous
 export * from './misc/Section';
 export * from './misc/BackgroundView';
-export * from './misc/GoalRow';
-export * from './misc/GoalList';
-export * from './misc/GoalDetails';
+export * from './goals/GoalRow';
+export * from './goals/GoalList';
+export * from './goals/GoalDetails';
 export * from './misc/BottomSheet';
-export * from './misc/TimeTracker';
+export * from './goals/TimeTracker';
 export * from './misc/EmptyContainer';
 export * from './misc/SwipeableList';
 export * from './misc/SwipeableItem';
-export * from './misc/ProjectRow';
-export * from './misc/ProjectList';
-export * from './misc/ProjectModal';
+export * from './projects/ProjectRow';
+export * from './projects/ProjectList';
+export * from './projects/ProjectModal';
 export * from './misc/ListHeader';
-export * from './misc/DayDetails';
+export * from './charts/DayDetails';
 export * from './misc/Onboarding';
 export * from './misc/DurationInfo';
 

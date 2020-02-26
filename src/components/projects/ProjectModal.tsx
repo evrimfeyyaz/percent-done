@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { SelectBox } from '..';
+import { SelectBox } from '../index';
 import Modal from 'react-native-modal';
 
 interface ProjectModalProps {

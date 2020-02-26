@@ -1,15 +1,15 @@
 import React from 'react';
-import { StoreState } from '../store/types';
-import { GoalDetails, GoalDetailsProps } from '../components';
+import { StoreState } from '../../store/types';
+import { GoalDetails, GoalDetailsProps } from '../../components';
 import {
   getChainLength,
   getGoalById,
   getTotalCompletedMsForGoal,
   isCompleted,
-} from '../store/goals/selectors';
-import { isTimeTracked } from '../store/goals/utilities';
+} from '../../store/goals/selectors';
+import { isTimeTracked } from '../../store/goals/utilities';
 import { AnyAction } from 'redux';
-import { handleCompleteOrTrackRequest } from '../store/goals/thunks';
+import { handleCompleteOrTrackRequest } from '../../store/goals/thunks';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 

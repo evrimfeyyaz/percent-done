@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TimetableEntryForm } from '../components';
-import { StoreState } from '../store/types';
-import { getTimetableEntryById } from '../store/timetableEntries/selectors';
-import { TimetableEntry, TimetableEntryActionTypes } from '../store/timetableEntries/types';
-import { deleteTimetableEntry, editTimetableEntry } from '../store/timetableEntries/actions';
-import { getAllGoals } from '../store/goals/selectors';
+import { TimetableEntryForm } from '../../components';
+import { StoreState } from '../../store/types';
+import { getTimetableEntryById } from '../../store/timetableEntries/selectors';
+import { TimetableEntry, TimetableEntryActionTypes } from '../../store/timetableEntries/types';
+import { deleteTimetableEntry, editTimetableEntry } from '../../store/timetableEntries/actions';
+import { getAllGoals } from '../../store/goals/selectors';
 import { ThunkDispatch } from 'redux-thunk';
-import { getAllProjects } from '../store/projects/selectors';
-import { ProjectActionTypes } from '../store/projects/types';
-import { createProjectAndReturnId } from '../store/projects/thunks';
-import { WithOptionalId } from '../utilities/types';
+import { getAllProjects } from '../../store/projects/selectors';
+import { ProjectActionTypes } from '../../store/projects/types';
+import { createProjectAndReturnId } from '../../store/projects/thunks';
+import { WithOptionalId } from '../../utilities/types';
 
 interface EditTimetableEntryFormProps {
   timetableEntryId: string;

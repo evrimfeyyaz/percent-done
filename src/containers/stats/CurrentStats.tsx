@@ -1,14 +1,14 @@
 import React from 'react';
-import { StoreState } from '../store/types';
-import { StatChartData, Stats, StatsProps } from '../components';
+import { StoreState } from '../../store/types';
+import { StatChartData, Stats, StatsProps } from '../../components';
 import {
   getTotalCompletedMsForLast30Days,
   getTotalCompletedMsForLast7Days, getTotalProgressForLast30Days,
   getTotalProgressForLast7Days, isThereEnoughDataToShowStatisticsOfLastNDays,
-} from '../store/goals/selectors';
+} from '../../store/goals/selectors';
 import { Dispatch } from 'redux';
-import { SettingsActionTypes, StatsPeriodKeyType } from '../store/settings/types';
-import { setStatsPeriodKey } from '../store/settings/actions';
+import { SettingsActionTypes, StatsPeriodKeyType } from '../../store/settings/types';
+import { setStatsPeriodKey } from '../../store/settings/actions';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state: StoreState): StatsProps => ({

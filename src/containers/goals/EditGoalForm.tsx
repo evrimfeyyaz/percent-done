@@ -1,11 +1,11 @@
 import React from 'react';
 import { Dispatch } from 'redux';
-import { deleteGoal, editGoal } from '../store/goals/actions';
-import { Goal, GoalActionTypes } from '../store/goals/types';
+import { deleteGoal, editGoal } from '../../store/goals/actions';
+import { Goal, GoalActionTypes } from '../../store/goals/types';
 import { connect } from 'react-redux';
-import { GoalForm, GoalFormProps } from '../components';
-import { StoreState } from '../store/types';
-import { getAllGoals, getGoalById } from '../store/goals/selectors';
+import { GoalForm, GoalFormProps } from '../../components';
+import { StoreState } from '../../store/types';
+import { getAllGoals, getGoalById } from '../../store/goals/selectors';
 
 interface EditGoalFormProps {
   goalId: string;

@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TimetableEntryForm } from '../components';
-import { TimetableEntry, TimetableEntryActionTypes } from '../store/timetableEntries/types';
-import { StoreState } from '../store/types';
-import { getAllGoals } from '../store/goals/selectors';
-import { createProjectAndReturnId } from '../store/projects/thunks';
+import { TimetableEntryForm } from '../../components';
+import { TimetableEntry, TimetableEntryActionTypes } from '../../store/timetableEntries/types';
+import { StoreState } from '../../store/types';
+import { getAllGoals } from '../../store/goals/selectors';
+import { createProjectAndReturnId } from '../../store/projects/thunks';
 import { ThunkDispatch } from 'redux-thunk';
-import { ProjectActionTypes } from '../store/projects/types';
-import { getAllProjects } from '../store/projects/selectors';
-import { addTimetableEntry } from '../store/timetableEntries/thunks';
-import { WithOptionalId } from '../utilities/types';
+import { ProjectActionTypes } from '../../store/projects/types';
+import { getAllProjects } from '../../store/projects/selectors';
+import { addTimetableEntry } from '../../store/timetableEntries/thunks';
+import { WithOptionalId } from '../../utilities/types';
 
 const mapStateToProps = (state: StoreState) => ({
   // TODO: Sort all goals by title in ascending order.

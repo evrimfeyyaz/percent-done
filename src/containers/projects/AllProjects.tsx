@@ -1,10 +1,10 @@
 import React from 'react';
-import { StoreState } from '../store/types';
+import { StoreState } from '../../store/types';
 import { connect } from 'react-redux';
-import { ProjectList, ProjectListProps } from '../components';
+import { ProjectList, ProjectListProps } from '../../components';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { convertProjectsToProjectRowProps, getAllProjects } from '../store/projects/selectors';
+import { convertProjectsToProjectRowProps, getAllProjects } from '../../store/projects/selectors';
 
 interface AllProjectsProps {
   onEditActionInteraction?: (projectId: string) => void;

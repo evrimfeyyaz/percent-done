@@ -1,19 +1,19 @@
 import React from 'react';
-import { StoreState } from '../store/types';
+import { StoreState } from '../../store/types';
 import {
   convertGoalsToGoalRowProps,
   getCompleteGoals, getIncompleteGoals,
   getTotalCompletedMsForDate,
   getTotalProgressForDate,
   getTotalRemainingMsForDate,
-} from '../store/goals/selectors';
-import { DayDetails, DayDetailsProps } from '../components';
-import { convertTimetableEntriesToTimetableRows, getTimetableEntriesByDate } from '../store/timetableEntries/selectors';
+} from '../../store/goals/selectors';
+import { DayDetails, DayDetailsProps } from '../../components';
+import { convertTimetableEntriesToTimetableRows, getTimetableEntriesByDate } from '../../store/timetableEntries/selectors';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { NavigationService } from '../utilities';
-import { setTimeMachineDateTimestamp } from '../store/settings/actions';
-import { SettingsActionTypes } from '../store/settings/types';
+import { NavigationService } from '../../utilities';
+import { setTimeMachineDateTimestamp } from '../../store/settings/actions';
+import { SettingsActionTypes } from '../../store/settings/types';
 
 const mapStateToProps = (state: StoreState): DayDetailsProps => {
   const date = new Date(state.settings.timeMachineDateTimestamp ?? Date.now());

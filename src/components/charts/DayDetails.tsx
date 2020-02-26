@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useRef } from 'react';
-import { Section } from './Section';
+import { Section } from '../misc/Section';
 import { ScrollView, StyleSheet } from 'react-native';
-import { GoalRowProps } from './GoalRow';
-import { BottomSheetDatePicker, Button, DaysStats, GoalList, Timetable, TimetableRow } from '..';
+import { GoalRowProps } from '../goals/GoalRow';
+import { BottomSheetDatePicker, Button, DaysStats, GoalList, Timetable, TimetableRow } from '../index';
 import { momentWithDeviceLocale } from '../../utilities';
 import { Icons } from '../../../assets';
 

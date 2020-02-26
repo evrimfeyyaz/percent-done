@@ -1,12 +1,12 @@
 import React from 'react';
 import { AnyAction } from 'redux';
-import { editProject } from '../store/projects/actions';
-import { Project } from '../store/projects/types';
+import { editProject } from '../../store/projects/actions';
+import { Project } from '../../store/projects/types';
 import { connect } from 'react-redux';
-import { ProjectForm, ProjectFormProps } from '../components';
-import { StoreState } from '../store/types';
-import { getAllProjects, getProjectById } from '../store/projects/selectors';
-import { deleteProject } from '../store/projects/thunks';
+import { ProjectForm, ProjectFormProps } from '../../components';
+import { StoreState } from '../../store/types';
+import { getAllProjects, getProjectById } from '../../store/projects/selectors';
+import { deleteProject } from '../../store/projects/thunks';
 import { ThunkDispatch } from 'redux-thunk';
 
 interface EditProjectFormProps {

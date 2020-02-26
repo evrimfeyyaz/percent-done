@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react';
-import { EmptyContainer } from './EmptyContainer';
-import { SwipeableItemAction } from './SwipeableItem';
+import { EmptyContainer } from '../misc/EmptyContainer';
+import { SwipeableItemAction } from '../misc/SwipeableItem';
 import { Icons } from '../../../assets';
 import { colors } from '../../theme';
-import { SwipeableList } from './SwipeableList';
+import { SwipeableList } from '../misc/SwipeableList';
 import { ProjectRow, ProjectRowProps } from './ProjectRow';
 
 export interface ProjectListProps {

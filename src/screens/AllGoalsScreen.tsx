@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { AllGoals } from '../containers/AllGoals';
+import { AllGoals } from '../containers/goals/AllGoals';
 import { ListHeader } from '../components';
 import { Icons } from '../../assets';
 import { useDispatchCurrentDateOnRender } from '../utilities';

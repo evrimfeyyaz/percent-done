@@ -109,8 +109,8 @@ export const Stats: FunctionComponent<StatsProps> = ({
 
   function renderStats() {
     if (!data.hasEnoughData) {
-      const text = 'There isn\'t enough data to show these statistics yet. ' +
-        'Keep using the app for a little while longer to see them.';
+      const text = 'There isn\'t enough data to show statistics on yet. ' +
+        'Keep using the app for a little while longer.';
       return <EmptyContainer text={text} style={styles.notEnoughData} />;
     }
 

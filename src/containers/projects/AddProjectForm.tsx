@@ -1,13 +1,13 @@
 import React from 'react';
 import { AnyAction } from 'redux';
-import { addProject } from '../store/projects/actions';
-import { Project } from '../store/projects/types';
+import { addProject } from '../../store/projects/actions';
+import { Project } from '../../store/projects/types';
 import { connect } from 'react-redux';
-import { ProjectForm, ProjectFormProps } from '../components';
-import { StoreState } from '../store/types';
-import { getAllProjects } from '../store/projects/selectors';
+import { ProjectForm, ProjectFormProps } from '../../components';
+import { StoreState } from '../../store/types';
+import { getAllProjects } from '../../store/projects/selectors';
 import { ThunkDispatch } from 'redux-thunk';
-import { WithOptionalId } from '../utilities/types';
+import { WithOptionalId } from '../../utilities/types';
 
 const mapStateToProps = (state: StoreState): ProjectFormProps => ({
   allProjectTitles: getAllProjects(state).map(project => project.title),

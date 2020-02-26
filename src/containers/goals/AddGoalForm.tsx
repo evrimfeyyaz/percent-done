@@ -1,12 +1,12 @@
 import React from 'react';
 import { Dispatch } from 'redux';
-import { addGoal } from '../store/goals/actions';
-import { Goal, GoalActionTypes } from '../store/goals/types';
+import { addGoal } from '../../store/goals/actions';
+import { Goal, GoalActionTypes } from '../../store/goals/types';
 import { connect } from 'react-redux';
-import { GoalForm, GoalFormProps } from '../components';
-import { StoreState } from '../store/types';
-import { getAllGoals } from '../store/goals/selectors';
-import { WithOptionalId } from '../utilities/types';
+import { GoalForm, GoalFormProps } from '../../components';
+import { StoreState } from '../../store/types';
+import { getAllGoals } from '../../store/goals/selectors';
+import { WithOptionalId } from '../../utilities/types';
 
 const mapStateToProps = (state: StoreState) => ({
   allGoalTitles: getAllGoals(state).map(goal => goal.title),

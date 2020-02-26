@@ -1,11 +1,11 @@
 import React from 'react';
-import { convertGoalsToGoalRowProps, getAllGoals } from '../store/goals/selectors';
-import { StoreState } from '../store/types';
+import { convertGoalsToGoalRowProps, getAllGoals } from '../../store/goals/selectors';
+import { StoreState } from '../../store/types';
 import { connect } from 'react-redux';
-import { GoalList, GoalListProps } from '../components';
+import { GoalList, GoalListProps } from '../../components';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { getCurrentDate } from '../store/settings/selectors';
+import { getCurrentDate } from '../../store/settings/selectors';
 
 interface AllGoalsProps {
   onEditActionInteraction?: (goalId: string) => void;
