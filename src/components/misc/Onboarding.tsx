@@ -76,7 +76,7 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({ onSkip, onDone,
       </View>
     ),
     title: 'Projects',
-    subtitle: 'Projects help keep a more detailed log of what you are working on. For example, you might have a goal to write an hour every day, and you might have two projects called "Blog" and "Book."',
+    subtitle: 'Projects help keep a more detailed log of what you are working on. For example, you might have a goal to write for an hour every day, and you might have two projects called "Blog" and "Book."',
   };
 
   const notifications: Page = {
