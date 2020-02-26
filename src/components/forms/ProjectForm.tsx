@@ -55,7 +55,6 @@ export class ProjectForm extends Component<ProjectFormProps, ProjectFormState> {
    * when it is an "edit project" form.
    */
   private isAddNewForm = () => {
-    console.log(this.props.project);
     return this.props.project == null;
   };
 

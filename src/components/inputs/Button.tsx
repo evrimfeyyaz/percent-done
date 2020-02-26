@@ -22,6 +22,7 @@ interface ButtonProps {
    */
   iconSource?: ImageSourcePropType;
   onPress?: (event: GestureResponderEvent) => void;
+  disabled?: boolean;
   style?: ViewStyle;
 }
 
@@ -33,6 +34,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
                                                          iconSource = null,
                                                          color = colors.orange,
                                                          titleColor = colors.white,
+                                                         disabled = false,
                                                          onPress,
                                                          style,
                                                        }) => {
@@ -50,7 +52,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   };
 
   return (
-    <TouchableOpacity style={[styles.container, colorStyle, style]} onPress={onPress}>
+    <TouchableOpacity style={[styles.container, colorStyle, style]} onPress={onPress} disabled={disabled}>
       {icon}
       <Text style={[styles.title, titleColorStyle]}>{title}</Text>
     </TouchableOpacity>

@@ -2,19 +2,28 @@ import React from 'react';
 import OnboardingSwiper, { Page } from 'react-native-onboarding-swiper';
 import { FunctionComponent } from 'react';
 import { colors, fonts } from '../../theme';
-import { Images } from '../../../assets';
+import { Icons, Images } from '../../../assets';
 import { Image, StyleSheet, View, Text, Platform } from 'react-native';
 import { Button } from '..';
 import { isScreenSmall } from '../../utilities/isScreenSmall';
+import { PushNotificationPermissions } from 'react-native-push-notification';
 
 interface OnboardingProps {
+  notificationPermissions: PushNotificationPermissions;
   onSkip?: () => void;
   onDone?: () => void;
   onAddGoalPress?: () => void;
   onTurnOnNotificationsPress?: () => void;
 }
 
-export const Onboarding: FunctionComponent<OnboardingProps> = ({ onSkip, onDone, onAddGoalPress, onTurnOnNotificationsPress }) => {
+export const Onboarding: FunctionComponent<OnboardingProps> = ({
+                                                                 notificationPermissions, onSkip, onDone,
+                                                                 onAddGoalPress, onTurnOnNotificationsPress,
+                                                               }) => {
+  function areNotificationsOn(): boolean {
+    return !!notificationPermissions.alert;
+  }
+
   const welcome: Page = {
     backgroundColor: colors.lightGray,
     image: (
@@ -96,7 +105,14 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({ onSkip, onDone,
           turning notifications on.
         </Text>
 
-        <Button title='Turn on Notifications' style={styles.callToAction} onPress={onTurnOnNotificationsPress} />
+        {areNotificationsOn() && (
+          <Button color={colors.green} title='Notifications Are On' iconSource={Icons.checkmarkLarge}
+                  style={styles.callToAction} disabled />
+        )}
+
+        {!areNotificationsOn() && (
+          <Button title='Turn On Notifications' style={styles.callToAction} onPress={onTurnOnNotificationsPress} />
+        )}
       </View>
     ),
   };

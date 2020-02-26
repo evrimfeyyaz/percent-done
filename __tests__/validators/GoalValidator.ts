@@ -23,8 +23,6 @@ describe('GoalValidator', () => {
 
       const result = validator.validate();
 
-      console.log(validator.errors);
-
       expect(result).toEqual(true);
     });
 

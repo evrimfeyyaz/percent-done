@@ -49,6 +49,6 @@ export function cancelLocalNotification(id: string) {
   PushNotification.cancelLocalNotifications({ id });
 }
 
-export function requestLocalNotificationPermissions() {
-  PushNotification.requestPermissions();
+export function requestLocalNotificationPermissions(): Promise<PushNotificationPermissions> {
+  return PushNotification.requestPermissions();
 }
