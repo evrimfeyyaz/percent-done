@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { GoalRow, GoalRowProps } from './GoalRow';
-import { EmptyContainer } from '../misc/EmptyContainer';
-import { SwipeableList } from '../misc/SwipeableList';
+import { EmptyContainer } from '..';
+import { SwipeableList } from '..';
 import { colors, fonts } from '../../theme';
 import { Icons } from '../../../assets';
-import { SwipeableItemAction } from '../misc/SwipeableItem';
+import { SwipeableItemAction } from '..';
 import { LayoutAnimation, StyleSheet } from 'react-native';
 
 export interface GoalListProps {

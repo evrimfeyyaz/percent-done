@@ -13,10 +13,11 @@ interface EmptyContainerProps {
 /**
  * A component that is shown when a container is empty.
  */
-export const EmptyContainer: FunctionComponent<EmptyContainerProps> = ({ text, style }) => {
+export const EmptyContainer: FunctionComponent<EmptyContainerProps> = ({ text, style, children }) => {
   return (
     <View style={[style, styles.container]}>
       <Text style={styles.text}>{text}</Text>
+      {children}
     </View>
   );
 };
