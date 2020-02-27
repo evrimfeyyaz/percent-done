@@ -2,14 +2,17 @@ import { StoreState } from '../types';
 import { Goal } from './types';
 import { GoalRowProps, StatChartData } from '../../components';
 import {
-  convertDateToIndex,
   getAbbreviatedDate,
   getAbbreviatedDayOfWeek,
   momentWithDeviceLocale,
 } from '../../utilities';
 import { TimetableEntry } from '../timetableEntries/types';
 import { getGoalColor, isActiveToday, isCreated, isDeleted, isTimeTracked } from './utilities';
-import { getTimetableEntriesByDate, getTimetableEntryById } from '../timetableEntries/selectors';
+import {
+  getTimetableEntriesByDate, getTimetableEntriesByGoalId,
+  getTimetableEntryById,
+} from '../timetableEntries/selectors';
+import _ from 'lodash';
 
 export function getGoalById(state: StoreState, id: string): Goal {
   return state.goals.byId[id];
@@ -32,10 +35,9 @@ export function getAllGoals(state: StoreState, options?: { includeDeleted: boole
  * Returns the goals that the user has for a given date.
  */
 export function getGoalsForDate(state: StoreState, date: Date): Goal[] {
-  const { goals } = state;
   const dayOfWeek = date.getDay();
 
-  const goalsArr = goals.allIds.map(id => goals.byId[id]);
+  const goalsArr = getAllGoals(state, { includeDeleted: true });
 
   return goalsArr.filter(goal => !isDeleted(goal, date) && isCreated(goal, date) && goal.recurringDays[dayOfWeek]);
 }
@@ -187,20 +189,10 @@ export function getTotalProgressForDate(state: StoreState, date: Date): number |
 }
 
 export function getTimetableEntriesForGoal(state: StoreState, goal: Goal, date: Date): TimetableEntry[] {
-  const dateIdx = convertDateToIndex(date);
-  const entryIds = state.timetableEntries.idsByDate[dateIdx];
+  const todaysEntries = getTimetableEntriesByDate(state, date);
+  const goalEntries = getTimetableEntriesByGoalId(state, goal.id);
 
-  if (entryIds == null) return [];
-
-  return entryIds.reduce((result: TimetableEntry[], entryId) => {
-    const entry = state.timetableEntries.byId[entryId];
-
-    if (entry.goalId === goal.id) {
-      result.push(entry);
-    }
-
-    return result;
-  }, []);
+  return _.intersectionBy(todaysEntries, goalEntries, 'id');
 }
 
 /**

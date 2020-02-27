@@ -2,9 +2,9 @@ import { createGoal, createStoreState, createTimetableEntry } from '../../../src
 import { TimetableRow } from '../../../src/components';
 import {
   convertTimetableEntriesToTimetableRows,
-  getTimetableEntriesByDate, getTimetableEntriesByProjectId, getTimetableEntryById,
+  getTimetableEntriesByDate, getTimetableEntriesByGoalId, getTimetableEntriesByProjectId, getTimetableEntryById,
 } from '../../../src/store/timetableEntries/selectors';
-import { createProject } from '../../../src/factories/createProject';
+import { createProject } from '../../../src/factories';
 import { getGoalColor } from '../../../src/store/goals/utilities';
 
 describe('timetable entries selectors', () => {
@@ -98,7 +98,39 @@ describe('timetable entries selectors', () => {
       const result = getTimetableEntriesByProjectId(state, project.id);
 
       expect(result).toEqual([]);
-    })
+    });
+  });
+
+  describe('getTimetableEntriesByGoalId', () => {
+    it('returns all timetable entries with given goal ID', () => {
+      const goal = createGoal({});
+      const entry1 = createTimetableEntry({
+        goalId: goal.id,
+        startDate: today,
+        startHour: 10,
+        durationInMin: 60,
+      });
+      const entry2 = createTimetableEntry({
+        goalId: 'some-other-goal-id',
+        startDate: today,
+        startHour: 12,
+        durationInMin: 60,
+      });
+      const state = createStoreState({ goals: [goal], timetableEntries: [entry1, entry2] });
+
+      const result = getTimetableEntriesByGoalId(state, goal.id);
+
+      expect(result).toEqual([entry1]);
+    });
+
+    it('returns an empty array when there are no timetable entries with given goal ID', () => {
+      const goal = createGoal({});
+      const state = createStoreState({ goals: [goal] });
+
+      const result = getTimetableEntriesByGoalId(state, goal.id);
+
+      expect(result).toEqual([]);
+    });
   });
 
   describe('convertTimetableEntriesToTimetableRows', () => {

@@ -19,6 +19,10 @@ export const getTimetableEntriesByProjectId = (state: StoreState, projectId: str
   return state.timetableEntries.idsByProjectId[projectId]?.map(id => getTimetableEntryById(state, id)) ?? [];
 };
 
+export const getTimetableEntriesByGoalId = (state: StoreState, goalId: string): TimetableEntry[] => {
+  return state.timetableEntries.idsByGoalId[goalId]?.map(id => getTimetableEntryById(state, id)) ?? [];
+};
+
 export const convertTimetableEntriesToTimetableRows = (state: StoreState, timetableEntries: TimetableEntry[]): TimetableRow[] => {
   return timetableEntries.map(entry => {
     const goal = getGoalById(state, entry.goalId);
