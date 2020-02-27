@@ -16,6 +16,7 @@ export * from './misc/ListHeader';
 export * from './charts/DayDetails';
 export * from './misc/Onboarding';
 export * from './misc/DurationInfo';
+export * from './misc/TextOnlyPage';
 
 // Settings
 export * from './settings/Settings';
@@ -25,7 +26,7 @@ export * from './settings/About';
 
 // Charts
 export * from './charts/ProgressChart';
-export * from './charts/Timetable';
+export * from './timetableEntries/Timetable';
 export * from './charts/StatChart';
 export * from './charts/DaysStats';
 export * from './charts/AnimatedProgressCircle';
@@ -65,6 +66,6 @@ export * from './navigation/HeaderButton';
 export * from './navigation/HeaderCancelButton';
 
 // Forms
-export * from './forms/GoalForm';
-export * from './forms/TimetableEntryForm';
-export * from './forms/ProjectForm';
+export * from './goals/GoalForm';
+export * from './timetableEntries/TimetableEntryForm';
+export * from './projects/ProjectForm';

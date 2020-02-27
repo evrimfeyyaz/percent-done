@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, fonts } from '../../theme';
 import { formatDurationInMs, formatTimeInTimestamp } from '../../utilities';
 import Svg, { Line } from 'react-native-svg';
-import { EmptyContainer } from '..';
+import { EmptyContainer } from '../index';
 
 export interface TimetableRow {
   title: string;

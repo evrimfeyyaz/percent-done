@@ -44,6 +44,7 @@ import {
   PercentDoneStats,
   HoursDoneStats,
   DayDetails, Stats, Onboarding, GoalDetails, DurationInfo, Settings, License, Licenses, About,
+  TextOnlyPage,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -59,10 +60,66 @@ import moment from 'moment';
 import { createGoal } from '../../src/factories';
 import { Icons } from '../../assets';
 import { createRandomId } from '../../src/utilities';
-import { createProject } from '../../src/factories/createProject';
+import { createProject } from '../../src/factories';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
+
+storiesOf('Charts', module)
+  .add('Day details', () => (
+    <DayDetails
+      date={new Date()}
+      percentDone={50}
+      completedMs={30 * 60 * 1000}
+      remainingMs={30 * 60 * 1000}
+      incompleteGoals={createGoals(5)}
+      completedGoals={[]}
+      entries={getTimetableEntries()}
+      onEntryPress={action('day-details-entry-pressed')}
+      onEditActionInteraction={action('day-details-edit-action-interaction')}
+      onDateChange={action('day-details-date-changed')}
+    />
+  ))
+  .add('Day\'s Stats', () => {
+    const progress = 42;
+    const completedMs = 1 * 60 * 60 * 1000;
+    const remainingMs = 30 * 60 * 10000;
+
+    return <DaysStats percentDone={progress} completedMs={completedMs} remainingMs={remainingMs} />;
+  })
+  .add('Monthly hours done chart', () => <HoursDoneStats data={getMonthlyHoursDoneData()} />)
+  .add('Weekly hours done stats', () => <HoursDoneStats data={getWeeklyHoursDoneData()} />)
+  .add('Monthly percent done stats', () => <PercentDoneStats data={getMonthlyPercentDoneData()} />)
+  .add('Weekly percent done stats', () => <PercentDoneStats data={getWeeklyPercentDoneData()} />)
+  .add('Progress chart', () => {
+    const label = 'Percent Done';
+    const defaultValue = 75;
+    const options = {
+      range: true,
+      min: 0,
+      max: 100,
+      step: 1,
+    };
+
+    const percentDone = number(label, defaultValue, options);
+
+    return <ProgressChart percentDone={percentDone} />;
+  })
+  .add('Stats', () => (
+      <ScrollView style={{ width: '100%' }}>
+        <Stats
+          hasEnoughDataToShow7DaysStats={() => true}
+          hasEnoughDataToShow30DaysStats={() => true}
+          statsPeriodKey='7'
+          onStatsPeriodKeyChange={action('stats-period-key-changed')}
+          getTotalCompletedMsForLast7Days={() => getWeeklyHoursDoneData()}
+          getTotalCompletedMsForLast30Days={() => getMonthlyHoursDoneData()}
+          getTotalPercentDoneForLast7Days={() => getWeeklyPercentDoneData()}
+          getTotalPercentDoneForLast30Days={() => getMonthlyPercentDoneData()}
+        />
+      </ScrollView>
+    ),
+  );
 
 storiesOf('Text styles', module)
   .add('Body', () => (
@@ -76,26 +133,7 @@ storiesOf('Text styles', module)
     </Text>
   ));
 
-storiesOf('Miscellaneous', module)
-  .add('Section', () => (
-    <Section title="Sample Section">
-      <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
-    </Section>
-  ))
-  .add('Goal row', () => (
-    <GoalRow
-      id='goal-id'
-      title="Write"
-      color={colors.yellow}
-      chainLength={10}
-      completedMs={30}
-      totalMs={60}
-      isActiveToday={true}
-    />
-  ))
-  .add('Goals list', () => {
-    return <GoalList goals={createGoals(100)} />;
-  })
+storiesOf('Goals', module)
   .add('Goal details (tracked goal)', () => {
     return (
       <GoalDetails
@@ -116,10 +154,20 @@ storiesOf('Miscellaneous', module)
       />
     );
   })
-  .add('Project row', () => <ProjectRow id='project-id' title="PercentDone" totalTimeSpentInMs={1 * 60 * 60 * 1000} />)
-  .add('Project list', () => {
-    return <ProjectList projects={createProjects(100)} />;
+  .add('Goals list', () => {
+    return <GoalList goals={createGoals(100)} />;
   })
+  .add('Goal row', () => (
+    <GoalRow
+      id='goal-id'
+      title="Write"
+      color={colors.yellow}
+      chainLength={10}
+      completedMs={30}
+      totalMs={60}
+      isActiveToday={true}
+    />
+  ))
   .add('Time tracker', () => (
     <TimeTracker
       goalId='GOAL_ID'
@@ -131,6 +179,61 @@ storiesOf('Miscellaneous', module)
       onProjectCreatePress={action('time-tracker-project-create-pressed')}
       onProjectRemove={action('time-tracker-project-removed')}
     />
+  ))
+  .add('Goal form', () => (
+    <GoalForm onSubmit={action('goal-form-submission')} allGoalTitles={['Goal 1', 'Goal 2']} />
+  ));
+
+storiesOf('Projects', module)
+  .add('Project row', () => <ProjectRow id='project-id' title="PercentDone" totalTimeSpentInMs={1 * 60 * 60 * 1000} />)
+  .add('Project list', () => {
+    return <ProjectList projects={createProjects(100)} />;
+  })
+  .add('Project form', () => (
+    <ProjectForm
+      project={createProject('PercentDone')}
+      allProjectTitles={['PercentDone', 'Project 2']}
+      onSubmit={action('project-form-submission')}
+      onDelete={action('project-form-deletion')}
+    />
+  ));
+
+storiesOf('Timetable entries', module)
+  .add('Timetable entry form', () => {
+    const goal1 = createGoal({ title: 'Work on PercentDone', durationInMin: 1 });
+    const goal2 = createGoal({ title: 'Exercise' });
+    const goal3 = createGoal({ title: 'Read', durationInMin: 1 });
+    const allGoals = [goal1, goal2, goal3];
+
+    return <TimetableEntryForm allGoals={allGoals} onSubmit={action('timetable-entry-form-submission')}
+                               onDelete={(action('timetable-entry-form-deletion'))}
+                               projects={[]} />;
+  })
+  .add('Timetable', () => {
+    const entries = getTimetableEntries();
+
+    return (
+      <Timetable
+        entries={entries}
+        onEntryPress={action('timetable-entry-pressed')}
+      />
+    );
+  });
+
+storiesOf('Miscellaneous', module)
+  .add('Text only page', () => {
+    const text = `
+    Here is some text.
+    
+    And here is a new paragraph.
+    `;
+
+    return <TextOnlyPage text={text} />;
+  })
+  .add('Section', () => (
+    <Section title="Sample Section">
+      <Text style={textStyles.body}>Lorem ipsum dolor sit amet.</Text>
+    </Section>
   ))
   .add('Swipeable item', () => {
     const leftAction = {
@@ -218,20 +321,6 @@ storiesOf('Miscellaneous', module)
       onButtonPress={action('list-header-button-press')}
     />
   ))
-  .add('Day details', () => (
-    <DayDetails
-      date={new Date()}
-      percentDone={50}
-      completedMs={30 * 60 * 1000}
-      remainingMs={30 * 60 * 1000}
-      incompleteGoals={createGoals(5)}
-      completedGoals={[]}
-      entries={getTimetableEntries()}
-      onEntryPress={action('day-details-entry-pressed')}
-      onEditActionInteraction={action('day-details-edit-action-interaction')}
-      onDateChange={action('day-details-date-changed')}
-    />
-  ))
   .add('Onboarding', () => (
     <Onboarding
       notificationPermissions={{
@@ -264,58 +353,6 @@ storiesOf('Settings', module)
   .add('About', () => (
     <About />
   ));
-
-storiesOf('Charts', module)
-  .add('Progress chart', () => {
-    const label = 'Percent Done';
-    const defaultValue = 75;
-    const options = {
-      range: true,
-      min: 0,
-      max: 100,
-      step: 1,
-    };
-
-    const percentDone = number(label, defaultValue, options);
-
-    return <ProgressChart percentDone={percentDone} />;
-  })
-  .add('Timetable', () => {
-    const entries = getTimetableEntries();
-
-    return (
-      <Timetable
-        entries={entries}
-        onEntryPress={action('timetable-entry-pressed')}
-      />
-    );
-  })
-  .add('Weekly percent done stats', () => <PercentDoneStats data={getWeeklyPercentDoneData()} />)
-  .add('Monthly percent done stats', () => <PercentDoneStats data={getMonthlyPercentDoneData()} />)
-  .add('Weekly hours done stats', () => <HoursDoneStats data={getWeeklyHoursDoneData()} />)
-  .add('Monthly hours done chart', () => <HoursDoneStats data={getMonthlyHoursDoneData()} />)
-  .add('Day\'s Stats', () => {
-    const progress = 42;
-    const completedMs = 1 * 60 * 60 * 1000;
-    const remainingMs = 30 * 60 * 10000;
-
-    return <DaysStats percentDone={progress} completedMs={completedMs} remainingMs={remainingMs} />;
-  })
-  .add('Stats', () => (
-      <ScrollView style={{ width: '100%' }}>
-        <Stats
-          hasEnoughDataToShow7DaysStats={() => true}
-          hasEnoughDataToShow30DaysStats={() => true}
-          statsPeriodKey='7'
-          onStatsPeriodKeyChange={action('stats-period-key-changed')}
-          getTotalCompletedMsForLast7Days={() => getWeeklyHoursDoneData()}
-          getTotalCompletedMsForLast30Days={() => getMonthlyHoursDoneData()}
-          getTotalPercentDoneForLast7Days={() => getWeeklyPercentDoneData()}
-          getTotalPercentDoneForLast30Days={() => getMonthlyPercentDoneData()}
-        />
-      </ScrollView>
-    ),
-  );
 
 storiesOf('Inputs', module)
   .add('Button', () => (
@@ -436,29 +473,6 @@ storiesOf('Navigation', module)
       <HeaderButton title='Add Goal' primary onPress={action('header-button-press')} />
     </View>
   ));
-
-storiesOf('Forms', module)
-  .add('Goal form', () => (
-    <GoalForm onSubmit={action('goal-form-submission')} allGoalTitles={['Goal 1', 'Goal 2']} />
-  ))
-  .add('Project form', () => (
-    <ProjectForm
-      project={createProject('PercentDone')}
-      allProjectTitles={['PercentDone', 'Project 2']}
-      onSubmit={action('project-form-submission')}
-      onDelete={action('project-form-deletion')}
-    />
-  ))
-  .add('Timetable entry form', () => {
-    const goal1 = createGoal({ title: 'Work on PercentDone', durationInMin: 1 });
-    const goal2 = createGoal({ title: 'Exercise' });
-    const goal3 = createGoal({ title: 'Read', durationInMin: 1 });
-    const allGoals = [goal1, goal2, goal3];
-
-    return <TimetableEntryForm allGoals={allGoals} onSubmit={action('timetable-entry-form-submission')}
-                               onDelete={(action('timetable-entry-form-deletion'))}
-                               projects={[]} />;
-  });
 
 // Utilities
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import { TextButton, TextInput } from '..';
+import { TextButton, TextInput } from '../index';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Project } from '../../store/projects/types';
 import { WithOptionalId } from '../../utilities/types';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DateInput, InputContainer, ItemInput, ProjectModal, TextButton, TimeInput } from '..';
+import { DateInput, InputContainer, ItemInput, ProjectModal, TextButton, TimeInput } from '../index';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { TimetableEntry } from '../../store/timetableEntries/types';
 import { Goal } from '../../store/goals/types';

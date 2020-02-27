@@ -7,7 +7,7 @@ import {
   Section,
   SwitchInput, TextButton,
   TextInput,
-} from '..';
+} from '../index';
 import { goalColors } from '../../theme';
 import { Goal } from '../../store/goals/types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
