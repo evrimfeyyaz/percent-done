@@ -30,11 +30,6 @@ interface GoalFormState {
   titleInputPosition?: number;
   titleInputError?: string;
   /**
-   * Y position of the recurring days input.
-   */
-  recurringDaysInputPosition?: number;
-  recurringDaysInputError?: string;
-  /**
    * Y positions of all inputs that failed validation.
    */
   failedInputPositions?: number[];
@@ -52,13 +47,12 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   };
 
   validate(): boolean {
-    const { titleInputPosition, recurringDaysInputPosition } = this.state;
+    const { titleInputPosition } = this.state;
     const { allGoalTitles, goal: previousGoal } = this.props;
 
     const goal = this.createGoalFromInputs();
 
     let titleInputError = this.state.titleInputError;
-    let recurringDaysInputError = this.state.recurringDaysInputError;
     let failedInputPositions = [];
 
     const validator = new GoalValidator(goal, allGoalTitles, previousGoal);
@@ -70,19 +64,13 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
 
     const errors = validator.errors;
     const titleError = errors.find(error => error.property === 'title');
-    const recurringDaysError = errors.find(error => error.property === 'recurringDays');
 
     if (titleError != null) {
       titleInputError = titleError.message;
       if (titleInputPosition != null) failedInputPositions.push(titleInputPosition);
     }
 
-    if (recurringDaysError != null) {
-      recurringDaysInputError = recurringDaysError.message;
-      if (recurringDaysInputPosition != null) failedInputPositions.push(recurringDaysInputPosition);
-    }
-
-    this.setState({ titleInputError, recurringDaysInputError, failedInputPositions });
+    this.setState({ titleInputError, failedInputPositions });
 
     return false;
   }
@@ -134,7 +122,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   handleRecurringDaysChange = (recurringDays: boolean[]) => {
     this.setState({
       recurringDays,
-      recurringDaysInputError: undefined,
     });
   };
 
@@ -145,12 +132,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   handleTitleInputLayout = (event: LayoutChangeEvent) => {
     this.setState({
       titleInputPosition: event.nativeEvent.layout.y,
-    });
-  };
-
-  handleRecurringDaysInputLayout = (event: LayoutChangeEvent) => {
-    this.setState({
-      recurringDaysInputPosition: event.nativeEvent.layout.y,
     });
   };
 
@@ -210,7 +191,7 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
   render() {
     const {
       title, isTimeTracked, duration, recurringDays,
-      colorIndex, titleInputError, recurringDaysInputError,
+      colorIndex, titleInputError,
     } = this.state;
 
     return (
@@ -223,8 +204,6 @@ export class GoalForm extends Component<GoalFormProps, GoalFormState> {
                      onLayout={this.handleTitleInputLayout} error={titleInputError} autoFocus />
           {this.isAddNewForm() && (
             <DaysOfWeekInput title='Repeat on following days' selectedDays={recurringDays}
-                             onLayout={this.handleRecurringDaysInputLayout}
-                             error={recurringDaysInputError}
                              onDaysChange={this.handleRecurringDaysChange} />
           )}
         </View>

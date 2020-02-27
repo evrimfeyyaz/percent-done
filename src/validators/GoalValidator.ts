@@ -40,18 +40,6 @@ export class GoalValidator extends AbstractValidator {
       });
     }
 
-    if (
-      this.goal.recurringDays == null ||
-      !Array.isArray(this.goal.recurringDays) ||
-      this.goal.recurringDays.length === 0 ||
-      this.goal.recurringDays.indexOf(true) === -1
-    ) {
-      this.errors.push({
-        property: 'recurringDays',
-        message: 'You should select at least one day.',
-      });
-    }
-
     return this.errors.length === 0;
   }
 }

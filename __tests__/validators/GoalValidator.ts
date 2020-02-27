@@ -71,18 +71,6 @@ describe('GoalValidator', () => {
           message: 'Another goal with this title already exists.',
         });
       });
-
-      it('validates at least one recurring day is selected', () => {
-        goal.recurringDays = Array(7).fill(false);
-
-        const validator = new GoalValidator(goal, allGoalTitles);
-        validator.validate();
-
-        expect(validator.errors).toContainEqual({
-          property: 'recurringDays',
-          message: 'You should select at least one day.',
-        });
-      });
     });
 
     describe('when a goal that is edited being validated', () => {
@@ -139,18 +127,6 @@ describe('GoalValidator', () => {
         expect(validator.errors).not.toContainEqual({
           property: 'title',
           message: 'Another goal with this title already exists.',
-        });
-      });
-
-      it('validates at least one recurring day is selected', () => {
-        goal.recurringDays = [];
-
-        const validator = new GoalValidator(goal, allGoalTitles, previousVersion);
-        validator.validate();
-
-        expect(validator.errors).toContainEqual({
-          property: 'recurringDays',
-          message: 'You should select at least one day.',
         });
       });
     });
