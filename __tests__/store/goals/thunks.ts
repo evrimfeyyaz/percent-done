@@ -163,16 +163,6 @@ describe('goal thunks', () => {
       expect(actionTypes).toContain(ADD_TIMETABLE_ENTRY);
     });
 
-    it('sets given project ID as the last project ID of the tracked goal', () => {
-      expect(actions).toContainEqual({
-        type: EDIT_GOAL,
-        goal: {
-          ...goal,
-          lastProjectId: projectId,
-        },
-      });
-    });
-
     it('cancels the scheduled goal completed notification', () => {
       expect(PushNotification.cancelLocalNotifications).toBeCalled();
     });
