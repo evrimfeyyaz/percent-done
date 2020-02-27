@@ -57,7 +57,7 @@ export const TodaysGoalsScreen: NavigationMaterialTabScreenComponent = ({ naviga
 
       {todaysGoals.length === 0 && (
         <EmptyContainer text="There aren't any goals for today yet." style={styles.emptyContainer}>
-          <Button title='Add a Goal' iconSource={Icons.goal} onPress={handleAddButtonPress}
+          <Button title='Add Goal' iconSource={Icons.goal} onPress={handleAddButtonPress}
                   style={styles.addGoalButton} />
         </EmptyContainer>
       )}
