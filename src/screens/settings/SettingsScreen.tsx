@@ -15,12 +15,22 @@ export const SettingsScreen: NavigationStackScreenComponent = ({ navigation }) =
     navigation.navigate('Licenses');
   };
 
+  const handleTermsOfUsePress = () => {
+    navigation.navigate('TermsOfUse');
+  };
+
+  const handlePrivacyPolicyPress = () => {
+    navigation.navigate('PrivacyPolicy');
+  };
+
   return (
     <BackgroundView>
       <Settings
         onTutorialPress={handleTutorialPress}
         onAboutPress={handleAboutPress}
         onLicensesPress={handleLicensesPress}
+        onTermsOfUsePress={handleTermsOfUsePress}
+        onPrivacyPolicyPress={handlePrivacyPolicyPress}
       />
     </BackgroundView>
   );

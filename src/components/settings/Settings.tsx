@@ -1,15 +1,18 @@
 import React, { FunctionComponent } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
-import { MenuLink } from '../index';
+import { MenuLink } from '..';
 
 interface SettingsProps {
   onAboutPress?: () => void;
   onTutorialPress?: () => void;
   onLicensesPress?: () => void;
+  onTermsOfUsePress?: () => void;
+  onPrivacyPolicyPress?: () => void;
 }
 
 export const Settings: FunctionComponent<SettingsProps> = ({
                                                              onAboutPress, onTutorialPress, onLicensesPress,
+                                                             onTermsOfUsePress, onPrivacyPolicyPress,
                                                            }) => {
   const about = {
     title: 'About',
@@ -29,12 +32,24 @@ export const Settings: FunctionComponent<SettingsProps> = ({
     onPress: onTutorialPress,
   };
 
+  const termsOfUse = {
+    title: 'Terms of Use',
+    key: 'terms-of-use',
+    onPress: onTermsOfUsePress,
+  };
+
+  const privacyPolicy = {
+    title: 'Privacy Policy',
+    key: 'privacy-policy',
+    onPress: onPrivacyPolicyPress,
+  };
+
   const sections = [
     {
       data: [tutorial],
     },
     {
-      data: [licenses, about],
+      data: [licenses, termsOfUse, privacyPolicy, about],
     },
   ];
 
