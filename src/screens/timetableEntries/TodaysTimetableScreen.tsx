@@ -1,20 +1,29 @@
 import React, { useEffect } from 'react';
 import { NavigationMaterialTabScreenComponent } from 'react-navigation-tabs';
 import { TodaysTimetable } from '../../containers';
-import { LayoutAnimation, ScrollView, StyleSheet } from 'react-native';
+import { Alert, LayoutAnimation, ScrollView, StyleSheet } from 'react-native';
 import { Icons } from '../../../assets';
 import { ListHeader } from '../../components';
 import { useDispatchCurrentDateOnRender } from '../../utilities';
+import { useSelector } from 'react-redux';
+import { getAllGoals } from '../../store/goals/selectors';
+import { StoreState } from '../../store/types';
 
 export const TodaysTimetableScreen: NavigationMaterialTabScreenComponent = ({ navigation }) => {
   useDispatchCurrentDateOnRender();
+
+  const allGoals = useSelector((state: StoreState) => getAllGoals(state));
 
   useEffect(() => {
     LayoutAnimation.easeInEaseOut();
   }, []);
 
   const handleAddButtonPress = () => {
-    navigation.navigate('AddTimetableEntry');
+    if (allGoals.length > 0) {
+      navigation.navigate('AddTimetableEntry');
+    } else {
+      Alert.alert('You need to add a goal first.');
+    }
   };
 
   const handleEntryPress = (timetableEntryId: string) => {

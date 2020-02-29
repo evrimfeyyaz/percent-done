@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { DateInput, InputContainer, ItemInput, ProjectModal, TextButton, TimeInput } from '../index';
+import { DateInput, InputContainer, ItemInput, ProjectModal, TextButton, TimeInput } from '..';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { TimetableEntry } from '../../store/timetableEntries/types';
 import { Goal } from '../../store/goals/types';
 import { isTimeTracked } from '../../store/goals/utilities';
-import { msToHoursMinutesSeconds } from '../../utilities';
 import { WithOptionalId } from '../../utilities/types';
 import { TimetableEntryValidator } from '../../validators';
 
@@ -32,7 +31,7 @@ interface TimetableEntryFormState {
 
 export class TimetableEntryForm extends Component<TimetableEntryFormProps, TimetableEntryFormState> {
   private now = Date.now();
-  private goalId = this.props.timetableEntry?.goalId || this.props.allGoals[0].id;
+  private goalId = this.props.timetableEntry?.goalId ?? this.props.allGoals?.[0]?.id;
   private goal = this.props.allGoals.find(goal => goal.id === this.goalId);
 
   state: TimetableEntryFormState = {
