@@ -10,6 +10,7 @@ import { setCurrentDateTimestamp } from './src/store/settings/actions';
 import { configureNotifications } from './src/utilities/configureNotifications';
 import SplashScreen from 'react-native-splash-screen';
 import { setStatusBarStyle } from './src/utilities/statusBar';
+import { enableScreens } from 'react-native-screens';
 
 YellowBox.ignoreWarnings([
   'Warning:',
@@ -26,6 +27,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 // export default Storybook;
 
+enableScreens();
 const { store, persistor } = configureStore();
 configureNotifications();
 

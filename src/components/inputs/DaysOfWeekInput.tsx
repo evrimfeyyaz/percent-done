@@ -29,11 +29,21 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
   };
 
   const dayButton = (day: number) => {
-    const selectedStyle = { opacity: 1 };
     const isSelected = selectedDays[day];
+
+    const selectedButtonStyle = {
+      backgroundColor: colors.orange,
+    };
     const dayButtonStyle = isSelected
-      ? [styles.dayButton, selectedStyle]
+      ? [styles.dayButton, selectedButtonStyle]
       : styles.dayButton;
+
+    const selectedButtonTitleStyle = {
+      color: colors.white,
+    };
+    const dayButtonTitleStyle = isSelected
+      ? [styles.dayButtonTitle, selectedButtonTitleStyle]
+      : styles.dayButtonTitle;
 
     return (
       <TouchableWithoutFeedback
@@ -41,7 +51,7 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
         onPress={() => handleDayChange(day)}
       >
         <View style={dayButtonStyle}>
-          <Text style={styles.dayButtonTitle}>{dayInitials[day]}</Text>
+          <Text style={dayButtonTitleStyle}>{dayInitials[day]}</Text>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -81,15 +91,16 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     borderRadius: 12,
-    backgroundColor: colors.orange,
+    backgroundColor: colors.darkGray,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    opacity: 0.5,
   },
   dayButtonTitle: {
-    color: colors.white,
+    color: colors.offBlack,
     fontFamily: fonts.semibold,
     fontSize: 12,
+    marginRight: -StyleSheet.hairlineWidth,
+    marginBottom: -2,
   },
 });
