@@ -49,6 +49,7 @@ export const DaysOfWeekInput: FunctionComponent<DaysOfWeekInputProps> = ({ title
       <TouchableWithoutFeedback
         key={`${day}-${isSelected ? 'selected' : 'unselected'}`}
         onPress={() => handleDayChange(day)}
+        hitSlop={{ top: 20, right: 20, left: 20, bottom: 20 }}
       >
         <View style={dayButtonStyle}>
           <Text style={dayButtonTitleStyle}>{dayInitials[day]}</Text>
