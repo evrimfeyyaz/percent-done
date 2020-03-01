@@ -49,11 +49,14 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialValue, o
   };
 
   const handlePeriodIndexChange = (index: number) => {
-    let newHour = time.getHours();
+    const currentHour = time.getHours();
+    let newHour = currentHour;
 
-    if (index === 1) { // PM
+    if (index === 1 && currentHour < 12) { // PM
       newHour += 12;
-    } else {
+    }
+
+    if (index === 0 && currentHour > 11) { // AM
       newHour -= 12;
     }
 
