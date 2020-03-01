@@ -15,10 +15,7 @@ import { StatsPeriodKeyType } from '../../store/settings/types';
 export interface StatsProps {
   hasEnoughDataToShow7DaysStats: () => boolean;
   hasEnoughDataToShow30DaysStats: () => boolean;
-  /**
-   * Either '7' or '30'.
-   */
-  statsPeriodKey: string;
+  statsPeriodKey: '7' | '30';
   getTotalCompletedMsForLast7Days: () => StatChartData,
   getTotalCompletedMsForLast30Days: () => StatChartData,
   getTotalPercentDoneForLast7Days: () => StatChartData,
@@ -148,10 +145,10 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flexGrow: 1,
     width: '100%',
+    paddingVertical: 20,
   },
   button: {
     marginHorizontal: 20,
-    marginTop: 10,
     marginBottom: 30,
   },
   notEnoughData: {

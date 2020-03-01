@@ -1,6 +1,6 @@
 import React from 'react';
 import { StoreState } from '../../store/types';
-import { StatChartData, Stats, StatsProps } from '../../components';
+import { Stats, StatsProps } from '../../components';
 import {
   getTotalCompletedMsForLast30Days,
   getTotalCompletedMsForLast7Days, getTotalProgressForLast30Days,
