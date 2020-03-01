@@ -11,6 +11,8 @@ import { configureNotifications } from './src/utilities/configureNotifications';
 import SplashScreen from 'react-native-splash-screen';
 import { setStatusBarStyle } from './src/utilities/statusBar';
 import { enableScreens } from 'react-native-screens';
+import PushNotification from 'react-native-push-notification';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 YellowBox.ignoreWarnings([
   'Warning:',
@@ -91,6 +93,10 @@ const App: FunctionComponent = () => {
       nextAppState === 'active'
     ) {
       updateCurrentDateAndSetTimeoutForTheNextDay();
+
+      if (Platform.OS === 'ios') {
+        PushNotificationIOS.removeAllDeliveredNotifications();
+      }
     }
 
     appState.current = nextAppState;

@@ -2,6 +2,7 @@ import { StoreState } from '../types';
 import { Goal } from './types';
 import { GoalRowProps, StatChartData } from '../../components';
 import {
+  convertDateToIndex,
   getAbbreviatedDate,
   getAbbreviatedDayOfWeek,
   momentWithDeviceLocale,
@@ -212,6 +213,16 @@ export function getChainLength(state: StoreState, goal: Goal, date: Date): numbe
   }
 
   return chainLength;
+}
+
+export function getNumOfTimesCompleted(state: StoreState, goal: Goal): number {
+  const entries = getTimetableEntriesByGoalId(state, goal.id);
+  const entriesOnSeparateDays = _.uniqBy(entries, entry => convertDateToIndex(new Date(entry.startTimestamp)));
+  const daysWorkedOn = entriesOnSeparateDays.map(entry => new Date(entry.startTimestamp));
+
+  const totalCompletedDays = daysWorkedOn.reduce((sum, day) => sum + (isCompleted(state, goal, day) ? 1 : 0), 0);
+
+  return totalCompletedDays;
 }
 
 export const getTotalProgressForLast7Days = (state: StoreState): StatChartData =>
