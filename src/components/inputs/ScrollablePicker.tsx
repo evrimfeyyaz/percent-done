@@ -46,7 +46,8 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
   };
 
   const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const index = event.nativeEvent.contentOffset.y / ITEM_SIZE;
+    let index = Math.floor(event.nativeEvent.contentOffset.y / ITEM_SIZE);
+    index = Math.min(0, Math.max(data.length, index));
 
     onIndexChange?.(index);
   };
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   itemContainer: {
     height: ITEM_SIZE,
