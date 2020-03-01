@@ -3,7 +3,7 @@ import { StoreState } from '../../store/types';
 import { GoalDetails, GoalDetailsProps } from '../../components';
 import {
   getChainLength,
-  getGoalById,
+  getGoalById, getNumOfTimesCompleted,
   getTotalCompletedMsForGoal,
   isCompleted,
 } from '../../store/goals/selectors';
@@ -28,6 +28,7 @@ const mapStateToProps = (state: StoreState, ownProps: GoalInfoProps): GoalDetail
     chainLength: getChainLength(state, goal, date),
     isCompleted: isCompleted(state, goal, date),
     totalCompletedMs: getTotalCompletedMsForGoal(state, goal),
+    numOfTimesCompleted: getNumOfTimesCompleted(state, goal),
   };
 };
 

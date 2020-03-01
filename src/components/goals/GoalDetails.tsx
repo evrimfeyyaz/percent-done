@@ -10,6 +10,7 @@ export interface GoalDetailsProps {
   isTracked: boolean;
   chainLength: number;
   totalCompletedMs?: number;
+  numOfTimesCompleted: number;
   isCompleted?: boolean;
   onTrackOrCompleteButtonPress?: () => void;
 }
@@ -17,6 +18,7 @@ export interface GoalDetailsProps {
 export const GoalDetails: FunctionComponent<GoalDetailsProps> = ({
                                                                    title, isTracked, chainLength,
                                                                    totalCompletedMs, isCompleted,
+                                                                   numOfTimesCompleted,
                                                                    onTrackOrCompleteButtonPress,
                                                                  }) => {
   const buttonTitle = isTracked ? 'Track Goal' : (isCompleted ? 'Mark as Incomplete' : 'Mark as Completed');
@@ -27,16 +29,25 @@ export const GoalDetails: FunctionComponent<GoalDetailsProps> = ({
       <Text style={styles.title}>{title}</Text>
 
       {isTracked && totalCompletedMs != null && (
-        <View style={styles.timeTrackedContainer}>
+        <View style={styles.infoContainer}>
           <Text style={styles.infoTitle}>Total Tracked Time</Text>
           <DurationInfo durationInMs={totalCompletedMs} />
         </View>
       )}
 
-      <Text style={styles.infoTitle}>Current Streak</Text>
-      <Text style={textStyles.info}>{chainLength}&nbsp;
-        <Text style={textStyles.infoLabel}>{pluralize('day', chainLength)}</Text>
-      </Text>
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoTitle}># of Times Completed</Text>
+        <Text style={textStyles.info}>{numOfTimesCompleted}&nbsp;
+          <Text style={textStyles.infoLabel}>{pluralize('day', numOfTimesCompleted)}</Text>
+        </Text>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoTitle}>Current Streak</Text>
+        <Text style={textStyles.info}>{chainLength}&nbsp;
+          <Text style={textStyles.infoLabel}>{pluralize('day', chainLength)}</Text>
+        </Text>
+      </View>
 
       <Button title={buttonTitle} iconSource={buttonIconSource} onPress={onTrackOrCompleteButtonPress}
               style={styles.trackOrCompleteButton} />
@@ -58,16 +69,16 @@ const styles = StyleSheet.create({
   },
   trackOrCompleteButton: {
     alignSelf: 'stretch',
-    marginTop: 40,
+    marginTop: 20,
+  },
+  infoContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
   },
   infoTitle: {
     fontFamily: fonts.semibold,
     fontSize: 24,
     textAlign: 'center',
     color: colors.gray,
-  },
-  timeTrackedContainer: {
-    marginBottom: 20,
-    alignItems: 'center',
   },
 });
