@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ViewStyle } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
 import { isLocale24Hours } from '../../utilities';
 import { colors, fonts } from '../../theme';
@@ -74,13 +74,17 @@ export const TimePicker: FunctionComponent<TimePickerProps> = ({ initialValue, o
   const periods = ['AM', 'PM'];
   const periodData = periods.map(period => ({ key: period, value: period }));
 
+  let minutePickerStyle: ViewStyle | undefined;
+  if (!is24Hours) {
+    minutePickerStyle = { width: 45, flex: 0 };
+  }
+
   return (
     <View style={styles.container}>
-      <ScrollablePicker data={hourData} index={hourIndex} style={styles.picker}
-                        onIndexChange={handleHourIndexChange} />
+      <ScrollablePicker data={hourData} index={hourIndex} onIndexChange={handleHourIndexChange} />
       <Text style={styles.colon}>:</Text>
-      <ScrollablePicker data={minuteData} index={minuteIndex} style={styles.picker}
-                        onIndexChange={handleMinuteIndexChange} />
+      <ScrollablePicker data={minuteData} index={minuteIndex} onIndexChange={handleMinuteIndexChange}
+                        alignment='start' style={minutePickerStyle} />
       {!is24Hours && (
         <ScrollablePicker index={periodIndex} data={periodData} alignment='start'
                           onIndexChange={handlePeriodIndexChange} />
@@ -95,16 +99,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 200,
-    paddingHorizontal: 30,
-  },
-  picker: {
-    marginHorizontal: 10,
   },
   colon: {
     fontFamily: fonts.regular,
     fontSize: 24,
     marginTop: -4,
-    marginEnd: -6,
     color: colors.gray,
   },
 });

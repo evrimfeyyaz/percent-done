@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import MaskedView from '@react-native-community/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
-import { colors, fonts } from '../../theme';
+import { fonts } from '../../theme';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 const ITEM_SIZE = 40;
@@ -22,10 +22,6 @@ interface ScrollablePickerProps {
     value: string,
   }[];
   /**
-   * Text to show after the picker to denote its purpose.
-   */
-  text?: string;
-  /**
    * Alignment of items inside the picker.
    */
   alignment?: 'start' | 'center' | 'end';
@@ -33,7 +29,7 @@ interface ScrollablePickerProps {
   style?: ViewStyle;
 }
 
-export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ index, data, text, alignment = 'end', onIndexChange, style }) => {
+export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ index, data, alignment = 'end', onIndexChange, style }) => {
   const [tempIndex, setTempIndex] = useState(index);
 
   const scrollViewRef = useRef<ScrollView>(null);
@@ -113,10 +109,6 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
           {items}
         </ScrollView>
       </MaskedView>
-      {text != null && (
-        // @ts-ignore
-        <Text style={styles.text} pointerEvents='none'>{text}</Text>
-      )}
     </View>
   );
 };
@@ -126,6 +118,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
+    overflow: 'hidden'
   },
   itemContainer: {
     height: ITEM_SIZE,
@@ -139,18 +133,15 @@ const styles = StyleSheet.create({
   scrollView: {
     height: ITEM_SIZE * 5,
     minWidth: 45,
+    width: '100%',
   },
   mask: {
     height: ITEM_SIZE * 5,
+    width: '100%',
   },
   maskGradient: {
     flex: 1,
     height: '100%',
     width: '100%',
-  },
-  text: {
-    fontFamily: fonts.regular,
-    fontSize: 24,
-    color: colors.gray,
   },
 });

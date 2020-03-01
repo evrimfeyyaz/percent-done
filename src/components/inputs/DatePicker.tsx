@@ -128,12 +128,9 @@ export const DatePicker: FunctionComponent<DatePickerProps> = ({ initialValue, o
 
   return (
     <View style={styles.container}>
-      <ScrollablePicker data={yearsData} index={yearIndex} style={styles.picker} onIndexChange={handleYearChange}
-                        alignment='center' />
-      <ScrollablePicker data={monthsData} index={monthIndex} style={styles.picker} onIndexChange={handleMonthChange}
-                        alignment='center' />
-      <ScrollablePicker data={daysData} index={dayIndex} style={styles.picker} onIndexChange={handleDayChange}
-                        alignment='center' />
+      <ScrollablePicker data={yearsData} index={yearIndex} onIndexChange={handleYearChange} alignment='end' />
+      <ScrollablePicker data={monthsData} index={monthIndex} onIndexChange={handleMonthChange} alignment='center' />
+      <ScrollablePicker data={daysData} index={dayIndex} onIndexChange={handleDayChange} alignment='start' />
     </View>
   );
 };
@@ -144,9 +141,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 200,
-    paddingHorizontal: 30,
-  },
-  picker: {
-    marginHorizontal: 10,
   },
 });

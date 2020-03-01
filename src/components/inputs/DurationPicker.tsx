@@ -1,7 +1,9 @@
 import React, { FunctionComponent, useState } from 'react';
+import { Text } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import { ScrollablePicker } from './ScrollablePicker';
 import _ from 'lodash';
+import { colors, fonts } from '../../theme';
 
 interface DurationPickerProps {
   initialValue: { hours: number, minutes: number }
@@ -31,10 +33,11 @@ export const DurationPicker: FunctionComponent<DurationPickerProps> = ({ initial
 
   return (
     <View style={styles.container}>
-      <ScrollablePicker data={hourData} index={duration.hours} style={styles.picker}
-                        onIndexChange={handleHoursChange} text='H' />
-      <ScrollablePicker data={minuteData} index={duration.minutes} style={styles.picker}
-                        onIndexChange={handleMinutesChange} text='M' />
+      <ScrollablePicker data={hourData} index={duration.hours}
+                        onIndexChange={handleHoursChange} />
+      <Text style={styles.colon}>:</Text>
+      <ScrollablePicker data={minuteData} index={duration.minutes}
+                        onIndexChange={handleMinutesChange} alignment='start' />
     </View>
   );
 };
@@ -45,9 +48,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 200,
-    paddingHorizontal: 30,
   },
-  picker: {
-    marginHorizontal: 10,
+  colon: {
+    fontFamily: fonts.regular,
+    fontSize: 24,
+    marginTop: -4,
+    color: colors.gray,
   },
 });
