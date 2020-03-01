@@ -35,6 +35,7 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
   const scrollViewRef = useRef<ScrollView>(null);
 
   const getScrollLocationByIndex = (index: number) => index * ITEM_SIZE;
+  const getIndexByScrollLocation = (y: number) => Math.floor(Math.min(data.length, Math.max(0, y / ITEM_SIZE)));
 
   useEffect(() => {
     ReactNativeHapticFeedback.trigger('selection');
@@ -46,17 +47,20 @@ export const ScrollablePicker: FunctionComponent<ScrollablePickerProps> = ({ ind
   };
 
   const handleMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    let index = Math.floor(event.nativeEvent.contentOffset.y / ITEM_SIZE);
-    index = Math.min(0, Math.max(data.length, index));
+    // let index = Math.floor(event.nativeEvent.contentOffset.y / ITEM_SIZE);
+    // index = Math.min(0, Math.max(data.length, index));
+    const { y } = event.nativeEvent.contentOffset;
+    let index = getIndexByScrollLocation(y);
 
     onIndexChange?.(index);
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const errorMargin = 10;
+    const { y } = event.nativeEvent.contentOffset;
 
-    if (event.nativeEvent.contentOffset.y % ITEM_SIZE < errorMargin) {
-      const index = Math.round(event.nativeEvent.contentOffset.y / ITEM_SIZE);
+    if (y % ITEM_SIZE < errorMargin) {
+      const index = getIndexByScrollLocation(y);
       if (index !== tempIndex) setTempIndex(index);
     }
   };

@@ -19,6 +19,7 @@ export const ItemPicker: FunctionComponent<ItemPickerProps> = ({ initialValue, a
   const selectedItemIndex = allValues?.findIndex(item => item.key === itemKey);
 
   const handleItemIndexChange = (index: number) => {
+    console.log(index);
     const newItem = allValues[index];
 
     setItemKey(newItem.key);
