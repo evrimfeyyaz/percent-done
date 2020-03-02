@@ -145,15 +145,14 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-start',
-    paddingBottom: isScreenSmall() ? 80 : 150,
-    paddingTop: 20,
-    paddingHorizontal: isScreenSmall() ? 15 : 30,
+    paddingBottom: isScreenSmall() ? '10%' : '30%',
+    paddingTop: '10%',
+    paddingHorizontal: '5%',
   },
   imageContainer: {
     height: isScreenSmall() ? '40%' : '70%',
     justifyContent: 'center',
-    paddingBottom: 0,
-    // overflow: 'hidden',
+    borderRadius: 10,
   },
   imageCard: {
     width: '100%',
