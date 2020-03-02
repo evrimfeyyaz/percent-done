@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 20,
     alignItems: 'center',
-    flexGrow: .5,
+    flexGrow: 1,
   },
   addEntryButton: {
     width: 200,

@@ -127,6 +127,7 @@ export const Timetable: FunctionComponent<TimetableProps> = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    flex: 1,
   },
   entry: {
     display: 'flex',
