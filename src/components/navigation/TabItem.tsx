@@ -14,7 +14,7 @@ interface Props {
    * 0 means not selected, and 1 means selected. Anything in between means tab selection is
    * changing.
    */
-  selectionStatus?: Animated.Value; // TODO: See if you really need this as an Animated.Value.
+  selectionStatus?: Animated.Value;
 }
 
 export const TabItem: FunctionComponent<Props> = ({

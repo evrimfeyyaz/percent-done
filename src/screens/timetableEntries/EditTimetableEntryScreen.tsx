@@ -9,7 +9,6 @@ import {
 import { EditTimetableEntryForm } from '../../containers';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
-// TODO: Refactor edit and add form screens into a HOC.
 export const EditTimetableEntryScreen: NavigationStackScreenComponent = ({ navigation }) => {
   const formRef = useRef<TimetableEntryForm>(null);
 

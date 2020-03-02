@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect, useMemo } from 'react';
 import { TabItem } from './TabItem';
 import {
   StyleSheet,
@@ -137,8 +137,7 @@ export const TabBar: FunctionComponent<Props> = ({
     setSelectedTabPositions({ ...selectedTabPositions, [tabIndex]: selectedXPosition });
   };
 
-  // TODO: Avoid re-creating this in every render.
-  const panResponder = PanResponder.create({
+  const panResponder = useMemo(() => PanResponder.create({
     onStartShouldSetPanResponder: () => false,
     onMoveShouldSetPanResponder: (evt, gestureState) => {
       const { dx, dy } = gestureState;
@@ -149,7 +148,7 @@ export const TabBar: FunctionComponent<Props> = ({
     onPanResponderMove: handleResponderMove,
     onPanResponderRelease: handleResponderRelease,
     onPanResponderTerminate: handleResponderRelease,
-  });
+  }), [selectedTabPositions, tabSelectionStatus, selectedTabIndex]);
 
   function moveToTab(fromIndex: number, toIndex: number) {
     const toXPosition = selectedTabPositions[toIndex];
@@ -231,6 +230,7 @@ export const TabBar: FunctionComponent<Props> = ({
 
   const tabBarMoveAmountStyle = { transform: [{ translateX: translateX as unknown as number }] };
   const windowWidth = Dimensions.get('window').width;
+
 
   return (
     <View style={styles.container}>

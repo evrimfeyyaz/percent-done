@@ -12,8 +12,7 @@ import { addTimetableEntry } from '../../store/timetableEntries/thunks';
 import { WithOptionalId } from '../../utilities/types';
 
 const mapStateToProps = (state: StoreState) => ({
-  // TODO: Sort all goals by title in ascending order.
-  allGoals: getAllGoals(state),
+  allGoals: getAllGoals(state).sort((goal1, goal2) => goal1.title.localeCompare(goal2.title)),
   projects: getAllProjects(state).map(project => ({ key: project.id, title: project.title })),
 });
 
