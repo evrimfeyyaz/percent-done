@@ -117,9 +117,15 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
   isGoalDeleted = () => {
     const { allGoals, timetableEntry } = this.props;
 
-    if (timetableEntry == null) return false;
+    if (timetableEntry == null) {
+      return false;
+    }
 
     return allGoals.map(goal => goal.id).indexOf(timetableEntry.goalId) === -1;
+  };
+
+  isTimetableEntryDeleted = () => {
+    return this.props.timetableEntry === null;
   };
 
   handleGoalChange = (goalId: string) => {
@@ -196,6 +202,10 @@ export class TimetableEntryForm extends Component<TimetableEntryFormProps, Timet
   };
 
   render() {
+    if (this.isTimetableEntryDeleted()) {
+      return <></>;
+    }
+
     const {
       startTimestamp, endTimestamp, goalId, isSelectedGoalTimeTracked,
       finishedAtError, isProjectModalVisible, projectKey,
