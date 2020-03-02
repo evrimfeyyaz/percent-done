@@ -117,16 +117,21 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
     ),
   };
 
+  const pages = [
+    welcome,
+    goals,
+    swipeToTrack,
+    streak,
+    projects,
+  ];
+
+  if (!areNotificationsOn()) {
+    pages.push(notifications);
+  }
+
   return (
     <OnboardingSwiper
-      pages={[
-        welcome,
-        goals,
-        swipeToTrack,
-        streak,
-        projects,
-        notifications,
-      ]}
+      pages={pages}
       titleStyles={styles.title}
       subTitleStyles={styles.subtitle}
       containerStyles={styles.container}
