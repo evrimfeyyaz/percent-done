@@ -23,6 +23,7 @@ export * from './settings/Settings';
 export * from './settings/License';
 export * from './settings/Licenses';
 export * from './settings/About';
+export * from './settings/BreakNotifications';
 
 // Charts
 export * from './charts/ProgressChart';

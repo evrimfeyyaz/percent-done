@@ -13,3 +13,4 @@ export * from './projects/EditProjectScreen';
 export * from './projects/AddProjectScreen';
 export * from './stats/TimeMachineScreen';
 export * from './goals/GoalInfoScreen';
+export * from './settings/BreakNotificationsScreen';

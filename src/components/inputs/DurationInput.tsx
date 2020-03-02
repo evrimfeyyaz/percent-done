@@ -2,11 +2,12 @@ import React, { FunctionComponent, useRef } from 'react';
 import { BottomSheetDurationPicker, InputContainer } from '..';
 
 interface DurationInputProps {
+  title?: string;
   duration: { hours: number, minutes: number };
   onDurationChange?: ({ hours, minutes }: { hours: number, minutes: number }) => void;
 }
 
-export const DurationInput: FunctionComponent<DurationInputProps> = ({ duration, onDurationChange }) => {
+export const DurationInput: FunctionComponent<DurationInputProps> = ({ title, duration, onDurationChange }) => {
   const bottomSheetDurationPickerRef = useRef(null);
 
   // @ts-ignore
@@ -20,7 +21,7 @@ export const DurationInput: FunctionComponent<DurationInputProps> = ({ duration,
 
   return (
     <InputContainer
-      title='Duration'
+      title={title ?? 'Duration'}
       value={inputValue}
       opacityOnTouch={false}
       onPress={handleInputContainerPress}

@@ -7,6 +7,10 @@ export const SettingsScreen: NavigationStackScreenComponent = ({ navigation }) =
     navigation.navigate('Onboarding');
   };
 
+  const handleBreakNotificationsPress = () => {
+    navigation.navigate('BreakNotifications');
+  };
+
   const handleAboutPress = () => {
     navigation.navigate('About');
   };
@@ -27,6 +31,7 @@ export const SettingsScreen: NavigationStackScreenComponent = ({ navigation }) =
     <BackgroundView>
       <Settings
         onTutorialPress={handleTutorialPress}
+        onBreakNotificationsPress={handleBreakNotificationsPress}
         onAboutPress={handleAboutPress}
         onLicensesPress={handleLicensesPress}
         onTermsOfUsePress={handleTermsOfUsePress}

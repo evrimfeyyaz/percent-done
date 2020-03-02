@@ -45,6 +45,7 @@ import {
   HoursDoneStats,
   DayDetails, Stats, Onboarding, GoalDetails, DurationInfo, Settings, License, Licenses, About,
   TextOnlyPage,
+  BreakNotifications,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -354,6 +355,12 @@ storiesOf('Settings', module)
   ))
   .add('About', () => (
     <About />
+  ))
+  .add('Break Notifications', () => (
+    <BreakNotifications
+      areNotificationsOn={true}
+      notifyAfterInMs={25 * 60 * 1000}
+    />
   ));
 
 storiesOf('Inputs', module)

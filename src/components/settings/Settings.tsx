@@ -5,6 +5,7 @@ import { MenuLink } from '..';
 interface SettingsProps {
   onAboutPress?: () => void;
   onTutorialPress?: () => void;
+  onBreakNotificationsPress?: () => void;
   onLicensesPress?: () => void;
   onTermsOfUsePress?: () => void;
   onPrivacyPolicyPress?: () => void;
@@ -12,8 +13,20 @@ interface SettingsProps {
 
 export const Settings: FunctionComponent<SettingsProps> = ({
                                                              onAboutPress, onTutorialPress, onLicensesPress,
-                                                             onTermsOfUsePress, onPrivacyPolicyPress,
+                                                             onTermsOfUsePress, onPrivacyPolicyPress, onBreakNotificationsPress,
                                                            }) => {
+  const tutorial = {
+    title: 'Tutorial',
+    key: 'tutorial',
+    onPress: onTutorialPress,
+  };
+
+  const breakNotifications = {
+    title: 'Break Notifications',
+    key: 'break-notifications',
+    onPress: onBreakNotificationsPress,
+  };
+
   const about = {
     title: 'About',
     key: 'about',
@@ -24,12 +37,6 @@ export const Settings: FunctionComponent<SettingsProps> = ({
     title: 'Licenses',
     key: 'licenses',
     onPress: onLicensesPress,
-  };
-
-  const tutorial = {
-    title: 'Tutorial',
-    key: 'tutorial',
-    onPress: onTutorialPress,
   };
 
   const termsOfUse = {
@@ -46,7 +53,7 @@ export const Settings: FunctionComponent<SettingsProps> = ({
 
   const sections = [
     {
-      data: [tutorial],
+      data: [breakNotifications, tutorial],
     },
     {
       data: [licenses, termsOfUse, privacyPolicy, about],
