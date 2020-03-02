@@ -140,6 +140,7 @@ storiesOf('Goals', module)
         title='Write'
         chainLength={10}
         totalCompletedMs={60 * 60 * 1000}
+        numOfTimesCompleted={10}
         isTracked
       />
     );
@@ -151,6 +152,7 @@ storiesOf('Goals', module)
         chainLength={1}
         isTracked={false}
         isCompleted={true}
+        numOfTimesCompleted={10}
       />
     );
   })
