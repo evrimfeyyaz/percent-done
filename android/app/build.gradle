@@ -132,7 +132,7 @@ android {
         applicationId "io.evrim.PercentDone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
+        versionCode 10
         versionName "0.2"
     }
     splits {
