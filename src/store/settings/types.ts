@@ -14,6 +14,7 @@ export interface SettingsState {
   scheduledGoalCompletedNotificationId?: string;
   areBreakNotificationsOn: boolean;
   notifyBreakAfterInMs: number;
+  scheduledBreakNotificationId?: string;
 }
 
 export const SET_CURRENT_DATE_TIMESTAMP = 'SET_CURRENT_DATE_TIMESTAMP';
@@ -23,6 +24,7 @@ export const SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID = 'SET_SCHEDULED_GOAL_
 export const SET_ONBOARDED = 'SET_ONBOARDED';
 export const SET_ARE_BREAK_NOTIFICATIONS_ON = 'SET_ARE_BREAK_NOTIFICATIONS_ON';
 export const SET_NOTIFY_BREAK_AFTER_IN_MS = 'SET_NOTIFY_BREAK_AFTER_IN_MS';
+export const SET_SCHEDULED_BREAK_NOTIFICATION_ID = 'SET_SCHEDULED_BREAK_NOTIFICATION_ID';
 
 export interface SetCurrentDateTimestampAction extends Action<typeof SET_CURRENT_DATE_TIMESTAMP> {
   timestamp: number;
@@ -52,6 +54,10 @@ export interface SetNotifyBreakAfterInMsAction extends Action<typeof SET_NOTIFY_
   notifyBreakAfterInMs: number;
 }
 
+export interface SetScheduledBreakNotificationIdAction extends Action<typeof SET_SCHEDULED_BREAK_NOTIFICATION_ID> {
+  id: string | undefined;
+}
+
 export type SettingsActionTypes =
   SetCurrentDateTimestampAction |
   SetTimeMachineDateTimestampAction |
@@ -59,4 +65,5 @@ export type SettingsActionTypes =
   SetScheduledGoalCompletedNotificationIdAction |
   SetOnboardedAction |
   SetAreBreakNotificationsOnAction |
-  SetNotifyBreakAfterInMsAction;
+  SetNotifyBreakAfterInMsAction |
+  SetScheduledBreakNotificationIdAction;

@@ -9,21 +9,26 @@ import { createGoal, createStoreState, createTimetableEntry } from '../../../src
 import { StoreState } from '../../../src/store/types';
 import { AnyAction } from 'redux';
 import {
-  EDIT_GOAL,
   Goal, REMOVE_TRACKED_GOAL,
   SET_TRACKED_GOAL,
   TrackedGoalState,
   UPDATE_TRACKED_GOAL_START_TIMESTAMP,
 } from '../../../src/store/goals/types';
 import { ADD_TIMETABLE_ENTRY, DELETE_TIMETABLE_ENTRY } from '../../../src/store/timetableEntries/types';
-import { NavigationService } from '../../../src/utilities';
+import { momentWithDeviceLocale, NavigationService } from '../../../src/utilities';
 import PushNotification from 'react-native-push-notification';
-import { SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID, SettingsState } from '../../../src/store/settings/types';
+import {
+  SET_SCHEDULED_BREAK_NOTIFICATION_ID,
+  SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
+  SettingsState,
+} from '../../../src/store/settings/types';
 
 const middlewares = [thunk];
 const mockStore = configureStore<StoreState, ThunkDispatch<StoreState, undefined, AnyAction>>(middlewares);
 
 describe('goal thunks', () => {
+  const localNotificationScheduleMock = PushNotification.localNotificationSchedule as jest.Mock;
+
   describe('handleCompleteOrTrackRequest', () => {
     describe('given a time-tracked-goal', () => {
       it('sets it as the current tracked goal', () => {
@@ -41,7 +46,7 @@ describe('goal thunks', () => {
 
     describe('given a non-time-tracked goal', () => {
       it('adds a timetable entry when the goal is not completed', () => {
-        const goal = createGoal({recurringEveryDay: true});
+        const goal = createGoal({ recurringEveryDay: true });
         const state = createStoreState({ goals: [goal] });
         const store = mockStore(state);
 
@@ -53,7 +58,7 @@ describe('goal thunks', () => {
       });
 
       it('removes the old timetable entry when the goal is completed', () => {
-        const goal = createGoal({recurringEveryDay: true});
+        const goal = createGoal({ recurringEveryDay: true });
         const timetableEntry = createTimetableEntry({
           goalId: goal.id,
           startDate: new Date(),
@@ -77,19 +82,27 @@ describe('goal thunks', () => {
 
   describe('startGoalTracking', () => {
     let goal: Goal;
+    const goalDuration = 30;
     let state: StoreState;
     let store: MockStoreEnhanced<StoreState, ThunkDispatch<StoreState, undefined, AnyAction>>;
 
     beforeEach(() => {
-      goal = createGoal({ durationInMin: 30, recurringEveryDay: true });
+      goal = createGoal({ durationInMin: goalDuration, recurringEveryDay: true });
       state = createStoreState({ goals: [goal] });
       store = mockStore(state);
     });
 
     it('schedules a goal completed notification', () => {
       store.dispatch(startGoalTracking(goal.id));
+      const actionTypes = store.getActions().map(action => action.type);
+      const thirtyMinutesFromNow = +momentWithDeviceLocale().add(goalDuration, 'minutes');
 
+      expect(actionTypes).toContainEqual(SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID);
       expect(PushNotification.localNotificationSchedule).toBeCalled();
+      // Scheduled time should be within 100ms of thirty minutes from now.
+      const scheduledDate = (PushNotification.localNotificationSchedule as jest.Mock).mock.calls[0][0].date.getTime();
+      expect(scheduledDate).toBeLessThanOrEqual(thirtyMinutesFromNow + 100);
+      expect(scheduledDate).toBeGreaterThanOrEqual(thirtyMinutesFromNow - 100);
     });
 
     it('navigates to the goal tracking screen', () => {
@@ -97,19 +110,51 @@ describe('goal thunks', () => {
 
       expect(NavigationService.navigate).toBeCalledWith('TrackGoal', {});
     });
+
+    it('schedules a break notification when break notifications are on', () => {
+      const breakAfter = 25 * 60 * 1000;
+      state = createStoreState({
+        goals: [goal],
+        settings: { notifyBreakAfterInMs: breakAfter, areBreakNotificationsOn: true },
+      });
+      store = mockStore(state);
+      store.dispatch(startGoalTracking(goal.id));
+      const actionTypes = store.getActions().map(action => action.type);
+      const twentyFiveMinutesFromNow = +momentWithDeviceLocale().add(breakAfter, 'ms');
+
+      expect(actionTypes).toContain(SET_SCHEDULED_BREAK_NOTIFICATION_ID);
+      expect(PushNotification.localNotificationSchedule).toBeCalledTimes(2);
+      // Scheduled time should be within five seconds of twenty five minutes from now.
+      const scheduledDate = localNotificationScheduleMock.mock.calls[1][0].date.getTime();
+      expect(scheduledDate).toBeLessThanOrEqual(twentyFiveMinutesFromNow + 5000);
+      expect(scheduledDate).toBeGreaterThanOrEqual(twentyFiveMinutesFromNow - 5000);
+    });
+
+    it('does not schedule a break notification when break notifications are off', () => {
+      store.dispatch(startGoalTracking(goal.id));
+
+      const actionTypes = store.getActions().map(action => action.type);
+      expect(actionTypes).not.toContain(SET_SCHEDULED_BREAK_NOTIFICATION_ID);
+      expect(PushNotification.localNotificationSchedule).toBeCalled();
+    });
   });
 
   describe('updateTrackedGoalStartTimestamp', () => {
     let store: MockStoreEnhanced<StoreState, ThunkDispatch<StoreState, undefined, AnyAction>>;
     let newTimestamp: number;
 
-    beforeAll(() => {
+    beforeEach(() => {
       const goal = createGoal({ durationInMin: 30, recurringEveryDay: true });
       const trackedGoal: TrackedGoalState = {
         id: goal.id,
         startTimestamp: Date.now(),
       };
-      const settings: Partial<SettingsState> = { scheduledGoalCompletedNotificationId: 'SOME_NOTIFICATION_ID' };
+      const settings: Partial<SettingsState> = {
+        scheduledGoalCompletedNotificationId: 'SOME_NOTIFICATION_ID',
+        scheduledBreakNotificationId: 'SOME_NOTIFICATION_ID',
+        areBreakNotificationsOn: true,
+        notifyBreakAfterInMs: 25 * 60 * 1000,
+      };
       const state = createStoreState({ goals: [goal], trackedGoal, settings });
       store = mockStore(state);
 
@@ -123,6 +168,14 @@ describe('goal thunks', () => {
       expect(actionTypes).toContain(SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID);
       expect(PushNotification.cancelLocalNotifications).toBeCalled();
       expect(PushNotification.localNotificationSchedule).toBeCalled();
+    });
+
+    it('cancels the scheduled break notification and schedules a new one', () => {
+      const actionTypes = store.getActions().map(action => action.type);
+
+      expect(actionTypes).toContain(SET_SCHEDULED_BREAK_NOTIFICATION_ID);
+      expect(PushNotification.cancelLocalNotifications).toBeCalledTimes(2);
+      expect(PushNotification.localNotificationSchedule).toBeCalledTimes(2);
     });
 
     it('updates the tracked goal timestamp', () => {
@@ -139,14 +192,19 @@ describe('goal thunks', () => {
     let goal: Goal;
     const projectId = 'SOME_PROJECT_ID';
 
-    beforeAll(() => {
+    beforeEach(() => {
       goal = createGoal({ durationInMin: 30, recurringEveryDay: true });
       const trackedGoal: TrackedGoalState = {
         id: goal.id,
         startTimestamp: Date.now(),
         projectId,
       };
-      const settings: Partial<SettingsState> = { scheduledGoalCompletedNotificationId: 'SOME_NOTIFICATION_ID' };
+      const settings: Partial<SettingsState> = {
+        scheduledGoalCompletedNotificationId: 'SOME_NOTIFICATION_ID',
+        scheduledBreakNotificationId: 'SOME_NOTIFICATION_ID',
+        areBreakNotificationsOn: true,
+        notifyBreakAfterInMs: 25 * 60 * 1000,
+      };
       const state = createStoreState({ goals: [goal], trackedGoal, settings });
       store = mockStore(state);
 
@@ -164,7 +222,13 @@ describe('goal thunks', () => {
     });
 
     it('cancels the scheduled goal completed notification', () => {
+      expect(actionTypes).toContain(SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID);
       expect(PushNotification.cancelLocalNotifications).toBeCalled();
+    });
+
+    it('cancels the scheduled break notification', () => {
+      expect(actionTypes).toContain(SET_SCHEDULED_BREAK_NOTIFICATION_ID);
+      expect(PushNotification.cancelLocalNotifications).toBeCalledTimes(2);
     });
   });
 });

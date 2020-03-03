@@ -11,7 +11,7 @@ import { getCurrentDate } from '../settings/selectors';
 import { addTimetableEntry } from '../timetableEntries/thunks';
 import { WithOptionalId } from '../../utilities/types';
 import { cancelLocalNotification, scheduleLocalNotification } from '../../utilities/localNotifications';
-import { setScheduledGoalCompletedNotificationId } from '../settings/actions';
+import { setScheduledBreakNotificationId, setScheduledGoalCompletedNotificationId } from '../settings/actions';
 import { SettingsActionTypes } from '../settings/types';
 
 export const handleCompleteOrTrackRequest = (goalId: string): ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes> => {
@@ -52,6 +52,8 @@ export const startGoalTracking = (goalId: string): ThunkAction<void, StoreState,
     const state = getState();
     scheduleGoalCompletedNotification(state, goalId, startTimestamp, dispatch);
 
+    scheduleBreakNotification(state, startTimestamp, dispatch);
+
     dispatch(setTrackedGoal(goalId, startTimestamp));
     NavigationService.navigate('TrackGoal', {});
   };
@@ -67,6 +69,7 @@ export const updateTrackedGoalStartTimestamp = (startTimestamp: number): ThunkAc
     }
 
     cancelGoalCompletedNotification(state, dispatch);
+    cancelBreakNotification(state, dispatch);
 
     dispatch({
       type: UPDATE_TRACKED_GOAL_START_TIMESTAMP,
@@ -74,6 +77,7 @@ export const updateTrackedGoalStartTimestamp = (startTimestamp: number): ThunkAc
     });
 
     scheduleGoalCompletedNotification(state, goalId, startTimestamp, dispatch);
+    scheduleBreakNotification(state, startTimestamp, dispatch);
   };
 };
 
@@ -99,6 +103,7 @@ export const stopGoalTracking = (): ThunkAction<void, StoreState, void, GoalActi
     dispatch(addTimetableEntry(timetableEntry));
 
     cancelGoalCompletedNotification(state, dispatch);
+    cancelBreakNotification(state, dispatch);
   };
 };
 
@@ -123,11 +128,33 @@ function scheduleGoalCompletedNotification(state: StoreState, goalId: string, st
   dispatch(setScheduledGoalCompletedNotificationId(notificationId));
 }
 
+function scheduleBreakNotification(state: StoreState, startTimestamp: number, dispatch: ThunkDispatch<any, any, any>) {
+  const { notifyBreakAfterInMs, areBreakNotificationsOn } = state.settings;
+
+  if (!areBreakNotificationsOn) {
+    return;
+  }
+
+  const breakAt = momentWithDeviceLocale(startTimestamp).add(notifyBreakAfterInMs, 'ms').toDate();
+  const notificationId = scheduleLocalNotification(`Time to take a break.`, breakAt);
+
+  dispatch(setScheduledBreakNotificationId(notificationId));
+}
+
 function cancelGoalCompletedNotification(state: StoreState, dispatch: ThunkDispatch<any, any, any>) {
   const notificationId = state.settings.scheduledGoalCompletedNotificationId;
 
   if (notificationId != null) {
     cancelLocalNotification(notificationId);
     dispatch(setScheduledGoalCompletedNotificationId(undefined));
+  }
+}
+
+function cancelBreakNotification(state: StoreState, dispatch: ThunkDispatch<any, any, any>) {
+  const notificationId = state.settings.scheduledBreakNotificationId;
+
+  if (notificationId != null) {
+    cancelLocalNotification(notificationId);
+    dispatch(setScheduledBreakNotificationId(undefined));
   }
 }

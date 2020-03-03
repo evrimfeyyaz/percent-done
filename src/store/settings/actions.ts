@@ -2,14 +2,14 @@ import {
   SET_ARE_BREAK_NOTIFICATIONS_ON,
   SET_CURRENT_DATE_TIMESTAMP,
   SET_NOTIFY_BREAK_AFTER_IN_MS,
-  SET_ONBOARDED,
+  SET_ONBOARDED, SET_SCHEDULED_BREAK_NOTIFICATION_ID,
   SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
   SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
   SetAreBreakNotificationsOnAction,
   SetCurrentDateTimestampAction,
   SetNotifyBreakAfterInMsAction,
-  SetOnboardedAction,
+  SetOnboardedAction, SetScheduledBreakNotificationIdAction,
   SetScheduledGoalCompletedNotificationIdAction,
   SetStatsPeriodKeyAction,
   SetTimeMachineDateTimestampAction,
@@ -65,3 +65,9 @@ export const setNotifyBreakAfterInMs = (notifyBreakAfterInMs: number): SetNotify
   };
 };
 
+export const setScheduledBreakNotificationId = (id: string | undefined): SetScheduledBreakNotificationIdAction => {
+  return {
+    type: SET_SCHEDULED_BREAK_NOTIFICATION_ID,
+    id,
+  };
+};

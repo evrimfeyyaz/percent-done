@@ -67,6 +67,8 @@ export const createStoreState = ({ goals = [], timetableEntries = [], projects =
     hasOnboarded: true,
     timeMachineDateTimestamp: Date.now(),
     statsPeriodKey: '7',
+    areBreakNotificationsOn: false,
+    notifyBreakAfterInMs: 0,
     ...settings,
   };
 

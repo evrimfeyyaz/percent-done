@@ -5,4 +5,5 @@ module.exports = {
     'node_modules/(?!react-navigation)/',
   ],
   setupFiles: ['./src/utilities/mocks.ts'],
+  clearMocks: true,
 };
