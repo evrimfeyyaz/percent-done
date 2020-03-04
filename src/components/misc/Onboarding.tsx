@@ -24,6 +24,7 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
     return !!notificationPermissions.alert;
   }
 
+  // @ts-ignore
   const welcome: Page = {
     backgroundColor: colors.lightGray,
     image: (
@@ -31,10 +32,20 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
         <Image source={Images.logo} style={[styles.image, styles.logo]} />
       </View>
     ),
-    title: 'Welcome!',
-    subtitle: 'Percent Done helps you to set goals and track them every day. Let\'s take a quick tour to see how it can help you.',
+    subtitle: (
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>
+          Welcome!
+        </Text>
+        <Text style={styles.subtitle}>
+          Percent Done helps you to set goals and track them every day. Let's take a quick tour to see how it can help
+          you.
+        </Text>
+      </View>
+    ),
   };
 
+  // @ts-ignore
   const goals: Page = {
     backgroundColor: colors.lightGray,
     image: (
@@ -42,9 +53,11 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
         <Image source={Images.onboarding.goals} style={styles.image} />
       </View>
     ),
-    title: 'Goals',
     subtitle: (
-      <View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>
+          Goals
+        </Text>
         <Text style={styles.subtitle}>
           Goals are tasks or habits that you would like to track day by day, such as "writing for an hour every day" or
           "exercising Monday to Friday."
@@ -55,6 +68,7 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
     ),
   };
 
+  // @ts-ignore
   const swipeToTrack: Page = {
     backgroundColor: colors.lightGray,
     image: (
@@ -62,10 +76,20 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
         <Image source={Images.onboarding.swipeToTrack} style={styles.image} />
       </View>
     ),
-    title: 'Track or Complete',
-    subtitle: 'After adding a goal, you can swipe right on it to start tracking it, or set it as complete if it is not a time-tracked goal.',
+    subtitle: (
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>
+          Track or Complete
+        </Text>
+        <Text style={styles.subtitle}>
+          After adding a goal, you can swipe right on it to start tracking it, or set it as complete if it is not a
+          time-tracked goal.
+        </Text>
+      </View>
+    ),
   };
 
+  // @ts-ignore
   const streak: Page = {
     backgroundColor: colors.lightGray,
     image: (
@@ -73,10 +97,19 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
         <Image source={Images.onboarding.streak} style={styles.image} />
       </View>
     ),
-    title: 'Don\'t Break the Chain',
-    subtitle: 'As you complete your goals every day, you will build up a streak.',
+    subtitle: (
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>
+          Don't Break the Chain
+        </Text>
+        <Text style={styles.subtitle}>
+          As you complete your goals every day, you will build up a streak.
+        </Text>
+      </View>
+    ),
   };
 
+  // @ts-ignore
   const projects: Page = {
     backgroundColor: colors.lightGray,
     image: (
@@ -84,10 +117,20 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
         <Image source={Images.onboarding.projects} style={styles.image} />
       </View>
     ),
-    title: 'Projects',
-    subtitle: 'Projects help keep a more detailed log of what you are working on. For example, you might have a goal to write for an hour every day, and you might have two projects called "Blog" and "Book."',
+    subtitle: (
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>
+          Projects
+        </Text>
+        <Text style={styles.subtitle}>
+          Projects help keep a more detailed log of what you are working on. For example, you might have a goal to write
+          for an hour every day, and you might have two projects called "Blog" and "Book."
+        </Text>
+      </View>
+    ),
   };
 
+  // @ts-ignore
   const notifications: Page = {
     backgroundColor: colors.lightGray,
     image: (
@@ -97,9 +140,11 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
           style={styles.image} />
       </View>
     ),
-    title: 'One Last Thing',
     subtitle: (
-      <View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>
+          One Last Thing
+        </Text>
         <Text style={styles.subtitle}>
           PercentDone uses notifications to notify you when a goal you are tracking is completed. We recommend
           turning notifications on.
@@ -123,17 +168,12 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
     swipeToTrack,
     streak,
     projects,
+    notifications,
   ];
-
-  if (!areNotificationsOn()) {
-    pages.push(notifications);
-  }
 
   return (
     <OnboardingSwiper
       pages={pages}
-      titleStyles={styles.title}
-      subTitleStyles={styles.subtitle}
       containerStyles={styles.container}
       imageContainerStyles={styles.imageContainer}
       onSkip={onSkip}
@@ -144,17 +184,16 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'flex-start',
-    paddingBottom: isScreenSmall() ? '10%' : '30%',
-    paddingTop: '10%',
-    paddingHorizontal: '5%',
+    justifyContent: 'flex-end',
+    paddingVertical: 160,
+    paddingHorizontal: 30,
   },
   imageContainer: {
-    height: isScreenSmall() ? '40%' : '70%',
-    justifyContent: 'center',
     borderRadius: 10,
   },
   imageCard: {
+    position: 'absolute',
+    bottom: isScreenSmall() ? 20 : 50,
     width: '100%',
     overflow: 'visible',
     alignItems: 'center',
@@ -178,9 +217,12 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
   },
+  infoContainer: {
+    height: '35%',
+  },
   title: {
     fontFamily: fonts.bold,
-    fontSize: 24,
+    fontSize: 22,
     color: colors.offBlack,
     textAlign: 'center',
   },
