@@ -9,6 +9,7 @@ export const About: FunctionComponent = () => {
   const githubGray = '#f6f8fa';
   const githubGrayDark = '#24292e';
   const icons8Green = '#0ca940';
+  const notificationSoundsRed = '#b2313d';
 
   const handleFollowOnTwitterPress = () => {
     Linking.openURL('https://twitter.com/evrimfeyyaz');
@@ -24,6 +25,10 @@ export const About: FunctionComponent = () => {
 
   const handleGoToIcons8Press = () => {
     Linking.openURL('https://icons8.com');
+  };
+
+  const handleGoToNotificationSoundsPress = () => {
+    Linking.openURL('https://notificationsounds.com/');
   };
 
   return (
@@ -44,10 +49,16 @@ export const About: FunctionComponent = () => {
               style={styles.button} iconSource={Icons.github} onPress={handleViewSourceCodePress} />
 
       <Text style={[textStyles.body, styles.text, styles.newParagraph]}>
-        Icons used in this application are made by Icons8.
+        The icons used in this application are made by Icons8.
       </Text>
       <Button title='Visit Icons8' color={icons8Green} style={styles.button} iconSource={Icons.icons8}
               onPress={handleGoToIcons8Press} />
+
+      <Text style={[textStyles.body, styles.text, styles.newParagraph]}>
+        The notification sound is from Notification Sounds.
+      </Text>
+      <Button title='Visit Notification Sounds' color={notificationSoundsRed} style={styles.button}
+              onPress={handleGoToNotificationSoundsPress} />
     </ScrollView>
   );
 };
