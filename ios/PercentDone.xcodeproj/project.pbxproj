@@ -20,6 +20,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* PercentDoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PercentDoneTests.m */; };
 		4B721F6D80C14B3B92B3C2EC /* NunitoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31DCEFFD1D484A4580520D39 /* NunitoSans-Bold.ttf */; };
 		7F9AC3C966864A418604D7E8 /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E95E1AFE973049A39BC083D4 /* NunitoSans-SemiBold.ttf */; };
+		9132C9E3240E89300058EDA9 /* arpeggio.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9132C9E2240E89300058EDA9 /* arpeggio.mp3 */; };
 		A1E9B1ADBDFEE40091406D08 /* libPods-PercentDone-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6837F64D417F9F96252CCF55 /* libPods-PercentDone-tvOSTests.a */; };
 		ADAF884E7FB2466F939F6B84 /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */; };
 		FFA26FDC91FF713F2CD63C70 /* libPods-PercentDoneTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F63184F49517CB4A39A336 /* libPods-PercentDoneTests.a */; };
@@ -65,6 +66,7 @@
 		7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NunitoSans-Regular.ttf"; path = "../assets/fonts/NunitoSans-Regular.ttf"; sourceTree = "<group>"; };
 		768D9EB694C7665D2EB4C08D /* Pods-PercentDone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone.release.xcconfig"; path = "Target Support Files/Pods-PercentDone/Pods-PercentDone.release.xcconfig"; sourceTree = "<group>"; };
 		88FA044E2CAD0ECFA3E085C4 /* Pods-PercentDone-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOSTests/Pods-PercentDone-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9132C9E2240E89300058EDA9 /* arpeggio.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = arpeggio.mp3; sourceTree = "<group>"; };
 		92B4DC5ABF731EFC3E300443 /* Pods-PercentDone-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOSTests/Pods-PercentDone-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		B89037247320C95A30B037A0 /* Pods-PercentDone-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOS/Pods-PercentDone-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		BA26E16997287C4F4935D0A8 /* Pods-PercentDoneTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDoneTests.release.xcconfig"; path = "Target Support Files/Pods-PercentDoneTests/Pods-PercentDoneTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		0E4879D4FF5845E180FE549E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9132C9E2240E89300058EDA9 /* arpeggio.mp3 */,
 				31DCEFFD1D484A4580520D39 /* NunitoSans-Bold.ttf */,
 				7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */,
 				E95E1AFE973049A39BC083D4 /* NunitoSans-SemiBold.ttf */,
@@ -363,6 +366,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				9132C9E3240E89300058EDA9 /* arpeggio.mp3 in Resources */,
 				4B721F6D80C14B3B92B3C2EC /* NunitoSans-Bold.ttf in Resources */,
 				ADAF884E7FB2466F939F6B84 /* NunitoSans-Regular.ttf in Resources */,
 				7F9AC3C966864A418604D7E8 /* NunitoSans-SemiBold.ttf in Resources */,

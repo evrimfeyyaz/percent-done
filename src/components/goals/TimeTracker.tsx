@@ -4,6 +4,7 @@ import { colors, fonts } from '../../theme';
 import { formatDurationInMs, leftOrOver, momentWithDeviceLocale } from '../../utilities';
 import { BottomSheetTimePicker, Button, ProgressChart, ProjectModal } from '..';
 import { Icons } from '../../../assets';
+import { playBreakNotificationSound } from '../../utilities/playBreakNotificationSound';
 
 export interface TimeTrackerProps {
   goalId: string;
@@ -18,6 +19,11 @@ export interface TimeTrackerProps {
    * Starting timestamp for the time tracker.
    */
   startTimestamp: number;
+  /**
+   * Notify the user to take a break this many ms after the
+   * start time.
+   */
+  notifyBreakAfterInMs?: number;
   projects: { key: string; title: string }[];
   projectKey?: string;
   onStopPress?: (startTimestamp: number, endTimestamp: number) => void;
@@ -34,7 +40,7 @@ export interface TimeTrackerProps {
 
 export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
                                                                    goalId, title, color, durationInMs, startTimestamp,
-                                                                   initialRemainingMs, projects, projectKey,
+                                                                   initialRemainingMs, projects, projectKey, notifyBreakAfterInMs,
                                                                    onStopPress, onStartTimestampChange, onProjectChange,
                                                                    onProjectRemove, onProjectCreatePress, onDidUnmount,
                                                                    onDateChange,
@@ -43,6 +49,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
   const [msPassed, setMsPassed] = useState(0);
   const [isProjectModalVisible, setIsProjectModalVisible] = useState(false);
+  const [timeToTakeBreak, setTimeToTakeBreak] = useState(false);
 
   const beginningOfNextDay = +momentWithDeviceLocale(startTimestamp).add(1, 'day').startOf('day');
 
@@ -58,12 +65,35 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     };
   });
 
+  useEffect(() => {
+    if (timeToTakeBreak) {
+      playBreakNotificationSound();
+    }
+  }, [timeToTakeBreak]);
+
   function tick() {
     const now = Date.now();
     setMsPassed(now - startTimestamp);
 
     if (now >= beginningOfNextDay) {
       onDateChange?.();
+    }
+
+    setBreakIfNeeded();
+  }
+
+  function setBreakIfNeeded() {
+    if (notifyBreakAfterInMs == null) {
+      setTimeToTakeBreak(false);
+
+      return;
+    }
+
+    const breakTimestamp = startTimestamp + notifyBreakAfterInMs;
+    if (Date.now() >= breakTimestamp) {
+      setTimeToTakeBreak(true);
+    } else {
+      setTimeToTakeBreak(false);
     }
   }
 
@@ -117,6 +147,8 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     project = projects.find(project => project.key === projectKey);
   }
 
+  const stopButtonTitle = timeToTakeBreak ? 'Time to Take a Break' : 'Stop';
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} alwaysBounceVertical={false}
                 showsVerticalScrollIndicator>
@@ -135,7 +167,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
         {formatDurationInMs(remainingMs, remainingMs > 0)}&nbsp;
         <Text style={styles.timeLeftLabel}>{leftOrOver(remainingMs)}</Text>
       </Text>
-      <Button iconSource={Icons.stop} title='Stop' style={styles.stopButton} onPress={handleStopPress} />
+      <Button iconSource={Icons.stop} title={stopButtonTitle} style={styles.stopButton} onPress={handleStopPress} />
       <TouchableOpacity onPress={handleStartedAtPress}>
         <View style={styles.textButtonContainer}>
           <Text style={styles.textButtonLabel}>Started at</Text>

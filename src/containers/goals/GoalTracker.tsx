@@ -19,6 +19,12 @@ interface GoalTrackerProps {
 const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
   const { id: trackedGoalId, startTimestamp, projectId } = state.goals.trackedGoal;
 
+  const { areBreakNotificationsOn } = state.settings;
+  let notifyBreakAfterInMs: number | undefined = state.settings.notifyBreakAfterInMs;
+  if (!areBreakNotificationsOn) {
+    notifyBreakAfterInMs = undefined;
+  }
+
   if (trackedGoalId == null || startTimestamp == null) return;
 
   const goal = getGoalById(state, trackedGoalId);
@@ -52,6 +58,7 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
     startTimestamp: trackerStartTimestamp,
     projects,
     projectKey,
+    notifyBreakAfterInMs,
   };
 };
 
