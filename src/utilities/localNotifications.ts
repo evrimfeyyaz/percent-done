@@ -1,4 +1,5 @@
 import PushNotification, { PushNotificationPermissions } from 'react-native-push-notification';
+import { Platform } from 'react-native';
 
 /**
  * Calling PushNotification.requestPermissions() twice causes a known error:
@@ -23,6 +24,7 @@ export function scheduleLocalNotification(message: string, date: Date, title?: s
       title,
       message,
       date,
+      soundName: 'arpeggio.mp3',
       // @ts-ignore
       ignoreInForeground: true,
     });
