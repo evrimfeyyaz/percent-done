@@ -1,10 +1,13 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { colors, fonts } from '../../theme';
-import { formatDurationInMs, leftOrOver, momentWithDeviceLocale } from '../../utilities';
+import { formatDurationInMs, leftOrOver, momentWithDeviceLocale, usePrevious } from '../../utilities';
 import { BottomSheetTimePicker, Button, ProgressChart, ProjectModal } from '..';
 import { Icons } from '../../../assets';
-import { playBreakNotificationSound } from '../../utilities/playBreakNotificationSound';
+import {
+  playBreakNotificationSound,
+  playGoalCompletedNotificationSound,
+} from '../../utilities/playBreakNotificationSound';
 
 export interface TimeTrackerProps {
   goalId: string;
@@ -49,8 +52,12 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
   const [msPassed, setMsPassed] = useState(0);
   const [isProjectModalVisible, setIsProjectModalVisible] = useState(false);
+  const [stopButtonTitle, setStopButtonTitle] = useState('Stop');
 
   const beginningOfNextDay = +momentWithDeviceLocale(startTimestamp).add(1, 'day').startOf('day');
+  const isCompleted = msPassed >= initialRemainingMs;
+
+  const prevIsCompleted = usePrevious(isCompleted);
 
   useEffect(() => {
     return onDidUnmount;
@@ -67,8 +74,16 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   useEffect(() => {
     if (shouldTakeBreak) {
       playBreakNotificationSound();
+      setStopButtonTitle('Time to Take a Break');
     }
   }, [shouldTakeBreak]);
+
+  useEffect(() => {
+    if (prevIsCompleted === false && isCompleted) {
+      setStopButtonTitle('Goal Completed');
+      playGoalCompletedNotificationSound();
+    }
+  }, [isCompleted]);
 
   function tick() {
     const now = Date.now();
@@ -128,8 +143,6 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   if (projectKey != null) {
     project = projects.find(project => project.key === projectKey);
   }
-
-  const stopButtonTitle = shouldTakeBreak ? 'Time to Take a Break' : 'Stop';
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} alwaysBounceVertical={false}
