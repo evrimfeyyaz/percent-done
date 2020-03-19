@@ -5,7 +5,6 @@ import {
   SET_ONBOARDED,
   SET_SCHEDULED_BREAK_NOTIFICATION_ID,
   SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
-  SET_SHOULD_TAKE_BREAK,
   SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
   SET_USER,
@@ -15,7 +14,6 @@ import {
   SetOnboardedAction,
   SetScheduledBreakNotificationIdAction,
   SetScheduledGoalCompletedNotificationIdAction,
-  SetShouldTakeBreakAction,
   SetStatsPeriodKeyAction,
   SetTimeMachineDateTimestampAction,
   SetUserAction,
@@ -66,9 +64,4 @@ export const setScheduledBreakNotificationId = (id: string | undefined): SetSche
 export const setUser = (user?: User): SetUserAction => ({
   type: SET_USER,
   user,
-});
-
-export const setShouldTakeBreak = (shouldTakeBreak: boolean): SetShouldTakeBreakAction => ({
-  type: SET_SHOULD_TAKE_BREAK,
-  shouldTakeBreak,
 });

@@ -24,11 +24,8 @@ export interface TimeTrackerProps {
   startTimestamp: number;
   projects: { key: string; title: string }[];
   projectKey?: string;
-  /**
-   * Set to `true` if it is time to take break based on
-   * the user's settings.
-   */
-  shouldTakeBreak?: boolean;
+  areBreakNotificationsOn?: boolean;
+  notifyBreakAfterInMs?: number;
   onStopPress?: (startTimestamp: number, endTimestamp: number) => void;
   onStartTimestampChange?: (newTimestamp: number) => void;
   onProjectCreatePress?: (projectTitle: string, goalId: string) => void;
@@ -43,7 +40,8 @@ export interface TimeTrackerProps {
 
 export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
                                                                    goalId, title, color, durationInMs, startTimestamp,
-                                                                   initialRemainingMs, projects, projectKey, shouldTakeBreak,
+                                                                   initialRemainingMs, projects, projectKey,
+                                                                   areBreakNotificationsOn, notifyBreakAfterInMs,
                                                                    onStopPress, onStartTimestampChange, onProjectChange,
                                                                    onProjectRemove, onProjectCreatePress, onDidUnmount,
                                                                    onDateChange,
@@ -55,11 +53,23 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   const [stopButtonTitle, setStopButtonTitle] = useState('Stop');
 
   const beginningOfNextDay = +momentWithDeviceLocale(startTimestamp).add(1, 'day').startOf('day');
+
   const isCompleted = msPassed >= initialRemainingMs;
+  const shouldTakeBreak = areBreakNotificationsOn ? msPassed >= (notifyBreakAfterInMs ?? 0) : false;
+
+  const BREAK_TITLE = 'Time to Take a Break';
+  const GOAL_COMPLETED_TITLE = 'Goal Completed';
 
   const prevIsCompleted = usePrevious(isCompleted);
+  const prevShouldTakeBreak = usePrevious(shouldTakeBreak);
 
   useEffect(() => {
+    if (isCompleted) {
+      setStopButtonTitle(GOAL_COMPLETED_TITLE);
+    } else if (shouldTakeBreak) {
+      setStopButtonTitle(BREAK_TITLE);
+    }
+
     return onDidUnmount;
   }, []);
 
@@ -72,16 +82,16 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   });
 
   useEffect(() => {
-    if (shouldTakeBreak) {
+    if (prevShouldTakeBreak === false && shouldTakeBreak) {
       playBreakNotificationSound();
-      setStopButtonTitle('Time to Take a Break');
+      setStopButtonTitle(BREAK_TITLE);
     }
   }, [shouldTakeBreak]);
 
   useEffect(() => {
     if (prevIsCompleted === false && isCompleted) {
-      setStopButtonTitle('Goal Completed');
       playGoalCompletedNotificationSound();
+      setStopButtonTitle(GOAL_COMPLETED_TITLE);
     }
   }, [isCompleted]);
 

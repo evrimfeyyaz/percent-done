@@ -30,6 +30,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 enableScreens();
 const { store, persistor } = configureStore();
+configureNotifications();
 
 const App: FunctionComponent = () => {
   const appState = useRef(AppState.currentState);
@@ -69,11 +70,8 @@ const App: FunctionComponent = () => {
     SplashScreen.hide();
 
     const state = store.getState();
-    const dispatch = store.dispatch;
     const { id, startTimestamp } = state.goals.trackedGoal;
     const { hasOnboarded } = state.settings;
-
-    configureNotifications(dispatch);
 
     if (id != null && startTimestamp != null) {
       NavigationService.navigate('TrackGoal', {});

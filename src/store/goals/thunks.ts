@@ -6,7 +6,7 @@ import { getGoalById, getRemainingMs, getTimetableEntriesForGoal, isCompleted } 
 import { deleteTimetableEntry } from '../timetableEntries/actions';
 import { isTimeTracked } from './utilities';
 import { momentWithDeviceLocale, NavigationService } from '../../utilities';
-import { editGoal, removeTrackedGoal, setTrackedGoal } from './actions';
+import { removeTrackedGoal, setTrackedGoal } from './actions';
 import { getCurrentDate } from '../settings/selectors';
 import { addTimetableEntry } from '../timetableEntries/thunks';
 import { WithOptionalId } from '../../utilities/types';
@@ -14,7 +14,6 @@ import { cancelLocalNotification, scheduleLocalNotification } from '../../utilit
 import {
   setScheduledBreakNotificationId,
   setScheduledGoalCompletedNotificationId,
-  setShouldTakeBreak,
 } from '../settings/actions';
 import { SettingsActionTypes } from '../settings/types';
 
@@ -105,7 +104,6 @@ export const stopGoalTracking = (): ThunkAction<void, StoreState, void, GoalActi
     };
 
     dispatch(addTimetableEntry(timetableEntry));
-    dispatch(setShouldTakeBreak(false));
 
     cancelGoalCompletedNotification(state, dispatch);
     cancelBreakNotification(state, dispatch);

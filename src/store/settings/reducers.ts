@@ -5,7 +5,6 @@ import {
   SET_ONBOARDED,
   SET_SCHEDULED_BREAK_NOTIFICATION_ID,
   SET_SCHEDULED_GOAL_COMPLETED_NOTIFICATION_ID,
-  SET_SHOULD_TAKE_BREAK,
   SET_STATS_PERIOD_KEY,
   SET_TIME_MACHINE_DATE_TIMESTAMP,
   SET_USER,
@@ -20,7 +19,6 @@ const initialState: SettingsState = {
   hasOnboarded: false,
   areBreakNotificationsOn: false,
   notifyBreakAfterInMs: 25 * 60 * 1000,
-  shouldTakeBreak: false,
 };
 
 export const settingsReducer: Reducer<SettingsState, SettingsActionTypes> = (state = initialState, action) => {
@@ -43,8 +41,6 @@ export const settingsReducer: Reducer<SettingsState, SettingsActionTypes> = (sta
       return { ...state, scheduledBreakNotificationId: action.id };
     case SET_USER:
       return { ...state, user: action.user };
-    case SET_SHOULD_TAKE_BREAK:
-      return { ...state, shouldTakeBreak: action.shouldTakeBreak };
     default:
       return state;
   }

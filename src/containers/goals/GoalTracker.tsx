@@ -21,7 +21,7 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
 
   if (trackedGoalId == null || startTimestamp == null) return;
 
-  const shouldTakeBreak = state.settings.shouldTakeBreak;
+  const { areBreakNotificationsOn, notifyBreakAfterInMs } = state.settings;
 
   const goal = getGoalById(state, trackedGoalId);
   const { id: goalId, title, durationInMs, lastProjectId } = goal;
@@ -54,7 +54,8 @@ const mapStateToProps = (state: StoreState): TimeTrackerProps | undefined => {
     startTimestamp: trackerStartTimestamp,
     projects,
     projectKey,
-    shouldTakeBreak,
+    areBreakNotificationsOn,
+    notifyBreakAfterInMs,
   };
 };
 
