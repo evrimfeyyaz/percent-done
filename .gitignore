@@ -63,3 +63,7 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+
+# Firebase
+ios/GoogleService-Info.plist
+android/app/google-services.json
