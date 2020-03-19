@@ -3,22 +3,15 @@ import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { Onboarding } from '../../components';
 import { useDispatch } from 'react-redux';
 import { setOnboarded } from '../../store/settings/actions';
-import { requestLocalNotificationPermissions } from '../../utilities/localNotifications';
+import { checkPermissions, requestLocalNotificationPermissions } from '../../utilities/localNotifications';
 import { setStatusBarStyle } from '../../utilities/statusBar';
-import PushNotification, { PushNotificationPermissions } from 'react-native-push-notification';
 
 export const OnboardingScreen: NavigationStackScreenComponent = ({ navigation }) => {
-  let numOfTimesNotificationPermissionsChecked = 0;
-
   const dispatch = useDispatch();
-  const [notificationPermissions, setNotificationPermissions] = useState<PushNotificationPermissions>({
-    alert: false,
-    badge: false,
-    sound: false,
-  });
+  const [hasNotificationPermissions, setHasNotificationPermissions] = useState<boolean>(false);
 
   useEffect(() => {
-    PushNotification.checkPermissions(permissions => setNotificationPermissions(permissions));
+    checkPermissions().then(hasPermission => setHasNotificationPermissions(hasPermission));
   }, []);
 
   const handleDoneOrSkip = () => {
@@ -32,20 +25,9 @@ export const OnboardingScreen: NavigationStackScreenComponent = ({ navigation })
   };
 
   const handleTurnOnNotificationsPress = () => {
-    requestLocalNotificationPermissions();
-
-    // This is a bit of a hack because the Promise that is
-    // returned from `requestLocalNotificationPermissions`
-    // does not resolve because of a bug in the native code
-    // of `PushNotificationsIOS`.
-    const intervalId = setInterval(() => {
-      PushNotification.checkPermissions(permissions => setNotificationPermissions(permissions));
-
-      numOfTimesNotificationPermissionsChecked++;
-      if (numOfTimesNotificationPermissionsChecked === 5) {
-        clearInterval(intervalId);
-      }
-    }, 2000);
+    requestLocalNotificationPermissions().then(() => {
+      checkPermissions().then(hasPermission => setHasNotificationPermissions(hasPermission));
+    });
   };
 
   return (
@@ -54,7 +36,7 @@ export const OnboardingScreen: NavigationStackScreenComponent = ({ navigation })
       onSkip={handleDoneOrSkip}
       onAddGoalPress={handleAddGoalPress}
       onTurnOnNotificationsPress={handleTurnOnNotificationsPress}
-      notificationPermissions={notificationPermissions}
+      hasNotificationPermissions={hasNotificationPermissions}
     />
   );
 };

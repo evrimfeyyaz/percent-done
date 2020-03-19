@@ -21,6 +21,7 @@
 		4B721F6D80C14B3B92B3C2EC /* NunitoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31DCEFFD1D484A4580520D39 /* NunitoSans-Bold.ttf */; };
 		7F9AC3C966864A418604D7E8 /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E95E1AFE973049A39BC083D4 /* NunitoSans-SemiBold.ttf */; };
 		9132C9E3240E89300058EDA9 /* arpeggio.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9132C9E2240E89300058EDA9 /* arpeggio.mp3 */; };
+		91C0178424112B3200436C92 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91C0178324112B3200436C92 /* GoogleService-Info.plist */; };
 		A1E9B1ADBDFEE40091406D08 /* libPods-PercentDone-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6837F64D417F9F96252CCF55 /* libPods-PercentDone-tvOSTests.a */; };
 		ADAF884E7FB2466F939F6B84 /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */; };
 		FFA26FDC91FF713F2CD63C70 /* libPods-PercentDoneTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F63184F49517CB4A39A336 /* libPods-PercentDoneTests.a */; };
@@ -67,6 +68,8 @@
 		768D9EB694C7665D2EB4C08D /* Pods-PercentDone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone.release.xcconfig"; path = "Target Support Files/Pods-PercentDone/Pods-PercentDone.release.xcconfig"; sourceTree = "<group>"; };
 		88FA044E2CAD0ECFA3E085C4 /* Pods-PercentDone-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOSTests/Pods-PercentDone-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9132C9E2240E89300058EDA9 /* arpeggio.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = arpeggio.mp3; sourceTree = "<group>"; };
+		91ABB53B241F9B20002C759A /* Percent Done.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Percent Done.entitlements"; path = "PercentDone/Percent Done.entitlements"; sourceTree = "<group>"; };
+		91C0178324112B3200436C92 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		92B4DC5ABF731EFC3E300443 /* Pods-PercentDone-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOSTests/Pods-PercentDone-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		B89037247320C95A30B037A0 /* Pods-PercentDone-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOS/Pods-PercentDone-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		BA26E16997287C4F4935D0A8 /* Pods-PercentDoneTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDoneTests.release.xcconfig"; path = "Target Support Files/Pods-PercentDoneTests/Pods-PercentDoneTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -144,6 +147,8 @@
 		13B07FAE1A68108700A75B9A /* PercentDone */ = {
 			isa = PBXGroup;
 			children = (
+				91ABB53B241F9B20002C759A /* Percent Done.entitlements */,
+				91C0178324112B3200436C92 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -370,6 +375,7 @@
 				4B721F6D80C14B3B92B3C2EC /* NunitoSans-Bold.ttf in Resources */,
 				ADAF884E7FB2466F939F6B84 /* NunitoSans-Regular.ttf in Resources */,
 				7F9AC3C966864A418604D7E8 /* NunitoSans-SemiBold.ttf in Resources */,
+				91C0178424112B3200436C92 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,6 +677,7 @@
 			baseConfigurationReference = 2C7913DB470C1F18373F27CC /* Pods-PercentDone.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "PercentDone/Percent Done.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 18;
@@ -697,6 +704,7 @@
 			baseConfigurationReference = 768D9EB694C7665D2EB4C08D /* Pods-PercentDone.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "PercentDone/Percent Done.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 18;

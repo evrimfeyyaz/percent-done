@@ -2,6 +2,10 @@ import { Action } from 'redux';
 
 export type StatsPeriodKeyType = '7' | '30';
 
+export interface User {
+  email: string;
+}
+
 export interface SettingsState {
   currentDateTimestamp?: number;
   timeMachineDateTimestamp: number;
@@ -14,7 +18,13 @@ export interface SettingsState {
   scheduledGoalCompletedNotificationId?: string;
   areBreakNotificationsOn: boolean;
   notifyBreakAfterInMs: number;
+  /**
+   * Set to `true` when the user should take
+   * a break.
+   */
+  shouldTakeBreak: boolean;
   scheduledBreakNotificationId?: string;
+  user?: User;
 }
 
 export const SET_CURRENT_DATE_TIMESTAMP = 'SET_CURRENT_DATE_TIMESTAMP';
@@ -25,6 +35,8 @@ export const SET_ONBOARDED = 'SET_ONBOARDED';
 export const SET_ARE_BREAK_NOTIFICATIONS_ON = 'SET_ARE_BREAK_NOTIFICATIONS_ON';
 export const SET_NOTIFY_BREAK_AFTER_IN_MS = 'SET_NOTIFY_BREAK_AFTER_IN_MS';
 export const SET_SCHEDULED_BREAK_NOTIFICATION_ID = 'SET_SCHEDULED_BREAK_NOTIFICATION_ID';
+export const SET_USER = 'SET_USER';
+export const SET_SHOULD_TAKE_BREAK = 'SET_SHOULD_TAKE_BREAK';
 
 export interface SetCurrentDateTimestampAction extends Action<typeof SET_CURRENT_DATE_TIMESTAMP> {
   timestamp: number;
@@ -58,6 +70,14 @@ export interface SetScheduledBreakNotificationIdAction extends Action<typeof SET
   id: string | undefined;
 }
 
+export interface SetUserAction extends Action<typeof SET_USER> {
+  user?: User;
+}
+
+export interface SetShouldTakeBreakAction extends Action<typeof SET_SHOULD_TAKE_BREAK> {
+  shouldTakeBreak: boolean;
+}
+
 export type SettingsActionTypes =
   SetCurrentDateTimestampAction |
   SetTimeMachineDateTimestampAction |
@@ -66,4 +86,6 @@ export type SettingsActionTypes =
   SetOnboardedAction |
   SetAreBreakNotificationsOnAction |
   SetNotifyBreakAfterInMsAction |
-  SetScheduledBreakNotificationIdAction;
+  SetScheduledBreakNotificationIdAction |
+  SetUserAction |
+  SetShouldTakeBreakAction;

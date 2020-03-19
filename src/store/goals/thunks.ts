@@ -11,7 +11,11 @@ import { getCurrentDate } from '../settings/selectors';
 import { addTimetableEntry } from '../timetableEntries/thunks';
 import { WithOptionalId } from '../../utilities/types';
 import { cancelLocalNotification, scheduleLocalNotification } from '../../utilities/localNotifications';
-import { setScheduledBreakNotificationId, setScheduledGoalCompletedNotificationId } from '../settings/actions';
+import {
+  setScheduledBreakNotificationId,
+  setScheduledGoalCompletedNotificationId,
+  setShouldTakeBreak,
+} from '../settings/actions';
 import { SettingsActionTypes } from '../settings/types';
 
 export const handleCompleteOrTrackRequest = (goalId: string): ThunkAction<void, StoreState, void, GoalActionTypes | TimetableEntryActionTypes> => {
@@ -101,6 +105,7 @@ export const stopGoalTracking = (): ThunkAction<void, StoreState, void, GoalActi
     };
 
     dispatch(addTimetableEntry(timetableEntry));
+    dispatch(setShouldTakeBreak(false));
 
     cancelGoalCompletedNotification(state, dispatch);
     cancelBreakNotification(state, dispatch);
@@ -123,7 +128,7 @@ function scheduleGoalCompletedNotification(state: StoreState, goalId: string, st
     willBeCompletedAt = willBeCompletedAt.startOf('day').add(remainingMs, 'ms');
   }
 
-  const notificationId = scheduleLocalNotification(`Your goal is completed. Great job!`, willBeCompletedAt.toDate(), goal.title);
+  const notificationId = scheduleLocalNotification(`Your goal is completed. Great job!`, willBeCompletedAt.toDate(), 'goal-completed-channel', goal.title);
 
   dispatch(setScheduledGoalCompletedNotificationId(notificationId));
 }
@@ -136,7 +141,7 @@ function scheduleBreakNotification(state: StoreState, startTimestamp: number, di
   }
 
   const breakAt = momentWithDeviceLocale(startTimestamp).add(notifyBreakAfterInMs, 'ms').toDate();
-  const notificationId = scheduleLocalNotification(`Time to take a break.`, breakAt);
+  const notificationId = scheduleLocalNotification('Time to take a break.', breakAt, 'break-channel');
 
   dispatch(setScheduledBreakNotificationId(notificationId));
 }

@@ -34,4 +34,6 @@ export const Icons = {
   twitter: require('./twitter.png'),
   github: require('./github.png'),
   evrim: require('./evrim.png'),
+  googleDrive: require('./google-drive.png'),
+  iCloud: require('./icloud.png'),
 };

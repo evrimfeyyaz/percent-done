@@ -1,56 +1,44 @@
-import PushNotification, { PushNotificationPermissions } from 'react-native-push-notification';
+import firebase from 'react-native-firebase';
 import { Platform } from 'react-native';
 
-/**
- * Calling PushNotification.requestPermissions() twice causes a known error:
- * https://github.com/facebook/react-native/issues/9105
- *
- * This variable holds information on whether the promise has returned,
- * as we can only call it safely if it has.
- */
-let hasRequestPermissionPromiseReturned = true;
+export type NotificationChannelId = 'goal-completed-channel' | 'break-channel';
 
-export function scheduleLocalNotification(message: string, date: Date, title?: string): string {
+export function scheduleLocalNotification(message: string, date: Date, channelId: NotificationChannelId, title?: string): string {
   const id = Math.floor(Math.random() * 1024).toString();
 
-  const scheduleIfPermitted = (permissions: PushNotificationPermissions): boolean => {
-    if (!permissions.alert) return false;
-
-    PushNotification.localNotificationSchedule({
-      id,
-      userInfo: {
-        id,
-      },
-      title,
-      message,
-      date,
-      soundName: 'arpeggio.mp3',
-      // @ts-ignore
-      ignoreInForeground: true,
+  const notification = new firebase.notifications.Notification()
+    .setNotificationId(id)
+    .setBody(message)
+    .setSound('arpeggio.mp3')
+    .setData({
+      channelId,
     });
 
-    return true;
-  };
+  if (Platform.OS === 'android') {
+    notification.android.setChannelId(channelId);
+  }
 
-  PushNotification.checkPermissions(permissions => {
-    const isPermitted = scheduleIfPermitted(permissions);
+  if (title != null) {
+    notification.setTitle(title);
+  }
 
-    if (!isPermitted && hasRequestPermissionPromiseReturned) {
-      hasRequestPermissionPromiseReturned = false;
-      PushNotification.requestPermissions().then(permissions => {
-        hasRequestPermissionPromiseReturned = true;
-        scheduleIfPermitted(permissions);
-      });
-    }
+  requestLocalNotificationPermissions().then(() => {
+    firebase.notifications().scheduleNotification(notification, {
+      fireDate: date.getTime(),
+    });
   });
 
   return id;
 }
 
 export function cancelLocalNotification(id: string) {
-  PushNotification.cancelLocalNotifications({ id });
+  firebase.notifications().cancelNotification(id);
 }
 
-export function requestLocalNotificationPermissions(): Promise<PushNotificationPermissions> {
-  return PushNotification.requestPermissions();
+export async function requestLocalNotificationPermissions(): Promise<void> {
+  return firebase.messaging().requestPermission();
+}
+
+export async function checkPermissions(): Promise<boolean> {
+  return firebase.messaging().hasPermission();
 }

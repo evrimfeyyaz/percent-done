@@ -19,13 +19,13 @@ export interface TimeTrackerProps {
    * Starting timestamp for the time tracker.
    */
   startTimestamp: number;
-  /**
-   * Notify the user to take a break this many ms after the
-   * start time.
-   */
-  notifyBreakAfterInMs?: number;
   projects: { key: string; title: string }[];
   projectKey?: string;
+  /**
+   * Set to `true` if it is time to take break based on
+   * the user's settings.
+   */
+  shouldTakeBreak?: boolean;
   onStopPress?: (startTimestamp: number, endTimestamp: number) => void;
   onStartTimestampChange?: (newTimestamp: number) => void;
   onProjectCreatePress?: (projectTitle: string, goalId: string) => void;
@@ -40,7 +40,7 @@ export interface TimeTrackerProps {
 
 export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
                                                                    goalId, title, color, durationInMs, startTimestamp,
-                                                                   initialRemainingMs, projects, projectKey, notifyBreakAfterInMs,
+                                                                   initialRemainingMs, projects, projectKey, shouldTakeBreak,
                                                                    onStopPress, onStartTimestampChange, onProjectChange,
                                                                    onProjectRemove, onProjectCreatePress, onDidUnmount,
                                                                    onDateChange,
@@ -49,7 +49,6 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
   const [msPassed, setMsPassed] = useState(0);
   const [isProjectModalVisible, setIsProjectModalVisible] = useState(false);
-  const [timeToTakeBreak, setTimeToTakeBreak] = useState(false);
 
   const beginningOfNextDay = +momentWithDeviceLocale(startTimestamp).add(1, 'day').startOf('day');
 
@@ -66,10 +65,10 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   });
 
   useEffect(() => {
-    if (timeToTakeBreak) {
+    if (shouldTakeBreak) {
       playBreakNotificationSound();
     }
-  }, [timeToTakeBreak]);
+  }, [shouldTakeBreak]);
 
   function tick() {
     const now = Date.now();
@@ -77,23 +76,6 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
     if (now >= beginningOfNextDay) {
       onDateChange?.();
-    }
-
-    setBreakIfNeeded();
-  }
-
-  function setBreakIfNeeded() {
-    if (notifyBreakAfterInMs == null) {
-      setTimeToTakeBreak(false);
-
-      return;
-    }
-
-    const breakTimestamp = startTimestamp + notifyBreakAfterInMs;
-    if (Date.now() >= breakTimestamp) {
-      setTimeToTakeBreak(true);
-    } else {
-      setTimeToTakeBreak(false);
     }
   }
 
@@ -147,7 +129,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     project = projects.find(project => project.key === projectKey);
   }
 
-  const stopButtonTitle = timeToTakeBreak ? 'Time to Take a Break' : 'Stop';
+  const stopButtonTitle = shouldTakeBreak ? 'Time to Take a Break' : 'Stop';
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} alwaysBounceVertical={false}

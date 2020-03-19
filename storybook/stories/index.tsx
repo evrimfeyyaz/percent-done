@@ -45,7 +45,7 @@ import {
   HoursDoneStats,
   DayDetails, Stats, Onboarding, GoalDetails, DurationInfo, Settings, License, Licenses, About,
   TextOnlyPage,
-  BreakNotifications,
+  BreakNotifications, SignIn, OnlineBackup,
 } from '../../src/components';
 import { addDecorator } from '@storybook/react-native/dist';
 import {
@@ -325,13 +325,7 @@ storiesOf('Miscellaneous', module)
     />
   ))
   .add('Onboarding', () => (
-    <Onboarding
-      notificationPermissions={{
-        sound: true,
-        badge: true,
-        alert: true,
-      }}
-    />
+    <Onboarding hasNotificationPermissions />
   ))
   .add('Duration info', () => (
     <DurationInfo durationInMs={60 * 60 * 1000} tailText='left' />
@@ -361,6 +355,12 @@ storiesOf('Settings', module)
       areNotificationsOn={true}
       notifyAfterInMs={25 * 60 * 1000}
     />
+  ))
+  .add('Sign in or sign up', () => (
+    <SignIn />
+  ))
+  .add('Online backup', () => (
+    <OnlineBackup userEmail='hi@example.com' lastBackupDate={new Date()} />
   ));
 
 storiesOf('Inputs', module)

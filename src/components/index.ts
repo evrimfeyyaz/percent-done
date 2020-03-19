@@ -1,22 +1,31 @@
 // Miscellaneous
 export * from './misc/Section';
 export * from './misc/BackgroundView';
-export * from './goals/GoalRow';
-export * from './goals/GoalList';
-export * from './goals/GoalDetails';
 export * from './misc/BottomSheet';
-export * from './goals/TimeTracker';
 export * from './misc/EmptyContainer';
 export * from './misc/SwipeableList';
 export * from './misc/SwipeableItem';
-export * from './projects/ProjectRow';
-export * from './projects/ProjectList';
-export * from './projects/ProjectModal';
 export * from './misc/ListHeader';
-export * from './charts/DayDetails';
 export * from './misc/Onboarding';
 export * from './misc/DurationInfo';
 export * from './misc/TextOnlyPage';
+
+// Goals
+export * from './goals/GoalRow';
+export * from './goals/GoalList';
+export * from './goals/GoalDetails';
+export * from './goals/TimeTracker';
+export * from './goals/GoalForm';
+
+// Projects
+export * from './projects/ProjectRow';
+export * from './projects/ProjectList';
+export * from './projects/ProjectModal';
+export * from './projects/ProjectForm';
+
+// Timetable Entries
+export * from './timetableEntries/Timetable';
+export * from './timetableEntries/TimetableEntryForm';
 
 // Settings
 export * from './settings/Settings';
@@ -24,16 +33,18 @@ export * from './settings/License';
 export * from './settings/Licenses';
 export * from './settings/About';
 export * from './settings/BreakNotifications';
+export * from './settings/SignIn';
+export * from './settings/OnlineBackup';
 
 // Charts
 export * from './charts/ProgressChart';
-export * from './timetableEntries/Timetable';
 export * from './charts/StatChart';
 export * from './charts/DaysStats';
 export * from './charts/AnimatedProgressCircle';
 export * from './charts/PercentDoneStats';
 export * from './charts/HoursDoneStats';
 export * from './charts/Stats';
+export * from './charts/DayDetails';
 
 // Inputs
 export * from './inputs/Button';
@@ -65,8 +76,3 @@ export * from './navigation/TabBar';
 export * from './navigation/TabNavigationView';
 export * from './navigation/HeaderButton';
 export * from './navigation/HeaderCancelButton';
-
-// Forms
-export * from './goals/GoalForm';
-export * from './timetableEntries/TimetableEntryForm';
-export * from './projects/ProjectForm';

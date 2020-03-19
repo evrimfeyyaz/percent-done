@@ -8,6 +8,7 @@ import {
 } from '../../components';
 import { AddGoalForm } from '../../containers';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
+import { NavigationService } from '../../utilities';
 
 export const AddGoalScreen: NavigationStackScreenComponent = ({ navigation }) => {
   const formRef = useRef<GoalForm>(null);

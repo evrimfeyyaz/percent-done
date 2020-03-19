@@ -23,7 +23,7 @@ interface ButtonProps {
   iconSource?: ImageSourcePropType;
   onPress?: (event: GestureResponderEvent) => void;
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
 }
 
 /**

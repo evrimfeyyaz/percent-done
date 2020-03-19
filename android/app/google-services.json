@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "545125684205",
+    "firebase_url": "https://percent-done.firebaseio.com",
+    "project_id": "percent-done",
+    "storage_bucket": "percent-done.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545125684205:android:2b2b912b82c7b3bfac4de4",
+        "android_client_info": {
+          "package_name": "io.evrim.PercentDone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "545125684205-vpps6mo9g3tnopf045bra5ck5nmp7pkt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE3eCsdOXa5RAvLeyWYoqSB3K2kP1YIC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "545125684205-vpps6mo9g3tnopf045bra5ck5nmp7pkt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

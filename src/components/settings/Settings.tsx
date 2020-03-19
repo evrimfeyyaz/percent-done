@@ -3,6 +3,7 @@ import { SectionList, StyleSheet, View } from 'react-native';
 import { MenuLink } from '..';
 
 interface SettingsProps {
+  onOnlineBackupPress?: () => void;
   onAboutPress?: () => void;
   onTutorialPress?: () => void;
   onBreakNotificationsPress?: () => void;
@@ -12,7 +13,7 @@ interface SettingsProps {
 }
 
 export const Settings: FunctionComponent<SettingsProps> = ({
-                                                             onAboutPress, onTutorialPress, onLicensesPress,
+                                                             onAboutPress, onTutorialPress, onLicensesPress, onOnlineBackupPress,
                                                              onTermsOfUsePress, onPrivacyPolicyPress, onBreakNotificationsPress,
                                                            }) => {
   const tutorial = {
@@ -25,6 +26,12 @@ export const Settings: FunctionComponent<SettingsProps> = ({
     title: 'Break Notifications',
     key: 'break-notifications',
     onPress: onBreakNotificationsPress,
+  };
+
+  const onlineBackup = {
+    title: 'Online Backup',
+    key: 'online-backup',
+    onPress: onOnlineBackupPress,
   };
 
   const about = {
@@ -53,7 +60,7 @@ export const Settings: FunctionComponent<SettingsProps> = ({
 
   const sections = [
     {
-      data: [breakNotifications, tutorial],
+      data: [breakNotifications, onlineBackup, tutorial],
     },
     {
       data: [licenses, termsOfUse, privacyPolicy, about],

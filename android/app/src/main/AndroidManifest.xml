@@ -2,13 +2,8 @@
           package="io.evrim.PercentDone">
 
   <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.WAKE_LOCK"/>
-  <permission
-          android:name="${applicationId}.permission.C2D_MESSAGE"
-          android:protectionLevel="signature"/>
-  <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
-  <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
 
   <application
           android:name=".MainApplication"
@@ -21,11 +16,11 @@
           android:exported="true"
           android:theme="@style/AppTheme">
 
-
     <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
     </activity>
 
     <activity
@@ -33,46 +28,33 @@
             android:label="@string/app_name"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
 
-    <meta-data android:name="com.dieam.reactnativepushnotification.notification_channel_name"
-               android:value="PercentDone"/>
-    <meta-data android:name="com.dieam.reactnativepushnotification.notification_channel_description"
-               android:value="PercentDone notifies you when a goal you are tracking is completed."/>
-    <meta-data android:name="com.dieam.reactnativepushnotification.notification_color"
-               android:resource="@color/dark_blue"/>
-
-    <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
+    <service android:name="io.invertase.firebase.messaging.RNFirebaseMessagingService">
       <intent-filter>
-        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-        <category android:name="${applicationId}"/>
-      </intent-filter>
-    </receiver>
-
-    <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher"/>
-    <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
-      <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED"/>
-      </intent-filter>
-    </receiver>
-    <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
-
-    <service
-            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerServiceGcm"
-            android:exported="false">
-      <intent-filter>
-        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
       </intent-filter>
     </service>
+
+    <receiver android:name="io.invertase.firebase.notifications.RNFirebaseNotificationReceiver"/>
+
+    <receiver android:enabled="true" android:exported="true"
+              android:name="io.invertase.firebase.notifications.RNFirebaseNotificationsRebootReceiver">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+        <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </receiver>
 
   </application>
 

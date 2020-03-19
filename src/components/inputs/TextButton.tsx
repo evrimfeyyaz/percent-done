@@ -10,7 +10,7 @@ import { colors, fonts } from '../../theme';
 interface TextButtonProps {
   title: string;
   onPress?: (event: GestureResponderEvent) => void;
-  style?: TextStyle;
+  style?: TextStyle | TextStyle[];
 }
 
 export const TextButton: FunctionComponent<TextButtonProps> = ({

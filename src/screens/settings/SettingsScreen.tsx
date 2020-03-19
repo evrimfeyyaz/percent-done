@@ -27,6 +27,10 @@ export const SettingsScreen: NavigationStackScreenComponent = ({ navigation }) =
     navigation.navigate('PrivacyPolicy');
   };
 
+  const handleOnlineBackupPress = () => {
+    navigation.navigate('OnlineBackup');
+  };
+
   return (
     <BackgroundView>
       <Settings
@@ -36,6 +40,7 @@ export const SettingsScreen: NavigationStackScreenComponent = ({ navigation }) =
         onLicensesPress={handleLicensesPress}
         onTermsOfUsePress={handleTermsOfUsePress}
         onPrivacyPolicyPress={handlePrivacyPolicyPress}
+        onOnlineBackupPress={handleOnlineBackupPress}
       />
     </BackgroundView>
   );

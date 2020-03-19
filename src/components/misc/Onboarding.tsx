@@ -6,10 +6,9 @@ import { Icons, Images } from '../../../assets';
 import { Image, StyleSheet, View, Text, Platform } from 'react-native';
 import { Button } from '..';
 import { isScreenSmall } from '../../utilities/isScreenSmall';
-import { PushNotificationPermissions } from 'react-native-push-notification';
 
 interface OnboardingProps {
-  notificationPermissions: PushNotificationPermissions;
+  hasNotificationPermissions: boolean;
   onSkip?: () => void;
   onDone?: () => void;
   onAddGoalPress?: () => void;
@@ -17,13 +16,9 @@ interface OnboardingProps {
 }
 
 export const Onboarding: FunctionComponent<OnboardingProps> = ({
-                                                                 notificationPermissions, onSkip, onDone,
+                                                                 hasNotificationPermissions, onSkip, onDone,
                                                                  onAddGoalPress, onTurnOnNotificationsPress,
                                                                }) => {
-  function areNotificationsOn(): boolean {
-    return !!notificationPermissions.alert;
-  }
-
   // @ts-ignore
   const welcome: Page = {
     backgroundColor: colors.lightGray,
@@ -150,12 +145,12 @@ export const Onboarding: FunctionComponent<OnboardingProps> = ({
           turning notifications on.
         </Text>
 
-        {areNotificationsOn() && (
+        {hasNotificationPermissions && (
           <Button color={colors.green} title='Notifications Are On' iconSource={Icons.checkmarkLarge}
                   style={styles.callToAction} disabled />
         )}
 
-        {!areNotificationsOn() && (
+        {!hasNotificationPermissions && (
           <Button title='Turn On Notifications' style={styles.callToAction} onPress={onTurnOnNotificationsPress} />
         )}
       </View>

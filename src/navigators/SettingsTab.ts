@@ -1,4 +1,4 @@
-import { BreakNotificationsScreen, SettingsScreen } from '../screens';
+import { BreakNotificationsScreen, OnlineBackupScreen, SettingsScreen } from '../screens';
 import { createStackNavigator } from 'react-navigation-stack';
 import { headerConfig } from './headerConfig';
 import { LicensesScreen } from '../screens/settings/LicensesScreen';
@@ -14,7 +14,8 @@ export const SettingsTab = createStackNavigator({
   About: AboutScreen,
   PrivacyPolicy: PrivacyPolicyScreen,
   TermsOfUse: TermsOfUseScreen,
-  BreakNotifications: BreakNotificationsScreen
+  BreakNotifications: BreakNotificationsScreen,
+  OnlineBackup: OnlineBackupScreen,
 }, {
   defaultNavigationOptions: { ...headerConfig },
 });

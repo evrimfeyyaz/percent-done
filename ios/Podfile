@@ -34,6 +34,9 @@ target 'PercentDone' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'Firebase/Core', '~> 6.13.0'
+  pod 'Firebase/Messaging', '~> 6.13.0'
+
   target 'PercentDoneTests' do
     inherit! :search_paths
     # Pods for testing

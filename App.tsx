@@ -1,17 +1,17 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
-import Storybook from './storybook';
 import { AppState, AppStateStatus, Platform, UIManager, YellowBox } from 'react-native';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { momentWithDeviceLocale, NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
 import configureStore from './src/store/configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
-import { setCurrentDateTimestamp } from './src/store/settings/actions';
+import { setCurrentDateTimestamp, setUser } from './src/store/settings/actions';
 import { configureNotifications } from './src/utilities/configureNotifications';
 import SplashScreen from 'react-native-splash-screen';
 import { setStatusBarStyle } from './src/utilities/statusBar';
 import { enableScreens } from 'react-native-screens';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import { User } from './src/store/settings/types';
 
 YellowBox.ignoreWarnings([
   'Warning:',
@@ -30,12 +30,27 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 enableScreens();
 const { store, persistor } = configureStore();
-configureNotifications();
 
 const App: FunctionComponent = () => {
   const appState = useRef(AppState.currentState);
   const [dayChangeTimeoutId, setDayChangeTimeoutId] = useState();
   const [loaded, setLoaded] = useState(false);
+
+  // function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
+  //   let currentUser: User | undefined;
+  //
+  //   if (user != null) {
+  //     currentUser = {
+  //       email: user.email as string,
+  //     };
+  //   }
+  //
+  //   store.dispatch(setUser(currentUser));
+  // }
+
+  // useEffect(() => {
+  //   return auth().onAuthStateChanged(onAuthStateChanged); // Unsubscribe on unmount.
+  // }, []);
 
   useEffect(() => {
     updateCurrentDateAndSetTimeoutForTheNextDay();
@@ -54,8 +69,11 @@ const App: FunctionComponent = () => {
     SplashScreen.hide();
 
     const state = store.getState();
+    const dispatch = store.dispatch;
     const { id, startTimestamp } = state.goals.trackedGoal;
     const { hasOnboarded } = state.settings;
+
+    configureNotifications(dispatch);
 
     if (id != null && startTimestamp != null) {
       NavigationService.navigate('TrackGoal', {});
