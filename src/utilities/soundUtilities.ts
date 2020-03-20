@@ -5,5 +5,5 @@ export function playBreakNotificationSound() {
 }
 
 export function playGoalCompletedNotificationSound() {
-  new Player('arpeggio.mp3').play();
+  new Player('eventually.mp3').play();
 }

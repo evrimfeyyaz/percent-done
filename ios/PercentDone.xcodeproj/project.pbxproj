@@ -21,6 +21,7 @@
 		4B721F6D80C14B3B92B3C2EC /* NunitoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31DCEFFD1D484A4580520D39 /* NunitoSans-Bold.ttf */; };
 		7F9AC3C966864A418604D7E8 /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E95E1AFE973049A39BC083D4 /* NunitoSans-SemiBold.ttf */; };
 		9132C9E3240E89300058EDA9 /* arpeggio.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 9132C9E2240E89300058EDA9 /* arpeggio.mp3 */; };
+		91A5D7432424B3F5009D3D3F /* eventually.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 91A5D7422424B3F5009D3D3F /* eventually.mp3 */; };
 		91C0178424112B3200436C92 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 91C0178324112B3200436C92 /* GoogleService-Info.plist */; };
 		A1E9B1ADBDFEE40091406D08 /* libPods-PercentDone-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6837F64D417F9F96252CCF55 /* libPods-PercentDone-tvOSTests.a */; };
 		ADAF884E7FB2466F939F6B84 /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */; };
@@ -68,6 +69,7 @@
 		768D9EB694C7665D2EB4C08D /* Pods-PercentDone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone.release.xcconfig"; path = "Target Support Files/Pods-PercentDone/Pods-PercentDone.release.xcconfig"; sourceTree = "<group>"; };
 		88FA044E2CAD0ECFA3E085C4 /* Pods-PercentDone-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOSTests/Pods-PercentDone-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9132C9E2240E89300058EDA9 /* arpeggio.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = arpeggio.mp3; sourceTree = "<group>"; };
+		91A5D7422424B3F5009D3D3F /* eventually.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = eventually.mp3; sourceTree = "<group>"; };
 		91ABB53B241F9B20002C759A /* Percent Done.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Percent Done.entitlements"; path = "PercentDone/Percent Done.entitlements"; sourceTree = "<group>"; };
 		91C0178324112B3200436C92 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		92B4DC5ABF731EFC3E300443 /* Pods-PercentDone-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PercentDone-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-PercentDone-tvOSTests/Pods-PercentDone-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 		0E4879D4FF5845E180FE549E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				91A5D7422424B3F5009D3D3F /* eventually.mp3 */,
 				9132C9E2240E89300058EDA9 /* arpeggio.mp3 */,
 				31DCEFFD1D484A4580520D39 /* NunitoSans-Bold.ttf */,
 				7152018E6A0B48C1BB16646A /* NunitoSans-Regular.ttf */,
@@ -374,6 +377,7 @@
 				9132C9E3240E89300058EDA9 /* arpeggio.mp3 in Resources */,
 				4B721F6D80C14B3B92B3C2EC /* NunitoSans-Bold.ttf in Resources */,
 				ADAF884E7FB2466F939F6B84 /* NunitoSans-Regular.ttf in Resources */,
+				91A5D7432424B3F5009D3D3F /* eventually.mp3 in Resources */,
 				7F9AC3C966864A418604D7E8 /* NunitoSans-SemiBold.ttf in Resources */,
 				91C0178424112B3200436C92 /* GoogleService-Info.plist in Resources */,
 			);

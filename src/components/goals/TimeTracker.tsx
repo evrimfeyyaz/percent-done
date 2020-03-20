@@ -1,13 +1,15 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { colors, fonts } from '../../theme';
-import { formatDurationInMs, leftOrOver, momentWithDeviceLocale, usePrevious } from '../../utilities';
+import {
+  formatDurationInMs,
+  leftOrOver,
+  momentWithDeviceLocale, playBreakNotificationSound,
+  playGoalCompletedNotificationSound,
+  usePrevious,
+} from '../../utilities';
 import { BottomSheetTimePicker, Button, ProgressChart, ProjectModal } from '..';
 import { Icons } from '../../../assets';
-import {
-  playBreakNotificationSound,
-  playGoalCompletedNotificationSound,
-} from '../../utilities/playBreakNotificationSound';
 
 export interface TimeTrackerProps {
   goalId: string;
