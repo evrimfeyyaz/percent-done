@@ -64,11 +64,7 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
   const prevShouldTakeBreak = usePrevious(shouldTakeBreak);
 
   useEffect(() => {
-    if (isCompleted) {
-      setStopButtonTitle(GOAL_COMPLETED_TITLE);
-    } else if (shouldTakeBreak) {
-      setStopButtonTitle(BREAK_TITLE);
-    }
+
 
     return onDidUnmount;
   }, []);
@@ -85,6 +81,8 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     if (prevShouldTakeBreak === false && shouldTakeBreak) {
       playBreakNotificationSound();
       setStopButtonTitle(BREAK_TITLE);
+    } else {
+      setStopButtonTitleToProperValue();
     }
   }, [shouldTakeBreak]);
 
@@ -92,6 +90,8 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
     if (prevIsCompleted === false && isCompleted) {
       playGoalCompletedNotificationSound();
       setStopButtonTitle(GOAL_COMPLETED_TITLE);
+    } else {
+      setStopButtonTitleToProperValue();
     }
   }, [isCompleted]);
 
@@ -101,6 +101,16 @@ export const TimeTracker: FunctionComponent<TimeTrackerProps> = ({
 
     if (now >= beginningOfNextDay) {
       onDateChange?.();
+    }
+  }
+
+  function setStopButtonTitleToProperValue() {
+    if (isCompleted) {
+      setStopButtonTitle(GOAL_COMPLETED_TITLE);
+    } else if (shouldTakeBreak) {
+      setStopButtonTitle(BREAK_TITLE);
+    } else {
+      setStopButtonTitle('Stop');
     }
   }
 
