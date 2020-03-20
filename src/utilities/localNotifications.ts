@@ -1,5 +1,7 @@
 import firebase from 'react-native-firebase';
 import { Platform } from 'react-native';
+import { Sounds } from './soundUtilities';
+import { colors } from '../theme';
 
 export type NotificationChannelId = 'goal-completed-channel' | 'break-channel';
 
@@ -9,13 +11,22 @@ export function scheduleLocalNotification(message: string, date: Date, channelId
   const notification = new firebase.notifications.Notification()
     .setNotificationId(id)
     .setBody(message)
-    .setSound('arpeggio.mp3')
     .setData({
       channelId,
     });
 
   if (Platform.OS === 'android') {
     notification.android.setChannelId(channelId);
+    notification.android.setSmallIcon('ic_stat_ic_notification');
+    notification.android.setColor(colors.darkBlue);
+  }
+
+  if (channelId === 'goal-completed-channel') {
+    notification.setSound(Sounds.goalCompletedSound);
+  }
+
+  if (channelId === 'break-channel') {
+    notification.setSound(Sounds.breakSound);
   }
 
   if (title != null) {
@@ -29,6 +40,22 @@ export function scheduleLocalNotification(message: string, date: Date, channelId
   });
 
   return id;
+}
+
+export function scheduleGoalCompletedNotification(date: Date, goalTitle: string) {
+  const message = 'Your goal is completed. Great job!';
+  const channelId = 'goal-completed-channel';
+  const notificationId = scheduleLocalNotification(message, date, channelId, goalTitle);
+
+  return notificationId;
+}
+
+export function scheduleBreakNotification(date: Date, goalTitle: string) {
+  const message = 'Time to take a break.';
+  const channelId = 'break-channel';
+  const notificationId = scheduleLocalNotification(message, date, channelId, goalTitle);
+
+  return notificationId;
 }
 
 export function cancelLocalNotification(id: string) {

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { AppState, AppStateStatus, Platform, UIManager, YellowBox } from 'react-native';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider } from 'react-redux';
 import { momentWithDeviceLocale, NavigationService } from './src/utilities';
 import { AppContainer } from './src/navigators/AppContainer';
 import configureStore from './src/store/configureStore';
@@ -11,6 +11,7 @@ import SplashScreen from 'react-native-splash-screen';
 import { setStatusBarStyle } from './src/utilities/statusBar';
 import { enableScreens } from 'react-native-screens';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import Storybook from './storybook';
 import { User } from './src/store/settings/types';
 
 YellowBox.ignoreWarnings([
@@ -26,7 +27,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-// export default Storybook;
+export default Storybook;
 
 enableScreens();
 const { store, persistor } = configureStore();
@@ -130,4 +131,4 @@ const App: FunctionComponent = () => {
     </Provider>
   );
 };
-export default App;
+// export default App;

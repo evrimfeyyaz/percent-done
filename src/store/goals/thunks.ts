@@ -10,7 +10,10 @@ import { removeTrackedGoal, setTrackedGoal } from './actions';
 import { getCurrentDate } from '../settings/selectors';
 import { addTimetableEntry } from '../timetableEntries/thunks';
 import { WithOptionalId } from '../../utilities/types';
-import { cancelLocalNotification, scheduleLocalNotification } from '../../utilities/localNotifications';
+import {
+  cancelLocalNotification,
+  scheduleBreakNotification, scheduleGoalCompletedNotification,
+} from '../../utilities/localNotifications';
 import {
   setScheduledBreakNotificationId,
   setScheduledGoalCompletedNotificationId,
@@ -53,9 +56,10 @@ export const startGoalTracking = (goalId: string): ThunkAction<void, StoreState,
     const startTimestamp = Date.now();
 
     const state = getState();
-    scheduleGoalCompletedNotification(state, goalId, startTimestamp, dispatch);
+    createAndScheduleGoalCompletedNotification(state, goalId, startTimestamp, dispatch);
 
-    scheduleBreakNotification(state, startTimestamp, dispatch);
+    const goalTitle = getGoalById(state, goalId).title;
+    createAndScheduleBreakNotification(state, startTimestamp, goalTitle, dispatch);
 
     dispatch(setTrackedGoal(goalId, startTimestamp));
     NavigationService.navigate('TrackGoal', {});
@@ -79,8 +83,10 @@ export const updateTrackedGoalStartTimestamp = (startTimestamp: number): ThunkAc
       startTimestamp,
     });
 
-    scheduleGoalCompletedNotification(state, goalId, startTimestamp, dispatch);
-    scheduleBreakNotification(state, startTimestamp, dispatch);
+    const goalTitle = getGoalById(state, goalId).title;
+
+    createAndScheduleGoalCompletedNotification(state, goalId, startTimestamp, dispatch);
+    createAndScheduleBreakNotification(state, startTimestamp, goalTitle, dispatch);
   };
 };
 
@@ -110,7 +116,7 @@ export const stopGoalTracking = (): ThunkAction<void, StoreState, void, GoalActi
   };
 };
 
-function scheduleGoalCompletedNotification(state: StoreState, goalId: string, startTimestamp: number, dispatch: ThunkDispatch<any, any, any>) {
+function createAndScheduleGoalCompletedNotification(state: StoreState, goalId: string, startTimestamp: number, dispatch: ThunkDispatch<any, any, any>) {
   const today = new Date();
   const goal = getGoalById(state, goalId);
 
@@ -126,12 +132,12 @@ function scheduleGoalCompletedNotification(state: StoreState, goalId: string, st
     willBeCompletedAt = willBeCompletedAt.startOf('day').add(remainingMs, 'ms');
   }
 
-  const notificationId = scheduleLocalNotification(`Your goal is completed. Great job!`, willBeCompletedAt.toDate(), 'goal-completed-channel', goal.title);
+  const notificationId = scheduleGoalCompletedNotification(willBeCompletedAt.toDate(), goal.title);
 
   dispatch(setScheduledGoalCompletedNotificationId(notificationId));
 }
 
-function scheduleBreakNotification(state: StoreState, startTimestamp: number, dispatch: ThunkDispatch<any, any, any>) {
+function createAndScheduleBreakNotification(state: StoreState, startTimestamp: number, goalTitle: string, dispatch: ThunkDispatch<any, any, any>) {
   const { notifyBreakAfterInMs, areBreakNotificationsOn } = state.settings;
 
   if (!areBreakNotificationsOn) {
@@ -139,7 +145,7 @@ function scheduleBreakNotification(state: StoreState, startTimestamp: number, di
   }
 
   const breakAt = momentWithDeviceLocale(startTimestamp).add(notifyBreakAfterInMs, 'ms').toDate();
-  const notificationId = scheduleLocalNotification('Time to take a break.', breakAt, 'break-channel');
+  const notificationId = scheduleBreakNotification(breakAt, goalTitle);
 
   dispatch(setScheduledBreakNotificationId(notificationId));
 }

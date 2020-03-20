@@ -60,8 +60,9 @@ import { colors, textStyles } from '../../src/theme';
 import moment from 'moment';
 import { createGoal } from '../../src/factories';
 import { Icons } from '../../assets';
-import { createRandomId } from '../../src/utilities';
+import { createRandomId, momentWithDeviceLocale } from '../../src/utilities';
 import { createProject } from '../../src/factories';
+import { scheduleBreakNotification, scheduleGoalCompletedNotification } from '../../src/utilities/localNotifications';
 
 addDecorator((getStory: any) => <CenterView>{getStory()}</CenterView>);
 addDecorator(withKnobs);
@@ -483,6 +484,34 @@ storiesOf('Navigation', module)
     </View>
   ));
 
+storiesOf('Notifications', module)
+  .add('Goal completed notification', () => (
+    <>
+      <Button
+        title="Schedule Notification for 5s Later"
+        onPress={() => scheduleGoalCompletedNotification(secondsLater(5), 'Test Goal')}
+        style={{ marginBottom: 30 }}
+      />
+      <Button
+        title="Schedule Notification for 10s Later"
+        onPress={() => scheduleGoalCompletedNotification(secondsLater(10), 'Test Goal')}
+      />
+    </>
+  ))
+  .add('Break notification', () => (
+    <>
+      <Button
+        title="Schedule Notification for 5s Later"
+        onPress={() => scheduleBreakNotification(secondsLater(5), 'Test Goal')}
+        style={{ marginBottom: 30 }}
+      />
+      <Button
+        title="Schedule Notification for 10s Later"
+        onPress={() => scheduleBreakNotification(secondsLater(10), 'Test Goal')}
+      />
+    </>
+  ));
+
 // Utilities
 
 function dateKnobReturningDateObj(name: string, defaultValue: Date) {
@@ -652,4 +681,8 @@ function getMonthlyPercentDoneData() {
       return { label: date, value: percentDone };
     })
     .reverse();
+}
+
+function secondsLater(seconds: number): Date {
+  return momentWithDeviceLocale().add(seconds, 'seconds').toDate();
 }
